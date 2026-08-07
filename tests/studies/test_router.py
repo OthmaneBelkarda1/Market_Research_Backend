@@ -375,6 +375,35 @@ async def test_get_the_report(
     assert body["payload"] == {"marche": {"geo": "MA"}, "limites": []}
 
 
+async def test_the_report_hides_the_workdir_file_names(
+    client: AsyncClient, db_session: AsyncSession, product: Product
+) -> None:
+    """The two workdir file names are dropped; the sources' own provenance is kept."""
+    created = await client.post("/studies", json={"product_id": str(product.id), "region": "MA"})
+    study_id = uuid.UUID(created.json()["id"])
+    db_session.add(
+        StudyReport(
+            study_id=study_id,
+            rapport_markdown="# Rapport",
+            payload={
+                "chemin_rapport": "rapport_etude.md",
+                "chemin_resume": "resume_executif.md",
+                "sources_utilisees": [{"source": "insights", "fichier": "insights.json"}],
+                "donnees_suffisantes": True,
+            },
+        )
+    )
+    await db_session.commit()
+
+    payload = (await client.get(f"/studies/{study_id}/report")).json()["payload"]
+
+    assert "chemin_rapport" not in payload
+    assert "chemin_resume" not in payload
+    assert payload["donnees_suffisantes"] is True
+    # Provenance stays: it is how a figure is traced back to the collector that fed it.
+    assert payload["sources_utilisees"][0]["fichier"] == "insights.json"
+
+
 async def test_a_study_without_a_report_yet(client: AsyncClient, product: Product) -> None:
     """404, not an empty body: F7 has not run, which is not the same as an empty report."""
     created = await client.post("/studies", json={"product_id": str(product.id), "region": "MA"})

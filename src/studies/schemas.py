@@ -157,6 +157,14 @@ class StudySourceListResponse(CustomModel):
     total: int = Field(description="Number of collectors that have written a row.")
 
 
+# Two keys of F7's output that name files inside the study's workdir. Dropped from the
+# response, not from the database: an API client already receives their content in
+# `rapport_markdown` and `resume_markdown`, so all they add is a path that means nothing
+# on the caller's side and invites reading a file that is not theirs to read. The row
+# keeps them, because the workdir files are what settle a doubt about the report.
+REPORT_WORKDIR_KEYS = frozenset({"chemin_rapport", "chemin_resume"})
+
+
 class StudyReportResponse(CustomModel):
     """The deliverable of a study: the report F7 produced, and its executive summary."""
 
@@ -177,10 +185,23 @@ class StudyReportResponse(CustomModel):
         description=(
             "F7's own JSON output: market, product, hypotheses, analysis statuses, "
             "coherence alerts and stated limits. The contract is the pipeline's, not "
-            "this API's."
+            "this API's -- minus the two workdir file names, which say nothing to a "
+            "caller that already holds the two Markdown texts."
         ),
     )
     created_at: datetime
+
+    @field_validator("payload")
+    @classmethod
+    def _drop_workdir_paths(cls, value: dict[str, Any] | None) -> dict[str, Any] | None:
+        """Shallow, and only these two keys.
+
+        `sources_utilisees[].fichier` names an upstream JSON on purpose -- that is the
+        report's provenance, which a reader needs to trace a figure back to its collector.
+        """
+        if value is None:
+            return None
+        return {key: item for key, item in value.items() if key not in REPORT_WORKDIR_KEYS}
 
 
 class StudyConflictDetail(CustomModel):
