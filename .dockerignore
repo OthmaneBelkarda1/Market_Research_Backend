@@ -1,0 +1,41 @@
+# Secrets : jamais dans une image. Sur Render, ces valeurs se saisissent dans
+# l'onglet Environment du service, pas dans le depot ni dans l'image.
+.env
+.env.*
+!.env.example
+
+# Venv local : l'image reconstruit le sien, et copier celui de Windows le casserait.
+.venv/
+venv/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Outils
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# Espace de travail des etudes : un dossier par etude, parfois plusieurs centaines de Mo.
+var/
+
+# Sorties d'une execution manuelle du pipeline en standalone
+src/agents/market_study/etudes/
+src/agents/market_study/**/output*.json
+src/agents/market_study/agent_aliexpress/.tokens.json
+
+# Inutile a l'execution
+.git/
+.github/
+tests/
+docs/
+*.md
+!README.md
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
