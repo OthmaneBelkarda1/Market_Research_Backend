@@ -1,0 +1,400 @@
+{
+  "produit": {
+    "nom": "JBL Endurance Peak 4 Open Ear",
+    "description": "Écouteurs sans fil à conduction d'air en oreille ouverte, crochets d'oreille souples, certification IP54, autonomie annoncée de 10 heures par charge et 40 heures avec le boîtier, commandes tactiles, positionnés pour la pratique sportive.",
+    "categorie": "electronics"
+  },
+  "marche": {
+    "geo": "FR",
+    "langue": "fr"
+  },
+  "region_couverte": true,
+  "pays": {
+    "code_pays": "MA",
+    "explication": "« MA » : collecte des annonces diffusées en MA, quel que soit le pays de l'annonceur."
+  },
+  "alertes_qualite_input": [
+    {
+      "type": "langue_inattendue",
+      "detail": "La description est rédigée en français mélangé à de l'arabe dialectal, alors que le marché ciblé est le Maroc avec la langue arabe. La description devrait être entièrement en arabe standard ou dialectal marocain cohérent."
+    },
+    {
+      "type": "description_insuffisante",
+      "detail": "La description « un short qui maske les parti awra chez les musilments » ne précise pas les caractéristiques techniques du produit (matière, longueur, coupe, taille, couleur, etc.) nécessaires pour identifier clairement la catégorie d'usage et formuler une recherche publicitaire pertinente."
+    }
+  ],
+  "plan_recherches": [
+    {
+      "mots_cles": "شورت ستر العورة",
+      "type_recherche": "mots_cles",
+      "statut_diffusion": "actives",
+      "justification": "Recherche directe sur le produit avec son attribut différenciant : un short conçu pour couvrir les parties awra selon les normes islamiques.",
+      "url": "https://www.facebook.com/ads/library/?q=%D8%B4%D9%88%D8%B1%D8%AA+%D8%B3%D8%AA%D8%B1+%D8%A7%D9%84%D8%B9%D9%88%D8%B1%D8%A9&country=MA&active_status=active&ad_type=all&search_type=keyword_unordered&media_type=all&is_targeted_country=false",
+      "filtres_url": true,
+      "est_annonceur": false,
+      "est_repli": false
+    },
+    {
+      "mots_cles": "شورت إسلامي للرجال",
+      "type_recherche": "mots_cles",
+      "statut_diffusion": "actives",
+      "justification": "Approche par la promesse religieuse et le positionnement : shorts conformes aux principes islamiques pour hommes.",
+      "url": "https://www.facebook.com/ads/library/?q=%D8%B4%D9%88%D8%B1%D8%AA+%D8%A5%D8%B3%D9%84%D8%A7%D9%85%D9%8A+%D9%84%D9%84%D8%B1%D8%AC%D8%A7%D9%84&country=MA&active_status=active&ad_type=all&search_type=keyword_unordered&media_type=all&is_targeted_country=false",
+      "filtres_url": true,
+      "est_annonceur": false,
+      "est_repli": false
+    },
+    {
+      "mots_cles": "ملابس ستر شرعي",
+      "type_recherche": "mots_cles",
+      "statut_diffusion": "actives",
+      "justification": "Angle catégoriel plus large sur les vêtements de couverture conforme à la charia, pour capturer les annonces concurrentes sur ce segment.",
+      "url": "https://www.facebook.com/ads/library/?q=%D9%85%D9%84%D8%A7%D8%A8%D8%B3+%D8%B3%D8%AA%D8%B1+%D8%B4%D8%B1%D8%B9%D9%8A&country=MA&active_status=active&ad_type=all&search_type=keyword_unordered&media_type=all&is_targeted_country=false",
+      "filtres_url": true,
+      "est_annonceur": false,
+      "est_repli": false
+    },
+    {
+      "mots_cles": "شورت إسلامي للرجال",
+      "type_recherche": "mots_cles",
+      "statut_diffusion": "toutes",
+      "justification": "Approche par la promesse religieuse et le positionnement : shorts conformes aux principes islamiques pour hommes.",
+      "url": "https://www.facebook.com/ads/library/?q=%D8%B4%D9%88%D8%B1%D8%AA+%D8%A5%D8%B3%D9%84%D8%A7%D9%85%D9%8A+%D9%84%D9%84%D8%B1%D8%AC%D8%A7%D9%84&country=MA&active_status=all&ad_type=all&search_type=keyword_unordered&media_type=all&is_targeted_country=false",
+      "filtres_url": false,
+      "est_annonceur": false,
+      "est_repli": true
+    },
+    {
+      "mots_cles": "ملابس ستر شرعي",
+      "type_recherche": "mots_cles",
+      "statut_diffusion": "toutes",
+      "justification": "Angle catégoriel plus large sur les vêtements de couverture conforme à la charia, pour capturer les annonces concurrentes sur ce segment.",
+      "url": "https://www.facebook.com/ads/library/?q=%D9%85%D9%84%D8%A7%D8%A8%D8%B3+%D8%B3%D8%AA%D8%B1+%D8%B4%D8%B1%D8%B9%D9%8A&country=MA&active_status=all&ad_type=all&search_type=keyword_unordered&media_type=all&is_targeted_country=false",
+      "filtres_url": false,
+      "est_annonceur": false,
+      "est_repli": true
+    }
+  ],
+  "annonces": [
+    {
+      "id_annonce": "1024057460610409",
+      "url_bibliotheque": "https://www.facebook.com/ads/library/?id=1024057460610409",
+      "annonceur": "COVER LIK",
+      "id_annonceur": "116500418116644",
+      "titre": "🚚 التوصيل متوفر | اضغط على \"تسوق الآن\" واطلب ديالك قبل ما يسالي المخزون!",
+      "texte": "باغي تريني مرتاح أولا تمشي للبحر ومستور في نفس الوقت؟ 🌊🏃‍♂️\nجبت لليك شورت ساتر العورة من Coverlik – اللباس الرياضي المحتشم اللي كيحتاجه كل راجل مغربي! مصمم خصيصاً باش يجمع ليك بين الستر والراحة الكاملة في الحركة.\n✨ علاش غادي يعجبك شورت Coverlik؟\nستر مريح ومحتشم: كيغطي العورة كاملة باش تحرك بـثقة في لاصال، وأنت كتجري، أو حتى فاش كتكون كتعوم فالبحر. 🏖️\nثوب خفيف وكينشف دغيا: مثالي للصهد ديال الصيف ومناسب بزاف للشواطئ. ☀️\nثبات فالتحرك: مرونة تامة لجميع الأنشطة الرياضية بلا ما يبرزطك.\n💪 تحرّك بثقة.. وخليك مستور!\n📥 اطلبه دابا وتمتع بالراحة والحشمة اللي كتستاهل!",
+      "description_lien": "🏆 شورت Coverlik: الستر، الراحة، وصالح حتى للبحر والرياضة!",
+      "legende": "coverlik.club",
+      "cta": "Shop now",
+      "lien": "https://coverlik.club/products/satr-alaaor",
+      "image": "https://scontent-dfw5-2.xx.fbcdn.net/v/t39.35426-6/743588755_1003218705920994_2442675481386571405_n.jpg?stp=dst-jpg_s600x600_tt6&_nc_cat=104&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=swv2F_5g-WYQ7kNvwG5NsP8&_nc_oc=Adpc-mfvBWJXjamQDc27pBQHJyLNDGUuLZPNVc0ZNW6rIK-BeREkH4756spUuVWtrIM&_nc_zt=14&_nc_ht=scontent-dfw5-2.xx&_nc_gid=9Od84bZg8cVOlkes-Y7-4Q&_nc_ss=72289&oh=00_AQEYfG9R-g4gcs-FM1FxbZX5_BxqaOmOS1z_h3PGai_RhA&oe=6A77EBAB",
+      "video": null,
+      "type_media": "image",
+      "id_collation": "2491326641353824",
+      "nb_declinaisons": 2,
+      "plateformes": [
+        "facebook",
+        "instagram",
+        "audience_network",
+        "messenger",
+        "threads"
+      ],
+      "active": true,
+      "date_debut": "2026-07-11",
+      "date_fin": "2026-08-04",
+      "duree_diffusion_jours": 24,
+      "portee_estimee": null,
+      "depense": null,
+      "devise": null,
+      "recherche_origine": "شورت ستر العورة",
+      "rang_collecte": 1,
+      "correspondance": "concurrent_direct",
+      "pertinence": 0.95
+    },
+    {
+      "id_annonce": "3172317686291582",
+      "url_bibliotheque": "https://www.facebook.com/ads/library/?id=3172317686291582",
+      "annonceur": "COVER LIK",
+      "id_annonceur": "116500418116644",
+      "titre": "🚚 التوصيل متوفر | اضغط على \"تسوق الآن\" واطلب ديالك قبل ما يسالي المخزون!",
+      "texte": "باغي تريني مرتاح أولا تمشي للبحر ومستور في نفس الوقت؟ 🌊🏃‍♂️\nجبت لليك شورت ساتر العورة من Coverlik – اللباس الرياضي المحتشم اللي كيحتاجه كل راجل مغربي! مصمم خصيصاً باش يجمع ليك بين الستر والراحة الكاملة في الحركة.\n✨ علاش غادي يعجبك شورت Coverlik؟\nستر مريح ومحتشم: كيغطي العورة كاملة باش تحرك بـثقة في لاصال، وأنت كتجري، أو حتى فاش كتكون كتعوم فالبحر. 🏖️\nثوب خفيف وكينشف دغيا: مثالي للصهد ديال الصيف ومناسب بزاف للشواطئ. ☀️\nثبات فالتحرك: مرونة تامة لجميع الأنشطة الرياضية بلا ما يبرزطك.\n💪 تحرّك بثقة.. وخليك مستور!\n📥 اطلبه دابا وتمتع بالراحة والحشمة اللي كتستاهل!",
+      "description_lien": "🏆 شورت Coverlik: الستر، الراحة، وصالح حتى للبحر والرياضة!",
+      "legende": "coverlik.club",
+      "cta": "Shop now",
+      "lien": "https://coverlik.club/products/satr-alaaor",
+      "image": "https://scontent-dfw6-2.xx.fbcdn.net/v/t39.35426-6/756603988_1975748283140892_2715689019606150261_n.jpg?stp=dst-jpg_s600x600_tt6&_nc_cat=110&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=uT1sCxCMAiEQ7kNvwGgGorW&_nc_oc=AdoO4-dhhqTKDwrzaDCOTI8vzXfBntrKz8oxVbHyAgJKlkoKBcBrGxMDmgmPwiLeobQ&_nc_zt=14&_nc_ht=scontent-dfw6-2.xx&_nc_gid=9Od84bZg8cVOlkes-Y7-4Q&_nc_ss=72289&oh=00_AQHplm5PJNDgnJoiSEqCL7u0AwlGEwVWLsFj-1yX4YAC8w&oe=6A77E2B8",
+      "video": null,
+      "type_media": "image",
+      "id_collation": "2131411697789794",
+      "nb_declinaisons": 3,
+      "plateformes": [
+        "facebook",
+        "instagram",
+        "audience_network",
+        "messenger",
+        "threads"
+      ],
+      "active": true,
+      "date_debut": "2026-07-26",
+      "date_fin": "2026-08-04",
+      "duree_diffusion_jours": 9,
+      "portee_estimee": null,
+      "depense": null,
+      "devise": null,
+      "recherche_origine": "شورت ستر العورة",
+      "rang_collecte": 3,
+      "correspondance": "concurrent_direct",
+      "pertinence": 0.95
+    },
+    {
+      "id_annonce": "1386473173418102",
+      "url_bibliotheque": "https://www.facebook.com/ads/library/?id=1386473173418102",
+      "annonceur": "COVER LIK",
+      "id_annonceur": "116500418116644",
+      "titre": "🚚 التوصيل متوفر | اضغط على \"تسوق الآن\" واطلب ديالك قبل ما يسالي المخزون!",
+      "texte": "باغي تريني مرتاح أولا تمشي للبحر ومستور في نفس الوقت؟ 🌊🏃‍♂️\nجبت لليك شورت ساتر العورة من Coverlik – اللباس الرياضي المحتشم اللي كيحتاجه كل راجل مغربي! مصمم خصيصاً باش يجمع ليك بين الستر والراحة الكاملة في الحركة.\n✨ علاش غادي يعجبك شورت Coverlik؟\nستر مريح ومحتشم: كيغطي العورة كاملة باش تحرك بـثقة في لاصال، وأنت كتجري، أو حتى فاش كتكون كتعوم فالبحر. 🏖️\nثوب خفيف وكينشف دغيا: مثالي للصهد ديال الصيف ومناسب بزاف للشواطئ. ☀️\nثبات فالتحرك: مرونة تامة لجميع الأنشطة الرياضية بلا ما يبرزطك.\n💪 تحرّك بثقة.. وخليك مستور!\n📥 اطلبه دابا وتمتع بالراحة والحشمة اللي كتستاهل!",
+      "description_lien": "🏆 شورت Coverlik: الستر، الراحة، وصالح حتى للبحر والرياضة!",
+      "legende": "coverlik.club",
+      "cta": "Shop now",
+      "lien": "https://coverlik.club/products/satr-alaaor",
+      "image": "https://scontent-dfw5-1.xx.fbcdn.net/v/t39.35426-6/756440997_1763560784959123_4511524747892678275_n.jpg?stp=dst-jpg_s600x600_tt6&_nc_cat=111&ccb=1-7&_nc_sid=c53f8f&_nc_ohc=sjhW4JHUclQQ7kNvwHHE-OY&_nc_oc=AdoF2YOWIESAkL01LLefT9hz-IT3bFRFoNwmhkeAol5C22g-3jfxc4_YF7QRpBK6lAY&_nc_zt=14&_nc_ht=scontent-dfw5-1.xx&_nc_gid=9Od84bZg8cVOlkes-Y7-4Q&_nc_ss=72289&oh=00_AQHuFni94Rv-syQiF4KfusRykoEDdbQlQm-1SNMkVIx6Iw&oe=6A77D5FB",
+      "video": null,
+      "type_media": "image",
+      "id_collation": "2845315102512289",
+      "nb_declinaisons": 1,
+      "plateformes": [
+        "facebook",
+        "instagram",
+        "audience_network",
+        "messenger",
+        "threads"
+      ],
+      "active": true,
+      "date_debut": "2026-07-26",
+      "date_fin": "2026-08-04",
+      "duree_diffusion_jours": 9,
+      "portee_estimee": null,
+      "depense": null,
+      "devise": null,
+      "recherche_origine": "شورت ستر العورة",
+      "rang_collecte": 6,
+      "correspondance": "concurrent_direct",
+      "pertinence": 0.95
+    },
+    {
+      "id_annonce": "1402277121745629",
+      "url_bibliotheque": "https://www.facebook.com/ads/library/?id=1402277121745629",
+      "annonceur": "COVER LIK",
+      "id_annonceur": "116500418116644",
+      "titre": "🚚 التوصيل متوفر | اضغط على \"تسوق الآن\" واطلب ديالك قبل ما يسالي المخزون!",
+      "texte": "باغي تريني مرتاح أولا تمشي للبحر ومستور في نفس الوقت؟ 🌊🏃‍♂️\nجبت لليك شورت ساتر العورة من Coverlik – اللباس الرياضي المحتشم اللي كيحتاجه كل راجل مغربي! مصمم خصيصاً باش يجمع ليك بين الستر والراحة الكاملة في الحركة.\n✨ علاش غادي يعجبك شورت Coverlik؟\nستر مريح ومحتشم: كيغطي العورة كاملة باش تحرك بـثقة في لاصال، وأنت كتجري، أو حتى فاش كتكون كتعوم فالبحر. 🏖️\nثوب خفيف وكينشف دغيا: مثالي للصهد ديال الصيف ومناسب بزاف للشواطئ. ☀️\nثبات فالتحرك: مرونة تامة لجميع الأنشطة الرياضية بلا ما يبرزطك.\n💪 تحرّك بثقة.. وخليك مستور!\n📥 اطلبه دابا وتمتع بالراحة والحشمة اللي كتستاهل!",
+      "description_lien": "🏆 شورت Coverlik: الستر، الراحة، وصالح حتى للبحر والرياضة!",
+      "legende": "coverlik.club",
+      "cta": "Shop now",
+      "lien": "https://coverlik.club/products/satr-alaaor",
+      "image": null,
+      "video": "https://video-dfw5-1.xx.fbcdn.net/o1/v/t2/f2/m366/AQM77dUQCd6Ks0AYDNXkPhhkwVAsQ79e7qlgqFdasDM1-TFYPaQeVkbXtD7cBwIhvz-6Sq3ApAdREGnVbjRor16ZeMc9pQdPntTKXNkefzbfuw.mp4?_nc_cat=105&_nc_sid=b66105&_nc_ht=video-dfw5-1.xx.fbcdn.net&_nc_ohc=IRVPC0_gVHYQ7kNvwEOIbcK&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5WSV9VU0VDQVNFX1BST0RVQ1RfVFlQRS4uQzMuNzIwLmRhc2hfaDI2NC1iYXNpYy1nZW4yXzcyMHAiLCJ4cHZfYXNzZXRfaWQiOjEzNjQ4Mzk1MzUwMjMxNTEsImFzc2V0X2FnZV9kYXlzIjoxLCJ2aV91c2VjYXNlX2lkIjoxMDc5OSwiZHVyYXRpb25fcyI6MjQsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=648d4a94d32e4b52&_nc_vs=HBksFQIYRWZiX2VwaGVtZXJhbC9EQjQ3RDM2RTZEODMxNEEyMjE2MjlCM0FENzAxRUJCMV9tdF8xX3ZpZGVvX2Rhc2hpbml0Lm1wNBUAAsgBEgAVAhhAZmJfcGVybWFuZW50L0NCNEMyNTFFRTA1Q0IwMjE4NjBGMjk0ODlDMDMyNDg0X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACbe0Mj6jtTsBBUCKAJDMywXQDizMzMzMzMYGWRhc2hfaDI2NC1iYXNpYy1nZW4yXzcyMHARAHUAZd6oAQA&_nc_gid=9Od84bZg8cVOlkes-Y7-4Q&_nc_ss=72289&_nc_zt=28&oh=00_AQFkKZLVvIULAyMOFWQpJvnz_9Cupyqfuz0RH58NhE-B4Q&oe=6A77F5D3",
+      "type_media": "video",
+      "id_collation": "1383567773968798",
+      "nb_declinaisons": 1,
+      "plateformes": [
+        "facebook",
+        "instagram",
+        "audience_network",
+        "messenger",
+        "threads"
+      ],
+      "active": true,
+      "date_debut": "2026-08-02",
+      "date_fin": "2026-08-04",
+      "duree_diffusion_jours": 2,
+      "portee_estimee": null,
+      "depense": null,
+      "devise": null,
+      "recherche_origine": "شورت ستر العورة",
+      "rang_collecte": 7,
+      "correspondance": "concurrent_direct",
+      "pertinence": 0.95
+    },
+    {
+      "id_annonce": "1678179426581129",
+      "url_bibliotheque": "https://www.facebook.com/ads/library/?id=1678179426581129",
+      "annonceur": "COVER LIK",
+      "id_annonceur": "116500418116644",
+      "titre": "🚚 التوصيل متوفر | اضغط على \"تسوق الآن\" واطلب ديالك قبل ما يسالي المخزون!",
+      "texte": "باغي تريني مرتاح أولا تمشي للبحر ومستور في نفس الوقت؟ 🌊🏃‍♂️\nجبت لليك شورت ساتر العورة من Coverlik – اللباس الرياضي المحتشم اللي كيحتاجه كل راجل مغربي! مصمم خصيصاً باش يجمع ليك بين الستر والراحة الكاملة في الحركة.\n✨ علاش غادي يعجبك شورت Coverlik؟\nستر مريح ومحتشم: كيغطي العورة كاملة باش تحرك بـثقة في لاصال، وأنت كتجري، أو حتى فاش كتكون كتعوم فالبحر. 🏖️\nثوب خفيف وكينشف دغيا: مثالي للصهد ديال الصيف ومناسب بزاف للشواطئ. ☀️\nثبات فالتحرك: مرونة تامة لجميع الأنشطة الرياضية بلا ما يبرزطك.\n💪 تحرّك بثقة.. وخليك مستور!\n📥 اطلبه دابا وتمتع بالراحة والحشمة اللي كتستاهل!",
+      "description_lien": "🏆 شورت Coverlik: الستر، الراحة، وصالح حتى للبحر والرياضة!",
+      "legende": "coverlik.club",
+      "cta": "Shop now",
+      "lien": "https://coverlik.club/products/satr-alaaor",
+      "image": null,
+      "video": "https://video-dfw5-2.xx.fbcdn.net/o1/v/t2/f2/m366/AQMJGCnZBfoTksBwfYpp1edItyYVHy3tJ7vRKdhPxSSTl-kkj8y4Pt-5l5C1-iSurT7n5PAupIzxFf3my4Pdvx_Nog81PON49z7mmH8aelo4eA.mp4?_nc_cat=100&_nc_sid=b66105&_nc_ht=video-dfw5-2.xx.fbcdn.net&_nc_ohc=5vLeeMgINscQ7kNvwECiZZR&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5WSV9VU0VDQVNFX1BST0RVQ1RfVFlQRS4uQzMuNzIwLmRhc2hfaDI2NC1iYXNpYy1nZW4yXzcyMHAiLCJ4cHZfYXNzZXRfaWQiOjIwNTQzNzM1MjU0NDcxNDMsImFzc2V0X2FnZV9kYXlzIjoxLCJ2aV91c2VjYXNlX2lkIjoxMDc5OSwiZHVyYXRpb25fcyI6MjQsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=4b0fc49236524f62&_nc_vs=HBksFQIYRWZiX2VwaGVtZXJhbC8wMDQ1N0QxOUVBMDYzRDE3MEVDOTgyQ0E3ODM4MDg5Nl9tdF8xX3ZpZGVvX2Rhc2hpbml0Lm1wNBUAAsgBEgAVAhhAZmJfcGVybWFuZW50LzY3NDU3MzBDOEY3NjI0QUI5NkQ1NEJFRkQ1MDdDNzg4X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACbOh8PDo5ymBxUCKAJDMywXQDgZmZmZmZoYGWRhc2hfaDI2NC1iYXNpYy1nZW4yXzcyMHARAHUAZd6oAQA&_nc_gid=9Od84bZg8cVOlkes-Y7-4Q&_nc_ss=72289&_nc_zt=28&oh=00_AQEl-kDPj9tMEhvY34ezTHAyxGjxU0QQIZFZMQXtZcSxyA&oe=6A77EBE0",
+      "type_media": "video",
+      "id_collation": "1071816315415152",
+      "nb_declinaisons": 1,
+      "plateformes": [
+        "facebook",
+        "instagram",
+        "audience_network",
+        "messenger",
+        "threads"
+      ],
+      "active": true,
+      "date_debut": "2026-08-02",
+      "date_fin": "2026-08-04",
+      "duree_diffusion_jours": 2,
+      "portee_estimee": null,
+      "depense": null,
+      "devise": null,
+      "recherche_origine": "شورت ستر العورة",
+      "rang_collecte": 8,
+      "correspondance": "concurrent_direct",
+      "pertinence": 0.95
+    },
+    {
+      "id_annonce": "4437374706511291",
+      "url_bibliotheque": "https://www.facebook.com/ads/library/?id=4437374706511291",
+      "annonceur": "COVER LIK",
+      "id_annonceur": "116500418116644",
+      "titre": "🚚 التوصيل متوفر | اضغط على \"تسوق الآن\" واطلب ديالك قبل ما يسالي المخزون!",
+      "texte": "باغي تريني مرتاح أولا تمشي للبحر ومستور في نفس الوقت؟ 🌊🏃‍♂️\nجبت لليك شورت ساتر العورة من Coverlik – اللباس الرياضي المحتشم اللي كيحتاجه كل راجل مغربي! مصمم خصيصاً باش يجمع ليك بين الستر والراحة الكاملة في الحركة.\n✨ علاش غادي يعجبك شورت Coverlik؟\nستر مريح ومحتشم: كيغطي العورة كاملة باش تحرك بـثقة في لاصال، وأنت كتجري، أو حتى فاش كتكون كتعوم فالبحر. 🏖️\nثوب خفيف وكينشف دغيا: مثالي للصهد ديال الصيف ومناسب بزاف للشواطئ. ☀️\nثبات فالتحرك: مرونة تامة لجميع الأنشطة الرياضية بلا ما يبرزطك.\n💪 تحرّك بثقة.. وخليك مستور!\n📥 اطلبه دابا وتمتع بالراحة والحشمة اللي كتستاهل!",
+      "description_lien": "🏆 شورت Coverlik: الستر، الراحة، وصالح حتى للبحر والرياضة!",
+      "legende": "coverlik.club",
+      "cta": "Shop now",
+      "lien": "https://coverlik.club/products/satr-alaaor",
+      "image": null,
+      "video": "https://video-dfw5-1.xx.fbcdn.net/o1/v/t2/f2/m366/AQMI5wQ-WbuhlggJjlcmkajt7n6WfuQBGTV1tnX6dQPMS6P1asLSyibjrGkWo6QWbbVRwU98dSlbqzQc8CKA51VZOfs1f88lYhoLcEjKKwvxJA.mp4?_nc_cat=111&_nc_sid=b66105&_nc_ht=video-dfw5-1.xx.fbcdn.net&_nc_ohc=uKQEEH9TS40Q7kNvwHtJ1Fn&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5WSV9VU0VDQVNFX1BST0RVQ1RfVFlQRS4uQzMuNzIwLmRhc2hfaDI2NC1iYXNpYy1nZW4yXzcyMHAiLCJ4cHZfYXNzZXRfaWQiOjEwNTgwNTcxMzM4NDkyMDQsImFzc2V0X2FnZV9kYXlzIjoxLCJ2aV91c2VjYXNlX2lkIjoxMDc5OSwiZHVyYXRpb25fcyI6MzAsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=b1452162a71a7adc&_nc_vs=HBksFQIYRWZiX2VwaGVtZXJhbC8wRTRBNUY4QTg1NDA0MUQ5OEQ4NDIzMzY4NUQ3NTA4RF9tdF8xX3ZpZGVvX2Rhc2hpbml0Lm1wNBUAAsgBEgAVAhhAZmJfcGVybWFuZW50LzVGNDJCNDU2OEVFQ0I2NTk1N0IxN0RENUZGNjI5MUJEX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACbo6ev5g5PhAxUCKAJDMywXQD4Q5WBBiTcYGWRhc2hfaDI2NC1iYXNpYy1nZW4yXzcyMHARAHUAZd6oAQA&_nc_gid=9Od84bZg8cVOlkes-Y7-4Q&_nc_ss=72289&_nc_zt=28&oh=00_AQG00XIZ_GjjH1FR8mcKIVkIOXy2J01wRkimnkQX7TdapA&oe=6A77F9A9",
+      "type_media": "video",
+      "id_collation": "1756954912106467",
+      "nb_declinaisons": 1,
+      "plateformes": [
+        "facebook",
+        "instagram",
+        "audience_network",
+        "messenger",
+        "threads"
+      ],
+      "active": true,
+      "date_debut": "2026-08-02",
+      "date_fin": "2026-08-04",
+      "duree_diffusion_jours": 2,
+      "portee_estimee": null,
+      "depense": null,
+      "devise": null,
+      "recherche_origine": "شورت ستر العورة",
+      "rang_collecte": 9,
+      "correspondance": "concurrent_direct",
+      "pertinence": 0.95
+    }
+  ],
+  "stats": {
+    "nb_annonces_collectees": 9,
+    "nb_annonces_retenues": 6,
+    "nb_annonceurs": 1,
+    "nb_annonces_actives": 6,
+    "nb_doublons_ecartes": 0,
+    "nb_doublons_creatif": 3,
+    "nb_annonces_hors_criteres": 0,
+    "nb_annonces_sous_seuil": 0,
+    "nb_annonces_non_classifiees": 0,
+    "duree_diffusion_mediane_jours": 5.5,
+    "duree_diffusion_max_jours": 24,
+    "repartition_par_correspondance": {
+      "concurrent_direct": 6
+    },
+    "repartition_par_annonceur": {
+      "COVER LIK": 6
+    },
+    "repartition_par_plateforme": {
+      "facebook": 6,
+      "instagram": 6,
+      "audience_network": 6,
+      "messenger": 6,
+      "threads": 6
+    },
+    "repartition_par_cta": {
+      "Shop now": 6
+    },
+    "repartition_par_recherche": {
+      "شورت ستر العورة": 6
+    }
+  },
+  "statuts_collecte": [
+    {
+      "recherche": "شورت ستر العورة",
+      "url": "https://www.facebook.com/ads/library/?q=%D8%B4%D9%88%D8%B1%D8%AA+%D8%B3%D8%AA%D8%B1+%D8%A7%D9%84%D8%B9%D9%88%D8%B1%D8%A9&country=MA&active_status=active&ad_type=all&search_type=keyword_unordered&media_type=all&is_targeted_country=false",
+      "succes": true,
+      "message_erreur": null,
+      "nb_items": 9,
+      "nb_tentatives": 1,
+      "plafond_atteint": false
+    },
+    {
+      "recherche": "شورت إسلامي للرجال",
+      "url": "https://www.facebook.com/ads/library/?q=%D8%B4%D9%88%D8%B1%D8%AA+%D8%A5%D8%B3%D9%84%D8%A7%D9%85%D9%8A+%D9%84%D9%84%D8%B1%D8%AC%D8%A7%D9%84&country=MA&active_status=active&ad_type=all&search_type=keyword_unordered&media_type=all&is_targeted_country=false",
+      "succes": true,
+      "message_erreur": "Run SUCCEEDED sans aucune annonce. Sur la bibliothèque publicitaire, c'est le plus souvent un constat réel — personne ne diffuse d'annonce sur ces mots dans ce pays — mais cela peut aussi venir d'une formulation trop étroite, d'un filtre de statut trop restrictif, ou d'un blocage de Meta.",
+      "nb_items": 0,
+      "nb_tentatives": 1,
+      "plafond_atteint": false
+    },
+    {
+      "recherche": "ملابس ستر شرعي",
+      "url": "https://www.facebook.com/ads/library/?q=%D9%85%D9%84%D8%A7%D8%A8%D8%B3+%D8%B3%D8%AA%D8%B1+%D8%B4%D8%B1%D8%B9%D9%8A&country=MA&active_status=active&ad_type=all&search_type=keyword_unordered&media_type=all&is_targeted_country=false",
+      "succes": true,
+      "message_erreur": "Run SUCCEEDED sans aucune annonce. Sur la bibliothèque publicitaire, c'est le plus souvent un constat réel — personne ne diffuse d'annonce sur ces mots dans ce pays — mais cela peut aussi venir d'une formulation trop étroite, d'un filtre de statut trop restrictif, ou d'un blocage de Meta.",
+      "nb_items": 0,
+      "nb_tentatives": 1,
+      "plafond_atteint": false
+    },
+    {
+      "recherche": "شورت إسلامي للرجال",
+      "url": "https://www.facebook.com/ads/library/?q=%D8%B4%D9%88%D8%B1%D8%AA+%D8%A5%D8%B3%D9%84%D8%A7%D9%85%D9%8A+%D9%84%D9%84%D8%B1%D8%AC%D8%A7%D9%84&country=MA&active_status=all&ad_type=all&search_type=keyword_unordered&media_type=all&is_targeted_country=false",
+      "succes": true,
+      "message_erreur": "Run SUCCEEDED sans aucune annonce. Sur la bibliothèque publicitaire, c'est le plus souvent un constat réel — personne ne diffuse d'annonce sur ces mots dans ce pays — mais cela peut aussi venir d'une formulation trop étroite, d'un filtre de statut trop restrictif, ou d'un blocage de Meta.",
+      "nb_items": 0,
+      "nb_tentatives": 1,
+      "plafond_atteint": false
+    },
+    {
+      "recherche": "ملابس ستر شرعي",
+      "url": "https://www.facebook.com/ads/library/?q=%D9%85%D9%84%D8%A7%D8%A8%D8%B3+%D8%B3%D8%AA%D8%B1+%D8%B4%D8%B1%D8%B9%D9%8A&country=MA&active_status=all&ad_type=all&search_type=keyword_unordered&media_type=all&is_targeted_country=false",
+      "succes": true,
+      "message_erreur": "Run SUCCEEDED sans aucune annonce. Sur la bibliothèque publicitaire, c'est le plus souvent un constat réel — personne ne diffuse d'annonce sur ces mots dans ce pays — mais cela peut aussi venir d'une formulation trop étroite, d'un filtre de statut trop restrictif, ou d'un blocage de Meta.",
+      "nb_items": 0,
+      "nb_tentatives": 1,
+      "plafond_atteint": false
+    }
+  ],
+  "donnees_disponibles": true,
+  "limites": [
+    "Le corpus ne décrit QUE la publicité payante diffusée sur les plateformes de Meta (Facebook, Instagram, Messenger, Audience Network). Google, TikTok, les places de marché et le référencement naturel en sont absents : ce n'est pas une photographie de la pression publicitaire totale sur le marché.",
+    "La bibliothèque publicitaire n'expose durablement que les annonces COMMERCIALES ACTIVES : une annonce arrêtée en sort, sauf dans l'Union européenne où le règlement sur les services numériques impose un archivage, et sauf pour les annonces politiques et de société, archivées sept ans. Une recherche sur les annonces inactives est donc normalement vide hors UE — ce point est tiré de la politique affichée par Meta et n'a pas été vérifié run à run.",
+    "Aucune donnée de diffusion n'est publiée pour les annonces commerciales : ni portée, ni dépense, ni ciblage, ni performance. `portee_estimee` et `depense` restent nuls hors annonces politiques. Rien dans ce corpus ne dit qu'une annonce a marché.",
+    "`duree_diffusion_jours` est un indicateur de LONGÉVITÉ, pas de rentabilité. Une annonce diffusée longtemps est un indice qu'un annonceur y trouve son compte, jamais une preuve : un budget mal suivi produit la même trace.",
+    "Le moteur de recherche de la bibliothèque apparie des mots sur le TEXTE des annonces. Un produit vendu par une créative purement visuelle, ou décrit avec un autre vocabulaire, est invisible à ce corpus.",
+    "Un même créatif est diffusé sous de nombreux identifiants d'annonce. Le module les rapproche par annonceur et par texte, mais un rapprochement reste approximatif : le décompte d'annonces n'est pas un décompte de campagnes.",
+    "`pertinence` et `correspondance` sont des heuristiques produites par un LLM, sans validation sur un échantillon annoté.",
+    "Le corpus est plafonné par recherche et n'est en aucun cas exhaustif : l'ordre servi par la bibliothèque n'est pas documenté et ne constitue pas un classement de notoriété ou de budget.",
+    "Un compte Apify en fin de quota tronque les runs SANS les faire échouer : ils remontent en statut SUCCEEDED avec un dataset incomplet. Vérifier le quota avant toute interprétation d'un volume d'annonces.",
+    "Une ou plusieurs recherches se sont terminées sans aucune annonce. Sur la bibliothèque publicitaire, c'est le plus souvent un constat réel — personne n'annonce sur ces mots dans ce pays — mais cela peut aussi venir d'une formulation trop étroite ou d'un filtre de statut trop restrictif."
+  ],
+  "hypotheses": [
+    "Le pays retenu sélectionne les annonces DIFFUSÉES dans ce pays, sans exiger qu'il soit leur unique ciblage (`is_targeted_country=false`). Ce n'est ni le pays de l'annonceur, ni le pays d'expédition du produit : une annonce internationale diffusée localement figure au corpus, et c'est voulu — c'est de la pression publicitaire subie sur ce marché qu'il s'agit. Appliqué ici : « MA » : collecte des annonces diffusées en MA, quel que soit le pays de l'annonceur.",
+    "Le corpus suppose que Meta est un canal d'acquisition significatif sur le marché étudié. C'est vrai de la plupart des marchés grand public, mais la part de Meta dans le mix publicitaire varie fortement d'un pays et d'une catégorie à l'autre : une bibliothèque pauvre peut signaler un marché publicitaire actif ailleurs, pas un marché sans concurrence.",
+    "Le produit est assimilé aux recherches retenues : les annonces collectées relèvent de la catégorie de besoin visée, pas nécessairement de la référence exacte de la fiche. Angles retenus — « شورت ستر العورة » : Recherche directe sur le produit avec son attribut différenciant : un short conçu pour couvrir les parties awra selon les normes islamiques. ; « شورت إسلامي للرجال » : Approche par la promesse religieuse et le positionnement : shorts conformes aux principes islamiques pour hommes. ; « ملابس ستر شرعي » : Angle catégoriel plus large sur les vêtements de couverture conforme à la charia, pour capturer les annonces concurrentes sur ce segment. ; « شورت إسلامي للرجال » : Approche par la promesse religieuse et le positionnement : shorts conformes aux principes islamiques pour hommes. ; « ملابس ستر شرعي » : Angle catégoriel plus large sur les vêtements de couverture conforme à la charia, pour capturer les annonces concurrentes sur ce segment.",
+    "Seuils appliqués : pertinence ≥ 0.5 pour retenir une annonce, 5 annonce(s) minimum avant déclenchement du repli, 30 annonces au plus par recherche. Ces valeurs sont des heuristiques non validées empiriquement."
+  ],
+  "_fixture": {
+    "statut": "reelle_adaptee",
+    "adaptation": "en-tete produit/marche harmonise sur le produit pivot",
+    "en_tete_origine": {
+      "produit": "short de satr al awra",
+      "marche": {
+        "geo": "MA",
+        "langue": "ar"
+      }
+    },
+    "note": "Run reel sur « short de satr al awra » (MA, arabe) : annonces hors sujet vis-a-vis du produit pivot. Sert a valider les structures d'annonces."
+  }
+}

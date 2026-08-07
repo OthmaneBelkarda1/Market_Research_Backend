@@ -1,0 +1,37 @@
+# Secrets / configuration locale
+.env
+.env.*
+!.env.example
+
+# Environnements virtuels
+.venv/
+venv/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+
+# Outils
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# Espace de travail des etudes : un dossier par etude, contenant les fichiers
+# d'entree et les sorties du pipeline (STUDY_KEEP_WORKDIR). Jamais versionne.
+var/
+
+# Sorties d'une execution manuelle du pipeline en standalone (etude_marche.ps1)
+src/agents/market_study/etudes/
+src/agents/market_study/**/output*.json
+src/agents/market_study/agent_aliexpress/.tokens.json
+
+# Editeurs / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

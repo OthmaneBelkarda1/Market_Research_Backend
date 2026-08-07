@@ -1,0 +1,4758 @@
+{
+  "produit": {
+    "nom": "JBL Endurance Peak 4 Open Ear",
+    "description": "Écouteurs sans fil à conduction d'air en oreille ouverte, crochets d'oreille souples, certification IP54, autonomie annoncée de 10 heures par charge et 40 heures avec le boîtier, commandes tactiles, positionnés pour la pratique sportive.",
+    "categorie": "electronics"
+  },
+  "marche": {
+    "geo": "FR",
+    "langue": "fr",
+    "devise": "EUR"
+  },
+  "alertes_qualite_input": [
+    {
+      "type": "description_insuffisante",
+      "detail": "La description est vide (┬½ ... ┬╗), ce qui ne permet pas d'identifier la cat├⌐gorie d'usage du produit ni ses caract├⌐ristiques techniques."
+    }
+  ],
+  "requetes": [
+    "ceinture lombaire double traction",
+    "ceinture dos double soutien",
+    "ceinture lombaire traction m├⌐dicale",
+    "ceinture dorsale double compression"
+  ],
+  "justification_requetes": "L'attribut diff├⌐renciant est le syst├¿me de ┬½ double traction ┬╗ qui distingue ce produit des ceintures lombaires simples. Les quatre requ├¬tes conservent cet ├⌐l├⌐ment cl├⌐ tout en variant le vocabulaire : ┬½ double traction ┬╗ (terme exact), ┬½ double soutien ┬╗ (synonyme courant), ┬½ traction m├⌐dicale ┬╗ (angle usage m├⌐dical/th├⌐rapeutique), et ┬½ double compression ┬╗ (variante descriptive du m├⌐canisme). Cette approche capture les diff├⌐rentes fa├ºons dont les fiches produits indexent ce type de ceinture sur AliExpress FR.",
+  "produits": [
+    {
+      "item_id": "1005012444204832",
+      "titre": "Ceinture de traction lombaire pour barre horizontale, dispositif de suspension dorsale r├⌐glable pour usage domestique, entra├«nement d'alignement de la colonne vert├⌐brale",
+      "url_produit": "https://www.aliexpress.com/item/1005012444204832.html?skuId=12000058403980675&pdp_ext_f=%7B%22sku_id%22%3A%2212000058403980675%22%2C%22tabScene%22%3A%22wholesale%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/Sddc3a183f3b24eb9bd5e20e8ffcaaceeu.jpg",
+      "prix_vente": 6.59,
+      "prix_original": 10.14,
+      "devise": "EUR",
+      "prix_formate": "6,59Γé¼",
+      "remise_pourcentage": 35.01,
+      "note": null,
+      "taux_evaluation": null,
+      "nb_commandes": null,
+      "ids_categories": [
+        "18",
+        "100005371",
+        "200001927",
+        "201349643"
+      ],
+      "requete_origine": "ceinture lombaire double traction",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:00:41.474902+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005012646738506",
+      "titre": "Nouvelle ceinture de traction lombaire ├á barre horizontale, ceinture de suspension lombaire pour ├⌐tirement, soulagement de la protusion discale, ceinture apaisante pour la taille",
+      "url_produit": "https://www.aliexpress.com/item/1005012646738506.html?skuId=12000058909149433&pdp_ext_f=%7B%22sku_id%22%3A%2212000058909149433%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/Sce70a07f5cd7409c8d35524fd73fcdd2S.jpg",
+      "prix_vente": 15.69,
+      "prix_original": 31.34,
+      "devise": "EUR",
+      "prix_formate": "15,69Γé¼",
+      "remise_pourcentage": 49.94,
+      "note": null,
+      "taux_evaluation": null,
+      "nb_commandes": 14,
+      "ids_categories": [
+        "18",
+        "100005371",
+        "200001927",
+        "201349643"
+      ],
+      "requete_origine": "ceinture lombaire double traction",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:00:41.474902+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005012801277579",
+      "titre": "Ceinture de traction lombaire portable, ceinture de traction cervicale suspendue, dispositif ergonomique d'├⌐tirement du dos et de la colonne vert├⌐brale pour les douleurs lombaires",
+      "url_produit": "https://www.aliexpress.com/item/1005012801277579.html?skuId=12000059375023679&pdp_ext_f=%7B%22sku_id%22%3A%2212000059375023679%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/S2d37ebcfac064d20811f3d776ccb1b4ba.jpg",
+      "prix_vente": 8.79,
+      "prix_original": 20.44,
+      "devise": "EUR",
+      "prix_formate": "8,79Γé¼",
+      "remise_pourcentage": 57.0,
+      "note": null,
+      "taux_evaluation": null,
+      "nb_commandes": 4,
+      "ids_categories": [
+        "66",
+        "200001355",
+        "200368146",
+        "200001427"
+      ],
+      "requete_origine": "ceinture lombaire double traction",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:00:41.474902+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005012653036487",
+      "titre": "Ceinture de traction suspendue portable pour le soutien lombaire et le soulagement des douleurs du bas du dos ΓÇô Dispositif ergonomique d'├⌐tirement de la colonne vert├⌐brale",
+      "url_produit": "https://www.aliexpress.com/item/1005012653036487.html?skuId=12000058940855571&pdp_ext_f=%7B%22sku_id%22%3A%2212000058940855571%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/S844c3c568cb14f78ae0a5b9c683af43bi.jpg",
+      "prix_vente": 9.99,
+      "prix_original": 20.39,
+      "devise": "EUR",
+      "prix_formate": "9,99Γé¼",
+      "remise_pourcentage": 51.01,
+      "note": 3.3,
+      "taux_evaluation": 65.0,
+      "nb_commandes": 83,
+      "ids_categories": [
+        "66",
+        "200001355",
+        "200368146",
+        "200001427"
+      ],
+      "requete_origine": "ceinture lombaire double traction",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:00:41.474902+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005010074414777",
+      "titre": "Ceinture de Traction lombaire, civi├¿re de r├⌐├⌐ducation lombaire Portable ├á domicile, ceinture d'├⌐tirement lombaire, ceinture d'exercice d'├⌐clatement antid├⌐rapante",
+      "url_produit": "https://www.aliexpress.com/item/1005010074414777.html?skuId=12000051041409888&pdp_ext_f=%7B%22sku_id%22%3A%2212000051041409888%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/Sd5f33c07b5d841f29f66eba61f292852K.jpg",
+      "prix_vente": 40.99,
+      "prix_original": 58.56,
+      "devise": "EUR",
+      "prix_formate": "40,99Γé¼",
+      "remise_pourcentage": 30.0,
+      "note": 4.0,
+      "taux_evaluation": 80.0,
+      "nb_commandes": 10,
+      "ids_categories": [
+        "66",
+        "200001355",
+        "200368146",
+        "201301801"
+      ],
+      "requete_origine": "ceinture lombaire double traction",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:00:41.474902+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005009718784515",
+      "titre": "Ceinture de Traction lombaire, civi├¿re de barre de traction, sangle de Suspension lombaire domestique, dispositif de Traction de colonne vert├⌐brale suspendue pour soins lombaire ├á domicile",
+      "url_produit": "https://www.aliexpress.com/item/1005009718784515.html?skuId=12000049941971769&pdp_ext_f=%7B%22sku_id%22%3A%2212000049941971769%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/Se861fb78a2af4612ba5060cf61b666b3j.jpg",
+      "prix_vente": 23.19,
+      "prix_original": 46.38,
+      "devise": "EUR",
+      "prix_formate": "16,29Γé¼",
+      "remise_pourcentage": 50.0,
+      "note": null,
+      "taux_evaluation": null,
+      "nb_commandes": 5,
+      "ids_categories": [
+        "18",
+        "100005371",
+        "201384511",
+        "200001945"
+      ],
+      "requete_origine": "ceinture lombaire double traction",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:00:41.474902+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005006237135770",
+      "titre": "Ceinture r├⌐tracteur de vert├¿bre lombaire, barre horizontale suspendue, tendeur de taille, civi├¿re, disque lombaire, sangle de r├⌐├⌐ducation de la colonne vert├⌐brale",
+      "url_produit": "https://www.aliexpress.com/item/1005006237135770.html?skuId=12000036432557579&pdp_ext_f=%7B%22sku_id%22%3A%2212000036432557579%22%2C%22tabScene%22%3A%22wholesale%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/S792d18fd12c4447881b0d94f42e816ffD.jpg",
+      "prix_vente": 24.39,
+      "prix_original": 73.91,
+      "devise": "EUR",
+      "prix_formate": "24,39Γé¼",
+      "remise_pourcentage": 67.0,
+      "note": 4.5,
+      "taux_evaluation": 90.6,
+      "nb_commandes": 62,
+      "ids_categories": [
+        "66",
+        "200001355",
+        "200368146",
+        "200001427"
+      ],
+      "requete_origine": "ceinture lombaire double traction",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:00:41.474902+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005010337308951",
+      "titre": "Ceinture de Traction suspendue, dispositif d'├⌐tirement lombaire ergonomique, bande de Yoga, Support de taille, disque, ceinture auxiliaire, exercice ├á barre unique",
+      "url_produit": "https://www.aliexpress.com/item/1005010337308951.html?skuId=12000052028189911&pdp_ext_f=%7B%22sku_id%22%3A%2212000052028189911%22%2C%22tabScene%22%3A%22wholesale%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/Sa64a2f56b5cb42d28451e952bf3d5013a.jpg",
+      "prix_vente": 22.19,
+      "prix_original": 21.77,
+      "devise": "EUR",
+      "prix_formate": "22,19Γé¼",
+      "remise_pourcentage": -1.93,
+      "note": 4.3,
+      "taux_evaluation": 85.8,
+      "nb_commandes": 600,
+      "ids_categories": [
+        "66",
+        "200001355",
+        "200368146",
+        "200001427"
+      ],
+      "requete_origine": "ceinture lombaire double traction",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:00:41.474902+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005012688772271",
+      "titre": "Ceinture de suspension lombaire pour ├⌐tirement de la colonne vert├⌐brale, ceinture de traction lombaire pour barre horizontale domestique, r├⌐glable en hauteur, pour soulagement de la taille",
+      "url_produit": "https://www.aliexpress.com/item/1005012688772271.html?skuId=12000059102250918&pdp_ext_f=%7B%22sku_id%22%3A%2212000059102250918%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/Sf8bdd424334941acafb5fa29d972ebecy.jpg",
+      "prix_vente": 9.89,
+      "prix_original": 20.18,
+      "devise": "EUR",
+      "prix_formate": "9,89Γé¼",
+      "remise_pourcentage": 50.99,
+      "note": null,
+      "taux_evaluation": null,
+      "nb_commandes": 29,
+      "ids_categories": [
+        "66",
+        "200001355",
+        "200368146",
+        "200001427"
+      ],
+      "requete_origine": "ceinture lombaire double traction",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:00:41.474902+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005012807190882",
+      "titre": "Ceinture de suspension lombaire pour ├⌐tirement de la colonne vert├⌐brale, ceinture de traction lombaire domestique, ceinture de soulagement de la taille, ceinture de traction ergonomique suspendue",
+      "url_produit": "https://www.aliexpress.com/item/1005012807190882.html?skuId=12000059413420405&pdp_ext_f=%7B%22sku_id%22%3A%2212000059413420405%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/Sc6d435aa53634efab7878cbe50b72428a.jpg",
+      "prix_vente": 9.69,
+      "prix_original": 20.62,
+      "devise": "EUR",
+      "prix_formate": "9,69Γé¼",
+      "remise_pourcentage": 53.01,
+      "note": null,
+      "taux_evaluation": null,
+      "nb_commandes": 1,
+      "ids_categories": [
+        "66",
+        "200001355",
+        "200368146",
+        "200001427"
+      ],
+      "requete_origine": "ceinture lombaire double traction",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:00:41.474902+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005009533038644",
+      "titre": "Ceinture de traction lombaire pour l'├⌐tirement de la colonne vert├⌐brale ΓÇô Sangle de suspension lombaire domestique, civi├¿re de barre de traction, id├⌐ale pour les soins lombaire ├á la maison",
+      "url_produit": "https://www.aliexpress.com/item/1005009533038644.html?skuId=12000049386521860&pdp_ext_f=%7B%22sku_id%22%3A%2212000049386521860%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/S07ecbb515e2a46178b09b66c019407c6V.jpg",
+      "prix_vente": 19.79,
+      "prix_original": 39.58,
+      "devise": "EUR",
+      "prix_formate": "19,79Γé¼",
+      "remise_pourcentage": 50.0,
+      "note": 4.6,
+      "taux_evaluation": 91.4,
+      "nb_commandes": 99,
+      "ids_categories": [
+        "18",
+        "100005371",
+        "201384511",
+        "200001973"
+      ],
+      "requete_origine": "ceinture lombaire double traction",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:00:41.474902+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005008586278791",
+      "titre": "Ceinture de traction lombaire r├⌐glable, civi├¿re de disque de suspension domestique, ceinture de suspension de d├⌐compression de la colonne vert├⌐brale pour soulager la n├⌐vralgie des maux de dos",
+      "url_produit": "https://www.aliexpress.com/item/1005008586278791.html?skuId=12000045845112990&pdp_ext_f=%7B%22sku_id%22%3A%2212000045845112990%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/S930afc4b13cb435c8cd7c5674b1a329cS.jpg",
+      "prix_vente": 15.99,
+      "prix_original": 17.19,
+      "devise": "EUR",
+      "prix_formate": "15,99Γé¼",
+      "remise_pourcentage": 6.98,
+      "note": 4.1,
+      "taux_evaluation": 81.3,
+      "nb_commandes": 51,
+      "ids_categories": [
+        "66",
+        "200001355",
+        "200368146",
+        "200001427"
+      ],
+      "requete_origine": "ceinture lombaire double traction",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:00:41.474902+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005008634397442",
+      "titre": "Ceinture de Traction lombaire r├⌐glable, usage domestique, ├⌐tirement lombaire de la poitrine, ceinture fixe, lit de Traction, ├⌐tirement, Traction du disque lombaire",
+      "url_produit": "https://www.aliexpress.com/item/1005008634397442.html?skuId=12000046436391287&pdp_ext_f=%7B%22sku_id%22%3A%2212000046436391287%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/S8c3c24aec31f4e9b89e20ed00d4f77acs.jpg",
+      "prix_vente": 20.79,
+      "prix_original": 27.72,
+      "devise": "EUR",
+      "prix_formate": "20,79Γé¼",
+      "remise_pourcentage": 25.0,
+      "note": 4.8,
+      "taux_evaluation": 95.6,
+      "nb_commandes": 30,
+      "ids_categories": [
+        "66",
+        "200001355",
+        "200368146",
+        "200001427"
+      ],
+      "requete_origine": "ceinture lombaire double traction",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:00:41.474902+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005006053180721",
+      "titre": "Ceinture de Traction Lombaire M├⌐dicale, ├ëcharpe, Barre Horizontale, Civi├¿re de Taille, Disque Colonne Vert├⌐brale, Sangles pour les Paines, Instituts",
+      "url_produit": "https://www.aliexpress.com/item/1005006053180721.html?skuId=12000035511303468&pdp_ext_f=%7B%22sku_id%22%3A%2212000035511303468%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/S161a9d3b3a7d4f1088569faf7a5ab1ee2.jpg",
+      "prix_vente": 32.39,
+      "prix_original": 40.49,
+      "devise": "EUR",
+      "prix_formate": "32,39Γé¼",
+      "remise_pourcentage": 20.0,
+      "note": 4.3,
+      "taux_evaluation": 86.7,
+      "nb_commandes": 13,
+      "ids_categories": [
+        "66",
+        "200001355",
+        "200368146",
+        "200001427"
+      ],
+      "requete_origine": "ceinture lombaire double traction",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:00:41.474902+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005012482154547",
+      "titre": "Ceinture de traction ergonomique suspendue pour ├⌐tirement lombaire, bande de fitness yoga, support de taille, ceinture auxiliaire pour exercices sur barre simple",
+      "url_produit": "https://www.aliexpress.com/item/1005012482154547.html?skuId=12000058510880141&pdp_ext_f=%7B%22sku_id%22%3A%2212000058510880141%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/Sb4a1266cbf0a4c968b2fc0681f52f2e64.png",
+      "prix_vente": 11.79,
+      "prix_original": 23.58,
+      "devise": "EUR",
+      "prix_formate": "11,79Γé¼",
+      "remise_pourcentage": 50.0,
+      "note": 4.3,
+      "taux_evaluation": 85.7,
+      "nb_commandes": 145,
+      "ids_categories": [
+        "66",
+        "200001355",
+        "200368146",
+        "200001427"
+      ],
+      "requete_origine": "ceinture lombaire double traction",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:00:41.474902+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005012288396698",
+      "titre": "Ceinture de traction suspendue ergonomique pour ├⌐tirement lombaire, bande de fitness et yoga, support lombaire, ceinture auxiliaire pour exercices ├á barre simple",
+      "url_produit": "https://www.aliexpress.com/item/1005012288396698.html?skuId=12000057992822410&pdp_ext_f=%7B%22sku_id%22%3A%2212000057992822410%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/S6dfd102308754b3b99ba269ac4e29b8a8.jpg",
+      "prix_vente": 18.79,
+      "prix_original": 19.18,
+      "devise": "EUR",
+      "prix_formate": "17,19Γé¼",
+      "remise_pourcentage": 2.03,
+      "note": 3.6,
+      "taux_evaluation": 72.0,
+      "nb_commandes": 72,
+      "ids_categories": [
+        "66",
+        "200001355",
+        "200368146",
+        "200001427"
+      ],
+      "requete_origine": "ceinture lombaire double traction",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:00:41.474902+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005012740560189",
+      "titre": "Ceinture de traction suspendue portable, dispositif de d├⌐compression lombaire ergonomique pour soulager les douleurs lombaires et l'inconfort cervical",
+      "url_produit": "https://www.aliexpress.com/item/1005012740560189.html?skuId=12000059209595933&pdp_ext_f=%7B%22sku_id%22%3A%2212000059209595933%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/S24960e15879b4c6e98945ffbe0d5e4e9F.jpg",
+      "prix_vente": 10.49,
+      "prix_original": 20.92,
+      "devise": "EUR",
+      "prix_formate": "10,49Γé¼",
+      "remise_pourcentage": 49.86,
+      "note": null,
+      "taux_evaluation": null,
+      "nb_commandes": 5,
+      "ids_categories": [
+        "66",
+        "200001355",
+        "200368146",
+        "200001427"
+      ],
+      "requete_origine": "ceinture lombaire double traction",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:00:41.474902+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005012669970256",
+      "titre": "Ceinture de suspension lombaire pour ├⌐tirement de la colonne vert├⌐brale, ceinture de traction lombaire suspendue ├á domicile pour soulager les douleurs lombaires et la d├⌐compression de la colonne vert├⌐brale",
+      "url_produit": "https://www.aliexpress.com/item/1005012669970256.html?skuId=12000059000457521&pdp_ext_f=%7B%22sku_id%22%3A%2212000059000457521%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/Se03a1e0fc136452588de726232ce0ca9a.jpg",
+      "prix_vente": 11.19,
+      "prix_original": 22.38,
+      "devise": "EUR",
+      "prix_formate": "11,19Γé¼",
+      "remise_pourcentage": 50.0,
+      "note": null,
+      "taux_evaluation": null,
+      "nb_commandes": 7,
+      "ids_categories": [
+        "66",
+        "202188610",
+        "202212602",
+        "202212612"
+      ],
+      "requete_origine": "ceinture lombaire double traction",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:00:41.474902+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005010759486630",
+      "titre": "Ceinture de traction ergonomique suspendue pour ├⌐tirement lombaire, bande de fitness yoga, support de taille, ceinture auxiliaire pour exercices sur barre simple",
+      "url_produit": "https://www.aliexpress.com/item/1005010759486630.html?skuId=12000053415848878&pdp_ext_f=%7B%22sku_id%22%3A%2212000053415848878%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/Sb4a1266cbf0a4c968b2fc0681f52f2e64.png",
+      "prix_vente": 11.29,
+      "prix_original": 22.58,
+      "devise": "EUR",
+      "prix_formate": "11,29Γé¼",
+      "remise_pourcentage": 50.0,
+      "note": 4.9,
+      "taux_evaluation": 98.0,
+      "nb_commandes": 1000,
+      "ids_categories": [
+        "66",
+        "200001355",
+        "200368146",
+        "200001427"
+      ],
+      "requete_origine": "ceinture lombaire double traction",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:00:41.474902+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005008352413045",
+      "titre": "Ceinture de d├⌐compression pour le dos, pour soulager les douleurs dans le bas du dos, ceinture de d├⌐compression lombaire, dispositif de Traction a├⌐rienne pour la colonne lombaire des adultes",
+      "url_produit": "https://www.aliexpress.com/item/1005008352413045.html?skuId=12000044696074445&pdp_ext_f=%7B%22sku_id%22%3A%2212000044696074445%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/Sa7295351ed8d4863b61caf2cf81f0502m.jpg",
+      "prix_vente": 27.39,
+      "prix_original": 34.63,
+      "devise": "EUR",
+      "prix_formate": "27,39Γé¼",
+      "remise_pourcentage": 20.91,
+      "note": null,
+      "taux_evaluation": null,
+      "nb_commandes": null,
+      "ids_categories": [
+        "66",
+        "200001355",
+        "200368146",
+        "200001427"
+      ],
+      "requete_origine": "ceinture lombaire double traction",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:00:41.474902+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005006383600815",
+      "titre": "Ceinture de soutien lombaire r├⌐glable, Corset orthop├⌐dique ├á Double traction pour le dos, d├⌐compression de la colonne vert├⌐brale, soulagement des douleurs dorsales, serrer l'abdomen",
+      "url_produit": "https://www.aliexpress.com/item/1005006383600815.html?skuId=12000037000226996&pdp_ext_f=%7B%22sku_id%22%3A%2212000037000226996%22%2C%22tabScene%22%3A%22wholesale%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/S6bf6f06ec6af43fb9ece6c6110fcd3f8l.jpg",
+      "prix_vente": 10.29,
+      "prix_original": 30.26,
+      "devise": "EUR",
+      "prix_formate": "10,59Γé¼",
+      "remise_pourcentage": 65.99,
+      "note": 4.7,
+      "taux_evaluation": 94.8,
+      "nb_commandes": 1000,
+      "ids_categories": [
+        "66",
+        "200001355",
+        "200368146",
+        "200001427"
+      ],
+      "requete_origine": "ceinture lombaire double traction",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:00:46.394425+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005005309469992",
+      "titre": "Ceinture de soutien lombaire ├á Double traction pour hommes et femmes, Corset orthop├⌐dique de taille, d├⌐compression de la colonne vert├⌐brale, attelle d'entra├«nement, soulagement des maux de dos",
+      "url_produit": "https://www.aliexpress.com/item/1005005309469992.html?skuId=12000032578875584&pdp_ext_f=%7B%22sku_id%22%3A%2212000032578875584%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/S21319b3ddd994d9384a952e883db41ed7.jpg",
+      "prix_vente": 14.49,
+      "prix_original": 14.49,
+      "devise": "EUR",
+      "prix_formate": "15,39Γé¼",
+      "remise_pourcentage": 0.0,
+      "note": 4.7,
+      "taux_evaluation": 94.4,
+      "nb_commandes": 1000,
+      "ids_categories": [
+        "18",
+        "100005371",
+        "100005588",
+        "100005605"
+      ],
+      "requete_origine": "ceinture lombaire double traction",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:00:46.394425+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005005946631833",
+      "titre": "Ceinture de Traction Lombaire, ├ëcharpe de D├⌐compression de la Colonne Vert├⌐brale SFP, Dos, Civi├¿re des Instituts Otos, Suspension ├ëpaisse, Sangles Command├⌐es ├á la Taille",
+      "url_produit": "https://www.aliexpress.com/item/1005005946631833.html?skuId=12000034975724605&pdp_ext_f=%7B%22sku_id%22%3A%2212000034975724605%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/S3958a88fbf1d429db430c96e76b311b8N.jpg",
+      "prix_vente": 28.19,
+      "prix_original": 28.57,
+      "devise": "EUR",
+      "prix_formate": "28,19Γé¼",
+      "remise_pourcentage": 1.33,
+      "note": 5.0,
+      "taux_evaluation": 100.0,
+      "nb_commandes": 9,
+      "ids_categories": [
+        "66",
+        "200001355",
+        "200368146",
+        "200001427"
+      ],
+      "requete_origine": "ceinture lombaire double traction",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:00:46.394425+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005010377742892",
+      "titre": "Ceinture de Traction lombaire ├á usage domestique, civi├¿re suspendue ├á barre unique pour le soulagement des hernie discales et le soutien de la taille",
+      "url_produit": "https://www.aliexpress.com/item/1005010377742892.html?skuId=12000052203336709&pdp_ext_f=%7B%22sku_id%22%3A%2212000052203336709%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/S9fe0d41681a84e7fbbbca39edea5b8cfF.jpg",
+      "prix_vente": 26.39,
+      "prix_original": 52.78,
+      "devise": "EUR",
+      "prix_formate": "14,99Γé¼",
+      "remise_pourcentage": 50.0,
+      "note": 4.3,
+      "taux_evaluation": 85.0,
+      "nb_commandes": 11,
+      "ids_categories": [
+        "66",
+        "202188610",
+        "202212602",
+        "202212612"
+      ],
+      "requete_origine": "ceinture lombaire double traction",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:00:46.394425+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005012783750180",
+      "titre": "Ceinture de traction lombaire r├⌐glable pour la maison, barre horizontale pour ├⌐tirement du dos, suspension pour alignement de la colonne vert├⌐brale, pour l'exercice quotidien",
+      "url_produit": "https://www.aliexpress.com/item/1005012783750180.html?skuId=12000059305517055&pdp_ext_f=%7B%22sku_id%22%3A%2212000059305517055%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/S44574ce526df4f5bbb34897f9694f2a2Q.jpg",
+      "prix_vente": 12.19,
+      "prix_original": 14.07,
+      "devise": "EUR",
+      "prix_formate": "12,19Γé¼",
+      "remise_pourcentage": 13.36,
+      "note": 4.0,
+      "taux_evaluation": 80.0,
+      "nb_commandes": 1,
+      "ids_categories": [
+        "18",
+        "100005371",
+        "200001927",
+        "201349643"
+      ],
+      "requete_origine": "ceinture lombaire double traction",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:00:46.394425+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005010580995012",
+      "titre": "Ceinture de Traction suspendue, Support de taille, dispositif d'├⌐tirement lombaire, ceinture auxiliaire de disque, ceinture d'├⌐tirement de la colonne vert├⌐brale ergonomique",
+      "url_produit": "https://www.aliexpress.com/item/1005010580995012.html?skuId=12000052883233378&pdp_ext_f=%7B%22sku_id%22%3A%2212000052883233378%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/Sc1ce9a518dc448e1ba1ca3f97c2bcbbf7.jpg",
+      "prix_vente": 13.79,
+      "prix_original": 19.7,
+      "devise": "EUR",
+      "prix_formate": "13,79Γé¼",
+      "remise_pourcentage": 30.0,
+      "note": 5.0,
+      "taux_evaluation": 100.0,
+      "nb_commandes": 4,
+      "ids_categories": [
+        "66",
+        "200001355",
+        "200368146",
+        "200001427"
+      ],
+      "requete_origine": "ceinture lombaire double traction",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:00:46.394425+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005008541420720",
+      "titre": "Orth├¿se dorsale r├⌐glable, ceinture de soutien lombaire ├á Double traction, antid├⌐rapante, pour hommes et femmes, coussin lombaire, coussin d'assistance sportive",
+      "url_produit": "https://www.aliexpress.com/item/1005008541420720.html?skuId=12000045678729322&pdp_ext_f=%7B%22sku_id%22%3A%2212000045678729322%22%2C%22tabScene%22%3A%22wholesale%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/S0d0523e220c44817b84e4e7ced73f082W.png",
+      "prix_vente": 20.79,
+      "prix_original": 41.58,
+      "devise": "EUR",
+      "prix_formate": "20,79Γé¼",
+      "remise_pourcentage": 50.0,
+      "note": 5.0,
+      "taux_evaluation": 100.0,
+      "nb_commandes": 7,
+      "ids_categories": [
+        "66",
+        "200001355",
+        "200368146",
+        "200001427"
+      ],
+      "requete_origine": "ceinture lombaire double traction",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:00:46.394425+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005010597709801",
+      "titre": "Ceinture de Traction suspendue, dispositif d'├⌐tirement lombaire ergonomique, bande de Yoga, soutien de la taille, ceinture d'├⌐tirement de la colonne vert├⌐brale",
+      "url_produit": "https://www.aliexpress.com/item/1005010597709801.html?skuId=12000052935369607&pdp_ext_f=%7B%22sku_id%22%3A%2212000052935369607%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/S0de1c4df2f5c4e09b6f8e76b1b560861g.jpg",
+      "prix_vente": 15.49,
+      "prix_original": 15.49,
+      "devise": "EUR",
+      "prix_formate": "15,49Γé¼",
+      "remise_pourcentage": 0.0,
+      "note": 3.5,
+      "taux_evaluation": 70.0,
+      "nb_commandes": 8,
+      "ids_categories": [
+        "66",
+        "200001355",
+        "200368146",
+        "200001427"
+      ],
+      "requete_origine": "ceinture lombaire double traction",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:00:46.394425+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005008705594130",
+      "titre": "Dispositif de Traction lombaire de taille pour hernie discale lombaire, traitement de r├⌐├⌐ducation des tensions musculaires lombaires, ceinture de Traction d'├⌐tirement",
+      "url_produit": "https://www.aliexpress.com/item/1005008705594130.html?skuId=12000046325093827&pdp_ext_f=%7B%22sku_id%22%3A%2212000046325093827%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/S025b546c37ce4b0ea79966a824776a76H.jpg",
+      "prix_vente": 14.29,
+      "prix_original": 14.29,
+      "devise": "EUR",
+      "prix_formate": "14,29Γé¼",
+      "remise_pourcentage": 0.0,
+      "note": 4.3,
+      "taux_evaluation": 85.0,
+      "nb_commandes": 14,
+      "ids_categories": [
+        "66",
+        "200001355",
+        "200368146",
+        "200001427"
+      ],
+      "requete_origine": "ceinture lombaire double traction",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:00:46.394425+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005010722319760",
+      "titre": "Ceinture de soutien lombaire de d├⌐compression, ceinture de taille gonflable r├⌐glable, prend en charge la Traction lombaire pour soulager les maux de dos, masseur unisexe",
+      "url_produit": "https://www.aliexpress.com/item/1005010722319760.html?skuId=12000053303458147&pdp_ext_f=%7B%22sku_id%22%3A%2212000053303458147%22%2C%22tabScene%22%3A%22wholesale%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/Sf9562f932a004e1a8062331ab5ad7e33n.jpg",
+      "prix_vente": 41.99,
+      "prix_original": 85.69,
+      "devise": "EUR",
+      "prix_formate": "41,99Γé¼",
+      "remise_pourcentage": 51.0,
+      "note": 4.8,
+      "taux_evaluation": 95.0,
+      "nb_commandes": 26,
+      "ids_categories": [
+        "66",
+        "200001355",
+        "200368146",
+        "200001427"
+      ],
+      "requete_origine": "ceinture lombaire double traction",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:00:46.394425+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005007480051448",
+      "titre": "Ceinture de traction lombaire r├⌐glable, fronde, barre horizontale, tendeur de taille, civi├¿re pour hernie discale, instituts g├⌐nitaux",
+      "url_produit": "https://www.aliexpress.com/item/1005007480051448.html?skuId=12000040923463739&pdp_ext_f=%7B%22sku_id%22%3A%2212000040923463739%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/S732d58460d884ef1b5adc4415a5b35dbb.jpg",
+      "prix_vente": 31.99,
+      "prix_original": 31.99,
+      "devise": "EUR",
+      "prix_formate": "31,99Γé¼",
+      "remise_pourcentage": 0.0,
+      "note": 0.0,
+      "taux_evaluation": 0.0,
+      "nb_commandes": 4,
+      "ids_categories": [
+        "66",
+        "200001355",
+        "200368146",
+        "200001427"
+      ],
+      "requete_origine": "ceinture lombaire double traction",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:00:46.394425+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005012688130530",
+      "titre": "Ceinture de soutien lombaire ├á double traction pour hommes et femmes, d├⌐compression de la colonne vert├⌐brale, attelle de maintien de la taille, coussin lombaire",
+      "url_produit": "https://www.aliexpress.com/item/1005012688130530.html?skuId=12000059082838040&pdp_ext_f=%7B%22sku_id%22%3A%2212000059082838040%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/Sa0f474107c234d03a21e918abb1c4f23F.png",
+      "prix_vente": 12.19,
+      "prix_original": 25.4,
+      "devise": "EUR",
+      "prix_formate": "12,19Γé¼",
+      "remise_pourcentage": 52.01,
+      "note": null,
+      "taux_evaluation": null,
+      "nb_commandes": 9,
+      "ids_categories": [
+        "18",
+        "100005371",
+        "100005588",
+        "100005605"
+      ],
+      "requete_origine": "ceinture lombaire double traction",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:00:46.394425+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005010719232857",
+      "titre": "Ceinture de transfert de patient r├⌐glable, antid├⌐rapante, avec boucle ├á d├⌐gagement rapide, ceinture de traction lombaire, ajustement confortable, poign├⌐es s├⌐curis├⌐es",
+      "url_produit": "https://www.aliexpress.com/item/1005010719232857.html?skuId=12000053288976717&pdp_ext_f=%7B%22sku_id%22%3A%2212000053288976717%22%2C%22tabScene%22%3A%22wholesale%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/Sde73bb9561e74959865f574a3279791cZ.jpg",
+      "prix_vente": 9.49,
+      "prix_original": 18.98,
+      "devise": "EUR",
+      "prix_formate": "9,49Γé¼",
+      "remise_pourcentage": 50.0,
+      "note": null,
+      "taux_evaluation": null,
+      "nb_commandes": null,
+      "ids_categories": [
+        "66",
+        "200001355",
+        "200368146",
+        "201301801"
+      ],
+      "requete_origine": "ceinture lombaire double traction",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:00:46.394425+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005003238502747",
+      "titre": "Ceinture de soutien lombaire ├á Double traction pour hommes et femmes, Corset orthop├⌐dique de taille, d├⌐compression de la colonne vert├⌐brale, attelle d'entra├«nement, soulagement des maux de dos",
+      "url_produit": "https://www.aliexpress.com/item/1005003238502747.html?skuId=12000024795606842&pdp_ext_f=%7B%22sku_id%22%3A%2212000024795606842%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/H6185098b49a741e98066cea906df181de.jpg",
+      "prix_vente": 17.79,
+      "prix_original": 18.72,
+      "devise": "EUR",
+      "prix_formate": "17,79Γé¼",
+      "remise_pourcentage": 4.97,
+      "note": 4.9,
+      "taux_evaluation": 97.3,
+      "nb_commandes": 136,
+      "ids_categories": [
+        "66",
+        "200001355",
+        "200368146",
+        "200001427"
+      ],
+      "requete_origine": "ceinture lombaire double traction",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:00:46.394425+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005005871704577",
+      "titre": "Ceinture de soutien lombaire de d├⌐compression, ceinture de taille gonflable r├⌐glable, prend en charge la Traction lombaire pour soulager les maux de dos, masseur unisexe",
+      "url_produit": "https://www.aliexpress.com/item/1005005871704577.html?skuId=12000034648945724&pdp_ext_f=%7B%22sku_id%22%3A%2212000034648945724%22%2C%22tabScene%22%3A%22wholesale%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/S6fa8da65a162468192c0685fddd6b42aa.jpg",
+      "prix_vente": 34.99,
+      "prix_original": 36.07,
+      "devise": "EUR",
+      "prix_formate": "34,99Γé¼",
+      "remise_pourcentage": 2.99,
+      "note": 4.8,
+      "taux_evaluation": 95.7,
+      "nb_commandes": 116,
+      "ids_categories": [
+        "66",
+        "200001355",
+        "200368146",
+        "200001427"
+      ],
+      "requete_origine": "ceinture lombaire double traction",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:00:46.394425+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005009088186384",
+      "titre": "Ceinture de Suspension lombaire extensible pour la colonne vert├⌐brale domestique, barre horizontale, ceinture de Traction lombaire, ceinture de taille apaisante, poids 200 Catties",
+      "url_produit": "https://www.aliexpress.com/item/1005009088186384.html?skuId=12000056678323821&pdp_ext_f=%7B%22sku_id%22%3A%2212000056678323821%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/Sbd580b527ea2460facb9f5bc76bbc659V.png",
+      "prix_vente": 13.49,
+      "prix_original": 26.98,
+      "devise": "EUR",
+      "prix_formate": "13,49Γé¼",
+      "remise_pourcentage": 50.0,
+      "note": 4.6,
+      "taux_evaluation": 91.8,
+      "nb_commandes": 1000,
+      "ids_categories": [
+        "18",
+        "100005371",
+        "201384511",
+        "200001945"
+      ],
+      "requete_origine": "ceinture lombaire double traction",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:00:46.394425+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005010755199507",
+      "titre": "1 Ceinture de maintien lombaire renforc├⌐e, correcteur de posture, gilet r├⌐glable, sangle de soutien dorsal, attelle de colonne vert├⌐brale, ├⌐tireur de cou, entra├«neur",
+      "url_produit": "https://www.aliexpress.com/item/1005010755199507.html?skuId=12000053405539328&pdp_ext_f=%7B%22sku_id%22%3A%2212000053405539328%22%2C%22tabScene%22%3A%22wholesale%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/Sb3f50767c8d6494e86c07415b06f2679q.jpg",
+      "prix_vente": 5.39,
+      "prix_original": 5.47,
+      "devise": "EUR",
+      "prix_formate": "5,39Γé¼",
+      "remise_pourcentage": 1.46,
+      "note": 4.2,
+      "taux_evaluation": 83.3,
+      "nb_commandes": 3000,
+      "ids_categories": [
+        "18",
+        "100005371",
+        "100005588",
+        "100006067"
+      ],
+      "requete_origine": "ceinture lombaire double traction",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:00:46.394425+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005010361022611",
+      "titre": "Ceinture de Traction suspendue, Support de taille ergonomique, bande de Yoga, dispositif d'├⌐tirement lombaire, ceinture d'├⌐tirement de la colonne vert├⌐brale",
+      "url_produit": "https://www.aliexpress.com/item/1005010361022611.html?skuId=12000052129737172&pdp_ext_f=%7B%22sku_id%22%3A%2212000052129737172%22%2C%22tabScene%22%3A%22wholesale%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/S44eb2847db684b808b1d5ebff90343887.jpg",
+      "prix_vente": 20.79,
+      "prix_original": 41.58,
+      "devise": "EUR",
+      "prix_formate": "20,79Γé¼",
+      "remise_pourcentage": 50.0,
+      "note": 5.0,
+      "taux_evaluation": 100.0,
+      "nb_commandes": 21,
+      "ids_categories": [
+        "66",
+        "200001355",
+        "200368146",
+        "200001427"
+      ],
+      "requete_origine": "ceinture lombaire double traction",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:00:46.394425+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005010804328558",
+      "titre": "Ceinture de traction suspendue, soutien lombaire, bande de fitness ergonomique, yoga, dispositif d'├⌐tirement lombaire, ceinture auxiliaire pour disque, ├⌐quipement de remise en forme ├á domicile",
+      "url_produit": "https://www.aliexpress.com/item/1005010804328558.html?skuId=12000053554715326&pdp_ext_f=%7B%22sku_id%22%3A%2212000053554715326%22%2C%22tabScene%22%3A%22wholesale%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/S060d3dbb66114551a2505ce41c7ec5049.jpg",
+      "prix_vente": 16.59,
+      "prix_original": 16.87,
+      "devise": "EUR",
+      "prix_formate": "16,59Γé¼",
+      "remise_pourcentage": 1.66,
+      "note": 4.4,
+      "taux_evaluation": 88.3,
+      "nb_commandes": 153,
+      "ids_categories": [
+        "66",
+        "200001355",
+        "200368146",
+        "200001427"
+      ],
+      "requete_origine": "ceinture lombaire double traction",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:00:46.394425+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005009082783243",
+      "titre": "AA20-2X lombaire colonne vert├⌐brale-Air dos ceinture Air Traction taille ceinture douleur bas soutien lombaire adapt├⌐ pour 29 pouces-49 pouces",
+      "url_produit": "https://www.aliexpress.com/item/1005009082783243.html?skuId=12000057767149155&pdp_ext_f=%7B%22sku_id%22%3A%2212000057767149155%22%2C%22tabScene%22%3A%22wholesale%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/S64050faf1cb54d2b8469e31dd0a4b7e2O.jpg",
+      "prix_vente": 50.39,
+      "prix_original": 67.19,
+      "devise": "EUR",
+      "prix_formate": "50,39Γé¼",
+      "remise_pourcentage": 25.0,
+      "note": null,
+      "taux_evaluation": null,
+      "nb_commandes": null,
+      "ids_categories": [
+        "66",
+        "201217706",
+        "200367162"
+      ],
+      "requete_origine": "ceinture lombaire double traction",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:00:46.394425+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005010700679942",
+      "titre": "Correcteur de Posture r├⌐glable, ceinture de soutien du dos, respirant, antid├⌐rapant, Support ergonomique pour une Posture am├⌐lior├⌐e, adapt├⌐ au Sitti",
+      "url_produit": "https://www.aliexpress.com/item/1005010700679942.html?skuId=12000053237727930&pdp_ext_f=%7B%22sku_id%22%3A%2212000053237727930%22%2C%22tabScene%22%3A%22wholesale%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/S3557504d4b8a40dea416dbf3e217c69cI.jpg",
+      "prix_vente": 4.19,
+      "prix_original": 8.55,
+      "devise": "EUR",
+      "prix_formate": "4,19Γé¼",
+      "remise_pourcentage": 50.99,
+      "note": 4.2,
+      "taux_evaluation": 83.7,
+      "nb_commandes": 2000,
+      "ids_categories": [
+        "18",
+        "100005371",
+        "100005588",
+        "100006067"
+      ],
+      "requete_origine": "ceinture dos double soutien",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:00:51.394203+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005006167563587",
+      "titre": "Ceinture de soutien lombaire pour le dos, Double traction r├⌐glable, attelle orthop├⌐dique pour la taille m├⌐dicale, d├⌐compression relax├⌐e, antid├⌐rapante, respirante",
+      "url_produit": "https://www.aliexpress.com/item/1005006167563587.html?skuId=12000036083778127&pdp_ext_f=%7B%22sku_id%22%3A%2212000036083778127%22%2C%22tabScene%22%3A%22wholesale%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/A53cb40b7740b494ab683e0f8233c8493L.jpg",
+      "prix_vente": 15.29,
+      "prix_original": 30.58,
+      "devise": "EUR",
+      "prix_formate": "15,29Γé¼",
+      "remise_pourcentage": 50.0,
+      "note": 5.0,
+      "taux_evaluation": 100.0,
+      "nb_commandes": 5,
+      "ids_categories": [
+        "66",
+        "200001355",
+        "200368146",
+        "200001427"
+      ],
+      "requete_origine": "ceinture dos double soutien",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:00:51.394203+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005010485646764",
+      "titre": "Ceinture de soutien pour le dos, pour soulager les douleurs dans le bas du dos, r├⌐glable, pour hommes et femmes, soutien lombaire, sciatique, scoliose, hernie discale",
+      "url_produit": "https://www.aliexpress.com/item/1005010485646764.html?skuId=12000052563823170&pdp_ext_f=%7B%22sku_id%22%3A%2212000052563823170%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/S85d67ced435b4cb8a2ad15d43dceb7c8x.jpg",
+      "prix_vente": 9.19,
+      "prix_original": 9.19,
+      "devise": "EUR",
+      "prix_formate": "9,99Γé¼",
+      "remise_pourcentage": 0.0,
+      "note": 4.7,
+      "taux_evaluation": 93.3,
+      "nb_commandes": 1000,
+      "ids_categories": [
+        "66",
+        "200001355",
+        "200368146",
+        "200001427"
+      ],
+      "requete_origine": "ceinture dos double soutien",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:00:51.394203+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005006023860901",
+      "titre": "Ceinture de soutien dorsal pour hommes et femmes, ceinture de soutien lombaire, attelle dorsale, hernie discale, artica contrast├⌐, scoliose",
+      "url_produit": "https://www.aliexpress.com/item/1005006023860901.html?skuId=12000035368502142&pdp_ext_f=%7B%22sku_id%22%3A%2212000035368502142%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/Sa1f88a3a12c24c59a515d8d39f79b388M.jpg",
+      "prix_vente": 11.89,
+      "prix_original": 11.89,
+      "devise": "EUR",
+      "prix_formate": "12,59Γé¼",
+      "remise_pourcentage": 0.0,
+      "note": 4.9,
+      "taux_evaluation": 97.5,
+      "nb_commandes": 16,
+      "ids_categories": [
+        "66",
+        "200001355",
+        "200368146",
+        "200001427"
+      ],
+      "requete_origine": "ceinture dos double soutien",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:00:51.394203+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005006653444134",
+      "titre": "Ceinture de soutien du dos pour femmes et hommes, soulage les maux de dos, fournit un soutien lombaire tout autour pour la salle de sport, les sports de plein air",
+      "url_produit": "https://www.aliexpress.com/item/1005006653444134.html?skuId=12000037932332748&pdp_ext_f=%7B%22sku_id%22%3A%2212000037932332748%22%2C%22tabScene%22%3A%22wholesale%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/S2901849a9bd3446b8c7a6e52c52ee1d0p.jpg",
+      "prix_vente": 7.09,
+      "prix_original": 7.19,
+      "devise": "EUR",
+      "prix_formate": "7,09Γé¼",
+      "remise_pourcentage": 1.39,
+      "note": 4.5,
+      "taux_evaluation": 89.4,
+      "nb_commandes": 157,
+      "ids_categories": [
+        "18",
+        "100005371",
+        "100005588",
+        "100005605"
+      ],
+      "requete_origine": "ceinture dos double soutien",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:00:51.394203+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005012064729944",
+      "titre": "Ceinture de soutien pour la posture debout et assise Ceinture dorsale robuste pour une meilleure posture",
+      "url_produit": "https://www.aliexpress.com/item/1005012064729944.html?skuId=12000057434542881&pdp_ext_f=%7B%22sku_id%22%3A%2212000057434542881%22%2C%22tabScene%22%3A%22wholesale%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/S1ccf939a200c4d08977987aaaef3dca7T.jpg",
+      "prix_vente": 6.19,
+      "prix_original": 13.17,
+      "devise": "EUR",
+      "prix_formate": "6,19Γé¼",
+      "remise_pourcentage": 53.0,
+      "note": 4.1,
+      "taux_evaluation": 82.6,
+      "nb_commandes": 254,
+      "ids_categories": [
+        "66",
+        "200001355",
+        "200368146",
+        "200001427"
+      ],
+      "requete_origine": "ceinture dos double soutien",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:00:51.394203+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005006379864393",
+      "titre": "Ceinture de soutien lombaire r├⌐glable, Double traction, attelle orthop├⌐dique m├⌐dicale pour la colonne vert├⌐brale, d├⌐compression relax├⌐e, antid├⌐rapante, respirante",
+      "url_produit": "https://www.aliexpress.com/item/1005006379864393.html?skuId=12000036978413114&pdp_ext_f=%7B%22sku_id%22%3A%2212000036978413114%22%2C%22tabScene%22%3A%22wholesale%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/S0e0ce0a5914e4df3aa036d8a6019f84b2.jpg",
+      "prix_vente": 11.99,
+      "prix_original": 12.26,
+      "devise": "EUR",
+      "prix_formate": "11,99Γé¼",
+      "remise_pourcentage": 2.2,
+      "note": 4.6,
+      "taux_evaluation": 92.2,
+      "nb_commandes": 66,
+      "ids_categories": [
+        "66",
+        "200001355",
+        "200368146",
+        "200001427"
+      ],
+      "requete_origine": "ceinture dos double soutien",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:00:51.394203+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005008098602910",
+      "titre": "Orth├¿se dorsale pour douleurs lombaires, sciatique, hernie discale, scoliose, ceinture de soutien du dos avec coussinet souple, soutien lombaire l├⌐ger",
+      "url_produit": "https://www.aliexpress.com/item/1005008098602910.html?skuId=12000044055287268&pdp_ext_f=%7B%22sku_id%22%3A%2212000044055287268%22%2C%22tabScene%22%3A%22wholesale%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/S03298265b4ad46e9b265f01403fcc9feq.jpg",
+      "prix_vente": 13.59,
+      "prix_original": 38.83,
+      "devise": "EUR",
+      "prix_formate": "13,59Γé¼",
+      "remise_pourcentage": 65.0,
+      "note": 4.8,
+      "taux_evaluation": 95.7,
+      "nb_commandes": 2000,
+      "ids_categories": [
+        "66",
+        "200001355",
+        "200368146",
+        "200001427"
+      ],
+      "requete_origine": "ceinture dos double soutien",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:00:51.394203+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005010202759939",
+      "titre": "5 attelle de soutien lombaire pour soulager les maux de dos bas, ceinture de soutien lombaire avec coussinet lombaire, conception ergonomique pour hernie discale sciatique",
+      "url_produit": "https://www.aliexpress.com/item/1005010202759939.html?skuId=12000051508641713&pdp_ext_f=%7B%22sku_id%22%3A%2212000051508641713%22%2C%22tabScene%22%3A%22wholesale%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/S90c75777575345d5964a1da44237eb92M.jpg",
+      "prix_vente": 11.99,
+      "prix_original": 12.62,
+      "devise": "EUR",
+      "prix_formate": "11,99Γé¼",
+      "remise_pourcentage": 4.99,
+      "note": 4.8,
+      "taux_evaluation": 95.4,
+      "nb_commandes": 500,
+      "ids_categories": [
+        "66",
+        "200001355",
+        "200368146",
+        "200001427"
+      ],
+      "requete_origine": "ceinture dos double soutien",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:00:51.394203+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005006165026179",
+      "titre": "Ceinture c├┤tel├⌐e lest├⌐e avec JODouble D-Ring, sangle de soutien dorsal, ├⌐quipement de gymnastique ├á domicile",
+      "url_produit": "https://www.aliexpress.com/item/1005006165026179.html?skuId=12000036066300095&pdp_ext_f=%7B%22sku_id%22%3A%2212000036066300095%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/Sad1bee74010c451590bd654a7695e5766.jpg",
+      "prix_vente": 13.39,
+      "prix_original": 13.39,
+      "devise": "EUR",
+      "prix_formate": "13,39Γé¼",
+      "remise_pourcentage": 0.0,
+      "note": 4.9,
+      "taux_evaluation": 97.1,
+      "nb_commandes": 359,
+      "ids_categories": [
+        "18",
+        "100005371",
+        "2008"
+      ],
+      "requete_origine": "ceinture dos double soutien",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:00:51.394203+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005009441136095",
+      "titre": "Ceinture de soutien lombaire r├⌐glable, poulie ├á Double traction, respirante, fa├ºonnant le corps, ceinture de Fixation pour soulager les maux de dos bas",
+      "url_produit": "https://www.aliexpress.com/item/1005009441136095.html?skuId=12000049109298450&pdp_ext_f=%7B%22sku_id%22%3A%2212000049109298450%22%2C%22tabScene%22%3A%22wholesale%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/S9967855803cd439eac26158507263959v.jpg",
+      "prix_vente": 11.89,
+      "prix_original": 24.27,
+      "devise": "EUR",
+      "prix_formate": "11,89Γé¼",
+      "remise_pourcentage": 51.01,
+      "note": 4.6,
+      "taux_evaluation": 92.8,
+      "nb_commandes": 148,
+      "ids_categories": [
+        "18",
+        "100005371",
+        "100005588",
+        "100005605"
+      ],
+      "requete_origine": "ceinture dos double soutien",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:00:51.394203+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005010458338272",
+      "titre": "Ceinture correctrice de Posture du dos, correcteur de bossu, pour hommes et femmes adultes, ceinture correctrice de Posture assise, ├⌐paule, dos droit",
+      "url_produit": "https://www.aliexpress.com/item/1005010458338272.html?skuId=12000052478217563&pdp_ext_f=%7B%22sku_id%22%3A%2212000052478217563%22%2C%22tabScene%22%3A%22wholesale%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/Sd77b5db1669c4111bcfefb2969d7af95f.jpg",
+      "prix_vente": 4.49,
+      "prix_original": 4.62,
+      "devise": "EUR",
+      "prix_formate": "4,49Γé¼",
+      "remise_pourcentage": 2.81,
+      "note": 4.1,
+      "taux_evaluation": 82.9,
+      "nb_commandes": 2000,
+      "ids_categories": [
+        "66",
+        "200001355",
+        "200368146",
+        "200001427"
+      ],
+      "requete_origine": "ceinture dos double soutien",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:00:51.394203+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005012551708436",
+      "titre": "Ceinture de soutien postural pour une meilleure alignement - Soutien dorsal l├⌐ger pour la position assise et debout, aide ├á maintenir une posture droite",
+      "url_produit": "https://www.aliexpress.com/item/1005012551708436.html?skuId=12000058662623057&pdp_ext_f=%7B%22sku_id%22%3A%2212000058662623057%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/Sd03bfc93043e49ebabe5f1dcb1330632o.jpg",
+      "prix_vente": 5.19,
+      "prix_original": 3.07,
+      "devise": "EUR",
+      "prix_formate": "5,19Γé¼",
+      "remise_pourcentage": -69.06,
+      "note": 5.0,
+      "taux_evaluation": 100.0,
+      "nb_commandes": 5,
+      "ids_categories": [
+        "66",
+        "200001355",
+        "200368146",
+        "200001427"
+      ],
+      "requete_origine": "ceinture dos double soutien",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:00:51.394203+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005006697527976",
+      "titre": "Ceinture de Correction de Posture du dos, pr├⌐vention des bosses, Correction de la Posture assise, unisexe, respirant, fa├ºonnage du corps",
+      "url_produit": "https://www.aliexpress.com/item/1005006697527976.html?skuId=12000038036616612&pdp_ext_f=%7B%22sku_id%22%3A%2212000038036616612%22%2C%22tabScene%22%3A%22wholesale%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/S4556e2613eed4244b26b71b771c8e54b6.png",
+      "prix_vente": 2.63,
+      "prix_original": 2.64,
+      "devise": "EUR",
+      "prix_formate": "2,63Γé¼",
+      "remise_pourcentage": 0.38,
+      "note": 4.2,
+      "taux_evaluation": 84.5,
+      "nb_commandes": 10000,
+      "ids_categories": [
+        "66",
+        "200001355",
+        "200368146",
+        "200001427"
+      ],
+      "requete_origine": "ceinture dos double soutien",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:00:51.394203+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005008464876454",
+      "titre": "Ceinture de soutien r├⌐glable ├á compression crois├⌐e, double orth├¿se initi├⌐e au sport, sangle ├á double bandage, dos des instituts oto",
+      "url_produit": "https://www.aliexpress.com/item/1005008464876454.html?skuId=12000045249639018&pdp_ext_f=%7B%22sku_id%22%3A%2212000045249639018%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/Sd6d31799df484762b3bb42149e606129x.jpg",
+      "prix_vente": 13.79,
+      "prix_original": 13.79,
+      "devise": "EUR",
+      "prix_formate": "13,79Γé¼",
+      "remise_pourcentage": 0.0,
+      "note": 4.8,
+      "taux_evaluation": 95.0,
+      "nb_commandes": 41,
+      "ids_categories": [
+        "66",
+        "200001355",
+        "200368146",
+        "200001427"
+      ],
+      "requete_origine": "ceinture dos double soutien",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:00:51.394203+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005009148491896",
+      "titre": "Ceinture de Correction Posturale pour le Dos, Confortable et R├⌐glable, Unisexe, pour Redresser la Colonne Vert├⌐brale, les ├ëpaules et le Bas du Dos",
+      "url_produit": "https://www.aliexpress.com/item/1005009148491896.html?skuId=12000048091887053&pdp_ext_f=%7B%22sku_id%22%3A%2212000048091887053%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/S432ddb186ad840e3a11378649d3659198.jpg",
+      "prix_vente": 5.49,
+      "prix_original": 5.49,
+      "devise": "EUR",
+      "prix_formate": "5,59Γé¼",
+      "remise_pourcentage": 0.0,
+      "note": 4.0,
+      "taux_evaluation": 79.9,
+      "nb_commandes": 2000,
+      "ids_categories": [
+        "18",
+        "100005371",
+        "100005588",
+        "100006067"
+      ],
+      "requete_origine": "ceinture dos double soutien",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:00:51.394203+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005007354134154",
+      "titre": "Ceinture de soutien lombaire pour hommes et femmes - Soutien lombaire respirant pour le bas du dos, pour la sciatique, avec deux sangles r├⌐glables",
+      "url_produit": "https://www.aliexpress.com/item/1005007354134154.html?skuId=12000040394222019&pdp_ext_f=%7B%22sku_id%22%3A%2212000040394222019%22%2C%22tabScene%22%3A%22wholesale%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/S8f0b08ae8cdb4ccbaf68beb251ea84eeW.jpg",
+      "prix_vente": 17.59,
+      "prix_original": 35.9,
+      "devise": "EUR",
+      "prix_formate": "17,59Γé¼",
+      "remise_pourcentage": 51.0,
+      "note": 5.0,
+      "taux_evaluation": 100.0,
+      "nb_commandes": 7,
+      "ids_categories": [
+        "18",
+        "100005371",
+        "100005588",
+        "100005605"
+      ],
+      "requete_origine": "ceinture dos double soutien",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:00:51.394203+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005005961585635",
+      "titre": "Ceinture de soutien lombaire r├⌐glable, Double traction, attelle orthop├⌐dique m├⌐dicale pour la colonne vert├⌐brale, d├⌐compression relax├⌐e, antid├⌐rapante, respirante",
+      "url_produit": "https://www.aliexpress.com/item/1005005961585635.html?skuId=12000035136865649&pdp_ext_f=%7B%22sku_id%22%3A%2212000035136865649%22%2C%22tabScene%22%3A%22wholesale%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/Sc0334a5baa1b445aab2892d51d94c7d57.jpg",
+      "prix_vente": 21.39,
+      "prix_original": 61.11,
+      "devise": "EUR",
+      "prix_formate": "21,99Γé¼",
+      "remise_pourcentage": 65.0,
+      "note": 5.0,
+      "taux_evaluation": 100.0,
+      "nb_commandes": 2,
+      "ids_categories": [
+        "66",
+        "200001355",
+        "200368146",
+        "200001427"
+      ],
+      "requete_origine": "ceinture dos double soutien",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:00:51.394203+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005012620526415",
+      "titre": "Ceinture de soutien lombaire r├⌐glable pour soulager les douleurs du bas du dos ΓÇô Hommes et Femmes ΓÇô Soutien lombaire, sciatique, scoliose, hernie discale",
+      "url_produit": "https://www.aliexpress.com/item/1005012620526415.html?skuId=12000058872142959&pdp_ext_f=%7B%22sku_id%22%3A%2212000058872142959%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/S24e21ad12cd44e1fbd826f469c28e8369.jpg",
+      "prix_vente": 10.89,
+      "prix_original": 21.75,
+      "devise": "EUR",
+      "prix_formate": "10,89Γé¼",
+      "remise_pourcentage": 49.93,
+      "note": 5.0,
+      "taux_evaluation": 100.0,
+      "nb_commandes": 19,
+      "ids_categories": [
+        "66",
+        "200001355",
+        "200368146",
+        "200001427"
+      ],
+      "requete_origine": "ceinture dos double soutien",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:01:07.616652+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005012061316352",
+      "titre": "Correcteur de posture r├⌐glable, ceinture de soutien dorsal - Soutien ergonomique respirant et antid├⌐rapant pour une meilleure posture, adapt├⌐ ├á la position assise",
+      "url_produit": "https://www.aliexpress.com/item/1005012061316352.html?skuId=12000057399261461&pdp_ext_f=%7B%22sku_id%22%3A%2212000057399261461%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/Sb380f71a4c5a4357912207ffe58f1482D.jpg",
+      "prix_vente": 3.09,
+      "prix_original": 6.19,
+      "devise": "EUR",
+      "prix_formate": "3,09Γé¼",
+      "remise_pourcentage": 50.08,
+      "note": 4.9,
+      "taux_evaluation": 98.0,
+      "nb_commandes": 157,
+      "ids_categories": [
+        "18",
+        "100005371",
+        "100005588",
+        "100006067"
+      ],
+      "requete_origine": "ceinture dos double soutien",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:01:07.616652+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005005776327850",
+      "titre": "Ceinture de soutien du dos, soulagement des douleurs lombaires avec 6 supports, sangle de soutien lombaire r├⌐glable, bretelles arri├¿re en maille respirante, ceinture de taille",
+      "url_produit": "https://www.aliexpress.com/item/1005005776327850.html?skuId=12000034393525274&pdp_ext_f=%7B%22sku_id%22%3A%2212000034393525274%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/Sb4e1ed4970dc4e95aa333cebfe699de0n.jpg",
+      "prix_vente": 11.89,
+      "prix_original": 11.91,
+      "devise": "EUR",
+      "prix_formate": "11,89Γé¼",
+      "remise_pourcentage": 0.17,
+      "note": 5.0,
+      "taux_evaluation": 100.0,
+      "nb_commandes": 8,
+      "ids_categories": [
+        "200574005",
+        "200001865",
+        "200001873"
+      ],
+      "requete_origine": "ceinture dos double soutien",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:01:07.616652+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005009795731633",
+      "titre": "Ceinture de traction ceinture de trempage lest├⌐e avec cha├«ne Double anneau en D sangle de soutien du dos d'halt├⌐rophilie ├⌐quipement de gymnastique ├á domicile ceinture de taille",
+      "url_produit": "https://www.aliexpress.com/item/1005009795731633.html?skuId=12000050188422121&pdp_ext_f=%7B%22sku_id%22%3A%2212000050188422121%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/S9fd0529e12d6457cb3bda514fc9c4275u.jpg",
+      "prix_vente": 3.79,
+      "prix_original": 4.17,
+      "devise": "EUR",
+      "prix_formate": "3,79Γé¼",
+      "remise_pourcentage": 9.11,
+      "note": 4.2,
+      "taux_evaluation": 83.6,
+      "nb_commandes": 113,
+      "ids_categories": [
+        "18",
+        "100005371",
+        "2008"
+      ],
+      "requete_origine": "ceinture dos double soutien",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:01:07.616652+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005008784423024",
+      "titre": "1 attelle pour le bas du dos pour soulager la douleur ΓÇô Ceinture de soutien lombaire r├⌐glable pour sciatique, respirante et stabilisation avec 4 supports en acier",
+      "url_produit": "https://www.aliexpress.com/item/1005008784423024.html?skuId=12000046652898223&pdp_ext_f=%7B%22sku_id%22%3A%2212000046652898223%22%2C%22tabScene%22%3A%22wholesale%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/S16a6b2b39a0346dfbd55c61e2921cccbr.jpg",
+      "prix_vente": 5.89,
+      "prix_original": 11.78,
+      "devise": "EUR",
+      "prix_formate": "5,89Γé¼",
+      "remise_pourcentage": 50.0,
+      "note": 4.6,
+      "taux_evaluation": 91.5,
+      "nb_commandes": 3000,
+      "ids_categories": [
+        "18",
+        "100005371",
+        "100005588",
+        "100005605"
+      ],
+      "requete_origine": "ceinture dos double soutien",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:01:07.616652+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005005725024741",
+      "titre": "Ceinture de soutien lombaire dorsal ├á double nervure pour hommes et femmes, corset taille Orth4WD, d├⌐compression de la colonne vert├⌐brale, entra├«neur de taille, orth├¿se dorsale, instituts",
+      "url_produit": "https://www.aliexpress.com/item/1005005725024741.html?skuId=12000034128288849&pdp_ext_f=%7B%22sku_id%22%3A%2212000034128288849%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/S381b5b4a6eb64ccc83065c0066f9c879W.jpg",
+      "prix_vente": 20.19,
+      "prix_original": 40.38,
+      "devise": "EUR",
+      "prix_formate": "20,19Γé¼",
+      "remise_pourcentage": 50.0,
+      "note": 4.6,
+      "taux_evaluation": 92.0,
+      "nb_commandes": 22,
+      "ids_categories": [
+        "18",
+        "100005371",
+        "100005588",
+        "100005605"
+      ],
+      "requete_origine": "ceinture dos double soutien",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:01:07.616652+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005012201718962",
+      "titre": "Ceinture de soutien dorsal ajustable pour corriger la posture - Respirante, antid├⌐rapante, soutien ergonomique pour une meilleure posture, adapt├⌐e pour la position assise",
+      "url_produit": "https://www.aliexpress.com/item/1005012201718962.html?skuId=12000057735403855&pdp_ext_f=%7B%22sku_id%22%3A%2212000057735403855%22%2C%22tabScene%22%3A%22wholesale%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/Sfc22acb952ee42c4ab801e59fe84de76L.jpg",
+      "prix_vente": 6.69,
+      "prix_original": 13.38,
+      "devise": "EUR",
+      "prix_formate": "6,69Γé¼",
+      "remise_pourcentage": 50.0,
+      "note": 1.0,
+      "taux_evaluation": 20.0,
+      "nb_commandes": 1,
+      "ids_categories": [
+        "18",
+        "100005371",
+        "100005588",
+        "100006067"
+      ],
+      "requete_origine": "ceinture dos double soutien",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:01:07.616652+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005012316795566",
+      "titre": "Ceinture de soutien lombaire pour soulager les douleurs du bas du dos - Ceinture de maintien dorsale pour femmes et hommes, soulage les douleurs lombaires, am├⌐liore la posture avec un confort optimal",
+      "url_produit": "https://www.aliexpress.com/item/1005012316795566.html?skuId=12000058093514510&pdp_ext_f=%7B%22sku_id%22%3A%2212000058093514510%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/S5424b83b02b94ba7874e93874271c64fw.jpg",
+      "prix_vente": 23.79,
+      "prix_original": 48.55,
+      "devise": "EUR",
+      "prix_formate": "23,79Γé¼",
+      "remise_pourcentage": 51.0,
+      "note": null,
+      "taux_evaluation": null,
+      "nb_commandes": 7,
+      "ids_categories": [
+        "18",
+        "100005371",
+        "100005588",
+        "100005605"
+      ],
+      "requete_origine": "ceinture dos double soutien",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:01:07.616652+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005012575219592",
+      "titre": "Ceinture de soutien dorsal r├⌐glable pour corriger la posture - Respirante, antid├⌐rapante, soutien ergonomique pour une meilleure posture, adapt├⌐e pour la position assise",
+      "url_produit": "https://www.aliexpress.com/item/1005012575219592.html?skuId=12000058736775195&pdp_ext_f=%7B%22sku_id%22%3A%2212000058736775195%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/S1c3d0739546c4e879eee482acc39d8e9M.jpg",
+      "prix_vente": 3.69,
+      "prix_original": 8.79,
+      "devise": "EUR",
+      "prix_formate": "3,69Γé¼",
+      "remise_pourcentage": 58.02,
+      "note": null,
+      "taux_evaluation": null,
+      "nb_commandes": 12,
+      "ids_categories": [
+        "18",
+        "100005371",
+        "100005588",
+        "100006067"
+      ],
+      "requete_origine": "ceinture dos double soutien",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:01:07.616652+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005008513820511",
+      "titre": "Supports pour le dos, correcteurs de Posture, ceinture r├⌐tracteur de vert├¿bre lombaire, civi├¿re de barre horizontale, disque lombaire, sangle de r├⌐├⌐ducation de la colonne vert├⌐brale",
+      "url_produit": "https://www.aliexpress.com/item/1005008513820511.html?skuId=12000045504998488&pdp_ext_f=%7B%22sku_id%22%3A%2212000045504998488%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/S16d3866e0646475cb1f7fc75dfc4712dN.jpg",
+      "prix_vente": 14.79,
+      "prix_original": 15.9,
+      "devise": "EUR",
+      "prix_formate": "14,79Γé¼",
+      "remise_pourcentage": 6.98,
+      "note": 4.7,
+      "taux_evaluation": 94.7,
+      "nb_commandes": 11,
+      "ids_categories": [
+        "66",
+        "200001355",
+        "200368146",
+        "200001427"
+      ],
+      "requete_origine": "ceinture dos double soutien",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:01:07.616652+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005006347412919",
+      "titre": "Attelle dorsale r├⌐glable pour hommes et femmes, ceinture de soutien lombaire dorsal, soutien de posture initi├⌐ pour am├⌐liorer la scoliose",
+      "url_produit": "https://www.aliexpress.com/item/1005006347412919.html?skuId=12000036844367754&pdp_ext_f=%7B%22sku_id%22%3A%2212000036844367754%22%2C%22tabScene%22%3A%22wholesale%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/S5874d130e7ba44e9b71cf24481105e97F.jpg",
+      "prix_vente": 6.49,
+      "prix_original": 20.28,
+      "devise": "EUR",
+      "prix_formate": "8,00Γé¼",
+      "remise_pourcentage": 68.0,
+      "note": 4.4,
+      "taux_evaluation": 87.8,
+      "nb_commandes": 2000,
+      "ids_categories": [
+        "66",
+        "200001355",
+        "200368146",
+        "200001427"
+      ],
+      "requete_origine": "ceinture dos double soutien",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:01:07.616652+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005012473005676",
+      "titre": "Correcteur de posture r├⌐glable, ceinture de soutien dorsal - Soutien ergonomique respirant et antid├⌐rapant pour une meilleure posture, adapt├⌐ ├á la position assise",
+      "url_produit": "https://www.aliexpress.com/item/1005012473005676.html?skuId=12000058466261007&pdp_ext_f=%7B%22sku_id%22%3A%2212000058466261007%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/Sb380f71a4c5a4357912207ffe58f1482D.jpg",
+      "prix_vente": 3.09,
+      "prix_original": 3.13,
+      "devise": "EUR",
+      "prix_formate": "3,09Γé¼",
+      "remise_pourcentage": 1.28,
+      "note": 4.3,
+      "taux_evaluation": 86.7,
+      "nb_commandes": 82,
+      "ids_categories": [
+        "18",
+        "100005371",
+        "100005588",
+        "100006067"
+      ],
+      "requete_origine": "ceinture dos double soutien",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:01:07.616652+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005007011440338",
+      "titre": "Soutien dorsal pour la posture des femmes et des hommes, redresseur d'├⌐paules, soutien dorsal complet r├⌐glable pour le haut et le bas du dos",
+      "url_produit": "https://www.aliexpress.com/item/1005007011440338.html?skuId=12000039076366526&pdp_ext_f=%7B%22sku_id%22%3A%2212000039076366526%22%2C%22tabScene%22%3A%22wholesale%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/S958a3c1703ab4eeeb2fb981b2bc232117.jpg",
+      "prix_vente": 8.59,
+      "prix_original": 8.76,
+      "devise": "EUR",
+      "prix_formate": "9,08Γé¼",
+      "remise_pourcentage": 1.94,
+      "note": 4.4,
+      "taux_evaluation": 87.8,
+      "nb_commandes": 2000,
+      "ids_categories": [
+        "66",
+        "200001355",
+        "200368146",
+        "200001427"
+      ],
+      "requete_origine": "ceinture dos double soutien",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:01:07.616652+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005009911232632",
+      "titre": "Ceinture de soutien du dos de sport avec 4 supports pour un levage lourd, s├⌐dentaire, soutien lombaire respirant pour hernie discale, sciatique",
+      "url_produit": "https://www.aliexpress.com/item/1005009911232632.html?skuId=12000050580668696&pdp_ext_f=%7B%22sku_id%22%3A%2212000050580668696%22%2C%22tabScene%22%3A%22wholesale%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/Sf19314c9ead24c3a9c8f4159884ad463N.jpg",
+      "prix_vente": 8.19,
+      "prix_original": 16.71,
+      "devise": "EUR",
+      "prix_formate": "8,19Γé¼",
+      "remise_pourcentage": 50.99,
+      "note": 4.8,
+      "taux_evaluation": 95.8,
+      "nb_commandes": 184,
+      "ids_categories": [
+        "18",
+        "100005371",
+        "100005588",
+        "100005605"
+      ],
+      "requete_origine": "ceinture dos double soutien",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:01:07.616652+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005009639851706",
+      "titre": "Orth├¿se dorsale pour soulager les douleurs lombaires, ceinture de soutien lombaire avec coussinet lombaire, conception ergonomique pour hernie discale, sciatique",
+      "url_produit": "https://www.aliexpress.com/item/1005009639851706.html?skuId=12000049724399370&pdp_ext_f=%7B%22sku_id%22%3A%2212000049724399370%22%2C%22tabScene%22%3A%22wholesale%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/S014f529f29224515b13a63c525c801a0G.jpg",
+      "prix_vente": 10.49,
+      "prix_original": 11.23,
+      "devise": "EUR",
+      "prix_formate": "11,49Γé¼",
+      "remise_pourcentage": 6.59,
+      "note": 4.6,
+      "taux_evaluation": 92.5,
+      "nb_commandes": 482,
+      "ids_categories": [
+        "66",
+        "200001355",
+        "200368146",
+        "200001427"
+      ],
+      "requete_origine": "ceinture dos double soutien",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:01:07.616652+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005012379280616",
+      "titre": "Ceinture de soutien lombaire SKDK respirante pour la gym, la protection lombaire, l'halt├⌐rophilie, le soulev├⌐ de terre, le squat, l'entra├«nement sportif",
+      "url_produit": "https://www.aliexpress.com/item/1005012379280616.html?skuId=12000058236730577&pdp_ext_f=%7B%22sku_id%22%3A%2212000058236730577%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/S00bbefbcb0054e11aea89a01e65c0c64e.jpg",
+      "prix_vente": 13.39,
+      "prix_original": 27.33,
+      "devise": "EUR",
+      "prix_formate": "13,39Γé¼",
+      "remise_pourcentage": 51.01,
+      "note": 5.0,
+      "taux_evaluation": 100.0,
+      "nb_commandes": 9,
+      "ids_categories": [
+        "18",
+        "100005371",
+        "2008"
+      ],
+      "requete_origine": "ceinture dos double soutien",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:01:07.616652+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005007003343439",
+      "titre": "Support dorsal pour le bas du dos, ceinture de soutien lombaire, hernie discale, atatique contrast├⌐e, scoliose, oto, hommes et femmes, 1 pi├¿ce",
+      "url_produit": "https://www.aliexpress.com/item/1005007003343439.html?skuId=12000039019031903&pdp_ext_f=%7B%22sku_id%22%3A%2212000039019031903%22%2C%22tabScene%22%3A%22wholesale%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/S320abb409f6c477190debad7aac47e26t.jpg",
+      "prix_vente": 15.39,
+      "prix_original": 15.74,
+      "devise": "EUR",
+      "prix_formate": "15,39Γé¼",
+      "remise_pourcentage": 2.22,
+      "note": 5.0,
+      "taux_evaluation": 100.0,
+      "nb_commandes": 1,
+      "ids_categories": [
+        "18",
+        "100005371",
+        "100005588",
+        "100005605"
+      ],
+      "requete_origine": "ceinture dos double soutien",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:01:07.616652+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005012133170067",
+      "titre": "1-3 pi├¿ces Correcteur de posture r├⌐glable, ceinture de soutien dorsal ΓÇô Respirant, antid├⌐rapant, soutien ergonomique pour une meilleure posture",
+      "url_produit": "https://www.aliexpress.com/item/1005012133170067.html?skuId=12000057598220510&pdp_ext_f=%7B%22sku_id%22%3A%2212000057598220510%22%2C%22tabScene%22%3A%22wholesale%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/S83b6793f510342dba86fd1a71b98946e3.jpg",
+      "prix_vente": 3.49,
+      "prix_original": 7.12,
+      "devise": "EUR",
+      "prix_formate": "3,49Γé¼",
+      "remise_pourcentage": 50.98,
+      "note": 5.0,
+      "taux_evaluation": 100.0,
+      "nb_commandes": 32,
+      "ids_categories": [
+        "18",
+        "100005371",
+        "100005588",
+        "100006067"
+      ],
+      "requete_origine": "ceinture dos double soutien",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:01:07.616652+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005009262267370",
+      "titre": "Orth├¿se dorsale pour soulager les douleurs lombaires, ceinture de soutien lombaire r├⌐glable, am├⌐liore la posture pendant les entra├«nements, la sciatique, les hernie discale",
+      "url_produit": "https://www.aliexpress.com/item/1005009262267370.html?skuId=12000048521385125&pdp_ext_f=%7B%22sku_id%22%3A%2212000048521385125%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/S6facfccdc0cc487ea3bbc8283e0ae990Q.jpg",
+      "prix_vente": 6.89,
+      "prix_original": 6.89,
+      "devise": "EUR",
+      "prix_formate": "6,89Γé¼",
+      "remise_pourcentage": 0.0,
+      "note": 4.4,
+      "taux_evaluation": 88.6,
+      "nb_commandes": 77,
+      "ids_categories": [
+        "66",
+        "200001355",
+        "200368146",
+        "200001427"
+      ],
+      "requete_origine": "ceinture dos double soutien",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:01:07.616652+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005009030920712",
+      "titre": "Ceinture de soutien lombaire robuste ΓÇô Orth├¿se dorsale r├⌐glable pour l'halt├⌐rophilie, le fitness et le sport ΓÇô Stabilisateur de taille avec bretelles",
+      "url_produit": "https://www.aliexpress.com/item/1005009030920712.html?skuId=12000047647110001&pdp_ext_f=%7B%22sku_id%22%3A%2212000047647110001%22%2C%22tabScene%22%3A%22wholesale%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/Hc9b0e48c51974bcbb870b0ff20185e90f.jpg",
+      "prix_vente": 11.69,
+      "prix_original": 11.93,
+      "devise": "EUR",
+      "prix_formate": "11,69Γé¼",
+      "remise_pourcentage": 2.01,
+      "note": 5.0,
+      "taux_evaluation": 100.0,
+      "nb_commandes": 1,
+      "ids_categories": [
+        "66",
+        "200001355",
+        "200368146",
+        "200001427"
+      ],
+      "requete_origine": "ceinture dos double soutien",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:01:07.616652+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005009833260802",
+      "titre": "Ceinture de Traction lombaire gonflable r├⌐glable, attelle de d├⌐compression d'air unisexe pour adultes, soulagement des maux de dos, correcteur de Posture, soutien de la colonne vert├⌐brale",
+      "url_produit": "https://www.aliexpress.com/item/1005009833260802.html?skuId=12000050310672642&pdp_ext_f=%7B%22sku_id%22%3A%2212000050310672642%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/S6faaf7005d864b0fb11f262146f4d039u.jpg",
+      "prix_vente": 14.69,
+      "prix_original": 15.92,
+      "devise": "EUR",
+      "prix_formate": "14,69Γé¼",
+      "remise_pourcentage": 7.73,
+      "note": 5.0,
+      "taux_evaluation": 100.0,
+      "nb_commandes": 20,
+      "ids_categories": [
+        "18",
+        "100005371",
+        "100005588",
+        "100005605"
+      ],
+      "requete_origine": "ceinture lombaire traction m├⌐dicale",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:01:28.922213+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005011672481949",
+      "titre": "Ceinture de traction cervicale m├⌐dicale, dispositif d'├⌐tirement du cou et cadre de traction avec support m├⌐tallique et crochet sp├⌐cial",
+      "url_produit": "https://www.aliexpress.com/item/1005011672481949.html?skuId=12000056209942620&pdp_ext_f=%7B%22sku_id%22%3A%2212000056209942620%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/S41dfb6c061fc4e13912d698ea7c7d449z.jpg",
+      "prix_vente": 2.17,
+      "prix_original": 2.17,
+      "devise": "EUR",
+      "prix_formate": "2,17Γé¼",
+      "remise_pourcentage": 0.0,
+      "note": 5.0,
+      "taux_evaluation": 100.0,
+      "nb_commandes": 10,
+      "ids_categories": [
+        "66",
+        "200001355",
+        "200001362",
+        "200369157"
+      ],
+      "requete_origine": "ceinture lombaire traction m├⌐dicale",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:01:28.922213+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005010547279958",
+      "titre": "Dispositif de d├⌐compression lombaire, tracteur ├á courroie, Traction des disques lombaires, traitement ├á domicile de l'hernie discale lombaire",
+      "url_produit": "https://www.aliexpress.com/item/1005010547279958.html?skuId=12000052776112035&pdp_ext_f=%7B%22sku_id%22%3A%2212000052776112035%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/S3344d5f7da154d04b7bf28442840f8d92.jpg",
+      "prix_vente": 136.39,
+      "prix_original": 170.49,
+      "devise": "EUR",
+      "prix_formate": "136,39Γé¼",
+      "remise_pourcentage": 20.0,
+      "note": 4.8,
+      "taux_evaluation": 95.0,
+      "nb_commandes": 77,
+      "ids_categories": [
+        "66",
+        "200001355",
+        "200368146",
+        "200001427"
+      ],
+      "requete_origine": "ceinture lombaire traction m├⌐dicale",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:01:28.922213+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005010151713339",
+      "titre": "Dispositif de d├⌐compression lombaire, tracteur ├á courroie, Traction des disques lombaires, traitement ├á domicile de l'hernie discale lombaire",
+      "url_produit": "https://www.aliexpress.com/item/1005010151713339.html?skuId=12000051332029072&pdp_ext_f=%7B%22sku_id%22%3A%2212000051332029072%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/Sb6e4c0981bba4445b46aed4edf42c6ccd.jpg",
+      "prix_vente": 119.39,
+      "prix_original": 198.98,
+      "devise": "EUR",
+      "prix_formate": "119,39Γé¼",
+      "remise_pourcentage": 40.0,
+      "note": 5.0,
+      "taux_evaluation": 100.0,
+      "nb_commandes": 44,
+      "ids_categories": [
+        "66",
+        "200001355",
+        "200368146",
+        "200001427"
+      ],
+      "requete_origine": "ceinture lombaire traction m├⌐dicale",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:01:28.922213+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005004909706305",
+      "titre": "Dispositif de d├⌐compression lombaire, tracteur ├á ceinture, traction du disque lombaire, traitement ├á domicile de la hernie discale lombaire",
+      "url_produit": "https://www.aliexpress.com/item/1005004909706305.html?skuId=12000030985074512&pdp_ext_f=%7B%22sku_id%22%3A%2212000030985074512%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/S0dfc3b3ff4f04dbc89f789284a59b05ee.jpg",
+      "prix_vente": 144.39,
+      "prix_original": 144.45,
+      "devise": "EUR",
+      "prix_formate": "144,39Γé¼",
+      "remise_pourcentage": 0.04,
+      "note": 0.0,
+      "taux_evaluation": 0.0,
+      "nb_commandes": 5,
+      "ids_categories": [
+        "66",
+        "200001355",
+        "200368146",
+        "200001427"
+      ],
+      "requete_origine": "ceinture lombaire traction m├⌐dicale",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:01:28.922213+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005012050204749",
+      "titre": "Masseur et ├⌐tireur lombaire, soulagement des douleurs vert├⌐brales, relaxant pour le bas du dos, traction et correction de la posture",
+      "url_produit": "https://www.aliexpress.com/item/1005012050204749.html?skuId=12000057368423193&pdp_ext_f=%7B%22sku_id%22%3A%2212000057368423193%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/S5eeae7b35c67446b977d2641fe47c269Q.jpg",
+      "prix_vente": 6.19,
+      "prix_original": 6.22,
+      "devise": "EUR",
+      "prix_formate": "5,89Γé¼",
+      "remise_pourcentage": 0.48,
+      "note": 4.1,
+      "taux_evaluation": 81.8,
+      "nb_commandes": 2000,
+      "ids_categories": [
+        "18",
+        "100005371",
+        "201384511",
+        "200001943"
+      ],
+      "requete_origine": "ceinture lombaire traction m├⌐dicale",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:01:28.922213+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005006175909742",
+      "titre": "Ceinture de soutien lombaire r├⌐glable, Double traction vers le dos, attelle orthop├⌐dique m├⌐dicale respirante, d├⌐compression de la colonne vert├⌐brale, soulagement de la douleur de la tra├«ne de la taille",
+      "url_produit": "https://www.aliexpress.com/item/1005006175909742.html?skuId=12000036137510230&pdp_ext_f=%7B%22sku_id%22%3A%2212000036137510230%22%2C%22tabScene%22%3A%22wholesale%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/Sb68edf41c8024f68ad345c4ee7b287edF.jpg",
+      "prix_vente": 10.99,
+      "prix_original": 11.17,
+      "devise": "EUR",
+      "prix_formate": "10,99Γé¼",
+      "remise_pourcentage": 1.61,
+      "note": 4.8,
+      "taux_evaluation": 95.5,
+      "nb_commandes": 127,
+      "ids_categories": [
+        "18",
+        "100005371",
+        "100005588",
+        "100005605"
+      ],
+      "requete_origine": "ceinture lombaire traction m├⌐dicale",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:01:28.922213+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005012666828206",
+      "titre": "Ceinture de soutien lombaire ├á traction pneumatique pour soulager les douleurs dorsales et d├⌐compresser la colonne vert├⌐brale",
+      "url_produit": "https://www.aliexpress.com/item/1005012666828206.html?skuId=12000059025190530&pdp_ext_f=%7B%22sku_id%22%3A%2212000059025190530%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/H0faf4facf7f240e2864712ece7944374c.jpg",
+      "prix_vente": 28.79,
+      "prix_original": 62.59,
+      "devise": "EUR",
+      "prix_formate": "28,79Γé¼",
+      "remise_pourcentage": 54.0,
+      "note": null,
+      "taux_evaluation": null,
+      "nb_commandes": null,
+      "ids_categories": [
+        "66",
+        "200001355",
+        "200368146",
+        "200001427"
+      ],
+      "requete_origine": "ceinture lombaire traction m├⌐dicale",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:01:28.922213+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005007556574833",
+      "titre": "Ceinture de soutien lombaire gonflable, attelle de Traction a├⌐rienne de la colonne lombaire, protection de lavage, soins de sant├⌐, ceinture arri├¿re de d├⌐compression pour hommes et femmes",
+      "url_produit": "https://www.aliexpress.com/item/1005007556574833.html?skuId=12000041281750487&pdp_ext_f=%7B%22sku_id%22%3A%2212000041281750487%22%2C%22tabScene%22%3A%22wholesale%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/Sc379e4ae7d3d41588f122e4db08c73dbi.jpg",
+      "prix_vente": 32.99,
+      "prix_original": 99.91,
+      "devise": "EUR",
+      "prix_formate": "32,79Γé¼",
+      "remise_pourcentage": 66.98,
+      "note": 4.7,
+      "taux_evaluation": 93.3,
+      "nb_commandes": 24,
+      "ids_categories": [
+        "66",
+        "200001355",
+        "200368146",
+        "200001427"
+      ],
+      "requete_origine": "ceinture lombaire traction m├⌐dicale",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:01:28.922213+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005003742306009",
+      "titre": "Dispositif portatif de traction de hernie discale lombaire, ration de colonne vert├⌐brale ├á la maison, massage avec la ceinture",
+      "url_produit": "https://www.aliexpress.com/item/1005003742306009.html?skuId=12000027006076370&pdp_ext_f=%7B%22sku_id%22%3A%2212000027006076370%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/H07341c96b0cd4aa2bee8f01ca9553393T.jpg",
+      "prix_vente": 70.99,
+      "prix_original": 88.74,
+      "devise": "EUR",
+      "prix_formate": "70,99Γé¼",
+      "remise_pourcentage": 20.0,
+      "note": 5.0,
+      "taux_evaluation": 100.0,
+      "nb_commandes": 6,
+      "ids_categories": [
+        "18",
+        "100005371",
+        "200001941",
+        "200001970"
+      ],
+      "requete_origine": "ceinture lombaire traction m├⌐dicale",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:01:28.922213+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005005644291808",
+      "titre": "Ceinture de soutien lombaire de d├⌐compression du dos, attelle de Traction a├⌐rienne pour la taille, soulagement de la colonne vert├⌐brale du dos, masseur de lib├⌐ration de la douleur",
+      "url_produit": "https://www.aliexpress.com/item/1005005644291808.html?skuId=12000033862626738&pdp_ext_f=%7B%22sku_id%22%3A%2212000033862626738%22%2C%22tabScene%22%3A%22wholesale%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/H8b42594bf3c544b6ac8e1f47c7ce2507J.jpg",
+      "prix_vente": 33.79,
+      "prix_original": 33.79,
+      "devise": "EUR",
+      "prix_formate": "33,79Γé¼",
+      "remise_pourcentage": 0.0,
+      "note": 4.7,
+      "taux_evaluation": 94.3,
+      "nb_commandes": 408,
+      "ids_categories": [
+        "66",
+        "200001355",
+        "200368146",
+        "200001427"
+      ],
+      "requete_origine": "ceinture dorsale double compression",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:01:33.867116+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005011824813151",
+      "titre": "Ceinture lombaire ajustable avec syst├¿me ├á poulie - Soutien lombaire pour hommes et femmes - Compression pour soulager les douleurs lombaires",
+      "url_produit": "https://www.aliexpress.com/item/1005011824813151.html?skuId=12000056702723909&pdp_ext_f=%7B%22sku_id%22%3A%2212000056702723909%22%2C%22tabScene%22%3A%22wholesale%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/S44dfd6d59000493faeb75db8973847ceB.jpg",
+      "prix_vente": 7.59,
+      "prix_original": 7.59,
+      "devise": "EUR",
+      "prix_formate": "7,59Γé¼",
+      "remise_pourcentage": 0.0,
+      "note": 4.6,
+      "taux_evaluation": 92.9,
+      "nb_commandes": 84,
+      "ids_categories": [
+        "18",
+        "100005371",
+        "100005588",
+        "100005605"
+      ],
+      "requete_origine": "ceinture dorsale double compression",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:01:33.867116+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005007476551723",
+      "titre": "Ceinture de soutien lombaire de d├⌐compression du dos, attelle de Traction a├⌐rienne pour la taille, soulagement de la colonne vert├⌐brale du dos, masseur de lib├⌐ration de la douleur",
+      "url_produit": "https://www.aliexpress.com/item/1005007476551723.html?skuId=12000040909863369&pdp_ext_f=%7B%22sku_id%22%3A%2212000040909863369%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/H8b42594bf3c544b6ac8e1f47c7ce2507J.jpg",
+      "prix_vente": 32.59,
+      "prix_original": 67.9,
+      "devise": "EUR",
+      "prix_formate": "32,59Γé¼",
+      "remise_pourcentage": 52.0,
+      "note": 4.9,
+      "taux_evaluation": 98.0,
+      "nb_commandes": 413,
+      "ids_categories": [
+        "66",
+        "200001355",
+        "200368146",
+        "200001427"
+      ],
+      "requete_origine": "ceinture dorsale double compression",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:01:33.867116+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005006869634549",
+      "titre": "Ceinture dorsale gonflable ├á d├⌐compression d'air, traction de la colonne lombaire ├á la taille, soins de sant├⌐, posture des instituts oto, physio, soutien de l'orth├¿se dorsale",
+      "url_produit": "https://www.aliexpress.com/item/1005006869634549.html?skuId=12000059067645061&pdp_ext_f=%7B%22sku_id%22%3A%2212000059067645061%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/S07613c2034f94d47874b06bf337830e1x.jpg",
+      "prix_vente": 17.19,
+      "prix_original": 27.73,
+      "devise": "EUR",
+      "prix_formate": "15,59Γé¼",
+      "remise_pourcentage": 38.01,
+      "note": 4.8,
+      "taux_evaluation": 95.0,
+      "nb_commandes": 35,
+      "ids_categories": [
+        "66",
+        "200001355",
+        "200368146",
+        "200001427"
+      ],
+      "requete_origine": "ceinture dorsale double compression",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:01:33.867116+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005009347376876",
+      "titre": "Sangle de soutien d'├⌐paule r├⌐glable, Double Bandage, Compression crois├⌐e, attelle de protection, sangle de Correction de Posture",
+      "url_produit": "https://www.aliexpress.com/item/1005009347376876.html?skuId=12000048826860239&pdp_ext_f=%7B%22sku_id%22%3A%2212000048826860239%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/S36ebbace2d1c427eba77a910f4cc512bG.jpg",
+      "prix_vente": 10.79,
+      "prix_original": 10.79,
+      "devise": "EUR",
+      "prix_formate": "10,79Γé¼",
+      "remise_pourcentage": 0.0,
+      "note": 4.5,
+      "taux_evaluation": 90.0,
+      "nb_commandes": 33,
+      "ids_categories": [
+        "66",
+        "200001355",
+        "200368146",
+        "200001427"
+      ],
+      "requete_origine": "ceinture dorsale double compression",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:01:33.867116+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005008653657379",
+      "titre": "Ceinture de soutien lombaire de d├⌐compression, attelle de Traction a├⌐rienne pour la taille, soulagement de la colonne vert├⌐brale du dos, masseur de lib├⌐ration de la douleur, unisexe",
+      "url_produit": "https://www.aliexpress.com/item/1005008653657379.html?skuId=12000046108567115&pdp_ext_f=%7B%22sku_id%22%3A%2212000046108567115%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/Sffef6322c034410ab5034b36d3902f8ed.jpg",
+      "prix_vente": 24.79,
+      "prix_original": 49.58,
+      "devise": "EUR",
+      "prix_formate": "24,79Γé¼",
+      "remise_pourcentage": 50.0,
+      "note": 4.5,
+      "taux_evaluation": 89.1,
+      "nb_commandes": 35,
+      "ids_categories": [
+        "66",
+        "200001355",
+        "200368146",
+        "200001427"
+      ],
+      "requete_origine": "ceinture dorsale double compression",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:01:33.867116+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005004590659894",
+      "titre": "Ceinture de Compression sacro-iliaque de hanche, ceinture de Correction de Posture pelvienne antid├⌐rapante pour les douleurs du bas du dos",
+      "url_produit": "https://www.aliexpress.com/item/1005004590659894.html?skuId=12000029747646646&pdp_ext_f=%7B%22sku_id%22%3A%2212000029747646646%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/S3814796604984a99a6dfc34feb89a8d9u.jpg",
+      "prix_vente": 15.99,
+      "prix_original": 16.58,
+      "devise": "EUR",
+      "prix_formate": "15,99Γé¼",
+      "remise_pourcentage": 3.56,
+      "note": 5.0,
+      "taux_evaluation": 100.0,
+      "nb_commandes": 17,
+      "ids_categories": [
+        "66",
+        "200001355",
+        "200368146",
+        "200001427"
+      ],
+      "requete_origine": "ceinture dorsale double compression",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:01:38.903192+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005008765949515",
+      "titre": "Sangle de soutien d'├⌐paule r├⌐glable, Double bandage, Compression crois├⌐e, attelle de protection, sangle de Correction de Posture",
+      "url_produit": "https://www.aliexpress.com/item/1005008765949515.html?skuId=12000046575930536&pdp_ext_f=%7B%22sku_id%22%3A%2212000046575930536%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/S7cdd4b1f7e47428e85fb52dc4c3842baT.jpg",
+      "prix_vente": 10.19,
+      "prix_original": 10.19,
+      "devise": "EUR",
+      "prix_formate": "10,19Γé¼",
+      "remise_pourcentage": 0.0,
+      "note": 4.3,
+      "taux_evaluation": 85.4,
+      "nb_commandes": 230,
+      "ids_categories": [
+        "66",
+        "200001355",
+        "200368146",
+        "200001427"
+      ],
+      "requete_origine": "ceinture dorsale double compression",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:01:38.903192+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005009149156082",
+      "titre": "Sangle de soutien d'├⌐paule r├⌐glable, Double Bandage, Compression crois├⌐e, attelle de protection, sangle de Correction de Posture",
+      "url_produit": "https://www.aliexpress.com/item/1005009149156082.html?skuId=12000048093009251&pdp_ext_f=%7B%22sku_id%22%3A%2212000048093009251%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/Scd0a6cb074e64b4ab3fb134830d52732T.jpg",
+      "prix_vente": 10.99,
+      "prix_original": 10.99,
+      "devise": "EUR",
+      "prix_formate": "10,99Γé¼",
+      "remise_pourcentage": 0.0,
+      "note": null,
+      "taux_evaluation": null,
+      "nb_commandes": 10,
+      "ids_categories": [
+        "66",
+        "200001355",
+        "200368146",
+        "200001427"
+      ],
+      "requete_origine": "ceinture dorsale double compression",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:01:38.903192+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005012353800311",
+      "titre": "Ceinture de Soutien Lombaire R├⌐glable Double Traction, Orth├¿se Dorsale, Corset de Taille Orthop├⌐dique, D├⌐compression de la Colonne Vert├⌐brale, Soulagement de la Douleur pour Hommes et Femmes, Id├⌐ale pour la Gym",
+      "url_produit": "https://www.aliexpress.com/item/1005012353800311.html?skuId=12000058171188074&pdp_ext_f=%7B%22sku_id%22%3A%2212000058171188074%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/S415aee79fd994ed3bee186681a469831T.jpg",
+      "prix_vente": 5.89,
+      "prix_original": 6.08,
+      "devise": "EUR",
+      "prix_formate": "5,69Γé¼",
+      "remise_pourcentage": 3.13,
+      "note": 4.3,
+      "taux_evaluation": 85.0,
+      "nb_commandes": 53,
+      "ids_categories": [
+        "66",
+        "200001355",
+        "200368146",
+        "200001427"
+      ],
+      "requete_origine": "ceinture dorsale double compression",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:01:38.903192+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005009554001419",
+      "titre": "Ceinture de s├⌐curit├⌐ de travail ├á haute altitude pour tout le corps, ceinture de s├⌐curit├⌐ ├á Double dos pour ├⌐lectricien, ceinture de s├⌐curit├⌐ tampon ├á trois points",
+      "url_produit": "https://www.aliexpress.com/item/1005009554001419.html?skuId=12000049447398150&pdp_ext_f=%7B%22sku_id%22%3A%2212000049447398150%22%2C%22tabScene%22%3A%22wholesale%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/Sfa23bbb809324c7498771b410a1e3bfdh.jpg",
+      "prix_vente": 37.79,
+      "prix_original": 80.4,
+      "devise": "EUR",
+      "prix_formate": "37,79Γé¼",
+      "remise_pourcentage": 53.0,
+      "note": 4.3,
+      "taux_evaluation": 86.7,
+      "nb_commandes": 14,
+      "ids_categories": [
+        "30",
+        "202245401",
+        "3007",
+        "300704"
+      ],
+      "requete_origine": "ceinture dorsale double compression",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:01:38.903192+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005008758791884",
+      "titre": "Ceinture de d├⌐compression du dos, masseur de dos, soulagement des douleurs dorsales, ceinture de Traction gonflable lombaire de la colonne vert├⌐brale, ceinture de soutien de la taille ├á Air",
+      "url_produit": "https://www.aliexpress.com/item/1005008758791884.html?skuId=12000046548630468&pdp_ext_f=%7B%22sku_id%22%3A%2212000046548630468%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/S317fe0a3b26148ff8efd64a59502affeS.jpg",
+      "prix_vente": 36.19,
+      "prix_original": 51.7,
+      "devise": "EUR",
+      "prix_formate": "36,19Γé¼",
+      "remise_pourcentage": 30.0,
+      "note": 4.4,
+      "taux_evaluation": 88.6,
+      "nb_commandes": 46,
+      "ids_categories": [
+        "66",
+        "200001355",
+        "200368146",
+        "200001427"
+      ],
+      "requete_origine": "ceinture dorsale double compression",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:01:38.903192+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005012375557283",
+      "titre": "Ceinture de soutien lombaire respirante en maille, attelle dorsale r├⌐glable, soutien ├⌐lastique de la colonne vert├⌐brale, soulagement des douleurs lombaires pour le bureau",
+      "url_produit": "https://www.aliexpress.com/item/1005012375557283.html?skuId=12000058236514314&pdp_ext_f=%7B%22sku_id%22%3A%2212000058236514314%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/S6a7e606b6233488292b8915dd3aed24eP.jpg",
+      "prix_vente": 7.39,
+      "prix_original": 7.53,
+      "devise": "EUR",
+      "prix_formate": "7,39Γé¼",
+      "remise_pourcentage": 1.86,
+      "note": 5.0,
+      "taux_evaluation": 100.0,
+      "nb_commandes": 9,
+      "ids_categories": [
+        "18",
+        "100005371",
+        "100005588",
+        "100005605"
+      ],
+      "requete_origine": "ceinture dorsale double compression",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:01:38.903192+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005001343665707",
+      "titre": "Gonfler lombaire d├⌐compression taille ceinture colonne vert├⌐brale Air Traction soins de sant├⌐ Physio dos soutien orth├¿se colonne vert├⌐brale dos Posture Correction",
+      "url_produit": "https://www.aliexpress.com/item/1005001343665707.html?skuId=12000057754773645&pdp_ext_f=%7B%22sku_id%22%3A%2212000057754773645%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/S53a369a35bb94b718c07d7b5f2632aacH.jpg",
+      "prix_vente": 31.39,
+      "prix_original": 108.24,
+      "devise": "EUR",
+      "prix_formate": "31,39Γé¼",
+      "remise_pourcentage": 71.0,
+      "note": 4.5,
+      "taux_evaluation": 90.0,
+      "nb_commandes": 8,
+      "ids_categories": [
+        "66",
+        "200001355",
+        "200368146",
+        "200001427"
+      ],
+      "requete_origine": "ceinture dorsale double compression",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:01:38.903192+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005009818722786",
+      "titre": "Ceinture de soutien lombaire, Compression de la taille, maille respirante, attelle pour le bas du dos, ├⌐lastique r├⌐glable, soulagement de la douleur, soutien de la colonne vert├⌐brale",
+      "url_produit": "https://www.aliexpress.com/item/1005009818722786.html?skuId=12000050268690975&pdp_ext_f=%7B%22sku_id%22%3A%2212000050268690975%22%2C%22tabScene%22%3A%22wholesale%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/Sabf59aa9960e48899263de10b9a9b4aea.jpg",
+      "prix_vente": 5.39,
+      "prix_original": 5.53,
+      "devise": "EUR",
+      "prix_formate": "5,39Γé¼",
+      "remise_pourcentage": 2.53,
+      "note": 4.6,
+      "taux_evaluation": 92.9,
+      "nb_commandes": 600,
+      "ids_categories": [
+        "18",
+        "100005371",
+        "100005588",
+        "100005605"
+      ],
+      "requete_origine": "ceinture dorsale double compression",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:01:38.903192+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005008505320005",
+      "titre": "Ceinture arri├¿re Anti-bossu, ceinture de Correction de Posture, ├⌐lastique pour le sport, la course, assise, Posture debout, pour adultes et enfants",
+      "url_produit": "https://www.aliexpress.com/item/1005008505320005.html?skuId=12000045469932613&pdp_ext_f=%7B%22sku_id%22%3A%2212000045469932613%22%2C%22tabScene%22%3A%22wholesale%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/S09bdb8602b68474296ba3103c454b13f0.jpg",
+      "prix_vente": 3.79,
+      "prix_original": 3.88,
+      "devise": "EUR",
+      "prix_formate": "3,79Γé¼",
+      "remise_pourcentage": 2.32,
+      "note": 4.8,
+      "taux_evaluation": 96.0,
+      "nb_commandes": 84,
+      "ids_categories": [
+        "66",
+        "200001355",
+        "200368146",
+        "200001427"
+      ],
+      "requete_origine": "ceinture dorsale double compression",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:01:38.903192+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005009882184911",
+      "titre": "652d courroie hanche sacro-iliaque r├⌐glable dans le bas du",
+      "url_produit": "https://www.aliexpress.com/item/1005009882184911.html?skuId=12000050466779640&pdp_ext_f=%7B%22sku_id%22%3A%2212000050466779640%22%2C%22tabScene%22%3A%22wholesale%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/S63997c141f49434ebf77cd1a9634f05fF.jpg",
+      "prix_vente": 2.65,
+      "prix_original": 2.65,
+      "devise": "EUR",
+      "prix_formate": "2,65Γé¼",
+      "remise_pourcentage": 0.0,
+      "note": null,
+      "taux_evaluation": null,
+      "nb_commandes": 1,
+      "ids_categories": [
+        "18",
+        "100005371",
+        "100005588",
+        "100005605"
+      ],
+      "requete_origine": "ceinture dorsale double compression",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:01:38.903192+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005007463159277",
+      "titre": "Attelle dorsale r├⌐glable pour hommes et femmes, ceinture initi├⌐e ├á la scoliose, ration de posture, compression du haut du dos, instituts oto",
+      "url_produit": "https://www.aliexpress.com/item/1005007463159277.html?skuId=12000040857454629&pdp_ext_f=%7B%22sku_id%22%3A%2212000040857454629%22%2C%22tabScene%22%3A%22wholesale%22%7D?appkey=540792",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/Se17fca3039e74c3dab48d066443d02e9b.jpg",
+      "prix_vente": 5.59,
+      "prix_original": 5.62,
+      "devise": "EUR",
+      "prix_formate": "5,59Γé¼",
+      "remise_pourcentage": 0.53,
+      "note": 5.0,
+      "taux_evaluation": 100.0,
+      "nb_commandes": 15,
+      "ids_categories": [
+        "18",
+        "100005371",
+        "100005588",
+        "100006067"
+      ],
+      "requete_origine": "ceinture dorsale double compression",
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:01:38.903192+00:00",
+        "methode_api": "recherche",
+        "pays_livraison_confirme": "FR"
+      }
+    }
+  ],
+  "produits_detailles": [
+    {
+      "item_id": "1005006697527976",
+      "titre": "Ceinture de Correction de Posture du dos, pr├⌐vention des bosses, Correction de la Posture assise, unisexe, respirant, fa├ºonnage du corps",
+      "nb_ventes": null,
+      "note_moyenne": 4.2,
+      "nb_evaluations": 5591,
+      "statut_produit": "onSelling",
+      "delai_livraison_jours": 7,
+      "skus": [
+        {
+          "sku_id": "12000038036616612",
+          "attributs_sku": "14:193#black M",
+          "attributs_lisibles": {
+            "Couleur": "noir"
+          },
+          "prix_base": 5.6,
+          "prix_vente": 2.69,
+          "devise": "EUR",
+          "remise_pourcentage": 51.96,
+          "stock_disponible": 74
+        },
+        {
+          "sku_id": "12000045464426970",
+          "attributs_sku": "14:200211869#black L",
+          "attributs_lisibles": {
+            "Couleur": "Rose rouge"
+          },
+          "prix_base": 6.65,
+          "prix_vente": 3.19,
+          "devise": "EUR",
+          "remise_pourcentage": 52.03,
+          "stock_disponible": 60
+        },
+        {
+          "sku_id": "12000045464426971",
+          "attributs_sku": "14:201441572#black XL",
+          "attributs_lisibles": {
+            "Couleur": "Transparent"
+          },
+          "prix_base": 6.79,
+          "prix_vente": 3.19,
+          "devise": "EUR",
+          "remise_pourcentage": 53.02,
+          "stock_disponible": 30
+        }
+      ],
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:01:40.899844+00:00",
+        "methode_api": "detail",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005008784423024",
+      "titre": "1 attelle pour le bas du dos pour soulager la douleur ΓÇô Ceinture de soutien lombaire r├⌐glable pour sciatique, respirante et stabilisation avec 4 supports en acier",
+      "nb_ventes": null,
+      "note_moyenne": 4.6,
+      "nb_evaluations": 1066,
+      "statut_produit": "onSelling",
+      "delai_livraison_jours": 7,
+      "skus": [
+        {
+          "sku_id": "12000046652898220",
+          "attributs_sku": "5:100014065;14:366#Gray-1PCS",
+          "attributs_lisibles": {
+            "Couleur": "Jaune",
+            "Taille": "XL"
+          },
+          "prix_base": 13.38,
+          "prix_vente": 6.69,
+          "devise": "EUR",
+          "remise_pourcentage": 50.0,
+          "stock_disponible": 14
+        },
+        {
+          "sku_id": "12000046652898221",
+          "attributs_sku": "5:361386;14:366#Gray-1PCS",
+          "attributs_lisibles": {
+            "Couleur": "Jaune",
+            "Taille": "M"
+          },
+          "prix_base": 11.98,
+          "prix_vente": 5.99,
+          "devise": "EUR",
+          "remise_pourcentage": 50.0,
+          "stock_disponible": 4
+        },
+        {
+          "sku_id": "12000046652898222",
+          "attributs_sku": "5:361385;14:366#Gray-1PCS",
+          "attributs_lisibles": {
+            "Couleur": "Jaune",
+            "Taille": "L'"
+          },
+          "prix_base": 12.58,
+          "prix_vente": 6.29,
+          "devise": "EUR",
+          "remise_pourcentage": 50.0,
+          "stock_disponible": 6
+        },
+        {
+          "sku_id": "12000046652898223",
+          "attributs_sku": "5:100014064;14:366#Gray-1PCS",
+          "attributs_lisibles": {
+            "Couleur": "Jaune",
+            "Taille": "S"
+          },
+          "prix_base": 11.78,
+          "prix_vente": 5.89,
+          "devise": "EUR",
+          "remise_pourcentage": 50.0,
+          "stock_disponible": 2968
+        },
+        {
+          "sku_id": "12000046652898224",
+          "attributs_sku": "5:100014065;14:29#Black-1PCS",
+          "attributs_lisibles": {
+            "Couleur": "BLANC",
+            "Taille": "XL"
+          },
+          "prix_base": 13.18,
+          "prix_vente": 6.59,
+          "devise": "EUR",
+          "remise_pourcentage": 50.0,
+          "stock_disponible": 3
+        },
+        {
+          "sku_id": "12000046652898225",
+          "attributs_sku": "5:361386;14:29#Black-1PCS",
+          "attributs_lisibles": {
+            "Couleur": "BLANC",
+            "Taille": "M"
+          },
+          "prix_base": 12.38,
+          "prix_vente": 6.19,
+          "devise": "EUR",
+          "remise_pourcentage": 50.0,
+          "stock_disponible": 2
+        },
+        {
+          "sku_id": "12000046652898226",
+          "attributs_sku": "5:361385;14:29#Black-1PCS",
+          "attributs_lisibles": {
+            "Couleur": "BLANC",
+            "Taille": "L'"
+          },
+          "prix_base": 12.78,
+          "prix_vente": 6.39,
+          "devise": "EUR",
+          "remise_pourcentage": 50.0,
+          "stock_disponible": 3
+        },
+        {
+          "sku_id": "12000046652898227",
+          "attributs_sku": "5:100014064;14:29#Black-1PCS",
+          "attributs_lisibles": {
+            "Couleur": "BLANC",
+            "Taille": "S"
+          },
+          "prix_base": 11.98,
+          "prix_vente": 5.99,
+          "devise": "EUR",
+          "remise_pourcentage": 50.0,
+          "stock_disponible": 2
+        }
+      ],
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:01:43.398697+00:00",
+        "methode_api": "detail",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005010755199507",
+      "titre": "1 Ceinture de maintien lombaire renforc├⌐e, correcteur de posture, gilet r├⌐glable, sangle de soutien dorsal, attelle de colonne vert├⌐brale, ├⌐tireur de cou, entra├«neur",
+      "nb_ventes": null,
+      "note_moyenne": 4.2,
+      "nb_evaluations": 421,
+      "statut_produit": "onSelling",
+      "delai_livraison_jours": 7,
+      "skus": [
+        {
+          "sku_id": "12000053405539331",
+          "attributs_sku": "5:361385#XXXL;14:29#Black",
+          "attributs_lisibles": {
+            "Couleur": "BLANC",
+            "Taille": "L'"
+          },
+          "prix_base": 12.48,
+          "prix_vente": 5.99,
+          "devise": "EUR",
+          "remise_pourcentage": 52.0,
+          "stock_disponible": 3
+        },
+        {
+          "sku_id": "12000053405539330",
+          "attributs_sku": "5:4182#XXL;14:29#Black",
+          "attributs_lisibles": {
+            "Couleur": "BLANC",
+            "Taille": "XXL"
+          },
+          "prix_base": 12.96,
+          "prix_vente": 6.09,
+          "devise": "EUR",
+          "remise_pourcentage": 53.01,
+          "stock_disponible": 8
+        },
+        {
+          "sku_id": "12000053405539329",
+          "attributs_sku": "5:361386#XL;14:29#Black",
+          "attributs_lisibles": {
+            "Couleur": "BLANC",
+            "Taille": "M"
+          },
+          "prix_base": 12.32,
+          "prix_vente": 5.79,
+          "devise": "EUR",
+          "remise_pourcentage": 53.0,
+          "stock_disponible": 10
+        },
+        {
+          "sku_id": "12000053405539328",
+          "attributs_sku": "5:100014064#L;14:29#Black",
+          "attributs_lisibles": {
+            "Couleur": "BLANC",
+            "Taille": "S"
+          },
+          "prix_base": 11.47,
+          "prix_vente": 5.39,
+          "devise": "EUR",
+          "remise_pourcentage": 53.01,
+          "stock_disponible": 9
+        },
+        {
+          "sku_id": "12000053405539327",
+          "attributs_sku": "5:100014066#M;14:29#Black",
+          "attributs_lisibles": {
+            "Couleur": "BLANC",
+            "Taille": "XS (├⌐quipement de secours de s├⌐curit├⌐)"
+          },
+          "prix_base": 11.85,
+          "prix_vente": 5.69,
+          "devise": "EUR",
+          "remise_pourcentage": 51.98,
+          "stock_disponible": 24
+        },
+        {
+          "sku_id": "12000053405539326",
+          "attributs_sku": "5:4181#S;14:29#Black",
+          "attributs_lisibles": {
+            "Couleur": "BLANC",
+            "Taille": "XXS"
+          },
+          "prix_base": 11.64,
+          "prix_vente": 5.59,
+          "devise": "EUR",
+          "remise_pourcentage": 51.98,
+          "stock_disponible": 1
+        }
+      ],
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:01:45.837077+00:00",
+        "methode_api": "detail",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005008098602910",
+      "titre": "Orth├¿se dorsale pour douleurs lombaires, sciatique, hernie discale, scoliose, ceinture de soutien du dos avec coussinet souple, soutien lombaire l├⌐ger",
+      "nb_ventes": null,
+      "note_moyenne": 4.8,
+      "nb_evaluations": 1647,
+      "statut_produit": "onSelling",
+      "delai_livraison_jours": 7,
+      "skus": [
+        {
+          "sku_id": "12000044055287271",
+          "attributs_sku": "491:200000314#3XL",
+          "attributs_lisibles": {
+            "Taille": "Grand"
+          },
+          "prix_base": 50.83,
+          "prix_vente": 17.79,
+          "devise": "EUR",
+          "remise_pourcentage": 65.0,
+          "stock_disponible": 44996
+        },
+        {
+          "sku_id": "12000044055287270",
+          "attributs_sku": "491:200000312#L",
+          "attributs_lisibles": {
+            "Taille": "Petit"
+          },
+          "prix_base": 49.69,
+          "prix_vente": 17.39,
+          "devise": "EUR",
+          "remise_pourcentage": 65.0,
+          "stock_disponible": 7
+        },
+        {
+          "sku_id": "12000044055287269",
+          "attributs_sku": "491:201452308#M",
+          "attributs_lisibles": {
+            "Taille": "Plusieurs tailles SML"
+          },
+          "prix_base": 48.53,
+          "prix_vente": 16.99,
+          "devise": "EUR",
+          "remise_pourcentage": 64.99,
+          "stock_disponible": 4
+        },
+        {
+          "sku_id": "12000044055287268",
+          "attributs_sku": "491:201452307#S",
+          "attributs_lisibles": {
+            "Taille": "TR├êS GRAND"
+          },
+          "prix_base": 38.83,
+          "prix_vente": 13.59,
+          "devise": "EUR",
+          "remise_pourcentage": 65.0,
+          "stock_disponible": 44942
+        },
+        {
+          "sku_id": "12000044055287267",
+          "attributs_sku": "491:200000313#XL",
+          "attributs_lisibles": {
+            "Taille": "Moyen"
+          },
+          "prix_base": 39.69,
+          "prix_vente": 13.89,
+          "devise": "EUR",
+          "remise_pourcentage": 65.0,
+          "stock_disponible": 15
+        },
+        {
+          "sku_id": "12000044055287272",
+          "attributs_sku": "491:4182#2XL",
+          "attributs_lisibles": {
+            "Taille": "XXL"
+          },
+          "prix_base": 49.4,
+          "prix_vente": 17.29,
+          "devise": "EUR",
+          "remise_pourcentage": 65.0,
+          "stock_disponible": 10
+        }
+      ],
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:01:48.493074+00:00",
+        "methode_api": "detail",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005006347412919",
+      "titre": "Attelle dorsale r├⌐glable pour hommes et femmes, ceinture de soutien lombaire dorsal, soutien de posture initi├⌐ pour am├⌐liorer la scoliose",
+      "nb_ventes": null,
+      "note_moyenne": 4.4,
+      "nb_evaluations": 1625,
+      "statut_produit": "onSelling",
+      "delai_livraison_jours": 7,
+      "skus": [
+        {
+          "sku_id": "12000038433108674",
+          "attributs_sku": "491:201452307#S",
+          "attributs_lisibles": {
+            "Taille": "TR├êS GRAND"
+          },
+          "prix_base": 20.28,
+          "prix_vente": 6.49,
+          "devise": "EUR",
+          "remise_pourcentage": 68.0,
+          "stock_disponible": 89
+        },
+        {
+          "sku_id": "12000038433108675",
+          "attributs_sku": "491:200000314#2XL",
+          "attributs_lisibles": {
+            "Taille": "Grand"
+          },
+          "prix_base": 23.72,
+          "prix_vente": 7.59,
+          "devise": "EUR",
+          "remise_pourcentage": 68.0,
+          "stock_disponible": 4
+        },
+        {
+          "sku_id": "12000036844367753",
+          "attributs_sku": "491:201452308#M",
+          "attributs_lisibles": {
+            "Taille": "Plusieurs tailles SML"
+          },
+          "prix_base": 23.0,
+          "prix_vente": 7.59,
+          "devise": "EUR",
+          "remise_pourcentage": 67.0,
+          "stock_disponible": 71
+        },
+        {
+          "sku_id": "12000036844367754",
+          "attributs_sku": "491:200000312#L",
+          "attributs_lisibles": {
+            "Taille": "Petit"
+          },
+          "prix_base": 24.24,
+          "prix_vente": 8.0,
+          "devise": "EUR",
+          "remise_pourcentage": 67.0,
+          "stock_disponible": 50
+        },
+        {
+          "sku_id": "12000038433108676",
+          "attributs_sku": "491:100014066#3XL",
+          "attributs_lisibles": {
+            "Taille": "XS (├⌐quipement de secours de s├⌐curit├⌐)"
+          },
+          "prix_base": 24.34,
+          "prix_vente": 7.79,
+          "devise": "EUR",
+          "remise_pourcentage": 68.0,
+          "stock_disponible": 15
+        },
+        {
+          "sku_id": "12000036844367755",
+          "attributs_sku": "491:200000313#XL",
+          "attributs_lisibles": {
+            "Taille": "Moyen"
+          },
+          "prix_base": 23.0,
+          "prix_vente": 7.59,
+          "devise": "EUR",
+          "remise_pourcentage": 67.0,
+          "stock_disponible": 19
+        },
+        {
+          "sku_id": "12000038433108677",
+          "attributs_sku": "491:4182#4XL",
+          "attributs_lisibles": {
+            "Taille": "XXL"
+          },
+          "prix_base": 24.34,
+          "prix_vente": 7.79,
+          "devise": "EUR",
+          "remise_pourcentage": 68.0,
+          "stock_disponible": 11
+        }
+      ],
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:01:51.065469+00:00",
+        "methode_api": "detail",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005007011440338",
+      "titre": "Soutien dorsal pour la posture des femmes et des hommes, redresseur d'├⌐paules, soutien dorsal complet r├⌐glable pour le haut et le bas du dos",
+      "nb_ventes": null,
+      "note_moyenne": 4.4,
+      "nb_evaluations": 441,
+      "statut_produit": "onSelling",
+      "delai_livraison_jours": 7,
+      "skus": [
+        {
+          "sku_id": "12000039076366530",
+          "attributs_sku": "14:193;491:4182#3XL",
+          "attributs_lisibles": {
+            "Couleur": "noir",
+            "Taille": "XXL"
+          },
+          "prix_base": 25.85,
+          "prix_vente": 8.79,
+          "devise": "EUR",
+          "remise_pourcentage": 66.0,
+          "stock_disponible": 3
+        },
+        {
+          "sku_id": "12000039076366528",
+          "attributs_sku": "14:193;491:200000314#XL",
+          "attributs_lisibles": {
+            "Couleur": "noir",
+            "Taille": "Grand"
+          },
+          "prix_base": 26.54,
+          "prix_vente": 9.29,
+          "devise": "EUR",
+          "remise_pourcentage": 65.0,
+          "stock_disponible": 10
+        },
+        {
+          "sku_id": "12000039076366529",
+          "attributs_sku": "14:193;491:100014066#2XL",
+          "attributs_lisibles": {
+            "Couleur": "noir",
+            "Taille": "XS (├⌐quipement de secours de s├⌐curit├⌐)"
+          },
+          "prix_base": 26.15,
+          "prix_vente": 8.89,
+          "devise": "EUR",
+          "remise_pourcentage": 66.0,
+          "stock_disponible": 1
+        },
+        {
+          "sku_id": "12000039076366526",
+          "attributs_sku": "14:193;491:201452308#M",
+          "attributs_lisibles": {
+            "Couleur": "noir",
+            "Taille": "Plusieurs tailles SML"
+          },
+          "prix_base": 25.96,
+          "prix_vente": 9.08,
+          "devise": "EUR",
+          "remise_pourcentage": 65.02,
+          "stock_disponible": 10
+        },
+        {
+          "sku_id": "12000039076366527",
+          "attributs_sku": "14:193;491:200000312#L",
+          "attributs_lisibles": {
+            "Couleur": "noir",
+            "Taille": "Petit"
+          },
+          "prix_base": 25.26,
+          "prix_vente": 8.59,
+          "devise": "EUR",
+          "remise_pourcentage": 65.99,
+          "stock_disponible": 10
+        },
+        {
+          "sku_id": "12000039076366525",
+          "attributs_sku": "14:193;491:201452307#S",
+          "attributs_lisibles": {
+            "Couleur": "noir",
+            "Taille": "TR├êS GRAND"
+          },
+          "prix_base": 25.11,
+          "prix_vente": 8.79,
+          "devise": "EUR",
+          "remise_pourcentage": 64.99,
+          "stock_disponible": 191
+        }
+      ],
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:01:53.707000+00:00",
+        "methode_api": "detail",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005010700679942",
+      "titre": "Correcteur de Posture r├⌐glable, ceinture de soutien du dos, respirant, antid├⌐rapant, Support ergonomique pour une Posture am├⌐lior├⌐e, adapt├⌐ au Sitti",
+      "nb_ventes": null,
+      "note_moyenne": 4.2,
+      "nb_evaluations": 355,
+      "statut_produit": "onSelling",
+      "delai_livraison_jours": 7,
+      "skus": [
+        {
+          "sku_id": "12000053237727930",
+          "attributs_sku": "14:193",
+          "attributs_lisibles": {
+            "Couleur": "noir"
+          },
+          "prix_base": 8.55,
+          "prix_vente": 4.19,
+          "devise": "EUR",
+          "remise_pourcentage": 50.99,
+          "stock_disponible": 28
+        }
+      ],
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:01:56.975474+00:00",
+        "methode_api": "detail",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005010458338272",
+      "titre": "Ceinture correctrice de Posture du dos, correcteur de bossu, pour hommes et femmes adultes, ceinture correctrice de Posture assise, ├⌐paule, dos droit",
+      "nb_ventes": null,
+      "note_moyenne": 4.1,
+      "nb_evaluations": 302,
+      "statut_produit": "onSelling",
+      "delai_livraison_jours": 7,
+      "skus": [
+        {
+          "sku_id": "12000052478217563",
+          "attributs_sku": "491:201452307#XL",
+          "attributs_lisibles": {
+            "Taille": "TR├êS GRAND"
+          },
+          "prix_base": 9.76,
+          "prix_vente": 4.49,
+          "devise": "EUR",
+          "remise_pourcentage": 54.0,
+          "stock_disponible": 4
+        },
+        {
+          "sku_id": "12000052478217565",
+          "attributs_sku": "491:200000312#M",
+          "attributs_lisibles": {
+            "Taille": "Petit"
+          },
+          "prix_base": 9.76,
+          "prix_vente": 4.49,
+          "devise": "EUR",
+          "remise_pourcentage": 54.0,
+          "stock_disponible": 1
+        },
+        {
+          "sku_id": "12000052478217564",
+          "attributs_sku": "491:201452308#S",
+          "attributs_lisibles": {
+            "Taille": "Plusieurs tailles SML"
+          },
+          "prix_base": 9.98,
+          "prix_vente": 4.59,
+          "devise": "EUR",
+          "remise_pourcentage": 54.01,
+          "stock_disponible": 4
+        },
+        {
+          "sku_id": "12000052478217567",
+          "attributs_sku": "491:100014066",
+          "attributs_lisibles": {
+            "Taille": "XS (├⌐quipement de secours de s├⌐curit├⌐)"
+          },
+          "prix_base": 26.1,
+          "prix_vente": 12.79,
+          "devise": "EUR",
+          "remise_pourcentage": 51.0,
+          "stock_disponible": 0
+        },
+        {
+          "sku_id": "12000052478217566",
+          "attributs_sku": "491:200000313#L",
+          "attributs_lisibles": {
+            "Taille": "Moyen"
+          },
+          "prix_base": 9.98,
+          "prix_vente": 4.59,
+          "devise": "EUR",
+          "remise_pourcentage": 54.01,
+          "stock_disponible": 4
+        }
+      ],
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:01:59.467942+00:00",
+        "methode_api": "detail",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005012050204749",
+      "titre": "Masseur et ├⌐tireur lombaire, soulagement des douleurs vert├⌐brales, relaxant pour le bas du dos, traction et correction de la posture",
+      "nb_ventes": null,
+      "note_moyenne": 4.1,
+      "nb_evaluations": 448,
+      "statut_produit": "onSelling",
+      "delai_livraison_jours": 7,
+      "skus": [
+        {
+          "sku_id": "12000057368423193",
+          "attributs_sku": "14:496#Purple",
+          "attributs_lisibles": {
+            "Couleur": "Violet"
+          },
+          "prix_base": 12.02,
+          "prix_vente": 5.89,
+          "devise": "EUR",
+          "remise_pourcentage": 51.0,
+          "stock_disponible": 0
+        },
+        {
+          "sku_id": "12000057368423192",
+          "attributs_sku": "14:1052#Pink",
+          "attributs_lisibles": {
+            "Couleur": "Rose"
+          },
+          "prix_base": 12.22,
+          "prix_vente": 5.99,
+          "devise": "EUR",
+          "remise_pourcentage": 50.98,
+          "stock_disponible": 0
+        },
+        {
+          "sku_id": "12000057368423191",
+          "attributs_sku": "14:173#Blue",
+          "attributs_lisibles": {
+            "Couleur": "Bleu"
+          },
+          "prix_base": 12.63,
+          "prix_vente": 6.19,
+          "devise": "EUR",
+          "remise_pourcentage": 50.99,
+          "stock_disponible": 17
+        }
+      ],
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:02:01.957481+00:00",
+        "methode_api": "detail",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005009148491896",
+      "titre": "Ceinture de Correction Posturale pour le Dos, Confortable et R├⌐glable, Unisexe, pour Redresser la Colonne Vert├⌐brale, les ├ëpaules et le Bas du Dos",
+      "nb_ventes": null,
+      "note_moyenne": 4.0,
+      "nb_evaluations": 513,
+      "statut_produit": "onSelling",
+      "delai_livraison_jours": 7,
+      "skus": [
+        {
+          "sku_id": "12000048091887053",
+          "attributs_sku": "5:100014064;14:193#Black",
+          "attributs_lisibles": {
+            "Couleur": "noir",
+            "Taille": "S"
+          },
+          "prix_base": 5.59,
+          "prix_vente": 5.59,
+          "devise": "EUR",
+          "remise_pourcentage": 0.0,
+          "stock_disponible": 5
+        },
+        {
+          "sku_id": "12000048091887055",
+          "attributs_sku": "5:361385;14:193#Black",
+          "attributs_lisibles": {
+            "Couleur": "noir",
+            "Taille": "L'"
+          },
+          "prix_base": 5.69,
+          "prix_vente": 5.69,
+          "devise": "EUR",
+          "remise_pourcentage": 0.0,
+          "stock_disponible": 3
+        },
+        {
+          "sku_id": "12000048091887054",
+          "attributs_sku": "5:361386;14:193#Black",
+          "attributs_lisibles": {
+            "Couleur": "noir",
+            "Taille": "M"
+          },
+          "prix_base": 5.49,
+          "prix_vente": 5.49,
+          "devise": "EUR",
+          "remise_pourcentage": 0.0,
+          "stock_disponible": 8
+        },
+        {
+          "sku_id": "12000048091887057",
+          "attributs_sku": "5:4182;14:193#Black",
+          "attributs_lisibles": {
+            "Couleur": "noir",
+            "Taille": "XXL"
+          },
+          "prix_base": 5.59,
+          "prix_vente": 5.59,
+          "devise": "EUR",
+          "remise_pourcentage": 0.0,
+          "stock_disponible": 7
+        },
+        {
+          "sku_id": "12000048091887056",
+          "attributs_sku": "5:100014065;14:193#Black",
+          "attributs_lisibles": {
+            "Couleur": "noir",
+            "Taille": "XL"
+          },
+          "prix_base": 5.79,
+          "prix_vente": 5.79,
+          "devise": "EUR",
+          "remise_pourcentage": 0.0,
+          "stock_disponible": 1
+        }
+      ],
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:02:04.339051+00:00",
+        "methode_api": "detail",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005010759486630",
+      "titre": "Ceinture de traction ergonomique suspendue pour ├⌐tirement lombaire, bande de fitness yoga, support de taille, ceinture auxiliaire pour exercices sur barre simple",
+      "nb_ventes": null,
+      "note_moyenne": 4.9,
+      "nb_evaluations": 269,
+      "statut_produit": "onSelling",
+      "delai_livraison_jours": 7,
+      "skus": [
+        {
+          "sku_id": "12000053415848878",
+          "attributs_sku": "14:201452310#Grey;200007763:201336100",
+          "attributs_lisibles": {
+            "Couleur": "VIOLETTE",
+            "Exp├⌐di├⌐ depuis": "China Mainland"
+          },
+          "prix_base": 22.58,
+          "prix_vente": 11.29,
+          "devise": "EUR",
+          "remise_pourcentage": 50.0,
+          "stock_disponible": 3
+        }
+      ],
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:02:06.772177+00:00",
+        "methode_api": "detail",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005005309469992",
+      "titre": "Ceinture de soutien lombaire ├á Double traction pour hommes et femmes, Corset orthop├⌐dique de taille, d├⌐compression de la colonne vert├⌐brale, attelle d'entra├«nement, soulagement des maux de dos",
+      "nb_ventes": null,
+      "note_moyenne": 4.7,
+      "nb_evaluations": 361,
+      "statut_produit": "onSelling",
+      "delai_livraison_jours": 3,
+      "skus": [
+        {
+          "sku_id": "12000032578875589",
+          "attributs_sku": "5:100014064#S for waist 60-80cm;14:366#Style B",
+          "attributs_lisibles": {
+            "Couleur": "Jaune",
+            "Taille": "S"
+          },
+          "prix_base": 15.69,
+          "prix_vente": 15.69,
+          "devise": "EUR",
+          "remise_pourcentage": 0.0,
+          "stock_disponible": 6
+        },
+        {
+          "sku_id": "12000032578875588",
+          "attributs_sku": "5:4182#XXL-waist 120-140cm;14:29#Style A",
+          "attributs_lisibles": {
+            "Couleur": "BLANC",
+            "Taille": "XXL"
+          },
+          "prix_base": 15.39,
+          "prix_vente": 15.39,
+          "devise": "EUR",
+          "remise_pourcentage": 0.0,
+          "stock_disponible": 13
+        },
+        {
+          "sku_id": "12000032578875591",
+          "attributs_sku": "5:361385#L for waist 90-110cm;14:366#Style B",
+          "attributs_lisibles": {
+            "Couleur": "Jaune",
+            "Taille": "L'"
+          },
+          "prix_base": 15.19,
+          "prix_vente": 15.19,
+          "devise": "EUR",
+          "remise_pourcentage": 0.0,
+          "stock_disponible": 15
+        },
+        {
+          "sku_id": "12000032578875590",
+          "attributs_sku": "5:361386#M for waist 80-100cm;14:366#Style B",
+          "attributs_lisibles": {
+            "Couleur": "Jaune",
+            "Taille": "M"
+          },
+          "prix_base": 15.89,
+          "prix_vente": 15.89,
+          "devise": "EUR",
+          "remise_pourcentage": 0.0,
+          "stock_disponible": 4
+        },
+        {
+          "sku_id": "12000032578875585",
+          "attributs_sku": "5:361386#M for waist 80-100cm;14:29#Style A",
+          "attributs_lisibles": {
+            "Couleur": "BLANC",
+            "Taille": "M"
+          },
+          "prix_base": 14.79,
+          "prix_vente": 14.79,
+          "devise": "EUR",
+          "remise_pourcentage": 0.0,
+          "stock_disponible": 6
+        },
+        {
+          "sku_id": "12000032578875584",
+          "attributs_sku": "5:100014064#S for waist 60-80cm;14:29#Style A",
+          "attributs_lisibles": {
+            "Couleur": "BLANC",
+            "Taille": "S"
+          },
+          "prix_base": 15.39,
+          "prix_vente": 15.39,
+          "devise": "EUR",
+          "remise_pourcentage": 0.0,
+          "stock_disponible": 4
+        },
+        {
+          "sku_id": "12000033425486422",
+          "attributs_sku": "5:4183#XXXL-waist 135-155cm;14:366#Style B",
+          "attributs_lisibles": {
+            "Couleur": "Jaune",
+            "Taille": "XXXL"
+          },
+          "prix_base": 15.59,
+          "prix_vente": 15.59,
+          "devise": "EUR",
+          "remise_pourcentage": 0.0,
+          "stock_disponible": 6
+        },
+        {
+          "sku_id": "12000032578875587",
+          "attributs_sku": "5:100014065#XL-waist 100-120cm;14:29#Style A",
+          "attributs_lisibles": {
+            "Couleur": "BLANC",
+            "Taille": "XL"
+          },
+          "prix_base": 14.49,
+          "prix_vente": 14.49,
+          "devise": "EUR",
+          "remise_pourcentage": 0.0,
+          "stock_disponible": 13
+        },
+        {
+          "sku_id": "12000033425486421",
+          "attributs_sku": "5:4183#XXXL-waist 135-155cm;14:29#Style A",
+          "attributs_lisibles": {
+            "Couleur": "BLANC",
+            "Taille": "XXXL"
+          },
+          "prix_base": 15.39,
+          "prix_vente": 15.39,
+          "devise": "EUR",
+          "remise_pourcentage": 0.0,
+          "stock_disponible": 5
+        },
+        {
+          "sku_id": "12000032578875586",
+          "attributs_sku": "5:361385#L for waist 90-110cm;14:29#Style A",
+          "attributs_lisibles": {
+            "Couleur": "BLANC",
+            "Taille": "L'"
+          },
+          "prix_base": 15.19,
+          "prix_vente": 15.19,
+          "devise": "EUR",
+          "remise_pourcentage": 0.0,
+          "stock_disponible": 10
+        },
+        {
+          "sku_id": "12000032578875593",
+          "attributs_sku": "5:4182#XXL-waist 120-140cm;14:366#Style B",
+          "attributs_lisibles": {
+            "Couleur": "Jaune",
+            "Taille": "XXL"
+          },
+          "prix_base": 15.99,
+          "prix_vente": 15.99,
+          "devise": "EUR",
+          "remise_pourcentage": 0.0,
+          "stock_disponible": 5
+        },
+        {
+          "sku_id": "12000032578875592",
+          "attributs_sku": "5:100014065#XL-waist 100-120cm;14:366#Style B",
+          "attributs_lisibles": {
+            "Couleur": "Jaune",
+            "Taille": "XL"
+          },
+          "prix_base": 16.69,
+          "prix_vente": 16.69,
+          "devise": "EUR",
+          "remise_pourcentage": 0.0,
+          "stock_disponible": 8
+        }
+      ],
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:02:09.203778+00:00",
+        "methode_api": "detail",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005006383600815",
+      "titre": "Ceinture de soutien lombaire r├⌐glable, Corset orthop├⌐dique ├á Double traction pour le dos, d├⌐compression de la colonne vert├⌐brale, soulagement des douleurs dorsales, serrer l'abdomen",
+      "nb_ventes": null,
+      "note_moyenne": 4.7,
+      "nb_evaluations": 649,
+      "statut_produit": "onSelling",
+      "delai_livraison_jours": 7,
+      "skus": [
+        {
+          "sku_id": "12000037000226995",
+          "attributs_sku": "14:201452310#Black;491:200000312#S",
+          "attributs_lisibles": {
+            "Couleur": "VIOLETTE",
+            "Taille": "Petit"
+          },
+          "prix_base": 31.15,
+          "prix_vente": 10.59,
+          "devise": "EUR",
+          "remise_pourcentage": 66.0,
+          "stock_disponible": 321
+        },
+        {
+          "sku_id": "12000037000226998",
+          "attributs_sku": "14:201452310#Black;491:100014066#XL",
+          "attributs_lisibles": {
+            "Couleur": "VIOLETTE",
+            "Taille": "XS (├⌐quipement de secours de s├⌐curit├⌐)"
+          },
+          "prix_base": 32.32,
+          "prix_vente": 10.99,
+          "devise": "EUR",
+          "remise_pourcentage": 66.0,
+          "stock_disponible": 19
+        },
+        {
+          "sku_id": "12000037000226999",
+          "attributs_sku": "14:201452310#Black;491:4182",
+          "attributs_lisibles": {
+            "Couleur": "VIOLETTE",
+            "Taille": "XXL"
+          },
+          "prix_base": 32.91,
+          "prix_vente": 11.19,
+          "devise": "EUR",
+          "remise_pourcentage": 66.0,
+          "stock_disponible": 8
+        },
+        {
+          "sku_id": "12000037000226996",
+          "attributs_sku": "14:201452310#Black;491:200000313#M",
+          "attributs_lisibles": {
+            "Couleur": "VIOLETTE",
+            "Taille": "Moyen"
+          },
+          "prix_base": 31.15,
+          "prix_vente": 10.59,
+          "devise": "EUR",
+          "remise_pourcentage": 66.0,
+          "stock_disponible": 4
+        },
+        {
+          "sku_id": "12000037000226997",
+          "attributs_sku": "14:201452310#Black;491:200000314#L",
+          "attributs_lisibles": {
+            "Couleur": "VIOLETTE",
+            "Taille": "Grand"
+          },
+          "prix_base": 30.26,
+          "prix_vente": 10.29,
+          "devise": "EUR",
+          "remise_pourcentage": 65.99,
+          "stock_disponible": 1
+        }
+      ],
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:02:11.675847+00:00",
+        "methode_api": "detail",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005010485646764",
+      "titre": "Ceinture de soutien pour le dos, pour soulager les douleurs dans le bas du dos, r├⌐glable, pour hommes et femmes, soutien lombaire, sciatique, scoliose, hernie discale",
+      "nb_ventes": null,
+      "note_moyenne": 4.7,
+      "nb_evaluations": 365,
+      "statut_produit": "onSelling",
+      "delai_livraison_jours": 7,
+      "skus": [
+        {
+          "sku_id": "12000052563823171",
+          "attributs_sku": "14:200211869#L",
+          "attributs_lisibles": {
+            "Color": "Rose rouge"
+          },
+          "prix_base": 9.69,
+          "prix_vente": 9.69,
+          "devise": "EUR",
+          "remise_pourcentage": 0.0,
+          "stock_disponible": 4
+        },
+        {
+          "sku_id": "12000052563823170",
+          "attributs_sku": "14:201452310#M",
+          "attributs_lisibles": {
+            "Color": "VIOLETTE"
+          },
+          "prix_base": 9.99,
+          "prix_vente": 9.99,
+          "devise": "EUR",
+          "remise_pourcentage": 0.0,
+          "stock_disponible": 3
+        },
+        {
+          "sku_id": "12000052563823173",
+          "attributs_sku": "14:200006158#XXL",
+          "attributs_lisibles": {
+            "Color": "Vin Rouge"
+          },
+          "prix_base": 9.19,
+          "prix_vente": 9.19,
+          "devise": "EUR",
+          "remise_pourcentage": 0.0,
+          "stock_disponible": 10
+        },
+        {
+          "sku_id": "12000052563823172",
+          "attributs_sku": "14:201441572#XL",
+          "attributs_lisibles": {
+            "Color": "Transparent"
+          },
+          "prix_base": 10.99,
+          "prix_vente": 10.99,
+          "devise": "EUR",
+          "remise_pourcentage": 0.0,
+          "stock_disponible": 3
+        }
+      ],
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:02:14.151235+00:00",
+        "methode_api": "detail",
+        "pays_livraison_confirme": "FR"
+      }
+    },
+    {
+      "item_id": "1005009088186384",
+      "titre": "Ceinture de Suspension lombaire extensible pour la colonne vert├⌐brale domestique, barre horizontale, ceinture de Traction lombaire, ceinture de taille apaisante, poids 200 Catties",
+      "nb_ventes": null,
+      "note_moyenne": 4.6,
+      "nb_evaluations": 241,
+      "statut_produit": "onSelling",
+      "delai_livraison_jours": 7,
+      "skus": [
+        {
+          "sku_id": "12000047864809559",
+          "attributs_sku": "14:200002130#Door seam gray",
+          "attributs_lisibles": {
+            "Couleur": "Ivoire"
+          },
+          "prix_base": 30.58,
+          "prix_vente": 15.29,
+          "devise": "EUR",
+          "remise_pourcentage": 50.0,
+          "stock_disponible": 55
+        },
+        {
+          "sku_id": "12000056678323820",
+          "attributs_sku": "14:29#Cervical  blue",
+          "attributs_lisibles": {
+            "Couleur": "BLANC"
+          },
+          "prix_base": 27.98,
+          "prix_vente": 13.99,
+          "devise": "EUR",
+          "remise_pourcentage": 50.0,
+          "stock_disponible": 98
+        },
+        {
+          "sku_id": "12000047864809558",
+          "attributs_sku": "14:175#Door seam purple",
+          "attributs_lisibles": {
+            "Couleur": "vert"
+          },
+          "prix_base": 28.38,
+          "prix_vente": 14.19,
+          "devise": "EUR",
+          "remise_pourcentage": 50.0,
+          "stock_disponible": 4
+        },
+        {
+          "sku_id": "12000056678323821",
+          "attributs_sku": "14:366#Cervical  brown",
+          "attributs_lisibles": {
+            "Couleur": "Jaune"
+          },
+          "prix_base": 26.98,
+          "prix_vente": 13.49,
+          "devise": "EUR",
+          "remise_pourcentage": 50.0,
+          "stock_disponible": 8
+        },
+        {
+          "sku_id": "12000056678323818",
+          "attributs_sku": "14:10#Hook black",
+          "attributs_lisibles": {
+            "Couleur": "Rouge"
+          },
+          "prix_base": 41.18,
+          "prix_vente": 20.59,
+          "devise": "EUR",
+          "remise_pourcentage": 50.0,
+          "stock_disponible": 6
+        },
+        {
+          "sku_id": "12000056678323819",
+          "attributs_sku": "14:350853#Cervical  purple",
+          "attributs_lisibles": {
+            "Couleur": "Argent"
+          },
+          "prix_base": 27.98,
+          "prix_vente": 13.99,
+          "devise": "EUR",
+          "remise_pourcentage": 50.0,
+          "stock_disponible": 100
+        },
+        {
+          "sku_id": "12000056678323816",
+          "attributs_sku": "14:1052#Door seam black",
+          "attributs_lisibles": {
+            "Couleur": "Rose"
+          },
+          "prix_base": 31.98,
+          "prix_vente": 15.99,
+          "devise": "EUR",
+          "remise_pourcentage": 50.0,
+          "stock_disponible": 92
+        },
+        {
+          "sku_id": "12000056678323817",
+          "attributs_sku": "14:496#Bracelet black",
+          "attributs_lisibles": {
+            "Couleur": "Violet"
+          },
+          "prix_base": 34.58,
+          "prix_vente": 17.29,
+          "devise": "EUR",
+          "remise_pourcentage": 50.0,
+          "stock_disponible": 98
+        },
+        {
+          "sku_id": "12000056678323814",
+          "attributs_sku": "14:350850#Bracelet brown",
+          "attributs_lisibles": {
+            "Couleur": "Or"
+          },
+          "prix_base": 41.58,
+          "prix_vente": 20.79,
+          "devise": "EUR",
+          "remise_pourcentage": 50.0,
+          "stock_disponible": 10
+        },
+        {
+          "sku_id": "12000056678323815",
+          "attributs_sku": "14:691#Hook brown",
+          "attributs_lisibles": {
+            "Couleur": "GRIS"
+          },
+          "prix_base": 40.38,
+          "prix_vente": 20.19,
+          "devise": "EUR",
+          "remise_pourcentage": 50.0,
+          "stock_disponible": 101
+        },
+        {
+          "sku_id": "12000056678323813",
+          "attributs_sku": "14:365458#Door seam brown",
+          "attributs_lisibles": {
+            "Couleur": "Brun"
+          },
+          "prix_base": 40.78,
+          "prix_vente": 20.39,
+          "devise": "EUR",
+          "remise_pourcentage": 50.0,
+          "stock_disponible": 102
+        },
+        {
+          "sku_id": "12000047864809561",
+          "attributs_sku": "14:350852#Hook gray",
+          "attributs_lisibles": {
+            "Couleur": "Orange"
+          },
+          "prix_base": 33.18,
+          "prix_vente": 16.59,
+          "devise": "EUR",
+          "remise_pourcentage": 50.0,
+          "stock_disponible": 13
+        },
+        {
+          "sku_id": "12000047864809560",
+          "attributs_sku": "14:173#Hook Purple",
+          "attributs_lisibles": {
+            "Couleur": "Bleu"
+          },
+          "prix_base": 34.78,
+          "prix_vente": 17.39,
+          "devise": "EUR",
+          "remise_pourcentage": 50.0,
+          "stock_disponible": 52
+        },
+        {
+          "sku_id": "12000047864809563",
+          "attributs_sku": "14:193#Bracelet gray",
+          "attributs_lisibles": {
+            "Couleur": "noir"
+          },
+          "prix_base": 35.98,
+          "prix_vente": 17.99,
+          "devise": "EUR",
+          "remise_pourcentage": 50.0,
+          "stock_disponible": 1
+        },
+        {
+          "sku_id": "12000047864809562",
+          "attributs_sku": "14:771#Bracelet Purple",
+          "attributs_lisibles": {
+            "Couleur": "Beige"
+          },
+          "prix_base": 37.78,
+          "prix_vente": 18.89,
+          "devise": "EUR",
+          "remise_pourcentage": 50.0,
+          "stock_disponible": 11
+        }
+      ],
+      "contexte": {
+        "pays_livraison": "FR",
+        "devise": "EUR",
+        "langue": "fr",
+        "horodatage_utc": "2026-08-03T19:02:16.645006+00:00",
+        "methode_api": "detail",
+        "pays_livraison_confirme": "FR"
+      }
+    }
+  ],
+  "stats": {
+    "devise": "EUR",
+    "nb_produits_recherche": 106,
+    "nb_produits_retenus": 15,
+    "nb_produits_detailles": 15,
+    "nb_skus": 87,
+    "prix_vente_min": 2.17,
+    "prix_vente_median": 12.19,
+    "prix_vente_max": 144.39,
+    "prix_sku_min": 2.69,
+    "prix_sku_median": 9.29,
+    "prix_sku_max": 20.79,
+    "total_annonce_par_requete": {
+      "ceinture lombaire double traction": 10636,
+      "ceinture dos double soutien": 18675,
+      "ceinture lombaire traction m├⌐dicale": 7519,
+      "ceinture dorsale double compression": 14048
+    },
+    "nb_appels_api": 26
+  },
+  "statuts_collecte": [
+    {
+      "etape": "recherche",
+      "cible": "ceinture lombaire double traction (page 1)",
+      "succes": true,
+      "message_erreur": null,
+      "nb_items": 20,
+      "nb_tentatives": 2,
+      "total_annonce": 10636
+    },
+    {
+      "etape": "controle_prix",
+      "cible": "1005010337308951",
+      "succes": false,
+      "message_erreur": "Prix de vente 22.19 sup├⌐rieur au prix de base 21.77 : ligne conserv├⌐e et signal├⌐e.",
+      "nb_items": 0,
+      "nb_tentatives": 0,
+      "total_annonce": null
+    },
+    {
+      "etape": "recherche",
+      "cible": "ceinture lombaire double traction (page 2)",
+      "succes": true,
+      "message_erreur": null,
+      "nb_items": 20,
+      "nb_tentatives": 1,
+      "total_annonce": 10636
+    },
+    {
+      "etape": "recherche",
+      "cible": "ceinture dos double soutien (page 1)",
+      "succes": true,
+      "message_erreur": null,
+      "nb_items": 20,
+      "nb_tentatives": 1,
+      "total_annonce": 18675
+    },
+    {
+      "etape": "controle_prix",
+      "cible": "1005012551708436",
+      "succes": false,
+      "message_erreur": "Prix de vente 5.19 sup├⌐rieur au prix de base 3.07 : ligne conserv├⌐e et signal├⌐e.",
+      "nb_items": 0,
+      "nb_tentatives": 0,
+      "total_annonce": null
+    },
+    {
+      "etape": "recherche",
+      "cible": "ceinture dos double soutien (page 2)",
+      "succes": true,
+      "message_erreur": null,
+      "nb_items": 20,
+      "nb_tentatives": 2,
+      "total_annonce": 18675
+    },
+    {
+      "etape": "recherche",
+      "cible": "ceinture lombaire traction m├⌐dicale (page 1)",
+      "succes": true,
+      "message_erreur": null,
+      "nb_items": 20,
+      "nb_tentatives": 2,
+      "total_annonce": 7519
+    },
+    {
+      "etape": "controle_prix",
+      "cible": "1005010337308951",
+      "succes": false,
+      "message_erreur": "Prix de vente 22.19 sup├⌐rieur au prix de base 21.77 : ligne conserv├⌐e et signal├⌐e.",
+      "nb_items": 0,
+      "nb_tentatives": 0,
+      "total_annonce": null
+    },
+    {
+      "etape": "recherche",
+      "cible": "ceinture lombaire traction m├⌐dicale (page 2)",
+      "succes": true,
+      "message_erreur": null,
+      "nb_items": 20,
+      "nb_tentatives": 1,
+      "total_annonce": 7519
+    },
+    {
+      "etape": "recherche",
+      "cible": "ceinture dorsale double compression (page 1)",
+      "succes": true,
+      "message_erreur": null,
+      "nb_items": 20,
+      "nb_tentatives": 1,
+      "total_annonce": 14048
+    },
+    {
+      "etape": "recherche",
+      "cible": "ceinture dorsale double compression (page 2)",
+      "succes": true,
+      "message_erreur": null,
+      "nb_items": 20,
+      "nb_tentatives": 1,
+      "total_annonce": 14048
+    },
+    {
+      "etape": "detail",
+      "cible": "1005006697527976",
+      "succes": true,
+      "message_erreur": null,
+      "nb_items": 1,
+      "nb_tentatives": 1,
+      "total_annonce": null
+    },
+    {
+      "etape": "detail",
+      "cible": "1005008784423024",
+      "succes": true,
+      "message_erreur": null,
+      "nb_items": 1,
+      "nb_tentatives": 1,
+      "total_annonce": null
+    },
+    {
+      "etape": "detail",
+      "cible": "1005010755199507",
+      "succes": true,
+      "message_erreur": null,
+      "nb_items": 1,
+      "nb_tentatives": 1,
+      "total_annonce": null
+    },
+    {
+      "etape": "detail",
+      "cible": "1005008098602910",
+      "succes": true,
+      "message_erreur": null,
+      "nb_items": 1,
+      "nb_tentatives": 1,
+      "total_annonce": null
+    },
+    {
+      "etape": "detail",
+      "cible": "1005006347412919",
+      "succes": true,
+      "message_erreur": null,
+      "nb_items": 1,
+      "nb_tentatives": 1,
+      "total_annonce": null
+    },
+    {
+      "etape": "detail",
+      "cible": "1005007011440338",
+      "succes": true,
+      "message_erreur": null,
+      "nb_items": 1,
+      "nb_tentatives": 1,
+      "total_annonce": null
+    },
+    {
+      "etape": "detail",
+      "cible": "1005010700679942",
+      "succes": true,
+      "message_erreur": null,
+      "nb_items": 1,
+      "nb_tentatives": 1,
+      "total_annonce": null
+    },
+    {
+      "etape": "detail",
+      "cible": "1005010458338272",
+      "succes": true,
+      "message_erreur": null,
+      "nb_items": 1,
+      "nb_tentatives": 1,
+      "total_annonce": null
+    },
+    {
+      "etape": "detail",
+      "cible": "1005012050204749",
+      "succes": true,
+      "message_erreur": null,
+      "nb_items": 1,
+      "nb_tentatives": 1,
+      "total_annonce": null
+    },
+    {
+      "etape": "detail",
+      "cible": "1005009148491896",
+      "succes": true,
+      "message_erreur": null,
+      "nb_items": 1,
+      "nb_tentatives": 1,
+      "total_annonce": null
+    },
+    {
+      "etape": "detail",
+      "cible": "1005010759486630",
+      "succes": true,
+      "message_erreur": null,
+      "nb_items": 1,
+      "nb_tentatives": 1,
+      "total_annonce": null
+    },
+    {
+      "etape": "detail",
+      "cible": "1005005309469992",
+      "succes": true,
+      "message_erreur": null,
+      "nb_items": 1,
+      "nb_tentatives": 1,
+      "total_annonce": null
+    },
+    {
+      "etape": "detail",
+      "cible": "1005006383600815",
+      "succes": true,
+      "message_erreur": null,
+      "nb_items": 1,
+      "nb_tentatives": 1,
+      "total_annonce": null
+    },
+    {
+      "etape": "detail",
+      "cible": "1005010485646764",
+      "succes": true,
+      "message_erreur": null,
+      "nb_items": 1,
+      "nb_tentatives": 1,
+      "total_annonce": null
+    },
+    {
+      "etape": "detail",
+      "cible": "1005009088186384",
+      "succes": true,
+      "message_erreur": null,
+      "nb_items": 1,
+      "nb_tentatives": 1,
+      "total_annonce": null
+    }
+  ],
+  "donnees_disponibles": true,
+  "limites": [
+    "Biais de couverture : l'API Dropshipping n'expose que les produits ├⌐ligibles au programme dropshipping ET livrables dans la r├⌐gion demand├⌐e. L'absence d'un produit dans cette collecte ne constitue en aucun cas un signal d'absence de ce produit sur le march├⌐.",
+    "Les prix renvoy├⌐s par l'API sont des prix de r├⌐f├⌐rence : ils excluent les Welcome Deals, coupons panier et promotions de session. Le prix per├ºu par l'acheteur sur le site peut ├¬tre inf├⌐rieur. L'├⌐cart avec une source de scraping est un signal d'intensit├⌐ promotionnelle, pas une erreur.",
+    "Les prix et les stocks sont un instantan├⌐ horodat├⌐, valable pour le seul triplet {pays de livraison, devise, langue} demand├⌐. Toute comparaison exige le m├¬me triplet et un horodatage proche.",
+    "Aucune conversion de change n'est effectu├⌐e : l'API ne fournit pas de taux. Les montants ne sont comparables qu'au sein d'une m├¬me ex├⌐cution, dans la devise d'├⌐tude.",
+    "Le quota journalier n'est pas confirm├⌐ officiellement (console d├⌐veloppeur sans limite affich├⌐e ; ~5 000 requ├¬tes/jour selon des sources secondaires). Un plafond de d├⌐bit non document├⌐ a en revanche ├⌐t├⌐ constat├⌐ sur la m├⌐thode de recherche.",
+    "La s├⌐lection des produits soumis au d├⌐tail (phase B) repose sur une heuristique d├⌐terministe ΓÇö similarit├⌐ de titre puis tri par volume de commandes et note ΓÇö qui n'a pas ├⌐t├⌐ valid├⌐e empiriquement.",
+    "Le champ `discount` de la recherche est incoh├⌐rent avec les prix cibles (observ├⌐ ├á ┬½ 0 % ┬╗ sur un produit affichant ΓêÆ50 %) : il n'est pas exploit├⌐, la remise est recalcul├⌐e ├á partir des prix cibles.",
+    "La m├⌐thode de recherche est instable par fen├¬tres de quelques minutes (erreur NGSELECTION_SEARCH_ERROR mesur├⌐e sur 8 appels valides sur 11 le 03/08/2026, ind├⌐pendamment de l'espacement). Le module insiste, mais une requ├¬te peut rester en ├⌐chec : la couverture d'une ex├⌐cution n'est pas reproductible ├á l'identique, et un ├⌐cart de volume entre deux ex├⌐cutions peut n'├¬tre qu'un artefact de disponibilit├⌐ de la passerelle.",
+    "Remise(s) sup├⌐rieure(s) ├á 60 % ΓÇö v├⌐rifier s'il s'agit d'une promotion exceptionnelle ou d'un prix barr├⌐ th├⌐orique.",
+    "Incoh├⌐rence de prix d├⌐tect├⌐e : prix de vente sup├⌐rieur au prix de base sur une ou plusieurs lignes. Les lignes sont conserv├⌐es et signal├⌐es."
+  ],
+  "hypotheses": [
+    "Le produit ├⌐tudi├⌐ est assimil├⌐ aux requ├¬tes marketplace retenues : les produits collect├⌐s rel├¿vent de la cat├⌐gorie de besoin vis├⌐e, et non n├⌐cessairement de la r├⌐f├⌐rence exacte de la fiche.",
+    "R├¿gle de s├⌐lection de la phase B : les produits dont le titre partage au moins 25% des mots significatifs d'une requ├¬te sont tri├⌐s par nombre de commandes d├⌐croissant, puis par note d├⌐croissante, et les 15 premiers sont d├⌐taill├⌐s. Le nombre de commandes est retenu comme meilleur signal disponible de traction commerciale, faute de donn├⌐es de ventes r├⌐elles.",
+    "Le prix d'annonce de la recherche (`targetSalePrice`) est interpr├⌐t├⌐ comme le prix du SKU le moins cher du produit ; les prix par SKU de la phase B font foi pour toute lecture fine.",
+    "Les notes et taux d'├⌐valuation sont suppos├⌐s approximativement comparables d'une r├⌐gion ├á l'autre : ils agr├¿gent des avis de toutes provenances et ne sont pas r├⌐gionalis├⌐s par la passerelle, contrairement aux prix."
+  ],
+  "_fixture": {
+    "statut": "reelle_adaptee",
+    "adaptation": "en-tete produit/marche harmonise sur le produit pivot",
+    "en_tete_origine": {
+      "produit": "Ceinture lombaire double traction",
+      "marche": {
+        "geo": "FR",
+        "langue": "fr",
+        "devise": "EUR"
+      }
+    },
+    "note": "Run reel sur « Ceinture lombaire double traction » (FR, EUR) : offres hors sujet vis-a-vis du produit pivot. Sert a valider les structures de prix/SKU."
+  }
+}

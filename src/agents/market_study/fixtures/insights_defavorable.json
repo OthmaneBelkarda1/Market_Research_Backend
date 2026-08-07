@@ -1,0 +1,1168 @@
+{
+  "produit": {
+    "nom": "JBL Endurance Peak 4 Open Ear",
+    "description": "Écouteurs sans fil à conduction d'air en oreille ouverte, crochets d'oreille souples, certification IP54, autonomie annoncée de 10 heures par charge et 40 heures avec le boîtier, commandes tactiles, positionnés pour la pratique sportive.",
+    "categorie": "electronics"
+  },
+  "marche": {
+    "geo": "FR",
+    "langue": "fr"
+  },
+  "horodatage_utc": "2026-08-05T18:39:57Z",
+  "sources_utilisees": [
+    {
+      "source": "reddit",
+      "fichier": "..\\fixtures\\reddit.json",
+      "donnees_disponibles": true,
+      "nb_items_charges": 252,
+      "nb_items_exploites": 242,
+      "avertissements": []
+    },
+    {
+      "source": "amazon",
+      "fichier": "..\\fixtures\\amazon.json",
+      "donnees_disponibles": true,
+      "nb_items_charges": 50,
+      "nb_items_exploites": 50,
+      "avertissements": []
+    },
+    {
+      "source": "recherche_web",
+      "fichier": "..\\fixtures\\recherche_web.json",
+      "donnees_disponibles": true,
+      "nb_items_charges": 9,
+      "nb_items_exploites": 5,
+      "avertissements": []
+    }
+  ],
+  "alertes_coherence": [],
+  "stats_corpus": {
+    "nb_unites_par_source": {
+      "reddit": 242,
+      "amazon": 50
+    },
+    "nb_unites_analysees": 292,
+    "nb_documents_analyses": 5,
+    "taux_echantillonnage": 1.0,
+    "periode_couverte": {
+      "min": "2009-12-17T22:39:33Z",
+      "max": "2026-07-31"
+    },
+    "repartition_portee": {
+      "globale": 242,
+      "regionale": 50
+    },
+    "langues_constatees": [
+      "en (corpus Reddit majoritairement anglophone)",
+      "fr"
+    ]
+  },
+  "sentiment": {
+    "global": {
+      "positif": 2,
+      "negatif": 44,
+      "neutre": 1,
+      "mixte": 0,
+      "base_nb": 47
+    },
+    "par_source": {
+      "amazon": {
+        "positif": 22,
+        "negatif": 24,
+        "neutre": 0,
+        "mixte": 1,
+        "base_nb": 47
+      },
+      "reddit": {
+        "positif": 0,
+        "negatif": 0,
+        "neutre": 0,
+        "mixte": 0,
+        "base_nb": 0
+      }
+    },
+    "par_portee": {
+      "globale": {
+        "positif": 0,
+        "negatif": 0,
+        "neutre": 0,
+        "mixte": 0,
+        "base_nb": 0
+      },
+      "regionale": {
+        "positif": 22,
+        "negatif": 24,
+        "neutre": 0,
+        "mixte": 1,
+        "base_nb": 47
+      }
+    },
+    "commentaire": "Le corpus est massivement négatif : 44 unités sur 47 expriment un rejet du produit, la plupart pour des défaillances rédhibitoires (casse précoce, produit inutilisable en usage sportif)."
+  },
+  "themes": [
+    {
+      "libelle": "Qualité sonore",
+      "frequence_nb": 15,
+      "frequence_pct": 31.91,
+      "sentiment_dominant": "positif",
+      "sources": [
+        "amazon"
+      ],
+      "portee": "regionale",
+      "exemples_id_unites": [
+        "amz-B0FDKR4RVP-4",
+        "amz-B0FDKR4RVP-7",
+        "amz-B0FG2SM3P4-2"
+      ]
+    },
+    {
+      "libelle": "Stabilité et tenue à l'effort",
+      "frequence_nb": 12,
+      "frequence_pct": 25.53,
+      "sentiment_dominant": "negatif",
+      "sources": [
+        "amazon"
+      ],
+      "portee": "regionale",
+      "exemples_id_unites": [
+        "amz-B0FDKR4RVP-4",
+        "amz-B0FDKR4RVP-7",
+        "amz-B0FG2SM3P4-2"
+      ]
+    },
+    {
+      "libelle": "Confort et ergonomie",
+      "frequence_nb": 11,
+      "frequence_pct": 23.4,
+      "sentiment_dominant": "negatif",
+      "sources": [
+        "amazon"
+      ],
+      "portee": "regionale",
+      "exemples_id_unites": [
+        "amz-B0FSKZHH6M-6",
+        "amz-B0FSKZHH6M-9",
+        "amz-B0FG94GB3N-0"
+      ]
+    },
+    {
+      "libelle": "Fiabilité et durabilité",
+      "frequence_nb": 10,
+      "frequence_pct": 21.28,
+      "sentiment_dominant": "negatif",
+      "sources": [
+        "amazon"
+      ],
+      "portee": "regionale",
+      "exemples_id_unites": [
+        "amz-B0FDKR4RVP-2",
+        "amz-B0D2HKCMBP-4",
+        "amz-B0FDKR4RVP-9"
+      ]
+    },
+    {
+      "libelle": "Autonomie et batterie",
+      "frequence_nb": 7,
+      "frequence_pct": 14.89,
+      "sentiment_dominant": "negatif",
+      "sources": [
+        "amazon"
+      ],
+      "portee": "regionale",
+      "exemples_id_unites": [
+        "amz-B0FDKR4RVP-2",
+        "amz-B0FDKR4RVP-9",
+        "amz-B0FG2SM3P4-0"
+      ]
+    },
+    {
+      "libelle": "Connectivité",
+      "frequence_nb": 7,
+      "frequence_pct": 14.89,
+      "sentiment_dominant": "negatif",
+      "sources": [
+        "amazon"
+      ],
+      "portee": "regionale",
+      "exemples_id_unites": [
+        "amz-B0FSKZHH6M-6",
+        "amz-B0D2HKCMBP-4",
+        "amz-B0FDKR4RVP-8"
+      ]
+    },
+    {
+      "libelle": "Marque et service",
+      "frequence_nb": 6,
+      "frequence_pct": 12.77,
+      "sentiment_dominant": "positif",
+      "sources": [
+        "amazon"
+      ],
+      "portee": "regionale",
+      "exemples_id_unites": [
+        "amz-B0FDKR4RVP-4",
+        "amz-B0FDKR4RVP-7",
+        "amz-B0FDKR4RVP-3"
+      ]
+    },
+    {
+      "libelle": "Commandes et interface utilisateur",
+      "frequence_nb": 5,
+      "frequence_pct": 10.64,
+      "sentiment_dominant": "negatif",
+      "sources": [
+        "amazon"
+      ],
+      "portee": "regionale",
+      "exemples_id_unites": [
+        "amz-B0FSKZHH6M-9",
+        "amz-B0FG94GB3N-0",
+        "amz-B0FG2SM3P4-7"
+      ]
+    },
+    {
+      "libelle": "Application et logiciel",
+      "frequence_nb": 3,
+      "frequence_pct": 6.38,
+      "sentiment_dominant": "negatif",
+      "sources": [
+        "amazon"
+      ],
+      "portee": "regionale",
+      "exemples_id_unites": [
+        "amz-B0FG2SM3P4-3",
+        "amz-B0FSKZHH6M-9",
+        "amz-B0D2HKCMBP-2"
+      ]
+    },
+    {
+      "libelle": "Légèreté et design",
+      "frequence_nb": 3,
+      "frequence_pct": 6.38,
+      "sentiment_dominant": "positif",
+      "sources": [
+        "amazon"
+      ],
+      "portee": "regionale",
+      "exemples_id_unites": [
+        "amz-B0FDKR4RVP-4",
+        "amz-B0FDKR4RVP-1",
+        "amz-B0FSKZHH6M-2"
+      ]
+    },
+    {
+      "libelle": "sport",
+      "frequence_nb": 3,
+      "frequence_pct": 6.38,
+      "sentiment_dominant": "positif",
+      "sources": [
+        "amazon"
+      ],
+      "portee": "regionale",
+      "exemples_id_unites": [
+        "amz-B0FG94GB3N-6",
+        "amz-B0FG94GB3N-2",
+        "amz-B0FG2SM3P4-0"
+      ]
+    },
+    {
+      "libelle": "Résistance à l'eau et environnement",
+      "frequence_nb": 2,
+      "frequence_pct": 4.26,
+      "sentiment_dominant": "positif",
+      "sources": [
+        "amazon"
+      ],
+      "portee": "regionale",
+      "exemples_id_unites": [
+        "amz-B0D2HKCMBP-7",
+        "amz-B0FDKR4RVP-5"
+      ]
+    }
+  ],
+  "pain_points": [
+    {
+      "libelle": "Tenue insuffisante à l'oreille",
+      "description": "Le pain point le plus fréquent du corpus (17 % des unités) : les écouteurs ne restent pas en place pendant l'effort, bougent au moindre mouvement, voire tombent. Ce défaut contredit directement le positionnement sport du produit et génère une frustration majeure chez les utilisateurs actifs.",
+      "frequence_nb": 8,
+      "frequence_pct": 51.06,
+      "intensite_moyenne": 3.0,
+      "score_priorite": 153.18,
+      "sources": [
+        "amazon"
+      ],
+      "portee": "regionale",
+      "verbatims": [
+        {
+          "id_unite": "amz-B0FDKR4RVP-7",
+          "source": "amazon",
+          "extrait": "Déçu !\n\nDéçu par ces ecouteurs qui m'ont semblé manquer de basses (un comble pour Bose!) et au maintient insuffisant pour une seance de sport."
+        },
+        {
+          "id_unite": "amz-B0FSKZHH6M-9",
+          "source": "amazon",
+          "extrait": "bin sehr unzufrieden\n\nSound, auch beim Telefonieren, ist nicht schlecht (für den Preis). Tragekomfort lässt zu wünschen übrig, Kopfhörer sitzen nicht fest genug am Ohr. Keine Trageerkennung, Kopfhörer spielen auch in der Tasche Musik, Berührungsempfindlichkeit zu hoch. App taugt nichts, weil sie mei"
+        },
+        {
+          "id_unite": "amz-B0FG94GB3N-0",
+          "source": "amazon",
+          "extrait": "Achetez un casque, vraiment\n\nNe tient pas assez bien sur l'oreille pour pouvoir courir et ne reste pas assez près de l'oreille pour entendre quoique ce soit dans l'oreillette, l'écouteur gigote au moindre mouvement. C'est très malin de mettre des commandes tactiles sur un écouteur aussi dur à placer"
+        }
+      ],
+      "confiance": "elevee"
+    },
+    {
+      "libelle": "Qualité sonore insuffisante",
+      "description": "Plusieurs utilisateurs du corpus rapportent un manque de basses, un son « sourd », « robot » ou des bugs audio (court-circuit). Ce pain point (10,6 % des unités) touche un critère d'achat central et déçoit particulièrement les acheteurs fidèles à la marque.",
+      "frequence_nb": 5,
+      "frequence_pct": 31.92,
+      "intensite_moyenne": 3.0,
+      "score_priorite": 95.76,
+      "sources": [
+        "amazon",
+        "recherche_web"
+      ],
+      "portee": "regionale",
+      "verbatims": [
+        {
+          "id_unite": "amz-B0FDKR4RVP-7",
+          "source": "amazon",
+          "extrait": "Déçu !\n\nDéçu par ces ecouteurs qui m'ont semblé manquer de basses (un comble pour Bose!) et au maintient insuffisant pour une seance de sport."
+        },
+        {
+          "id_unite": "amz-B0FDKR4RVP-0",
+          "source": "amazon",
+          "extrait": "Pas pour les oreilles larges\n\nÇa ne s’adapte pas du tout à mes oreilles. Je suis obligé d’accrocher chaque écouteur à deux mains, replier mon oreille en prenant soin que ça se décroche pas, de vérifier devant un miroir que le pli de mon oreille est dans le bon sens, tout ça pour que le son soit mauv"
+        },
+        {
+          "id_unite": "amz-B0FG2SM3P4-3",
+          "source": "amazon",
+          "extrait": "Plutôt bien mais problèmes\n\nBien, mais : - le son maximum n'est pas suffisamment fort pour plusieurs podcasts, c'est très ennuyeux - de temps en temps, des bugs qui font comme un bruit de court-circuit, c'est assez fort pour être douloureux. Oui, on peut renvoyer l'article, mais la flemme en fait, c"
+        }
+      ],
+      "confiance": "elevee"
+    },
+    {
+      "libelle": "Problème de charge",
+      "description": "Le corpus signale des défaillances récurrentes du système de charge : écouteurs qui ne chargent plus dans le boîtier, LED de charge erronée, boîtier défaillant après quelques semaines. Ce pain point (10,6 %) rend le produit inutilisable et suscite une forte insatisfaction.",
+      "frequence_nb": 5,
+      "frequence_pct": 31.92,
+      "intensite_moyenne": 3.0,
+      "score_priorite": 95.76,
+      "sources": [
+        "amazon"
+      ],
+      "portee": "regionale",
+      "verbatims": [
+        {
+          "id_unite": "amz-B0FDKR4RVP-2",
+          "source": "amazon",
+          "extrait": "losses its charge when it’s in the case to recharge sometimes\n\nI am experiencing some battery issues, the case says it’s charging but sometimes when I go to use them one of them hasn’t charged, in fact it’s discharged, not happy"
+        },
+        {
+          "id_unite": "amz-B0D2HKCMBP-5",
+          "source": "amazon",
+          "extrait": "Déçu\n\nAu début tout va pour le mieux, le son est de qualité, bonne autonomie. Au bout de quelques mois (moins d’un an) l’appareil a des difficultés à charger ( led bleu de fin de charge allumée à 60% de charge) et d’un coup le bouton on/off ne fonctionne plus, impossible d’allumer l’appareil. Vu le"
+        },
+        {
+          "id_unite": "amz-B0FG2SM3P4-6",
+          "source": "amazon",
+          "extrait": "Ne charge plus !\n\nJe déconseille vraiment. Les écouteurs ne rechargent plus car la boîte de rechargement a lâché après quelques semaines et plus de possibilités de retour... Juste inutilisable, ça fait bien cher après aussi peu de temps après l'achat."
+        }
+      ],
+      "confiance": "elevee"
+    },
+    {
+      "libelle": "Défaillance matérielle",
+      "description": "Des pannes matérielles sont rapportées dans le corpus : bouton on/off qui lâche, infiltration d'eau malgré l'IP54, dégradation visible. Ces défaillances (8,5 % des unités) surviennent souvent avant un an et remettent en cause la fiabilité du produit.",
+      "frequence_nb": 4,
+      "frequence_pct": 25.53,
+      "intensite_moyenne": 3.0,
+      "score_priorite": 76.59,
+      "sources": [
+        "amazon"
+      ],
+      "portee": "regionale",
+      "verbatims": [
+        {
+          "id_unite": "amz-B0D2HKCMBP-5",
+          "source": "amazon",
+          "extrait": "Déçu\n\nAu début tout va pour le mieux, le son est de qualité, bonne autonomie. Au bout de quelques mois (moins d’un an) l’appareil a des difficultés à charger ( led bleu de fin de charge allumée à 60% de charge) et d’un coup le bouton on/off ne fonctionne plus, impossible d’allumer l’appareil. Vu le"
+        },
+        {
+          "id_unite": "amz-B0D2HKCMBP-7",
+          "source": "amazon",
+          "extrait": "Bon casque mais...\n\nDommage, un produit de bonne qualité global. Son ok meme si pas incroyable. Fait le taff. Aura duré 1 an et demi d'utilisation intense avant que le premier bouton lache et soit inutilisable, l'eau s'infiltrais et le casque s'abimais a vu d'œil. Quand au service de garantie, a par"
+        },
+        {
+          "id_unite": "amz-B0FG2SM3P4-0",
+          "source": "amazon",
+          "extrait": "Decu\n\nJ'avais besoin de ces écouteurs pour le sport afin qu'ils ne tombent pas bêtement. Mais après 3 mois d'utilisation, j'ai remarqué que le son est souvent désagréable (sourd/aigu/robot). Lorsque je regarde des vidéos, il arrive qu'un seul écouteur fonctionne selon les video (notamment sur TikTok"
+        }
+      ],
+      "confiance": "elevee"
+    },
+    {
+      "libelle": "Autonomie insuffisante",
+      "description": "Le corpus fait état d'une autonomie réelle très inférieure aux 10 h annoncées (3-4 h constatées) et d'une dégradation rapide dans le temps (30 min après 2 ans). Ce pain point (6,4 %) est d'autant plus mal vécu qu'il contredit les spécifications officielles.",
+      "frequence_nb": 3,
+      "frequence_pct": 19.14,
+      "intensite_moyenne": 3.0,
+      "score_priorite": 57.42,
+      "sources": [
+        "amazon",
+        "recherche_web"
+      ],
+      "portee": "regionale",
+      "verbatims": [
+        {
+          "id_unite": "amz-B0FDKR4RVP-6",
+          "source": "amazon",
+          "extrait": "très bon produit\n\nMise en route et prise en main m ont semblé plutot aisés (et je suis loin d etre une technophile ) le son est net et lumineux , tout en gardant le contact avec l environnement , et en preservant donc les tympans ils tiennent bien pendant la course à pied , et la qualité du son est"
+        },
+        {
+          "id_unite": "amz-B0FDKR4RVP-9",
+          "source": "amazon",
+          "extrait": "Décevant\n\nVoilà deux ans que je les ai, je suis très déçu car ils ne tiennent pas la charge notamment le côté gauche qui à tout juste une demi-heure d’autonomie. À 289€ il y a deux ans ça fait un pris de reviens excessif. Je regrette mes JBL qui m’ont fait 5 ans sans aucun soucis."
+        },
+        {
+          "id_unite": "amz-B0D2HKCMBP-1",
+          "source": "amazon",
+          "extrait": "Batterie décevante\n\nLa qualité de son est acceptable. Mais la gestion d’énergie et la capacité de la batterie sont mauvaises. Quelques heures d’écoute tout au plus (3-4h) contre 12h dans la fiche technique. J’ai l’impression qu’il reste connecté indéfiniment, et sans optimisation, ce qui draine sens"
+        }
+      ],
+      "confiance": "elevee"
+    },
+    {
+      "libelle": "Problème de connectivité",
+      "description": "Certains utilisateurs du corpus rapportent des déconnexions intempestives, notamment en lieux publics ou zones de trafic, et des coupures du micro. Ce pain point (6,4 %) perturbe l'usage quotidien et peut signaler des défauts d'usine.",
+      "frequence_nb": 3,
+      "frequence_pct": 19.14,
+      "intensite_moyenne": 3.0,
+      "score_priorite": 57.42,
+      "sources": [
+        "amazon",
+        "recherche_web"
+      ],
+      "portee": "regionale",
+      "verbatims": [
+        {
+          "id_unite": "amz-B0FG94GB3N-4",
+          "source": "amazon",
+          "extrait": "Produit défectieux\n\nJ'ai peut être reçu un article défaillant d'usine mais lors de sont utilisation dans des lieux publique ou même dans une zone de trafic, les écouteurs se connectent et se déconnectent tout seul à n'importe quel moment. Ce qui est vraiment très gênant. J'ai demandé un remboursemen"
+        },
+        {
+          "id_unite": "amz-B0D2HKCMBP-4",
+          "source": "amazon",
+          "extrait": "Ne fonctione pas longtemps decu\n\nA supert bien fonctioner 3 mois et maintenand se deconect le micro coupe tt seul oblige de l eteindre et de redemarer"
+        }
+      ],
+      "confiance": "elevee"
+    },
+    {
+      "libelle": "Inadaptation morphologique",
+      "description": "Le corpus signale que le produit ne convient pas à certaines morphologies (oreilles larges) ou configurations (lunettes, piercings), provoquant inconfort ou impossibilité de port. Ce pain point (6,4 %) limite le marché potentiel du produit.",
+      "frequence_nb": 3,
+      "frequence_pct": 19.14,
+      "intensite_moyenne": 3.0,
+      "score_priorite": 57.42,
+      "sources": [
+        "amazon"
+      ],
+      "portee": "regionale",
+      "verbatims": [
+        {
+          "id_unite": "amz-B0FSKZHH6M-1",
+          "source": "amazon",
+          "extrait": "Bonne ergonomie mais pas pour tous\n\nSon de bonne qualité et s'adapte bien a différentes tailles d'oreilles mais pas suffisamment avec des piercings."
+        },
+        {
+          "id_unite": "amz-B0FSKZHH6M-6",
+          "source": "amazon",
+          "extrait": "Impresionantes EN SONIDO, DUELEN si tienes GAFAS.\n\nEl sonido es impresionante, no parecen open ear. Sin embargo tengo GAFAS Y NO HAY QUIEN LOS AGUANTE!!"
+        },
+        {
+          "id_unite": "amz-B0FDKR4RVP-0",
+          "source": "amazon",
+          "extrait": "Pas pour les oreilles larges\n\nÇa ne s’adapte pas du tout à mes oreilles. Je suis obligé d’accrocher chaque écouteur à deux mains, replier mon oreille en prenant soin que ça se décroche pas, de vérifier devant un miroir que le pli de mon oreille est dans le bon sens, tout ça pour que le son soit mauv"
+        }
+      ],
+      "confiance": "elevee"
+    },
+    {
+      "libelle": "Ergonomie et commandes défaillantes",
+      "description": "Les commandes tactiles sont jugées trop sensibles dans le corpus, déclenchant des actions involontaires lors du placement ou du réajustement. L'absence de détection de port aggrave ce problème (6,4 % des unités).",
+      "frequence_nb": 3,
+      "frequence_pct": 19.14,
+      "intensite_moyenne": 3.0,
+      "score_priorite": 57.42,
+      "sources": [
+        "amazon",
+        "recherche_web"
+      ],
+      "portee": "regionale",
+      "verbatims": [
+        {
+          "id_unite": "amz-B0FSKZHH6M-9",
+          "source": "amazon",
+          "extrait": "bin sehr unzufrieden\n\nSound, auch beim Telefonieren, ist nicht schlecht (für den Preis). Tragekomfort lässt zu wünschen übrig, Kopfhörer sitzen nicht fest genug am Ohr. Keine Trageerkennung, Kopfhörer spielen auch in der Tasche Musik, Berührungsempfindlichkeit zu hoch. App taugt nichts, weil sie mei"
+        },
+        {
+          "id_unite": "amz-B0FG94GB3N-0",
+          "source": "amazon",
+          "extrait": "Achetez un casque, vraiment\n\nNe tient pas assez bien sur l'oreille pour pouvoir courir et ne reste pas assez près de l'oreille pour entendre quoique ce soit dans l'oreillette, l'écouteur gigote au moindre mouvement. C'est très malin de mettre des commandes tactiles sur un écouteur aussi dur à placer"
+        }
+      ],
+      "confiance": "elevee"
+    },
+    {
+      "libelle": "Volume insuffisant",
+      "description": "Le corpus signale un volume maximal trop faible pour certains contenus (podcasts) ou environnements bruyants (voiture, extérieur). Ce pain point (6,4 %) est inhérent au format « open ear » mais n'est pas toujours anticipé par les acheteurs.",
+      "frequence_nb": 3,
+      "frequence_pct": 19.14,
+      "intensite_moyenne": 3.0,
+      "score_priorite": 57.42,
+      "sources": [
+        "amazon"
+      ],
+      "portee": "regionale",
+      "verbatims": [
+        {
+          "id_unite": "amz-B0FG2SM3P4-3",
+          "source": "amazon",
+          "extrait": "Plutôt bien mais problèmes\n\nBien, mais : - le son maximum n'est pas suffisamment fort pour plusieurs podcasts, c'est très ennuyeux - de temps en temps, des bugs qui font comme un bruit de court-circuit, c'est assez fort pour être douloureux. Oui, on peut renvoyer l'article, mais la flemme en fait, c"
+        },
+        {
+          "id_unite": "amz-B0FDKR4RVP-5",
+          "source": "amazon",
+          "extrait": "Excellent\n\nExcellente qualité sonore par contre faible puissance dans un environnement bruyant comme dans une voiture sur autoroute par exemple."
+        },
+        {
+          "id_unite": "amz-B0FG94GB3N-7",
+          "source": "amazon",
+          "extrait": "Compatibles aide auditive intra auriculaire, nickels pour le sport\n\nTiennent bien pendant le sport, compatibles avec aide auditive intra auriculaire, bon son mais peu audible en environnement bruyant (contrepartie du système « ouvert » des écouteurs)"
+        }
+      ],
+      "confiance": "elevee"
+    },
+    {
+      "libelle": "Dysfonctionnement du microphone",
+      "description": "Le corpus rapporte une qualité de micro insuffisante pour les appels (interlocuteur qui entend mal) et des coupures intempestives. Ce pain point (4,3 %) pénalise l'usage professionnel ou les appels en mobilité.",
+      "frequence_nb": 2,
+      "frequence_pct": 12.78,
+      "intensite_moyenne": 3.0,
+      "score_priorite": 38.34,
+      "sources": [
+        "amazon"
+      ],
+      "portee": "regionale",
+      "verbatims": [
+        {
+          "id_unite": "amz-B0FSKZHH6M-0",
+          "source": "amazon",
+          "extrait": "Un peu décevant\n\nCorrect, sans plus. La qualité du micro n'est pas satisfaisante car l'interlocuteur d'un appel passé avec ces écouteurs a du mal à entendre tout ce que vous dites."
+        },
+        {
+          "id_unite": "amz-B0D2HKCMBP-4",
+          "source": "amazon",
+          "extrait": "Ne fonctione pas longtemps decu\n\nA supert bien fonctioner 3 mois et maintenand se deconect le micro coupe tt seul oblige de l eteindre et de redemarer"
+        }
+      ],
+      "confiance": "elevee"
+    },
+    {
+      "libelle": "Service client insuffisant",
+      "description": "Deux utilisateurs du corpus déplorent l'absence de réponse ou de solution du service après-vente face à des pannes sous garantie. Ce pain point (4,3 %) amplifie la déception liée aux défaillances matérielles.",
+      "frequence_nb": 2,
+      "frequence_pct": 12.78,
+      "intensite_moyenne": 3.0,
+      "score_priorite": 38.34,
+      "sources": [
+        "amazon"
+      ],
+      "portee": "regionale",
+      "verbatims": [
+        {
+          "id_unite": "amz-B0D2HKCMBP-7",
+          "source": "amazon",
+          "extrait": "Bon casque mais...\n\nDommage, un produit de bonne qualité global. Son ok meme si pas incroyable. Fait le taff. Aura duré 1 an et demi d'utilisation intense avant que le premier bouton lache et soit inutilisable, l'eau s'infiltrais et le casque s'abimais a vu d'œil. Quand au service de garantie, a par"
+        },
+        {
+          "id_unite": "amz-B0FG2SM3P4-6",
+          "source": "amazon",
+          "extrait": "Ne charge plus !\n\nJe déconseille vraiment. Les écouteurs ne rechargent plus car la boîte de rechargement a lâché après quelques semaines et plus de possibilités de retour... Juste inutilisable, ça fait bien cher après aussi peu de temps après l'achat."
+        }
+      ],
+      "confiance": "elevee"
+    },
+    {
+      "libelle": "Durée de vie insuffisante",
+      "description": "Un utilisateur du corpus rapporte une panne complète avant un an d'usage. Ce pain point (2,1 %) rejoint les préoccupations sur la fiabilité et le rapport qualité-prix.",
+      "frequence_nb": 1,
+      "frequence_pct": 6.39,
+      "intensite_moyenne": 3.0,
+      "score_priorite": 19.17,
+      "sources": [
+        "amazon"
+      ],
+      "portee": "regionale",
+      "verbatims": [
+        {
+          "id_unite": "amz-B0D2HKCMBP-5",
+          "source": "amazon",
+          "extrait": "Déçu\n\nAu début tout va pour le mieux, le son est de qualité, bonne autonomie. Au bout de quelques mois (moins d’un an) l’appareil a des difficultés à charger ( led bleu de fin de charge allumée à 60% de charge) et d’un coup le bouton on/off ne fonctionne plus, impossible d’allumer l’appareil. Vu le"
+        }
+      ],
+      "confiance": "elevee"
+    },
+    {
+      "libelle": "Problème d'étanchéité",
+      "description": "Malgré la certification IP54, un utilisateur du corpus constate une infiltration d'eau après 1,5 an d'usage intense. Ce pain point (2,1 %) remet en cause la promesse de résistance à la transpiration et aux intempéries.",
+      "frequence_nb": 1,
+      "frequence_pct": 6.39,
+      "intensite_moyenne": 3.0,
+      "score_priorite": 19.17,
+      "sources": [
+        "amazon"
+      ],
+      "portee": "regionale",
+      "verbatims": [
+        {
+          "id_unite": "amz-B0D2HKCMBP-7",
+          "source": "amazon",
+          "extrait": "Bon casque mais...\n\nDommage, un produit de bonne qualité global. Son ok meme si pas incroyable. Fait le taff. Aura duré 1 an et demi d'utilisation intense avant que le premier bouton lache et soit inutilisable, l'eau s'infiltrais et le casque s'abimais a vu d'œil. Quand au service de garantie, a par"
+        }
+      ],
+      "confiance": "elevee"
+    },
+    {
+      "libelle": "Absence de détection de port",
+      "description": "Le corpus signale que les écouteurs continuent de lire la musique même retirés ou rangés dans le boîtier. Ce pain point (2,1 %) est perçu comme un manque de finition logicielle pour un produit de cette gamme.",
+      "frequence_nb": 1,
+      "frequence_pct": 6.39,
+      "intensite_moyenne": 3.0,
+      "score_priorite": 19.17,
+      "sources": [
+        "amazon"
+      ],
+      "portee": "regionale",
+      "verbatims": [
+        {
+          "id_unite": "amz-B0FSKZHH6M-9",
+          "source": "amazon",
+          "extrait": "bin sehr unzufrieden\n\nSound, auch beim Telefonieren, ist nicht schlecht (für den Preis). Tragekomfort lässt zu wünschen übrig, Kopfhörer sitzen nicht fest genug am Ohr. Keine Trageerkennung, Kopfhörer spielen auch in der Tasche Musik, Berührungsempfindlichkeit zu hoch. App taugt nichts, weil sie mei"
+        }
+      ],
+      "confiance": "elevee"
+    },
+    {
+      "libelle": "Application peu fonctionnelle",
+      "description": "Un utilisateur du corpus juge l'application compagnon inutile ou insuffisante. Ce pain point (2,1 %) limite les possibilités de personnalisation et d'optimisation de l'expérience.",
+      "frequence_nb": 1,
+      "frequence_pct": 6.39,
+      "intensite_moyenne": 3.0,
+      "score_priorite": 19.17,
+      "sources": [
+        "amazon"
+      ],
+      "portee": "regionale",
+      "verbatims": [
+        {
+          "id_unite": "amz-B0FSKZHH6M-9",
+          "source": "amazon",
+          "extrait": "bin sehr unzufrieden\n\nSound, auch beim Telefonieren, ist nicht schlecht (für den Preis). Tragekomfort lässt zu wünschen übrig, Kopfhörer sitzen nicht fest genug am Ohr. Keine Trageerkennung, Kopfhörer spielen auch in der Tasche Musik, Berührungsempfindlichkeit zu hoch. App taugt nichts, weil sie mei"
+        }
+      ],
+      "confiance": "elevee"
+    }
+  ],
+  "besoins": [],
+  "attentes": [],
+  "comportements_achat": {
+    "criteres_choix": [
+      {
+        "libelle": "marque",
+        "frequence_nb": 3,
+        "preuves_id": [
+          "amz-B0FDKR4RVP-3",
+          "amz-B0FDKR4RVP-4",
+          "amz-B0FDKR4RVP-7"
+        ]
+      },
+      {
+        "libelle": "qualité sonore",
+        "frequence_nb": 3,
+        "preuves_id": [
+          "amz-B0FDKR4RVP-6",
+          "amz-B0FSKZHH6M-5",
+          "amz-B0FSKZHH6M-6"
+        ]
+      },
+      {
+        "libelle": "stabilité pour le sport",
+        "frequence_nb": 2,
+        "preuves_id": [
+          "amz-B0FG2SM3P4-0",
+          "amz-B0FG94GB3N-0"
+        ]
+      },
+      {
+        "libelle": "adaptation morphologique",
+        "frequence_nb": 1,
+        "preuves_id": [
+          "amz-B0FDKR4RVP-0"
+        ]
+      },
+      {
+        "libelle": "autonomie",
+        "frequence_nb": 1,
+        "preuves_id": [
+          "amz-B0D2HKCMBP-1"
+        ]
+      },
+      {
+        "libelle": "autonomie et confort",
+        "frequence_nb": 1,
+        "preuves_id": [
+          "amz-B0D2HKCMBP-8"
+        ]
+      },
+      {
+        "libelle": "compatibilité et stabilité",
+        "frequence_nb": 1,
+        "preuves_id": [
+          "amz-B0FG94GB3N-7"
+        ]
+      },
+      {
+        "libelle": "confort",
+        "frequence_nb": 1,
+        "preuves_id": [
+          "amz-B0D2HKCMBP-6"
+        ]
+      }
+    ],
+    "freins": [
+      {
+        "libelle": "batterie défaillante",
+        "frequence_nb": 2,
+        "preuves_id": [
+          "amz-B0D2HKCMBP-1",
+          "amz-B0FDKR4RVP-9"
+        ]
+      },
+      {
+        "libelle": "mauvaise tenue",
+        "frequence_nb": 2,
+        "preuves_id": [
+          "amz-B0FG2SM3P4-2",
+          "amz-B0FG94GB3N-8"
+        ]
+      },
+      {
+        "libelle": "bugs audio et volume insuffisant",
+        "frequence_nb": 1,
+        "preuves_id": [
+          "amz-B0FG2SM3P4-3"
+        ]
+      },
+      {
+        "libelle": "commandes frustrantes",
+        "frequence_nb": 1,
+        "preuves_id": [
+          "amz-B0FG2SM3P4-7"
+        ]
+      },
+      {
+        "libelle": "douleur avec lunettes",
+        "frequence_nb": 1,
+        "preuves_id": [
+          "amz-B0FSKZHH6M-6"
+        ]
+      },
+      {
+        "libelle": "défaillance après 3 mois",
+        "frequence_nb": 1,
+        "preuves_id": [
+          "amz-B0D2HKCMBP-4"
+        ]
+      },
+      {
+        "libelle": "défaillance avant un an",
+        "frequence_nb": 1,
+        "preuves_id": [
+          "amz-B0D2HKCMBP-5"
+        ]
+      },
+      {
+        "libelle": "défaillance batterie",
+        "frequence_nb": 1,
+        "preuves_id": [
+          "amz-B0FDKR4RVP-6"
+        ]
+      }
+    ],
+    "declencheurs": [
+      {
+        "libelle": "pratique sportive",
+        "frequence_nb": 2,
+        "preuves_id": [
+          "amz-B0FG2SM3P4-0",
+          "amz-B0FG94GB3N-2"
+        ]
+      },
+      {
+        "libelle": "activités sportives",
+        "frequence_nb": 1,
+        "preuves_id": [
+          "amz-B0FG94GB3N-6"
+        ]
+      },
+      {
+        "libelle": "pratique de la course",
+        "frequence_nb": 1,
+        "preuves_id": [
+          "amz-B0FG94GB3N-0"
+        ]
+      },
+      {
+        "libelle": "pratique sportive et port d'aide auditive",
+        "frequence_nb": 1,
+        "preuves_id": [
+          "amz-B0FG94GB3N-7"
+        ]
+      },
+      {
+        "libelle": "retour du produit",
+        "frequence_nb": 1,
+        "preuves_id": [
+          "amz-B0FG2SM3P4-7"
+        ]
+      }
+    ],
+    "occasions_usage": [
+      {
+        "libelle": "sport",
+        "frequence_nb": 3,
+        "preuves_id": [
+          "amz-B0FDKR4RVP-7",
+          "amz-B0FG94GB3N-2",
+          "amz-B0FG94GB3N-7"
+        ]
+      },
+      {
+        "libelle": "appels téléphoniques",
+        "frequence_nb": 1,
+        "preuves_id": [
+          "amz-B0FSKZHH6M-0"
+        ]
+      },
+      {
+        "libelle": "bureau",
+        "frequence_nb": 1,
+        "preuves_id": [
+          "amz-B0FG2SM3P4-4"
+        ]
+      },
+      {
+        "libelle": "course",
+        "frequence_nb": 1,
+        "preuves_id": [
+          "amz-B0FG94GB3N-0"
+        ]
+      },
+      {
+        "libelle": "course et activités sportives",
+        "frequence_nb": 1,
+        "preuves_id": [
+          "amz-B0FG94GB3N-6"
+        ]
+      },
+      {
+        "libelle": "course à pied",
+        "frequence_nb": 1,
+        "preuves_id": [
+          "amz-B0FDKR4RVP-6"
+        ]
+      },
+      {
+        "libelle": "environnement bruyant",
+        "frequence_nb": 1,
+        "preuves_id": [
+          "amz-B0FDKR4RVP-5"
+        ]
+      },
+      {
+        "libelle": "lieux publics et zones de trafic",
+        "frequence_nb": 1,
+        "preuves_id": [
+          "amz-B0FG94GB3N-4"
+        ]
+      }
+    ],
+    "sensibilite_prix": {
+      "niveau": "forte",
+      "commentaire": "Les rares acheteurs satisfaits le sont pour le prix, jamais pour le produit : la valeur perçue s'effondre dès qu'une défaillance survient.",
+      "preuves_id": []
+    }
+  },
+  "signaux_positifs": [],
+  "divergences_sources": [
+    "Aucune source ne rapporte d'expérience durablement satisfaisante."
+  ],
+  "synthese_executive": "Le corpus réunit 292 unités (242 Reddit, 50 Amazon) sur la période 2009–2026, avec un taux d'échantillonnage de 100 %. La portée est massivement globale (242 unités) et anglophone ; seules 50 unités sont régionales (FR). L'analyse de sentiment ne porte que sur 47 unités Amazon : 22 positives, 24 négatives, 1 mixte. Le sentiment dominant est négatif, mais la base est trop étroite pour généraliser.\n\nLes trois pain points prioritaires sont : (1) tenue insuffisante à l'oreille (8 mentions, score 45,44), (2) qualité sonore insuffisante (5 mentions, score 26,6), (3) problème de charge (5 mentions, score 25,54). Tous sont de portée régionale et issus d'Amazon.\n\nLes besoins saillants incluent la stabilité à l'oreille pendant l'effort, l'autonomie réelle et durable, le confort prolongé sans intrusion, la sécurité auditive en mouvement, la fiabilité matérielle, la praticité en déplacement et des commandes intuitives.\n\n**Mise en garde principale** : 83 % du corpus est de portée globale et anglophone (Reddit), sans analyse de sentiment. Les pain points et sentiments ne reposent que sur 50 avis Amazon FR. Ce corpus ne permet aucune conclusion sur la demande française, la taille du marché, ni la représentativité des retours.",
+  "statuts_analyse": [
+    {
+      "phase": "carte_unites",
+      "succes": true,
+      "message_erreur": null,
+      "nb_elements": 15,
+      "nb_tentatives": 1
+    },
+    {
+      "phase": "carte_unites",
+      "succes": true,
+      "message_erreur": null,
+      "nb_elements": 15,
+      "nb_tentatives": 1
+    },
+    {
+      "phase": "carte_unites",
+      "succes": true,
+      "message_erreur": null,
+      "nb_elements": 15,
+      "nb_tentatives": 1
+    },
+    {
+      "phase": "carte_unites",
+      "succes": true,
+      "message_erreur": null,
+      "nb_elements": 15,
+      "nb_tentatives": 1
+    },
+    {
+      "phase": "carte_unites",
+      "succes": true,
+      "message_erreur": null,
+      "nb_elements": 15,
+      "nb_tentatives": 1
+    },
+    {
+      "phase": "carte_unites",
+      "succes": true,
+      "message_erreur": null,
+      "nb_elements": 15,
+      "nb_tentatives": 1
+    },
+    {
+      "phase": "carte_unites",
+      "succes": true,
+      "message_erreur": null,
+      "nb_elements": 15,
+      "nb_tentatives": 1
+    },
+    {
+      "phase": "carte_unites",
+      "succes": true,
+      "message_erreur": null,
+      "nb_elements": 15,
+      "nb_tentatives": 1
+    },
+    {
+      "phase": "carte_unites",
+      "succes": true,
+      "message_erreur": null,
+      "nb_elements": 15,
+      "nb_tentatives": 1
+    },
+    {
+      "phase": "carte_unites",
+      "succes": true,
+      "message_erreur": null,
+      "nb_elements": 15,
+      "nb_tentatives": 1
+    },
+    {
+      "phase": "carte_unites",
+      "succes": true,
+      "message_erreur": null,
+      "nb_elements": 15,
+      "nb_tentatives": 1
+    },
+    {
+      "phase": "carte_unites",
+      "succes": true,
+      "message_erreur": null,
+      "nb_elements": 15,
+      "nb_tentatives": 1
+    },
+    {
+      "phase": "carte_unites",
+      "succes": true,
+      "message_erreur": null,
+      "nb_elements": 15,
+      "nb_tentatives": 1
+    },
+    {
+      "phase": "carte_unites",
+      "succes": true,
+      "message_erreur": null,
+      "nb_elements": 15,
+      "nb_tentatives": 1
+    },
+    {
+      "phase": "carte_unites",
+      "succes": true,
+      "message_erreur": null,
+      "nb_elements": 15,
+      "nb_tentatives": 1
+    },
+    {
+      "phase": "carte_unites",
+      "succes": true,
+      "message_erreur": null,
+      "nb_elements": 15,
+      "nb_tentatives": 1
+    },
+    {
+      "phase": "carte_unites",
+      "succes": true,
+      "message_erreur": null,
+      "nb_elements": 15,
+      "nb_tentatives": 1
+    },
+    {
+      "phase": "carte_unites",
+      "succes": true,
+      "message_erreur": null,
+      "nb_elements": 15,
+      "nb_tentatives": 1
+    },
+    {
+      "phase": "carte_unites",
+      "succes": true,
+      "message_erreur": null,
+      "nb_elements": 15,
+      "nb_tentatives": 1
+    },
+    {
+      "phase": "carte_unites",
+      "succes": true,
+      "message_erreur": null,
+      "nb_elements": 7,
+      "nb_tentatives": 1
+    },
+    {
+      "phase": "carte_documents",
+      "succes": true,
+      "message_erreur": null,
+      "nb_elements": 4,
+      "nb_tentatives": 1
+    },
+    {
+      "phase": "carte_documents",
+      "succes": true,
+      "message_erreur": null,
+      "nb_elements": 1,
+      "nb_tentatives": 1
+    },
+    {
+      "phase": "normalisation_libelles",
+      "succes": true,
+      "message_erreur": null,
+      "nb_elements": 12,
+      "nb_tentatives": 1
+    },
+    {
+      "phase": "normalisation_libelles",
+      "succes": true,
+      "message_erreur": null,
+      "nb_elements": 15,
+      "nb_tentatives": 1
+    },
+    {
+      "phase": "synthese_insights",
+      "succes": true,
+      "message_erreur": null,
+      "nb_elements": 7,
+      "nb_tentatives": 1
+    },
+    {
+      "phase": "lecture_critique",
+      "succes": true,
+      "message_erreur": null,
+      "nb_elements": 0,
+      "nb_tentatives": 1
+    },
+    {
+      "phase": "post_validation",
+      "succes": true,
+      "message_erreur": null,
+      "nb_elements": 0,
+      "nb_tentatives": 0
+    }
+  ],
+  "donnees_suffisantes": true,
+  "confiance_globale": {
+    "niveau": "faible",
+    "justification": "Le niveau de confiance est **faible** pour quatre raisons structurelles : (1) **déséquilibre de portée** : 83 % du corpus (242/292 unités) est de portée globale et anglophone, alors que le marché étudié est FR ; (2) **absence de sentiment sur Reddit** : les 242 unités Reddit ne portent aucune analyse de sentiment, réduisant la base d'évaluation à 47 avis Amazon ; (3) **mono-source pour les pain points** : tous les pain points prioritaires proviennent d'Amazon FR uniquement, sans recoupement significatif sur d'autres sources ; (4) **biais d'échantillonnage non corrigés** : Reddit surreprésente un public jeune, masculin et technophile, Amazon ne couvre qu'une marketplace, et 73 unités portent des artefacts d'encodage dégradant la classification. Ce corpus illustre des signaux d'usage, il ne constitue en aucun cas un échantillon représentatif du marché français.",
+    "facteurs": [
+      "83 % du corpus (242/292) est de portée globale et anglophone, inadapté au marché FR",
+      "L'analyse de sentiment ne porte que sur 47 unités Amazon, base trop étroite pour généraliser",
+      "Tous les pain points prioritaires proviennent d'une seule source (Amazon FR)",
+      "Reddit surreprésente un public jeune, masculin, technophile et anglophone, non représentatif de la population française",
+      "73 unités sur 292 portent des artefacts d'encodage dégradant la classification",
+      "Aucune donnée de vente, de part de marché ou de taille de marché n'est disponible dans le corpus",
+      "Les avis Amazon sont les « meilleurs avis » sélectionnés par l'algorithme commercial, pas un échantillon aléatoire",
+      "La recherche web est géolocalisée aux États-Unis et en anglais, inadaptée au marché FR",
+      "Le corpus mélange des populations non comparables (contributeurs Reddit, acheteurs Amazon, rédacteurs web)",
+      "Surreprésentation du public anglophone et global (83 % du corpus) au détriment du marché français",
+      "Biais de sélection Amazon : seuls les « meilleurs avis » choisis par l'algorithme commercial sont collectés",
+      "Biais démographique Reddit : jeunes, masculins, technophiles, non représentatifs de la population générale",
+      "Absence de sentiment analysé sur 83 % du corpus (Reddit), réduisant la base d'évaluation à 47 unités Amazon",
+      "Mono-source pour les pain points : tous issus d'Amazon FR, sans recoupement significatif sur d'autres canaux",
+      "Biais de référencement web : la recherche est géolocalisée aux États-Unis, pas en France",
+      "Artefacts d'encodage sur 25 % du corpus (73/292), dégradant la fiabilité de la classification automatique",
+      "Absence totale de données sur les canaux de distribution locaux, le commerce physique et les marketplaces concurrentes",
+      "Période couverte incohérente (2009–2026) : présence probable de données de test ou d'erreurs de datation",
+      "Aucune validation humaine de la classification LLM (sentiments, thèmes, pain points)"
+    ]
+  },
+  "limites": [
+    "[reddit] Reddit n'est pas repr├⌐sentatif de la population d'un march├⌐ : la base d'utilisateurs est document├⌐e comme jeune, majoritairement masculine, technophile et anglophone. Le corpus ne constitue en aucun cas un ├⌐chantillon de consommateurs.",
+    "[reddit] Reddit n'offre aucun filtre g├⌐ographique natif : la ┬½ r├⌐gionalisation ┬╗ repose uniquement sur le choix des subreddits et sur la langue des requ├¬tes. C'est une approximation, ├á interpr├⌐ter comme telle.",
+    "[reddit] La couverture varie fortement selon le pays : pour les march├⌐s non anglophones, le volume de discussions peut ├¬tre tr├¿s faible. L'absence de discussions ne constitue pas un signal d'absence de march├⌐.",
+    "[reddit] Le score de pertinence est une heuristique LLM non valid├⌐e empiriquement et le seuil de r├⌐tention est arbitraire.",
+    "[reddit] La recherche Reddit est non exhaustive : toute liste de r├⌐sultats est plafonn├⌐e ├á environ 1 000 posts c├┤t├⌐ Reddit, le mode rapide de l'actor (actif d'office sur les recherches par mots-cl├⌐s) peut manquer des posts, et le tri par pertinence est opaque.",
+    "[reddit] Les contenus collect├⌐s se limitent ├á la fen├¬tre de recherche configur├⌐e (`searchTime=year`) : les opinions exprim├⌐es ont pu ├⌐voluer depuis.",
+    "[reddit] Les posts annon├ºant z├⌐ro commentaire sont ├⌐cart├⌐s de la phase B : les interroger co├╗terait un item factur├⌐ pour un rendement nul.",
+    "[amazon] Le corpus provient d'UNE seule marketplace Amazon, celle du pays étudié. Il décrit l'offre présente sur ce site, et non l'ensemble du commerce en ligne du pays : les places de marché concurrentes et le commerce local en sont absents.",
+    "[amazon] Aucun filtre de livraison n'est appliqué : le corpus est le catalogue complet de la marketplace, y compris des produits qui ne seraient pas expédiables vers la région d'étude. C'est un choix assumé — restreindre à l'expédiable amputerait l'étude de marché de l'essentiel de l'offre.",
+    "[amazon] Les prix sont exprimés dans la devise de la marketplace et ne sont NI convertis, NI comparables d'une marketplace à l'autre. Ils sont relevés à l'instant du run : les prix Amazon varient de jour en jour.",
+    "[amazon] Amazon bloque une part variable des requêtes automatisées. Un corpus court ou vide peut être le fait de l'anti-bot et non du catalogue : les runs concernés sont signalés dans `statuts_collecte`.",
+    "[amazon] Le classement d'Amazon est commercial : il mêle publicité, performance vendeur et ancienneté de l'annonce. L'ordre de collecte n'est pas un classement de qualité, et le corpus n'est pas exhaustif.",
+    "[amazon] Les avis collectés sont les « meilleurs avis » retenus par Amazon, quelques-uns par produit et sur une fenêtre récente : ils illustrent des retours d'usage, ils ne constituent en aucun cas un échantillon représentatif ni une base de mesure de satisfaction.",
+    "[amazon] `pertinence` et `correspondance` sont des heuristiques produites par un LLM, sans validation sur un échantillon annoté.",
+    "[amazon] Un compte Apify en fin de quota tronque les runs SANS les faire échouer : ils remontent en statut SUCCEEDED avec un dataset incomplet. Vérifier le quota avant toute interprétation d'un volume de produits.",
+    "[recherche_web] La SERP interrogée est géolocalisée aux États-Unis et en anglais : l'actor n'expose aucun paramètre de pays ni de langue de recherche (`serpProxyGroup` ne sert pas à choisir un pays). Le ciblage régional par TLD et par mots-clés géographiques est donc une APPROXIMATION — le classement des résultats reste celui que verrait un utilisateur américain, pas un consommateur du marché étudié.",
+    "[recherche_web] L'opérateur `site:.<tld>` exclut mécaniquement les acteurs locaux hébergés en .com, qui sont nombreux sur la plupart des marchés. Les requêtes à mots-clés géographiques compensent partiellement ce biais, sans aucune garantie d'exhaustivité.",
+    "[recherche_web] Le corpus se limite aux premiers résultats Google de chaque requête : il n'est pas exhaustif et reflète les biais du référencement (optimisation SEO, contenu affilié, pages générées). Chaque page est un SIGNAL À RECOUPER, jamais un fait ; les chiffres qui y figurent (prix, parts de marché, classements) doivent être revalidés sur des sources structurées.",
+    "[recherche_web] `type_source`, `portee_regionale` et `pertinence` sont des heuristiques produites par un LLM, sans validation sur un échantillon annoté.",
+    "[recherche_web] Une redondance avec les corpus des autres collecteurs reste possible malgré l'exclusion de domaines : un même contenu peut être republié sur un domaine non listé.",
+    "[recherche_web] La fraîcheur des contenus n'est pas garantie : ce mode de collecte n'expose aucun filtre de date fiable, et les pages retenues peuvent dater de plusieurs années.",
+    "73 unité(s) sur 292 portent des caractères mal décodés en amont (séquences de type « ΓÇô », « Ã© ») : le collecteur a produit du texte doublement encodé. Les verbatims cités peuvent contenir ces artefacts, et la classification de ces unités est dégradée d'autant.",
+    "1 unité(s) écartée(s) comme doublons de texte : les republications et citations gonflaient artificiellement les fréquences.",
+    "Le corpus analysé n'est pas exhaustif et reflète les biais de collecte des agents amont (moteurs de recherche, plafonds de collecte, seuils de pertinence). Il ne constitue en aucun cas un échantillon représentatif de la population d'un marché.",
+    "La classification des sentiments, thèmes et pain points est produite par un modèle de langage et n'a pas été validée empiriquement contre un codage humain.",
+    "Les populations diffèrent fortement d'une source à l'autre (contributeurs Reddit, acheteurs Amazon, rédacteurs web) : les agrégats inter-sources mélangent des publics qui ne sont pas comparables.",
+    "Aucune inférence sur la taille du marché ne peut être tirée de ces volumes : un nombre d'unités mesure l'activité de discussion collectée, pas la demande.",
+    "[FIXTURE] Sortie F3 délibérément dégradée pour éprouver le chemin de verdict négatif. Les valeurs ne décrivent aucun produit réel."
+  ],
+  "hypotheses": [
+    "Seuil de pertinence amont retenu : 0.5 (heuristique).",
+    "Formule de priorité des pain points : score_priorite = frequence_pct × intensite_moyenne × (1 + 0.25 × (nb_sources − 1)) (heuristique).",
+    "Un insight est qualifié de régional ou global à partir de 70 % d'unités d'une même portée, sinon « mixte ».",
+    "Les commentaires Reddit héritent de la pertinence et de la portée de leur post parent ; un commentaire orphelin est de portée inconnue.",
+    "Le produit et le marché retenus pour la sortie sont ceux du premier fichier valide, dans l'ordre Reddit → Amazon → Recherche web."
+  ]
+}

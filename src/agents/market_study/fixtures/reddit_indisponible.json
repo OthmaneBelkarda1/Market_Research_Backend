@@ -1,0 +1,50 @@
+{
+  "produit": {
+    "nom": "JBL Endurance Peak 4 Open Ear",
+    "description": "Écouteurs sans fil à conduction d'air en oreille ouverte, crochets d'oreille souples, certification IP54, autonomie annoncée de 10 heures par charge et 40 heures avec le boîtier, commandes tactiles, positionnés pour la pratique sportive.",
+    "categorie": "electronics"
+  },
+  "marche": {
+    "geo": "FR",
+    "langue": "fr"
+  },
+  "alertes_qualite_input": [],
+  "strategie": {
+    "requetes_marche": [],
+    "requetes_globales": [],
+    "subreddits_regionaux": [],
+    "subreddits_thematiques": [],
+    "justification": ""
+  },
+  "posts": [],
+  "commentaires": [],
+  "stats": {
+    "nb_posts_collectes": 0,
+    "nb_posts_retenus": 0,
+    "nb_posts_approfondis": 0,
+    "nb_commentaires": 0,
+    "repartition_par_subreddit": {},
+    "repartition_par_portee": {},
+    "date_plus_ancienne": null,
+    "date_plus_recente": null
+  },
+  "statuts_collecte": [
+    {
+      "phase": "prospection_globale",
+      "cible": "3 requetes",
+      "succes": false,
+      "message_erreur": "quota Apify epuise",
+      "nb_items": 0,
+      "nb_tentatives": 2
+    }
+  ],
+  "donnees_disponibles": false,
+  "limites": [
+    "Aucun post n'a pu etre collecte : le corpus Reddit est vide."
+  ],
+  "hypotheses": [],
+  "_fixture": {
+    "statut": "synthetique",
+    "note": "Cas de degradation amont : donnees_disponibles=false, corpus vide."
+  }
+}

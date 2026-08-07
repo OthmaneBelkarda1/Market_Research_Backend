@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(uv --version)",
+      "Bash(uv venv *)",
+      "Bash(uv sync *)",
+      "Bash(uv pip *)",
+      "Bash(.venv/Scripts/python.exe -W error::DeprecationWarning -c \"from fastapi import status; print\\(status.HTTP_422_UNPROCESSABLE_ENTITY\\); print\\(status.HTTP_413_REQUEST_ENTITY_TOO_LARGE\\)\")",
+      "Bash(DATABASE_URL=\"postgresql+asyncpg://postgres:pwd@localhost:5432/postgres\" SUPABASE_URL=\"https://example.supabase.co\" SUPABASE_SERVICE_ROLE_KEY=\"dummy\" PYTHONPATH=\".\" .venv/Scripts/python.exe \"C:/Users/belka/AppData/Local/Temp/claude/c--Users-belka-Desktop-Internship-agent--tude-de-marche/b2500b4b-bc27-4479-b2f5-88c6ac849df0/scratchpad/smoke.py\")",
+      "Bash(DATABASE_URL=postgresql+asyncpg://postgres:pwd@localhost:5432/postgres SUPABASE_URL=https://example.supabase.co SUPABASE_SERVICE_ROLE_KEY=dummy .venv/Scripts/python.exe -c ' *)",
+      "Bash(.venv/Scripts/alembic.exe init *)",
+      "Bash(.venv/Scripts/python.exe -)",
+      "Bash(export DATABASE_URL=\"postgresql+asyncpg://postgres:pwd@localhost:5432/postgres\" SUPABASE_URL=\"https://example.supabase.co\" SUPABASE_SERVICE_ROLE_KEY=\"dummy\")",
+      "Bash(.venv/Scripts/alembic.exe upgrade *)",
+      "Bash(.venv/Scripts/python.exe -c ' *)",
+      "Bash(DATABASE_URL=\"postgresql+asyncpg://postgres:pwd@localhost:5432/postgres\" SUPABASE_URL=\"https://example.supabase.co\" SUPABASE_SERVICE_ROLE_KEY=\"dummy\" .venv/Scripts/python.exe -m pytest -q)",
+      "Bash(where psql *)",
+      "Bash(powershell -NoProfile -Command \"Get-Service -Name 'postgres*' -ErrorAction SilentlyContinue | Select-Object Name,Status\")",
+      "Bash(.venv/Scripts/ruff.exe check *)",
+      "Bash(grep -n \"^#\\\\{1,3\\\\} \\\\|^| \\\\`GET\\\\|^| \\\\`POST\" README.md)"
+    ]
+  }
+}

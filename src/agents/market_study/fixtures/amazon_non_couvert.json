@@ -1,0 +1,221 @@
+{
+  "produit": {
+    "nom": "JBL Endurance Peak 4 Open Ear",
+    "description": "Écouteurs sans fil à conduction d'air en oreille ouverte, crochets d'oreille souples, certification IP54, autonomie annoncée de 10 heures par charge et 40 heures avec le boîtier, commandes tactiles, positionnés pour la pratique sportive.",
+    "categorie": "electronics"
+  },
+  "marche": {
+    "geo": "FR",
+    "langue": "fr"
+  },
+  "region_couverte": false,
+  "marketplace": null,
+  "alertes_qualite_input": [
+    {
+      "type": "description_insuffisante",
+      "detail": "La description ne précise pas le type de connectivité (Bluetooth, filaire, etc.), ni la compatibilité avec les appareils (smartphone, montre, etc.), éléments essentiels pour identifier l'usage et formuler une recherche pertinente."
+    },
+    {
+      "type": "autre",
+      "detail": "Le titre mentionne « Open Ear » (anglais) tandis que la description utilise « conduction ouverte » (français). Incohérence terminologique pour le marché FR."
+    }
+  ],
+  "plan_recherches": [
+    {
+      "mots_cles": "écouteurs open ear sport",
+      "tri": "pertinence",
+      "prix_min": null,
+      "prix_max": null,
+      "note_min": null,
+      "nb_avis_min": 0,
+      "justification": "Cibler directement la catégorie d'écouteurs à conduction ouverte pour le sport, attribut différenciant principal du produit.",
+      "url": "https://www.amazon.fr/s?k=%C3%A9couteurs+open+ear+sport",
+      "filtres_url": false,
+      "est_repli": false
+    },
+    {
+      "mots_cles": "écouteurs conduction ouverte",
+      "tri": "meilleures_ventes",
+      "prix_min": null,
+      "prix_max": null,
+      "note_min": null,
+      "nb_avis_min": 100,
+      "justification": "Élargir à la technologie de conduction ouverte sans restriction sportive, en privilégiant les best-sellers pour évaluer la demande du segment.",
+      "url": "https://www.amazon.fr/s?k=%C3%A9couteurs+conduction+ouverte&s=exact-aware-popularity-rank",
+      "filtres_url": false,
+      "est_repli": false
+    },
+    {
+      "mots_cles": "écouteurs sport IP54",
+      "tri": "prix_decroissant",
+      "prix_min": null,
+      "prix_max": null,
+      "note_min": null,
+      "nb_avis_min": 0,
+      "justification": "Positionner le produit sur le segment premium des écouteurs sportifs étanches, en explorant les offres haut de gamme.",
+      "url": "https://www.amazon.fr/s?k=%C3%A9couteurs+sport+IP54&s=price-desc-rank",
+      "filtres_url": false,
+      "est_repli": false
+    }
+  ],
+  "produits": [],
+  "stats": {
+    "nb_produits_collectes": 90,
+    "nb_produits_retenus": 59,
+    "nb_produits_avec_avis": 5,
+    "nb_avis_collectes": 50,
+    "nb_doublons_ecartes": 12,
+    "nb_produits_hors_criteres": 10,
+    "nb_produits_sous_seuil": 9,
+    "nb_produits_non_classifies": 0,
+    "nb_enregistrements_erreur": 0,
+    "prix_min": 10.88,
+    "prix_median": 33.95,
+    "prix_max": 199.99,
+    "devise": "€",
+    "note_moyenne": 4.13,
+    "repartition_par_correspondance": {
+      "produit_equivalent": 40,
+      "variante": 19
+    },
+    "repartition_par_marque": {
+      "JBL": 13,
+      "SHOKZ": 4,
+      "LOBKIN": 3,
+      "soundcore": 3,
+      "UGREEN": 2,
+      "LEVMEK": 2,
+      "I love e iFecco": 2,
+      "Bose": 1,
+      "HUAWEI": 1,
+      "Amazfit": 1,
+      "oraolo": 1,
+      "JLab": 1,
+      "Volink": 1,
+      "SoundPEATS": 1,
+      "truefree": 1,
+      "Panasonic": 1,
+      "Caijin": 1,
+      "AZJLOOF": 1,
+      "Sennheiser": 1,
+      "sayrelances": 1,
+      "ZOVIMAX": 1,
+      "FALSOM": 1,
+      "Conyat": 1,
+      "PTHTECHUS": 1,
+      "Belkin": 1,
+      "Baseus": 1,
+      "GYQX": 1,
+      "EEXXYZ": 1,
+      "Raycon": 1,
+      "isightguard": 1,
+      "fesoklaf": 1,
+      "Jesebang": 1,
+      "Avantree": 1,
+      "CASCHO": 1,
+      "Rulefiss": 1,
+      "iMangoo": 1,
+      "Btootos": 1
+    },
+    "repartition_par_recherche": {
+      "écouteurs open ear sport": 27,
+      "écouteurs sport IP54": 19,
+      "écouteurs conduction ouverte": 13
+    }
+  },
+  "statuts_collecte": [
+    {
+      "recherche": "écouteurs open ear sport",
+      "type_run": "produits",
+      "succes": true,
+      "message_erreur": null,
+      "nb_items": 30,
+      "nb_tentatives": 1
+    },
+    {
+      "recherche": "écouteurs conduction ouverte",
+      "type_run": "produits",
+      "succes": true,
+      "message_erreur": null,
+      "nb_items": 30,
+      "nb_tentatives": 1
+    },
+    {
+      "recherche": "écouteurs sport IP54",
+      "type_run": "produits",
+      "succes": true,
+      "message_erreur": null,
+      "nb_items": 30,
+      "nb_tentatives": 1
+    },
+    {
+      "recherche": "https://www.amazon.fr/dp/B0FDKR4RVP",
+      "type_run": "avis",
+      "succes": true,
+      "message_erreur": null,
+      "nb_items": 10,
+      "nb_tentatives": 1
+    },
+    {
+      "recherche": "https://www.amazon.fr/dp/B0D2HKCMBP",
+      "type_run": "avis",
+      "succes": true,
+      "message_erreur": null,
+      "nb_items": 10,
+      "nb_tentatives": 1
+    },
+    {
+      "recherche": "https://www.amazon.fr/dp/B0FSKZHH6M",
+      "type_run": "avis",
+      "succes": true,
+      "message_erreur": null,
+      "nb_items": 10,
+      "nb_tentatives": 1
+    },
+    {
+      "recherche": "https://www.amazon.fr/dp/B0FG94GB3N",
+      "type_run": "avis",
+      "succes": true,
+      "message_erreur": null,
+      "nb_items": 10,
+      "nb_tentatives": 1
+    },
+    {
+      "recherche": "https://www.amazon.fr/dp/B0FG2SM3P4",
+      "type_run": "avis",
+      "succes": true,
+      "message_erreur": null,
+      "nb_items": 10,
+      "nb_tentatives": 1
+    }
+  ],
+  "donnees_disponibles": true,
+  "limites": [
+    "Le corpus provient d'UNE seule marketplace Amazon, celle du pays étudié. Il décrit l'offre présente sur ce site, et non l'ensemble du commerce en ligne du pays : les places de marché concurrentes et le commerce local en sont absents.",
+    "Aucun filtre de livraison n'est appliqué : le corpus est le catalogue complet de la marketplace, y compris des produits qui ne seraient pas expédiables vers la région d'étude. C'est un choix assumé — restreindre à l'expédiable amputerait l'étude de marché de l'essentiel de l'offre.",
+    "Les prix sont exprimés dans la devise de la marketplace et ne sont NI convertis, NI comparables d'une marketplace à l'autre. Ils sont relevés à l'instant du run : les prix Amazon varient de jour en jour.",
+    "Amazon bloque une part variable des requêtes automatisées. Un corpus court ou vide peut être le fait de l'anti-bot et non du catalogue : les runs concernés sont signalés dans `statuts_collecte`.",
+    "Le classement d'Amazon est commercial : il mêle publicité, performance vendeur et ancienneté de l'annonce. L'ordre de collecte n'est pas un classement de qualité, et le corpus n'est pas exhaustif.",
+    "Les avis collectés sont les « meilleurs avis » retenus par Amazon, quelques-uns par produit et sur une fenêtre récente : ils illustrent des retours d'usage, ils ne constituent en aucun cas un échantillon représentatif ni une base de mesure de satisfaction.",
+    "`pertinence` et `correspondance` sont des heuristiques produites par un LLM, sans validation sur un échantillon annoté.",
+    "Un compte Apify en fin de quota tronque les runs SANS les faire échouer : ils remontent en statut SUCCEEDED avec un dataset incomplet. Vérifier le quota avant toute interprétation d'un volume de produits."
+  ],
+  "hypotheses": [
+    "Seul le site Amazon DU PAYS étudié est interrogé, et l'agent s'arrête si ce pays n'en a pas. Le corpus suppose donc qu'Amazon est un canal significatif sur ce marché — ce qui reste à vérifier pays par pays, la part de marché d'Amazon variant fortement d'un site à l'autre. Appliqué ici : FR → amazon.fr. « FR » : collecte sur amazon.fr, le site Amazon du pays.",
+    "Aucun `countryCode` ni `zipCode` n'est transmis à l'actor, délibérément. Renseigner une adresse de livraison ferait masquer par Amazon tout ce qu'il ne peut pas y expédier et convertirait les prix dans la devise de ce pays. Le corpus livré est le catalogue COMPLET de la marketplace, dans sa propre devise : une marketplace n'est pas une destination de livraison.",
+    "Le produit est assimilé aux recherches retenues : les produits collectés relèvent de la catégorie de besoin visée, pas nécessairement de la référence exacte de la fiche. Angles retenus — « écouteurs open ear sport » : Cibler directement la catégorie d'écouteurs à conduction ouverte pour le sport, attribut différenciant principal du produit. ; « écouteurs conduction ouverte » : Élargir à la technologie de conduction ouverte sans restriction sportive, en privilégiant les best-sellers pour évaluer la demande du segment. ; « écouteurs sport IP54 » : Positionner le produit sur le segment premium des écouteurs sportifs étanches, en explorant les offres haut de gamme.",
+    "Seuils appliqués : pertinence ≥ 0.5 pour retenir un produit, 5 produit(s) minimum avant déclenchement du repli, avis collectés sur les 5 produits les plus pertinents. Ces valeurs sont des heuristiques non validées empiriquement."
+  ],
+  "_fixture": {
+    "statut": "reelle_adaptee",
+    "adaptation": "en-tete produit/marche harmonise sur le produit pivot",
+    "en_tete_origine": {
+      "produit": "JBL Endurance Peak 4 Open Ear",
+      "marche": {
+        "geo": "FR",
+        "langue": "fr"
+      }
+    },
+    "note": "Derive de amazon.json : region_couverte=false, comme le collecteur le produit pour un pays sans site Amazon propre (le Maroc notamment)."
+  }
+}

@@ -1,0 +1,6 @@
+# Identifiants et état de session — ne doivent JAMAIS être versionnés.
+.env
+.tokens.json
+
+__pycache__/
+*.pyc
