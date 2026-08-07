@@ -10,7 +10,7 @@ from src.products.models import Product
 from src.studies import service
 from src.studies.config import studies_settings
 from src.studies.constants import StudySource, StudySourceStatus, StudyStatus, StudyTrigger
-from src.studies.models import Study, StudySourceData
+from src.studies.models import Study, StudyReport, StudySourceData
 
 from tests.studies.conftest import ProductFactory
 
@@ -345,3 +345,44 @@ async def test_get_an_unknown_source_name(
     response = await client.get(f"/studies/{study_id}/sources/tiktok")
 
     assert response.status_code == 422
+
+
+# ---------------------------------------------------------------------------
+# GET /studies/{study_id}/report
+# ---------------------------------------------------------------------------
+async def test_get_the_report(
+    client: AsyncClient, db_session: AsyncSession, product: Product
+) -> None:
+    created = await client.post("/studies", json={"product_id": str(product.id), "region": "MA"})
+    study_id = uuid.UUID(created.json()["id"])
+    db_session.add(
+        StudyReport(
+            study_id=study_id,
+            rapport_markdown="# Rapport\n\nNeuf sections.",
+            resume_markdown="# Resume executif",
+            payload={"marche": {"geo": "MA"}, "limites": []},
+        )
+    )
+    await db_session.commit()
+
+    response = await client.get(f"/studies/{study_id}/report")
+
+    assert response.status_code == 200, response.text
+    body = response.json()
+    assert body["study_id"] == str(study_id)
+    assert body["rapport_markdown"] == "# Rapport\n\nNeuf sections."
+    assert body["resume_markdown"] == "# Resume executif"
+    assert body["payload"] == {"marche": {"geo": "MA"}, "limites": []}
+
+
+async def test_a_study_without_a_report_yet(client: AsyncClient, product: Product) -> None:
+    """404, not an empty body: F7 has not run, which is not the same as an empty report."""
+    created = await client.post("/studies", json={"product_id": str(product.id), "region": "MA"})
+
+    response = await client.get(f"/studies/{created.json()['id']}/report")
+
+    assert response.status_code == 404
+
+
+async def test_the_report_of_an_unknown_study(client: AsyncClient) -> None:
+    assert (await client.get(f"/studies/{uuid.uuid4()}/report")).status_code == 404

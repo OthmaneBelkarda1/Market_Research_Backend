@@ -10,11 +10,12 @@ from src.models import ErrorResponse
 from src.studies import service
 from src.studies.constants import DEFAULT_LIST_LIMIT, MAX_LIST_LIMIT, StudySource, StudyStatus
 from src.studies.dependencies import DbSession, ExistingStudy
-from src.studies.models import Study, StudySourceData
+from src.studies.models import Study, StudyReport, StudySourceData
 from src.studies.schemas import (
     StudyConflictResponse,
     StudyCreate,
     StudyListResponse,
+    StudyReportResponse,
     StudyResponse,
     StudySourceListResponse,
     StudySourceResponse,
@@ -193,3 +194,32 @@ async def get_study_source(
     study: ExistingStudy, source: SourceName, db: DbSession
 ) -> StudySourceData:
     return await service.get_study_source(db, study.id, source)
+
+
+@router.get(
+    "/{study_id}/report",
+    response_model=StudyReportResponse,
+    status_code=status.HTTP_200_OK,
+    summary="The report produced by a study",
+    description=(
+        "The deliverable: the full report in Markdown, its executive summary, and F7's "
+        "own JSON output (market, product, hypotheses, analysis statuses, coherence "
+        "alerts, stated limits).\n\n"
+        "`rapport_markdown` runs to tens of thousands of characters -- it is the report "
+        "itself, not an excerpt.\n\n"
+        "A 404 means F7 has not produced a report yet: the study is still running, or it "
+        "failed. A study that reached `completed` or `partial` always has one, since a "
+        "failed report is precisely what makes a study `failed`.\n\n"
+        "**A negative verdict is a result, not a failure**: such a study is `completed` "
+        "and its report says so."
+    ),
+    responses={
+        status.HTTP_200_OK: {"description": "The report and its executive summary"},
+        status.HTTP_404_NOT_FOUND: {
+            "model": ErrorResponse,
+            "description": "No study with this identifier, or this study has no report yet",
+        },
+    },
+)
+async def get_study_report(study: ExistingStudy, db: DbSession) -> StudyReport:
+    return await service.get_study_report(db, study.id)

@@ -31,9 +31,10 @@ from src.studies.exceptions import (
     StudyAlreadyRunning,
     StudyNotFound,
     StudyProductNotFound,
+    StudyReportNotFound,
     StudySourceNotFound,
 )
-from src.studies.models import Study, StudySourceData
+from src.studies.models import Study, StudyReport, StudySourceData
 from src.studies.schemas import StudyCreate
 
 logger = logging.getLogger(__name__)
@@ -263,6 +264,20 @@ async def get_study_source(
     if row is None:
         raise StudySourceNotFound()
     return row
+
+
+async def get_study_report(db: AsyncSession, study_id: uuid.UUID) -> StudyReport:
+    """The report of a study, or raise 404.
+
+    A missing report is a 404 rather than an empty body: it means F7 has not run yet, or
+    could not produce one -- and a study whose report fails is marked ``failed``, never
+    ``completed``. So a study in ``completed`` or ``partial`` always has one here.
+    """
+    statement = select(StudyReport).where(StudyReport.study_id == study_id)
+    report = await db.scalar(statement)
+    if report is None:
+        raise StudyReportNotFound()
+    return report
 
 
 async def set_study_status(

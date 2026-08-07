@@ -157,6 +157,32 @@ class StudySourceListResponse(CustomModel):
     total: int = Field(description="Number of collectors that have written a row.")
 
 
+class StudyReportResponse(CustomModel):
+    """The deliverable of a study: the report F7 produced, and its executive summary."""
+
+    id: uuid.UUID
+    study_id: uuid.UUID
+    rapport_markdown: str = Field(
+        description=(
+            "The full report, in Markdown, exactly as F7 wrote it. Counts tens of "
+            "thousands of characters: this is the deliverable, not a preview."
+        )
+    )
+    resume_markdown: str | None = Field(
+        default=None,
+        description="The executive summary, when F7 produced one alongside the report.",
+    )
+    payload: dict[str, Any] | None = Field(
+        default=None,
+        description=(
+            "F7's own JSON output: market, product, hypotheses, analysis statuses, "
+            "coherence alerts and stated limits. The contract is the pipeline's, not "
+            "this API's."
+        ),
+    )
+    created_at: datetime
+
+
 class StudyConflictDetail(CustomModel):
     """Body of the 409: the caller gets the running study back, to poll it."""
 

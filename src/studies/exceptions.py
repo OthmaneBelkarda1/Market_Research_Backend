@@ -16,6 +16,10 @@ class StudySourceNotFound(NotFound):
     DETAIL = ErrorCode.STUDY_SOURCE_NOT_FOUND
 
 
+class StudyReportNotFound(NotFound):
+    DETAIL = ErrorCode.STUDY_REPORT_NOT_FOUND
+
+
 class StudyProductNotFound(NotFound):
     DETAIL = ErrorCode.PRODUCT_NOT_FOUND
 

@@ -207,8 +207,27 @@ curl -X POST http://127.0.0.1:8000/products/<product_id>/image \
 
 ## Les endpoints
 
-Huit au total, dans deux domaines. Ni authentification ni autorisation à cette itération :
+Neuf au total, dans deux domaines. Ni authentification ni autorisation à cette itération :
 tout ce qui suit est ouvert.
+
+### ⚠️ CORS — obligatoire dès qu'un front web appelle l'API
+
+`CORS_ORIGINS` liste les origines du front, séparées par des virgules :
+
+```
+CORS_ORIGINS=http://localhost:5173,https://mon-front.lovable.app
+```
+
+**Sans elle, aucun navigateur ne peut appeler l'API.** Le navigateur refuse une réponse
+cross-origin qui ne nomme pas son origine, et l'appel échoue en *erreur réseau* — jamais
+en code HTTP. C'est pourquoi le manque est invisible tant qu'on teste avec `curl` ou
+depuis la suite de tests : seuls les clients navigateur sont concernés. L'application
+journalise un avertissement au démarrage quand la variable est vide.
+
+Jamais `*` : cette API n'a aucune authentification, donc une origine autorisée par
+accident est une origine depuis laquelle n'importe quel site peut la piloter. Pour la même
+raison, `allow_credentials` est désactivé — il n'y a ni cookie ni en-tête d'authentification
+à transporter.
 
 ### `products` — les fiches produit
 
@@ -231,6 +250,7 @@ directement en base. C'est un manque assumé de cette itération, pas un oubli.
 | `GET` | `/studies/{study_id}` | État d'une étude : statut, `progress` par module, `phase_durations`, `error`. **C'est l'endpoint qu'on interroge en boucle** pendant qu'elle tourne. | `200` `404` `422` |
 | `GET` | `/studies/{study_id}/sources` | Bilan de collecte : une entrée par collecteur, **sans** les JSON collectés. | `200` `404` `422` |
 | `GET` | `/studies/{study_id}/sources/{source}` | Le JSON brut d'un collecteur, tel que le pipeline l'a produit. | `200` `404` `422` |
+| `GET` | `/studies/{study_id}/report` | **Le livrable** : rapport Markdown complet, résumé exécutif, et la sortie JSON de F7. | `200` `404` `422` |
 
 Détail des deux derniers : [Lire les résultats de collecte](#lire-les-résultats-de-collecte).
 Détail des codes : [Codes de réponse](#codes-de-réponse-1).
@@ -255,12 +275,14 @@ curl http://127.0.0.1:8000/studies/<study_id>
 # 4. Voir comment chaque collecteur s'en est sorti, puis lire l'un d'eux
 curl http://127.0.0.1:8000/studies/<study_id>/sources
 curl http://127.0.0.1:8000/studies/<study_id>/sources/reddit
+
+# 5. Le livrable, une fois l'étude en `completed` ou `partial`
+curl http://127.0.0.1:8000/studies/<study_id>/report
 ```
 
-**Ce qui n'existe pas encore** : la restitution `GET /studies/{id}/report` (rapport et
-verdict), la relance et l'annulation d'une étude, la suppression, et toute lecture des
-tables `study_analysis` et `study_report` par l'API. Voir
-[Hors périmètre](#hors-périmètre-de-cette-itération).
+**Ce qui n'existe pas encore** : la relance et l'annulation d'une étude, sa suppression, et
+la lecture de `study_analysis` par l'API (les analyses F3–F6 ne sont lisibles qu'en base).
+Voir [Hors périmètre](#hors-périmètre-de-cette-itération).
 
 ## Extraction automatique
 

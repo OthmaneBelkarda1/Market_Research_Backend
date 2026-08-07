@@ -232,6 +232,10 @@ class ErrorCode(StrEnum):
         "This study holds no data for this collector: it has not run yet, or the study "
         "never reached the collection stage."
     )
+    STUDY_REPORT_NOT_FOUND = (
+        "This study has no report: it is still running, or it failed before F7 could "
+        "produce one. A study that reached `completed` or `partial` always has one."
+    )
     PRODUCT_NOT_FOUND = "No product sheet found for this identifier."
     REGION_REQUIRED = (
         "No region for this study: none was sent and the product sheet does not carry a "
