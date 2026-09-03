@@ -290,11 +290,15 @@ async def extract_product(
     except Exception as exc:
         error = _http_error(exc)
         logger.warning(
-            "Extraction failed url=%s region=%s error=%s: %s",
+            "Extraction failed url=%s region=%s error=%s -> %s: %s",
             url,
             region,
             type(exc).__name__,
             error.__class__.__name__,
+            # Without the message the log only says "something upstream failed": the
+            # actor id, the run id and the reason all live in there. ConfigError is the
+            # one exception -- its message names a credential and may quote its value.
+            "<redacted>" if isinstance(exc, ConfigError) else exc,
             exc_info=not isinstance(exc, ExtractionError | TimeoutError),
         )
         raise error from exc

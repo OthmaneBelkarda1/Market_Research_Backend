@@ -420,6 +420,29 @@ def map_ecommerce_tool(record: dict) -> dict[str, Any]:
     return {k: v for k, v in fields.items() if v not in (None, "", [], {})}
 
 
+def _aliexpress_canonical_url(url: str) -> str:
+    """Rewrite an AliExpress product URL to its scrapable form.
+
+    Country hosts (`fr.`, `es.`, `pt.`, ...) 302 to
+    `www.aliexpress.com/item/<id>.html?gatewayAdapt=...`, and the actor comes
+    back with an empty dataset from that redirect — the run SUCCEEDs with 0
+    items, which surfaces as a 502. The same item id on `www.` scrapes fine, so
+    the host is normalised and the tracking query string (`spm`, `pdp_ext_f`,
+    ...) dropped, keeping only the `/item/<id>.html` path.
+    """
+    match = re.match(
+        r"^https?://(?:[\w-]+\.)*aliexpress\.(com|us|ru)(/[^?#]*item/[^?#]+)",
+        url,
+        re.IGNORECASE,
+    )
+    if not match:
+        return url
+    # The TLD is kept: aliexpress.us is a separate storefront, not a translation
+    # of .com, so rewriting it would scrape a different listing.
+    tld, path = match.group(1).lower(), match.group(2)
+    return f"https://www.aliexpress.{tld}{path}"
+
+
 def map_aliexpress(items: list[dict], url: str) -> dict[str, Any]:
     """nifty.codes/aliexpress-product-ariants-scraper — emits ONE ROW PER
     VARIANT, all carrying the same product-level columns, so the rows are
@@ -468,9 +491,20 @@ def map_aliexpress(items: list[dict], url: str) -> dict[str, Any]:
     delivery = " - ".join(filter(None, [head.get("Min Delivery Time"),
                                         head.get("Max Delivery Time")]))
 
+    # The actor reports the category only as numeric ids ("Category Path":
+    # "44/100000306/202230603/202231007"), which is unusable as a product
+    # sheet's category. The spec table is where AliExpress states it in words,
+    # same as eBay/Walmart above; nothing is inferred when it says none.
+    category = next(
+        (specs[key] for key in ("Category", "Product Type", "Type", "Style", "Set Type")
+         if specs.get(key)),
+        None,
+    )
+
     fields = {
         "title": head.get("Product Title"),
         "brand": None if head.get("Brand") in (None, "Not Available") else head.get("Brand"),
+        "category": category,
         "sku": head.get("Product ID"),
         "identifiers": {"aliexpress_product_id": head.get("Product ID"),
                         "category_id": head.get("Category ID")},
@@ -562,7 +596,8 @@ ACTOR_ADAPTERS: dict[str, ActorAdapter] = {
         label="AliExpress Product & Variant Scraper",
         # One row per variant SKU — only pay for the extra rows when the caller
         # actually wants variants; row 1 already carries the product-level data.
-        build_input=lambda url: {"urls": [url], "maxItems": 40 if INCLUDE_VARIANTS else 1},
+        build_input=lambda url: {"urls": [_aliexpress_canonical_url(url)],
+                                 "maxItems": 40 if INCLUDE_VARIANTS else 1},
         aggregate=map_aliexpress,
         notes=("Returns one row per variant, folded back into a single product. "
                "The official e-commerce tool returns empty records for AliExpress "
