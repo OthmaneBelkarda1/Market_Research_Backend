@@ -275,10 +275,19 @@ async def extract_product(
 
         The agent reports its consumption through this channel whether the run
         succeeded, failed or hit its step limit -- the failed runs being precisely the
-        expensive ones. Every other event kind feeds the CLI and is ignored here.
+        expensive ones. The other kind worth a line is `agent_error`: the agent catches
+        it, falls back to the deterministic pipeline and answers 200, so nothing else
+        in this module ever sees it. That silence hid a 400 from the Anthropic API on
+        EVERY extraction -- each product came back with the template description and a
+        warning nobody reads. Every other event kind feeds the CLI and is ignored here.
         """
         if kind == "usage":
             logger.info("Extraction usage url=%s region=%s %s", url, region, payload)
+        elif kind == "agent_error":
+            logger.warning(
+                "Extraction agent degraded url=%s region=%s error=%s: %s",
+                url, region, type(payload).__name__, payload,
+            )
 
     try:
         async with asyncio.timeout(products_settings.EXTRACTION_TIMEOUT_SECONDS):

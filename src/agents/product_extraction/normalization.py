@@ -482,8 +482,12 @@ _CTA_ADVERB_RE = re.compile(
 # Selling points shops staple onto the title, in the languages this store uses.
 _NOISE_RE = re.compile(
     r"free\s+(shipping|delivery)|cash\s+on\s+delivery|best\s+price|fast\s+delivery|"
-    r"official\s+(store|site|shop)|online\s+store|new\s+arrival|home\s+page|sale|promo|"
-    r"discount|\d+\s?%\s?off|"
+    r"official\s+(store|site|shop)|online\s+store|new\s+arrival|home\s+page|"
+    # Anchored on word boundaries: unanchored, "sale" ate the middle of the
+    # French "nasale" ("respiration nasale" -> "respiration na") and "promo"
+    # would eat "promotion". Every other alternative here is multi-word, so
+    # only these three can match inside a longer word.
+    r"\b(?:sale|promos?|discounts?)\b|\d+\s?%\s?off|"
     r"livraison\s+(gratuite|rapide)|paiement\s+à\s+la\s+livraison|meilleur\s+prix|"
     r"boutique\s+officielle|"
     r"التوصيل\s+بالمجان|توصيل\s+مجاني|شحن\s+مجاني|الدفع\s+(عند|بعد)\s+الاستلام|"

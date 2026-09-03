@@ -27,6 +27,7 @@ import json
 from typing import Any
 
 from langchain.agents import create_agent
+from langchain.agents.structured_output import ToolStrategy
 from langchain_anthropic import ChatAnthropic
 from langchain_core.callbacks import get_usage_metadata_callback
 from langchain_core.messages import SystemMessage
@@ -293,7 +294,19 @@ def build_agent(tools: list, model: str = ANTHROPIC_MODEL, country: str = TARGET
                 }
             ]
         ),
-        response_format=ProductDraft,
+        # ToolStrategy, not the bare schema. Passing `ProductDraft` directly
+        # lets LangChain pick its provider strategy, which sends the schema as
+        # `output_config.format` -- and the API compiles that into a grammar.
+        # ProductDraft is ~9 KB with six nested models, over the grammar limit:
+        # every call came back 400 "The compiled grammar is too large", the
+        # agent fell through to `draft = None`, and every product got the
+        # deterministic English template instead of the model's prose.
+        # As a plain tool the same schema carries no grammar, and Pydantic still
+        # validates the answer on our side.
+        # It also restores the open dicts: the provider strategy rewrote
+        # `identifiers`/`specifications`/`metadata` to `additionalProperties:
+        # false` with no properties, so the model could never fill them.
+        response_format=ToolStrategy(ProductDraft),
     )
 
 
