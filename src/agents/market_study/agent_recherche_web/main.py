@@ -23,8 +23,10 @@ import argparse
 import sys
 from pathlib import Path
 
+from langchain_core.callbacks import get_usage_metadata_callback
+
 from agent import rechercher_web
-from config import configurer_logging, obtenir_logger
+from config import configurer_logging, obtenir_logger, resumer_consommation
 from schemas import FicheProduit, ParametresMarche, ResultatRechercheWeb
 
 _LOG = obtenir_logger(__name__)
@@ -130,7 +132,11 @@ def main() -> None:
         langue=arguments.langue.strip().lower(),
     )
 
-    resultat = rechercher_web(produit, marche)
+    with get_usage_metadata_callback() as consommation:
+        resultat = rechercher_web(produit, marche)
+    recapitulatif = resumer_consommation(consommation.usage_metadata)
+    if recapitulatif:
+        print(f"Consommation LLM — {recapitulatif}", file=sys.stderr)
 
     if arguments.sortie:
         _ecrire_resultat(resultat, arguments.sortie)

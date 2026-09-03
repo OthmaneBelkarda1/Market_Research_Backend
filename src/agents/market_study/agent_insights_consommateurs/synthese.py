@@ -109,7 +109,14 @@ _HUMAIN_LECTURE = (
 
 
 def _json(valeur) -> str:
-    """Sérialise une valeur en JSON compact et lisible.
+    """Sérialise une valeur en JSON compact, destiné à un prompt.
+
+    JSON COMPACT, PAS INDENTÉ — l'indentation est facturée comme le reste.
+    Mesuré par `count_tokens` sur le run de référence : `indent=1` coûtait
+    33 335 jetons d'entrée sur l'ensemble du pipeline, soit 9,5 % de toute
+    l'entrée, pour zéro information supplémentaire — le modèle reçoit le même
+    objet dans les deux cas. Les documents de sortie restent indentés : eux
+    sont lus par des humains (`main.py`, `indent=2`).
 
     Args:
         valeur: Valeur sérialisable.
@@ -117,7 +124,7 @@ def _json(valeur) -> str:
     Returns:
         Sa représentation JSON, accents conservés.
     """
-    return json.dumps(valeur, ensure_ascii=False, indent=1, default=str)
+    return json.dumps(valeur, ensure_ascii=False, separators=(",", ":"), default=str)
 
 
 def synthetiser_insights(

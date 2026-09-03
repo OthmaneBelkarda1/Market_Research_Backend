@@ -87,8 +87,8 @@ def etablir_diagnostic(
             "produit_description": produit.description,
             "marche": marche,
             "langue_analyse": langue_analyse,
-            "dossier": dossier.model_dump_json(indent=1),
-            "refs": json.dumps(sorted(dossier.references()), ensure_ascii=False, indent=1),
+            "dossier": dossier.model_dump_json(),
+            "refs": json.dumps(sorted(dossier.references()), ensure_ascii=False, separators=(",", ":")),
             "absentes": json.dumps(sorted(entrees_absentes), ensure_ascii=False)
             if entrees_absentes
             else "aucune",

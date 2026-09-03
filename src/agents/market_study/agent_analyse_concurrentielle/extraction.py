@@ -114,7 +114,7 @@ def extraire_attributs(
         charge = json.dumps(
             [{"id_offre": o.id_offre, "titre": o.titre} for o in lot],
             ensure_ascii=False,
-            indent=1,
+            separators=(",", ":"),
         )
         resultat, tentatives, erreur = invoquer_structure(
             chaine,
@@ -205,7 +205,7 @@ def extraire_claims(
                 for a in lot
             ],
             ensure_ascii=False,
-            indent=1,
+            separators=(",", ":"),
         )
         resultat, tentatives, erreur = invoquer_structure(
             chaine,

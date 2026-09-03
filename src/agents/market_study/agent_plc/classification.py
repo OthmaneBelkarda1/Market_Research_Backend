@@ -163,9 +163,9 @@ def orienter_signaux(
             "produit_description": produit.description,
             "marche": marche,
             "langue_analyse": langue_analyse,
-            "familles": json.dumps(familles, ensure_ascii=False, indent=1),
-            "dossier": dossier.model_dump_json(indent=1),
-            "refs": json.dumps(sorted(dossier.references()), ensure_ascii=False, indent=1),
+            "familles": json.dumps(familles, ensure_ascii=False, separators=(",", ":")),
+            "dossier": dossier.model_dump_json(),
+            "refs": json.dumps(sorted(dossier.references()), ensure_ascii=False, separators=(",", ":")),
         },
         PHASE_ORIENTATION,
     )

@@ -176,9 +176,9 @@ def noter_grille(
             "produit_description": produit.description,
             "marche": marche,
             "langue_analyse": langue_analyse,
-            "criteres": json.dumps(criteres, ensure_ascii=False, indent=1),
-            "dossier": dossier.model_dump_json(indent=1),
-            "refs": json.dumps(sorted(dossier.references()), ensure_ascii=False, indent=1),
+            "criteres": json.dumps(criteres, ensure_ascii=False, separators=(",", ":")),
+            "dossier": dossier.model_dump_json(),
+            "refs": json.dumps(sorted(dossier.references()), ensure_ascii=False, separators=(",", ":")),
         },
         PHASE_NOTATION,
     )
@@ -443,7 +443,7 @@ def rediger_conditions_reexamen(
             "score_total": verdict.score_total,
             "nb_criteres_evalues": verdict.nb_criteres_evalues,
             "grille": json.dumps(
-                [n.model_dump() for n in verdict.grille], ensure_ascii=False, indent=1
+                [n.model_dump() for n in verdict.grille], ensure_ascii=False, separators=(",", ":")
             ),
             "regle": verdict.regle_appliquee,
         },

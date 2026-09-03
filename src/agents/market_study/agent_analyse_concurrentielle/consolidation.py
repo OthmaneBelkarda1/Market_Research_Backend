@@ -106,7 +106,7 @@ def _vue_compacte(referentiel: Referentiel) -> dict[str, str]:
         for marque in page.marques_detectees:
             marques_web[marque].append(page.id_page)
 
-    serialiser = lambda valeur: json.dumps(valeur, ensure_ascii=False, indent=1)  # noqa: E731
+    serialiser = lambda valeur: json.dumps(valeur, ensure_ascii=False, separators=(",", ":"))  # noqa: E731
     return {
         "marques": serialiser(
             [{"nom": nom, **donnees} for nom, donnees in sorted(marques.items())]

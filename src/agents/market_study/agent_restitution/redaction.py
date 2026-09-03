@@ -236,7 +236,7 @@ def rediger_section(
             "badge": injectables.badges.get(section, "non qualifié"),
             "consigne_specifique": _CONSIGNES.get(section, "")
             + consigne_supplementaire,
-            "donnees": json.dumps(donnees, ensure_ascii=False, indent=1),
+            "donnees": json.dumps(donnees, ensure_ascii=False, separators=(",", ":")),
         },
         f"redaction_{section}",
     )

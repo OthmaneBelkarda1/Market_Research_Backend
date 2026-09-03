@@ -35,8 +35,15 @@ import argparse
 import sys
 from pathlib import Path
 
+from langchain_core.callbacks import get_usage_metadata_callback
+
 from agent import rechercher_meta_ads
-from config import MAX_ANNONCES_PAR_RECHERCHE, configurer_logging, obtenir_logger
+from config import (
+    MAX_ANNONCES_PAR_RECHERCHE,
+    configurer_logging,
+    obtenir_logger,
+    resumer_consommation,
+)
 from schemas import FicheProduit, ParametresMarche, ResultatRechercheMetaAds
 
 _LOG = obtenir_logger(__name__)
@@ -181,12 +188,16 @@ def main() -> None:
         langue=arguments.langue.strip().lower(),
     )
 
-    resultat = rechercher_meta_ads(
-        produit,
-        marche,
-        urls_annonceurs=arguments.annonceur,
-        max_annonces_par_recherche=max(1, arguments.annonces),
-    )
+    with get_usage_metadata_callback() as consommation:
+        resultat = rechercher_meta_ads(
+            produit,
+            marche,
+            urls_annonceurs=arguments.annonceur,
+            max_annonces_par_recherche=max(1, arguments.annonces),
+        )
+    recapitulatif = resumer_consommation(consommation.usage_metadata)
+    if recapitulatif:
+        print(f"Consommation LLM — {recapitulatif}", file=sys.stderr)
 
     if arguments.sortie:
         _ecrire_resultat(resultat, arguments.sortie)

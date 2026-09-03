@@ -37,8 +37,10 @@ import argparse
 import sys
 from pathlib import Path
 
+from langchain_core.callbacks import get_usage_metadata_callback
+
 from agent import rechercher_amazon
-from config import NB_PRODUITS_AVIS, configurer_logging, obtenir_logger
+from config import NB_PRODUITS_AVIS, configurer_logging, obtenir_logger, resumer_consommation
 from schemas import FicheProduit, ParametresMarche, ResultatRechercheAmazon
 
 _LOG = obtenir_logger(__name__)
@@ -181,12 +183,16 @@ def main() -> None:
         langue=arguments.langue.strip().lower(),
     )
 
-    resultat = rechercher_amazon(
-        produit,
-        marche,
-        domaine_force=arguments.domaine,
-        nb_produits_avis=max(0, arguments.avis),
-    )
+    with get_usage_metadata_callback() as consommation:
+        resultat = rechercher_amazon(
+            produit,
+            marche,
+            domaine_force=arguments.domaine,
+            nb_produits_avis=max(0, arguments.avis),
+        )
+    recapitulatif = resumer_consommation(consommation.usage_metadata)
+    if recapitulatif:
+        print(f"Consommation LLM — {recapitulatif}", file=sys.stderr)
 
     if arguments.sortie:
         _ecrire_resultat(resultat, arguments.sortie)

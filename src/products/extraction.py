@@ -270,11 +270,22 @@ async def extract_product(
         use_agent,
         options.get("force_actor"),
     )
+    def on_agent_event(kind: str, payload: Any) -> None:
+        """Forward the agent's token accounting to the service log.
+
+        The agent reports its consumption through this channel whether the run
+        succeeded, failed or hit its step limit -- the failed runs being precisely the
+        expensive ones. Every other event kind feeds the CLI and is ignored here.
+        """
+        if kind == "usage":
+            logger.info("Extraction usage url=%s region=%s %s", url, region, payload)
+
     try:
         async with asyncio.timeout(products_settings.EXTRACTION_TIMEOUT_SECONDS):
             async with _semaphore:
                 product = await _on_browser_capable_loop(
-                    lambda: extract_product_data(url, use_agent=use_agent, **options)
+                    lambda: extract_product_data(url, use_agent=use_agent,
+                                                 on_event=on_agent_event, **options)
                 )
     except Exception as exc:
         error = _http_error(exc)

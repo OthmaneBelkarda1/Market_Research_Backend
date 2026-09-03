@@ -151,12 +151,12 @@ def produire_recommandations_phase(
             "verdict_amont": dossier.verdict_amont or "inconnu",
             "angles": "; ".join(angles) if angles else "aucun",
             "max_conditions": MAX_CONDITIONS_REEXAMEN,
-            "dossier": dossier.model_dump_json(indent=1),
+            "dossier": dossier.model_dump_json(),
             "orientations": json.dumps(
-                [s.model_dump() for s in signaux], ensure_ascii=False, indent=1
+                [s.model_dump() for s in signaux], ensure_ascii=False, separators=(",", ":")
             ),
-            "classification": classification.model_dump_json(indent=1),
-            "refs": json.dumps(sorted(dossier.references()), ensure_ascii=False, indent=1),
+            "classification": classification.model_dump_json(),
+            "refs": json.dumps(sorted(dossier.references()), ensure_ascii=False, separators=(",", ":")),
         },
         PHASE_RECOMMANDATIONS,
     )

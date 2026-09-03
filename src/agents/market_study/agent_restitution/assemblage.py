@@ -306,7 +306,7 @@ def _section_consommateurs(
         injectables.tableau_besoins,
         "**Attentes exprimées**" if injectables.tableau_attentes else "",
         injectables.tableau_attentes,
-        "**Principales difficultés rapportées**" if irritants else "",
+        "**Principaux points de friction**" if irritants else "",
         "\n\n".join(irritants),
         "**Répartition du sentiment par source**"
         if injectables.tableau_sentiment

@@ -14,8 +14,10 @@ from __future__ import annotations
 import argparse
 import sys
 
+from langchain_core.callbacks import get_usage_metadata_callback
+
 from agent import analyser_tendances
-from config import configurer_logging
+from config import configurer_logging, resumer_consommation
 from schemas import FicheProduit, ParametresMarche
 
 
@@ -62,7 +64,11 @@ def main() -> int:
     marche = ParametresMarche(geo=arguments.geo, langue=arguments.langue)
 
     try:
-        resultat = analyser_tendances(produit=produit, marche=marche)
+        with get_usage_metadata_callback() as consommation:
+            resultat = analyser_tendances(produit=produit, marche=marche)
+        recapitulatif = resumer_consommation(consommation.usage_metadata)
+        if recapitulatif:
+            print(f"Consommation LLM — {recapitulatif}", file=sys.stderr)
     except Exception as exception:  # noqa: BLE001 — erreur de configuration ou LLM
         logger.error("Analyse interrompue : %s", exception)
         return 1

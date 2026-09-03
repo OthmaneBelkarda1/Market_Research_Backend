@@ -27,15 +27,20 @@ import json
 from typing import Any
 
 from langchain.agents import create_agent
+from langchain_anthropic import ChatAnthropic
+from langchain_core.callbacks import get_usage_metadata_callback
+from langchain_core.messages import SystemMessage
 from langchain_core.tools import tool
-from langchain_openai import ChatOpenAI
 
 from .config import (
     AGENT_MAX_STEPS,
+    ANTHROPIC_MAX_TOKENS,
+    ANTHROPIC_MODEL,
     INCLUDE_VARIANTS,
-    OPENAI_MODEL,
     TARGET_COUNTRY,
     ExtractionError,
+    require_anthropic_key,
+    summarize_usage,
 )
 from .normalization import (
     build_product,
@@ -231,20 +236,63 @@ def build_tools(collected: list[SourceResult], *, force_actor: str | None = None
 # ---------------------------------------------------------------------------
 # 2. Agent construction
 # ---------------------------------------------------------------------------
-def build_agent(tools: list, model: str = OPENAI_MODEL, country: str = TARGET_COUNTRY,
+def build_agent(tools: list, model: str = ANTHROPIC_MODEL, country: str = TARGET_COUNTRY,
                 include_variants: bool = INCLUDE_VARIANTS):
     """create_agent is the current LangChain entry point for tool-calling
     agents (langgraph.prebuilt.create_react_agent is deprecated in v1).
-    response_format makes the final answer a validated ProductDraft."""
+    response_format makes the final answer a validated ProductDraft.
+
+    The key is checked here rather than left to the client constructor: a
+    ConfigError is mapped to an explicit "not configured" response, whereas the
+    client's own exception is not, and would reach the caller as a bare 500.
+    """
+    require_anthropic_key()
     system_prompt = SYSTEM_PROMPT.format(
         country=country,
         variants_rule=_VARIANTS_ON if include_variants else _VARIANTS_OFF,
         variants_scope=_SCOPE_ON if include_variants else _SCOPE_OFF,
     )
     return create_agent(
-        ChatOpenAI(model=model),
+        # No temperature: the current Claude models reject sampling parameters.
+        #
+        # PROMPT CACHING, two breakpoints, and they do different jobs.
+        #
+        # 1. `cache_control` at the top level of the request auto-places a
+        #    breakpoint on the last cacheable block of every call. An agent loop
+        #    resends the whole conversation on every step, so step N+1 reads back
+        #    step N's prefix -- system, tool schemas, and the fetched page, which
+        #    alone runs to MAX_PAGE_TEXT_CHARS -- at 0.1x instead of 1x. This is
+        #    what makes a multi-step extraction stop costing the square of its
+        #    step count.
+        # 2. The explicit breakpoint on the system block below caches the STATIC
+        #    prefix -- system prompt plus the three tool schemas -- which is
+        #    byte-identical across extractions (`country` and the variants rules
+        #    are fixed by configuration, and the URL lives in the user message,
+        #    after the cut). Without it the automatic breakpoint would sit after
+        #    the first user message, whose URL differs every run, and no second
+        #    extraction could ever read the prefix back.
+        #
+        # Both are free wins: the payload sent is unchanged, only its billing is.
+        # A write costs 1.25x and a read 0.1x, so the pair pays for itself on the
+        # second step of the very first extraction. Entries live 5 minutes; that
+        # covers a loop's own steps always, and back-to-back extractions often.
+        # `summarize_usage` reports reads and writes apart, so the effect is
+        # visible in the CLI without any extra instrumentation.
+        ChatAnthropic(
+            model=model,
+            max_tokens=ANTHROPIC_MAX_TOKENS,
+            model_kwargs={"cache_control": {"type": "ephemeral"}},
+        ),
         tools,
-        system_prompt=system_prompt,
+        system_prompt=SystemMessage(
+            content=[
+                {
+                    "type": "text",
+                    "text": system_prompt,
+                    "cache_control": {"type": "ephemeral"},
+                }
+            ]
+        ),
         response_format=ProductDraft,
     )
 
@@ -266,12 +314,12 @@ async def extract_product(url: str, **options) -> ProductSummary:
 
 
 async def extract_product_data(url: str, *, use_agent: bool = True,
-                               model: str = OPENAI_MODEL, force_actor: str | None = None,
+                               model: str = ANTHROPIC_MODEL, force_actor: str | None = None,
                                on_event=None, **playwright_options) -> ProductData:
     """URL -> standardized ProductData.
 
-    use_agent=False runs the deterministic pipeline only (no OpenAI key needed,
-    no token cost); the schema of the result is identical either way.
+    use_agent=False runs the deterministic pipeline only (no Anthropic key
+    needed, no token cost); the schema of the result is identical either way.
     force_actor pins extraction to one Apify adapter, bypassing the routing table.
     `on_event(kind, payload)` receives progress notifications for the CLI.
     """
@@ -291,23 +339,31 @@ async def extract_product_data(url: str, *, use_agent: bool = True,
         model=model,
     )
 
-    try:
-        state = await agent.ainvoke(
-            {"messages": [("human", USER_TEMPLATE.format(url=route.url,
-                                                         routing=route.describe(),
-                                                         country=TARGET_COUNTRY))]},
-            config={"recursion_limit": AGENT_MAX_STEPS},
-        )
-        draft: ProductDraft | None = state.get("structured_response")
-    except Exception as exc:                       # noqa: BLE001 - see fallback below
-        notify("agent_error", exc)
-        draft = None
-        if not collected:
-            # The model never got usable data: fall back to pure code so the
-            # caller still receives a record instead of an exception.
-            result = await gather_source(url, route=route, force_actor=force_actor,
-                                         **playwright_options)
-            collected.append(result)
+    with get_usage_metadata_callback() as usage:
+        try:
+            state = await agent.ainvoke(
+                {"messages": [("human", USER_TEMPLATE.format(url=route.url,
+                                                             routing=route.describe(),
+                                                             country=TARGET_COUNTRY))]},
+                config={"recursion_limit": AGENT_MAX_STEPS},
+            )
+            draft: ProductDraft | None = state.get("structured_response")
+        except Exception as exc:                   # noqa: BLE001 - see fallback below
+            notify("agent_error", exc)
+            draft = None
+            if not collected:
+                # The model never got usable data: fall back to pure code so the
+                # caller still receives a record instead of an exception.
+                result = await gather_source(url, route=route, force_actor=force_actor,
+                                             **playwright_options)
+                collected.append(result)
+
+    # Emitted outside the try on purpose: a run that ends in an exception, or one cut
+    # short by recursion_limit, has already been billed for every step it took. Those
+    # are the expensive runs, so they are exactly the ones worth reporting.
+    consumption = summarize_usage(usage.usage_metadata)
+    if consumption:
+        notify("usage", consumption)
 
     for result in collected:
         notify("source", result)

@@ -196,7 +196,14 @@ _HUMAIN_RESTITUTION = (
 
 
 def _json(valeur) -> str:
-    """Sérialise une valeur en JSON lisible.
+    """Sérialise une valeur en JSON compact, destiné à un prompt.
+
+    JSON COMPACT, PAS INDENTÉ — l'indentation est facturée comme le reste.
+    Mesuré par `count_tokens` sur le run de référence : `indent=1` coûtait
+    33 335 jetons d'entrée sur l'ensemble du pipeline, soit 9,5 % de toute
+    l'entrée, pour zéro information supplémentaire — le modèle reçoit le même
+    objet dans les deux cas. Les documents de sortie restent indentés : eux
+    sont lus par des humains (`main.py`, `indent=2`).
 
     Args:
         valeur: Valeur sérialisable.
@@ -204,7 +211,7 @@ def _json(valeur) -> str:
     Returns:
         Sa représentation JSON, accents conservés.
     """
-    return json.dumps(valeur, ensure_ascii=False, indent=1, default=str)
+    return json.dumps(valeur, ensure_ascii=False, separators=(",", ":"), default=str)
 
 
 def _consigne_verdict(verdict: str) -> str:
@@ -264,7 +271,7 @@ def produire_recommandations(
             "consigne_verdict": _consigne_verdict(verdict.verdict),
             "devises": ", ".join(devises) if devises else "AUCUNE",
             "bornes": _json(bornes) if bornes else "aucune",
-            "dossier": dossier.model_dump_json(indent=1),
+            "dossier": dossier.model_dump_json(),
             "diagnostic": _json(diagnostic.model_dump()) if diagnostic else "indisponible",
             "verdict_detail": _json(verdict.model_dump()),
             "refs": _json(sorted(dossier.references())),
@@ -332,7 +339,7 @@ def produire_opportunites_risques(
             "langue_analyse": langue_analyse,
             "verdict": verdict.verdict,
             "consigne_mode": consigne,
-            "dossier": dossier.model_dump_json(indent=1),
+            "dossier": dossier.model_dump_json(),
             "diagnostic": _json(diagnostic.model_dump()) if diagnostic else "indisponible",
             "qualite": _json(dossier.qualite_donnees.model_dump()),
             "refs": _json(sorted(dossier.references())),
@@ -404,7 +411,7 @@ def produire_restitution(
             "langue_analyse": langue_analyse,
             "verdict": verdict.verdict,
             "confiance": verdict.confiance,
-            "dossier": dossier.model_dump_json(indent=1),
+            "dossier": dossier.model_dump_json(),
             "verdict_detail": _json(verdict.model_dump()),
             "diagnostic": _json(diagnostic.model_dump()) if diagnostic else "indisponible",
             "recommandations": _json(liste_recos),

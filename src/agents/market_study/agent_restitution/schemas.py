@@ -235,6 +235,19 @@ class DiagnosticEntree(SchemaConsomme):
     fenetre_opportunite: str | None = None
 
 
+class CinqForcesItemEntree(SchemaConsomme):
+    """Une des cinq forces, telle que l'analyse de synthèse pourrait la publier.
+
+    **Pas encore produite en amont.** En son absence, `preparation.py` estime
+    trois des cinq forces par une règle déterministe et déclare les deux autres
+    non évaluées ; l'origine est publiée dans `controles.cinq_forces_source`.
+    """
+
+    force: str = ""
+    niveau: str = ""
+    justification: str = ""
+
+
 class EntreeRecommandations(SchemaConsomme):
     """Sortie de `agent_recommandations_strategiques` (F5) — requise."""
 
@@ -260,6 +273,9 @@ class EntreeRecommandations(SchemaConsomme):
     confiance_globale: ConfianceHeritee | None = None
     limites: list[str] = Field(default_factory=list)
     hypotheses: list[str] = Field(default_factory=list)
+    cinq_forces: list[CinqForcesItemEntree] | None = None
+    """Cinq forces publiées par l'analyse de synthèse, si elle les produit un
+    jour. Recopiées telles quelles ; sinon estimées par règle locale."""
 
 
 # --- F3 : insights consommateurs (optionnelle) ----------------------------- #
@@ -288,7 +304,7 @@ class SentimentEntree(SchemaConsomme):
 
 
 class VerbatimEntree(SchemaConsomme):
-    """Extrait de corpus attaché à une difficulté rapportée."""
+    """Extrait de corpus attaché à un point de friction."""
 
     id_unite: str = ""
     source: str = ""
@@ -437,6 +453,11 @@ class LigneComparatifEntree(SchemaConsomme):
     argument_principal: str | None = None
     force_principale: str | None = None
     faiblesse_principale: str | None = None
+    clientele_cible: str | None = None
+    """Segment visé par ce concurrent — **pas encore produit par l'analyse
+    concurrentielle**. Déclaré ici pour que F7 le consomme sans modification le
+    jour où elle le publiera ; en son absence, le sous-bloc « Leur clientèle »
+    affiche sa phrase standard plutôt qu'une déduction."""
 
 
 class ValiditeRegionaleEntree(SchemaConsomme):
@@ -602,6 +623,50 @@ class Injectables(BaseModel):
     sections_degradees: list[str] = Field(default_factory=list)
     sections_absentes: list[str] = Field(default_factory=list)
 
+    # --- Gabarit v2 : « rapport décisionnel » ------------------------------- #
+    # Champs additifs. Le v1 n'en lit aucun ; les deux gabarits partagent en
+    # revanche tout ce qui précède, donc les mêmes garanties de sûreté.
+    decision_libelle: str = ""
+    """Go / No-go / Go conditionnel — la traduction métier du verdict."""
+    ligne_verdict: str = ""
+    """« Verdict calculé : … · score n/max · fiabilité … », affichée SOUS le
+    libellé : le rapport montre les deux, il n'en substitue jamais un à l'autre."""
+    score_max: int = 0
+    ligne_meta: str = ""
+    ligne_sources: str = ""
+    encart_partielle_v2: str = ""
+    faits_cles_decision: list[str] = Field(default_factory=list)
+    risque_principal_decision: str = ""
+    puces_changer_decision: list[str] = Field(default_factory=list)
+    puces_manque_trancher: list[str] = Field(default_factory=list)
+    details_besoins_attentes: str = ""
+    dynamique_demande: str = ""
+    concurrents_v2: list[dict[str, str]] = Field(default_factory=list)
+    """Concurrents retenus pour le gabarit v2. Les cles `force_brute` et
+    `faiblesse_brute` portent le texte amont ; `force` et `faiblesse` recoivent
+    sa compression redactionnelle, produite apres la preparation."""
+    actions_p1: list[dict[str, str]] = Field(default_factory=list)
+    """Actions de priorite 1. `enonce` est vide tant que l'enonce amont depasse
+    le budget de mots : la compression le remplit."""
+    tableau_concurrents_v2: str = ""
+    widgets_extraits: list[str] = Field(default_factory=list)
+    tableau_cinq_forces: str = ""
+    cinq_forces_source: str = ""
+    puces_personne_ne_fait: list[str] = Field(default_factory=list)
+    details_angles: str = ""
+    ligne_phases: str = ""
+    puces_phase: list[str] = Field(default_factory=list)
+    tableau_actions_p1: str = ""
+    tableau_actions_suivantes: str = ""
+    fourchette_prix: str = ""
+    conditions_prix: list[str] = Field(default_factory=list)
+    puces_opportunites: list[str] = Field(default_factory=list)
+    puces_risques: list[str] = Field(default_factory=list)
+    details_opportunites_risques: str = ""
+    sous_blocs_standards: dict[str, str] = Field(default_factory=dict)
+    """Sous-blocs sans donnée exploitable : identifiant → phrase standard. Le
+    modèle n'est pas sollicité pour eux, et le cas est tracé en statut."""
+
 
 class SortieNarratif(BaseModel):
     """Sortie d'une chaîne de rédaction — du texte, et rien d'autre."""
@@ -612,6 +677,38 @@ class SortieNarratif(BaseModel):
     puces: list[str] = Field(
         default_factory=list,
         description="Puces courtes ; utilisées uniquement pour les réserves majeures.",
+    )
+
+
+class SortieEcran(BaseModel):
+    """Sortie d'une chaîne de rédaction du gabarit v2 — des puces, par sous-bloc.
+
+    Le v2 n'a plus de paragraphes : chaque sous-bloc porte une question en titre,
+    et le modèle y répond par des puces courtes. Une clé absente vaut sous-bloc
+    non rédigé, ce qui est un cas normal quand la donnée manque.
+    """
+
+    sous_blocs: dict[str, list[str]] = Field(
+        default_factory=dict,
+        description=(
+            "Identifiant de sous-bloc → ses puces, une phrase chacune. "
+            "N'écris que les sous-blocs demandés, et aucun autre."
+        ),
+    )
+
+
+class SortieCompression(BaseModel):
+    """Sortie de la chaîne de compression rédactionnelle des cellules longues.
+
+    Elle remplace la troncature à « … », qui perdait l'argument. La sortie est
+    passée au contrôle de liste blanche comme n'importe quel texte du modèle :
+    une compression qui introduirait un chiffre absent de l'original est
+    rejetée, et l'original coupé au dernier mot entier prend le relais.
+    """
+
+    textes: list[str] = Field(
+        default_factory=list,
+        description="Versions raccourcies, dans le MÊME ORDRE que les originaux.",
     )
 
 
@@ -674,6 +771,13 @@ class SectionProduite(BaseModel):
         description="Vrai si la section est construite depuis l'écho de synthèse.",
     )
     refs_sources: list[str] = Field(default_factory=list)
+    sous_blocs_produits: list[str] = Field(
+        default_factory=list,
+        description="Sous-blocs effectivement rendus (gabarit v2).",
+    )
+    nb_mots_budget: int = Field(
+        default=0, description="Budget de mots de l'écran (gabarit v2)."
+    )
 
 
 class ControlesRestitution(BaseModel):
@@ -691,6 +795,21 @@ class ControlesRestitution(BaseModel):
     )
     termes_interdits_retires: int = 0
     mentions_etude_partielle: list[str] = Field(default_factory=list)
+    budgets_respectes: bool = Field(
+        default=True,
+        description="Vrai : chaque écran et le total tiennent dans leur budget de mots.",
+    )
+    nb_cellules_compressees: int = Field(
+        default=0,
+        description="Cellules raccourcies par compression rédactionnelle, jamais par « … ».",
+    )
+    cinq_forces_source: str = Field(
+        default="",
+        description="Origine du tableau des 5 forces : f5, regles_locales ou non_evalue.",
+    )
+    libelle_verdict: str = Field(
+        default="", description="Libellé métier affiché : Go, No-go ou Go conditionnel."
+    )
 
 
 class ResultatRestitution(BaseModel):

@@ -9,6 +9,7 @@ from __future__ import annotations
 import logging
 import os
 import sys
+from typing import Any
 
 from dotenv import find_dotenv, load_dotenv
 
@@ -38,6 +39,14 @@ APIFY_TOKEN: str | None = os.getenv("APIFY_TOKEN") or os.getenv("APIFY_API_TOKEN
 MODELE_CLAUDE: str = "claude-haiku-4-5-20251001"
 TEMPERATURE_LLM: float = 0.0
 MAX_TOKENS_LLM: int = 1024
+
+TARIFS_USD_PAR_MTOK: dict[str, tuple[float, float]] = {MODELE_CLAUDE: (1.00, 5.00)}
+"""Tarif public (entrée, sortie) en dollars par million de jetons.
+
+Saisi à la main, non interrogé en ligne : à revérifier à chaque migration de
+modèle. Un identifiant absent de cette table est signalé par
+`resumer_consommation`, jamais compté pour zéro en silence.
+"""
 
 # --------------------------------------------------------------------------- #
 # Source de données Apify
@@ -215,3 +224,89 @@ def obtenir_logger(nom: str) -> logging.Logger:
         Le logger enfant correspondant.
     """
     return logging.getLogger(f"{NOM_LOGGER}.{nom}")
+
+
+# --------------------------------------------------------------------------- #
+# Comptabilité des jetons
+# --------------------------------------------------------------------------- #
+# Multiplicateurs appliqués au tarif d'entrée de base pour les jetons de cache.
+# Ces rapports sont les mêmes sur tous les modèles Claude : seule la base varie.
+MULT_CACHE_LECTURE: float = 0.10
+MULT_CACHE_ECRITURE_5MIN: float = 1.25
+MULT_CACHE_ECRITURE_1H: float = 2.00
+
+
+def resumer_consommation(usage: dict[str, Any]) -> str:
+    """Résume la consommation de jetons d'une exécution et son coût estimé.
+
+    POURQUOI LE CACHE EST VENTILÉ — `langchain_anthropic` rajoute les jetons de
+    cache dans `input_tokens` (l'`input_tokens` d'Anthropic, lui, les exclut).
+    Les tarifer au tarif d'entrée plein surfacturerait une lecture de cache d'un
+    facteur dix et, surtout, afficherait un coût identique avec et sans mise en
+    cache : le rapport ne montrerait aucune économie là où elle serait pourtant
+    réelle. Le détail est donc repris de `input_token_details` et tarifé à part.
+
+    Args:
+        usage: Dictionnaire `modèle → métadonnées d'usage`, tel que produit par
+            `langchain_core.callbacks.get_usage_metadata_callback`.
+
+    Returns:
+        Une ligne de récapitulatif, vide si aucun appel n'a été passé.
+    """
+    if not usage:
+        return ""
+    morceaux: list[str] = []
+    total = 0.0
+    tarif_manquant = False
+    for modele, metriques in sorted(usage.items()):
+        details = metriques.get("input_token_details") or {}
+        lecture = int(details.get("cache_read", 0) or 0)
+        # `cache_creation` et la ventilation par TTL s'excluent mutuellement :
+        # `langchain_anthropic` remet la première à zéro dès que la seconde est
+        # renseignée. Les additionner ne double donc jamais le compte.
+        ecriture_5min = int(details.get("ephemeral_5m_input_tokens", 0) or 0)
+        ecriture_1h = int(details.get("ephemeral_1h_input_tokens", 0) or 0)
+        # Écriture dont le TTL n'est pas ventilé : tarifée au TTL par défaut.
+        ecriture_indistincte = int(details.get("cache_creation", 0) or 0)
+        ecriture = ecriture_5min + ecriture_1h + ecriture_indistincte
+
+        entree_totale = int(metriques.get("input_tokens", 0) or 0)
+        # Le solde est ce qui n'a été ni lu ni écrit en cache : plein tarif.
+        entree_neuve = max(entree_totale - lecture - ecriture, 0)
+        sortie = int(metriques.get("output_tokens", 0) or 0)
+
+        tarifs = TARIFS_USD_PAR_MTOK.get(modele)
+        if tarifs is None:
+            # Un modèle absent de la table valait auparavant 0 $ sans le dire :
+            # une migration de modèle rendait le rapport faux en silence.
+            tarif_manquant = True
+            tarif_entree, tarif_sortie = 0.0, 0.0
+        else:
+            tarif_entree, tarif_sortie = tarifs
+
+        cout = (
+            entree_neuve * tarif_entree
+            + lecture * tarif_entree * MULT_CACHE_LECTURE
+            + (ecriture_5min + ecriture_indistincte) * tarif_entree * MULT_CACHE_ECRITURE_5MIN
+            + ecriture_1h * tarif_entree * MULT_CACHE_ECRITURE_1H
+            + sortie * tarif_sortie
+        ) / 1_000_000
+        total += cout
+
+        ligne = f"{modele} : {entree_neuve} jetons entrée / {sortie} sortie"
+        if lecture or ecriture:
+            part_lue = 100.0 * lecture / entree_totale if entree_totale else 0.0
+            ligne += (
+                f" / {lecture} cache lu ({part_lue:.0f} % de l'entrée)"
+                f" / {ecriture} cache écrit"
+            )
+        ligne += " (tarif inconnu)" if tarifs is None else f" (~{cout:.4f} $)"
+        morceaux.append(ligne)
+
+    recapitulatif = " | ".join(morceaux) + f" | total estimé ~{total:.4f} $"
+    if tarif_manquant:
+        recapitulatif += (
+            " | ATTENTION : un modèle absent de TARIFS_USD_PAR_MTOK a été compté "
+            "pour 0 $ — le total est sous-estimé"
+        )
+    return recapitulatif

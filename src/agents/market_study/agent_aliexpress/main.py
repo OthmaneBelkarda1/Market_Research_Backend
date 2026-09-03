@@ -22,10 +22,11 @@ from __future__ import annotations
 import argparse
 import sys
 
+from langchain_core.callbacks import get_usage_metadata_callback
 from pydantic import ValidationError
 
 from agent import collecter_aliexpress_api
-from config import configurer_logging, verifier_identifiants
+from config import configurer_logging, resumer_consommation, verifier_identifiants
 from schemas import FicheProduit, ParametresMarche
 
 _INDENTATION_JSON = 2
@@ -133,7 +134,11 @@ def main() -> None:
         categorie=arguments.categorie,
     )
 
-    resultat = collecter_aliexpress_api(produit, marche)
+    with get_usage_metadata_callback() as consommation:
+        resultat = collecter_aliexpress_api(produit, marche)
+    recapitulatif = resumer_consommation(consommation.usage_metadata)
+    if recapitulatif:
+        print(f"Consommation LLM — {recapitulatif}", file=sys.stderr)
     print(resultat.model_dump_json(indent=_INDENTATION_JSON))
 
 

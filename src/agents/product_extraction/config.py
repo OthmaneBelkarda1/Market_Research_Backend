@@ -8,6 +8,7 @@ other agents in this project).
 """
 
 import os
+from typing import Any
 
 from dotenv import load_dotenv
 
@@ -18,11 +19,36 @@ load_dotenv(override=True)
 # read lazily (see require_apify_token) instead of exploding at import time —
 # Playwright-only usage must work without an Apify account.
 APIFY_API_TOKEN = os.environ.get("APIFY_API_TOKEN")
-OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")  # used implicitly by ChatOpenAI
+# Same rule for the model key: only `use_agent=True` reaches the LLM, so the
+# deterministic pipeline must keep working without it (see require_anthropic_key).
+ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY")  # used implicitly by ChatAnthropic
 
 # --- models ----------------------------------------------------------------
-OPENAI_MODEL = os.environ.get("OPENAI_MODEL", "gpt-5-nano")
+ANTHROPIC_MODEL = os.environ.get("ANTHROPIC_MODEL", "claude-opus-5")
+# Claude counts thinking and answer against the same ceiling, so this has to
+# cover both: too low and the product sheet is truncated mid-JSON.
+#
+# This is a backstop, not a tuning knob: the model never sees it, and a run that
+# hits it is billed in full for an answer that is then thrown away. Opus 5 thinks
+# by default, which eats into the same ceiling, so 8000 left very little room for
+# a long spec table. Raised to 16000 -- the largest value that stays clear of the
+# SDK's HTTP timeout on a non-streaming request. Unused headroom costs nothing.
+ANTHROPIC_MAX_TOKENS = int(os.environ.get("PRODUCT_MAX_OUTPUT_TOKENS", "16000"))
 AGENT_MAX_STEPS = int(os.environ.get("PRODUCT_AGENT_MAX_STEPS", "20"))
+
+# Public list prices (input, output) in USD per million tokens. Hand-entered, not
+# queried online: recheck on every model migration. A model missing from this table
+# is reported by `summarize_usage`, never silently counted as free.
+PRICES_USD_PER_MTOK: dict[str, tuple[float, float]] = {
+    "claude-opus-5": (5.00, 25.00),
+    "claude-sonnet-5": (2.00, 10.00),
+    "claude-haiku-4-5": (1.00, 5.00),
+}
+# Multipliers applied to the base input price for cached tokens. The ratios are the
+# same on every Claude model; only the base price differs.
+CACHE_READ_MULTIPLIER: float = 0.10
+CACHE_WRITE_5MIN_MULTIPLIER: float = 1.25
+CACHE_WRITE_1H_MULTIPLIER: float = 2.00
 
 # --- shopper location ------------------------------------------------------
 # E-commerce prices are geo-dependent: currency, taxes, shipping cost and even
@@ -98,6 +124,97 @@ def require_apify_token() -> str:
             "Add it to your .env file."
         )
     return APIFY_API_TOKEN
+
+
+def require_anthropic_key() -> str:
+    """Same contract as require_apify_token, for the LLM half of the extraction.
+
+    Without this the missing key surfaces as whatever exception the Anthropic
+    client raises inside its constructor, which the error mapper does not
+    recognize and reports as a bare 500.
+    """
+    if not ANTHROPIC_API_KEY:
+        raise ConfigError(
+            "ANTHROPIC_API_KEY is not set — the agent-assisted extraction needs it. "
+            "Add it to your .env file, or call with use_agent=False."
+        )
+    return ANTHROPIC_API_KEY
+
+
+def summarize_usage(usage: dict[str, Any]) -> str:
+    """One line of token accounting for an agent run, with an estimated cost.
+
+    This agent is the only one in the repository whose cost grows with the number of
+    products imported rather than with the number of studies, and the only one running
+    a reasoning loop — where every step re-bills the whole history. It is therefore the
+    one that most needs to be counted.
+
+    Cache tokens are priced apart on purpose. `langchain_anthropic` folds cache reads
+    and writes into `input_tokens` (Anthropic's own `input_tokens` excludes them), so
+    charging the whole thing at the base input rate would overcharge a cache read
+    tenfold and — worse — report the same cost with and without caching, hiding the
+    very saving the cache is there to produce.
+
+    Args:
+        usage: `model -> usage metadata`, as produced by
+            `langchain_core.callbacks.get_usage_metadata_callback`.
+
+    Returns:
+        A recap line, empty when no call was made.
+    """
+    if not usage:
+        return ""
+    parts: list[str] = []
+    total = 0.0
+    missing_price = False
+    for model, metrics in sorted(usage.items()):
+        details = metrics.get("input_token_details") or {}
+        cache_read = int(details.get("cache_read", 0) or 0)
+        # `cache_creation` and the per-TTL breakdown are mutually exclusive:
+        # langchain_anthropic zeroes the former as soon as the latter is filled in,
+        # so summing them never double-counts.
+        write_5min = int(details.get("ephemeral_5m_input_tokens", 0) or 0)
+        write_1h = int(details.get("ephemeral_1h_input_tokens", 0) or 0)
+        write_untyped = int(details.get("cache_creation", 0) or 0)  # TTL unknown
+        cache_write = write_5min + write_1h + write_untyped
+
+        total_input = int(metrics.get("input_tokens", 0) or 0)
+        fresh_input = max(total_input - cache_read - cache_write, 0)
+        output = int(metrics.get("output_tokens", 0) or 0)
+
+        prices = PRICES_USD_PER_MTOK.get(model)
+        if prices is None:
+            missing_price = True
+            price_in, price_out = 0.0, 0.0
+        else:
+            price_in, price_out = prices
+
+        cost = (
+            fresh_input * price_in
+            + cache_read * price_in * CACHE_READ_MULTIPLIER
+            + (write_5min + write_untyped) * price_in * CACHE_WRITE_5MIN_MULTIPLIER
+            + write_1h * price_in * CACHE_WRITE_1H_MULTIPLIER
+            + output * price_out
+        ) / 1_000_000
+        total += cost
+
+        line = f"{model}: {fresh_input} input / {output} output"
+        if cache_read or cache_write:
+            share = 100.0 * cache_read / total_input if total_input else 0.0
+            line += (
+                f" / {cache_read} cache read ({share:.0f}% of input)"
+                f" / {cache_write} cache written"
+            )
+        line += " (price unknown)" if prices is None else f" (~${cost:.4f})"
+        parts.append(line)
+
+    recap = " | ".join(parts) + f" | estimated total ~${total:.4f}"
+    if missing_price:
+        recap += (
+            " | WARNING: a model absent from PRICES_USD_PER_MTOK was counted as $0 "
+            "- the total is understated"
+        )
+    return recap
 
 
 # ---------------------------------------------------------------------------

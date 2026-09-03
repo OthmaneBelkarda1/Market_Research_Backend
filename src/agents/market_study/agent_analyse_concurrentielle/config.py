@@ -55,17 +55,41 @@ logger = logging.getLogger(NOM_LOGGER)
 # Modèles LLM — deux niveaux, température nulle
 # --------------------------------------------------------------------------- #
 # Identifiants vérifiés le 05/08/2026 : tous deux disponibles à l'API Anthropic.
-# `claude-sonnet-4-5-20250929` est un modèle « legacy actif ». La génération
-# courante (`claude-sonnet-5`) rejette toute valeur de `temperature` non par
-# défaut : elle est incompatible avec l'exigence de température 0.
+# `claude-sonnet-5` remplace `claude-sonnet-4-5-20250929` (02/09/2026) : même
+# famille, génération postérieure, et un tarif inférieur d'un tiers dans les deux
+# sens (2/10 $ contre 3/15 $ par million de jetons). Il refuse `temperature` ;
+# `construire_modele` ne la transmet donc qu'aux modèles qui l'acceptent.
 
 MODELE_EXTRACTION: str = "claude-haiku-4-5-20251001"
 """Extraction d'attributs de titres et de claims d'annonces, par lots."""
 
-MODELE_SYNTHESE: str = "claude-sonnet-4-5-20250929"
+MODELE_SYNTHESE: str = "claude-sonnet-5"
 """Consolidation des concurrents, analyse qualitative, différenciation."""
 
 TEMPERATURE: float = 0.0
+
+MODELES_SANS_ECHANTILLONNAGE: frozenset[str] = frozenset(
+    {"claude-sonnet-5", "claude-opus-5"}
+)
+"""Modèles de génération courante : ils refusent tout paramètre d'échantillonnage.
+
+`temperature`, `top_p` et `top_k` y renvoient une erreur 400. Le déterminisme que
+`TEMPERATURE = 0` visait n'était de toute façon pas atteint : deux exécutions du
+même code sur les mêmes entrées produisent déjà des sorties différentes
+(cf. `docs/baseline_jetons.md` §7). `TEMPERATURE` reste transmise aux modèles qui
+l'acceptent encore, Haiku 4.5 en particulier.
+"""
+
+RAISONNEMENT_SYNTHESE: dict[str, str] = {"type": "disabled"}
+"""Raisonnement adaptatif de la génération courante, désactivé par défaut.
+
+Désactivé, le modèle se comporte comme Sonnet 4.5 — aucun jeton de raisonnement
+facturé — donc la baisse de tarif 3/15 → 2/10 $ par million de jetons est acquise
+sans contrepartie sur la sortie. Passer à `{"type": "adaptive"}`, éventuellement
+avec `output_config={"effort": "low"}`, est le seul arbitrage qualité/coût de ce
+module : il demande une campagne de mesure avant d'être adopté.
+"""
+
 MAX_TOKENS_EXTRACTION: int = 8000
 MAX_TOKENS_SYNTHESE: int = 16000
 
@@ -73,7 +97,7 @@ NOM_VARIABLE_CLE_API: str = "ANTHROPIC_API_KEY"
 
 TARIFS_USD_PAR_MTOK: dict[str, tuple[float, float]] = {
     MODELE_EXTRACTION: (1.00, 5.00),
-    MODELE_SYNTHESE: (3.00, 15.00),
+    MODELE_SYNTHESE: (2.00, 10.00),
 }
 """Tarifs publics (entrée, sortie) par million de jetons, pour estimation seule.
 
@@ -288,12 +312,18 @@ def construire_modele(nom_modele: str, max_tokens: int) -> Any:
     """
     from langchain_anthropic import ChatAnthropic
 
+    options: dict[str, Any] = {}
+    if nom_modele in MODELES_SANS_ECHANTILLONNAGE:
+        options["thinking"] = RAISONNEMENT_SYNTHESE
+    else:
+        options["temperature"] = TEMPERATURE
+
     return ChatAnthropic(
         model=nom_modele,
-        temperature=TEMPERATURE,
         max_tokens=max_tokens,
         timeout=None,
         stop=None,
+        **options,
     )
 
 
@@ -344,11 +374,29 @@ def invoquer_structure(
     return None, NB_TENTATIVES_LLM, derniere_erreur
 
 
+# --------------------------------------------------------------------------- #
+# Comptabilité des jetons
+# --------------------------------------------------------------------------- #
+# Multiplicateurs appliqués au tarif d'entrée de base pour les jetons de cache.
+# Ces rapports sont les mêmes sur tous les modèles Claude : seule la base varie.
+MULT_CACHE_LECTURE: float = 0.10
+MULT_CACHE_ECRITURE_5MIN: float = 1.25
+MULT_CACHE_ECRITURE_1H: float = 2.00
+
+
 def resumer_consommation(usage: dict[str, Any]) -> str:
-    """Résume la consommation de jetons et son coût estimé.
+    """Résume la consommation de jetons d'une exécution et son coût estimé.
+
+    POURQUOI LE CACHE EST VENTILÉ — `langchain_anthropic` rajoute les jetons de
+    cache dans `input_tokens` (l'`input_tokens` d'Anthropic, lui, les exclut).
+    Les tarifer au tarif d'entrée plein surfacturerait une lecture de cache d'un
+    facteur dix et, surtout, afficherait un coût identique avec et sans mise en
+    cache : le rapport ne montrerait aucune économie là où elle serait pourtant
+    réelle. Le détail est donc repris de `input_token_details` et tarifé à part.
 
     Args:
-        usage: Dictionnaire `modèle → métadonnées d'usage`.
+        usage: Dictionnaire `modèle → métadonnées d'usage`, tel que produit par
+            `langchain_core.callbacks.get_usage_metadata_callback`.
 
     Returns:
         Une ligne de récapitulatif, vide si aucun appel n'a été passé.
@@ -357,16 +405,59 @@ def resumer_consommation(usage: dict[str, Any]) -> str:
         return ""
     morceaux: list[str] = []
     total = 0.0
+    tarif_manquant = False
     for modele, metriques in sorted(usage.items()):
-        entree = int(metriques.get("input_tokens", 0))
-        sortie = int(metriques.get("output_tokens", 0))
-        tarif_entree, tarif_sortie = TARIFS_USD_PAR_MTOK.get(modele, (0.0, 0.0))
-        cout = (entree * tarif_entree + sortie * tarif_sortie) / 1_000_000
+        details = metriques.get("input_token_details") or {}
+        lecture = int(details.get("cache_read", 0) or 0)
+        # `cache_creation` et la ventilation par TTL s'excluent mutuellement :
+        # `langchain_anthropic` remet la première à zéro dès que la seconde est
+        # renseignée. Les additionner ne double donc jamais le compte.
+        ecriture_5min = int(details.get("ephemeral_5m_input_tokens", 0) or 0)
+        ecriture_1h = int(details.get("ephemeral_1h_input_tokens", 0) or 0)
+        # Écriture dont le TTL n'est pas ventilé : tarifée au TTL par défaut.
+        ecriture_indistincte = int(details.get("cache_creation", 0) or 0)
+        ecriture = ecriture_5min + ecriture_1h + ecriture_indistincte
+
+        entree_totale = int(metriques.get("input_tokens", 0) or 0)
+        # Le solde est ce qui n'a été ni lu ni écrit en cache : plein tarif.
+        entree_neuve = max(entree_totale - lecture - ecriture, 0)
+        sortie = int(metriques.get("output_tokens", 0) or 0)
+
+        tarifs = TARIFS_USD_PAR_MTOK.get(modele)
+        if tarifs is None:
+            # Un modèle absent de la table valait auparavant 0 $ sans le dire :
+            # une migration de modèle rendait le rapport faux en silence.
+            tarif_manquant = True
+            tarif_entree, tarif_sortie = 0.0, 0.0
+        else:
+            tarif_entree, tarif_sortie = tarifs
+
+        cout = (
+            entree_neuve * tarif_entree
+            + lecture * tarif_entree * MULT_CACHE_LECTURE
+            + (ecriture_5min + ecriture_indistincte) * tarif_entree * MULT_CACHE_ECRITURE_5MIN
+            + ecriture_1h * tarif_entree * MULT_CACHE_ECRITURE_1H
+            + sortie * tarif_sortie
+        ) / 1_000_000
         total += cout
-        morceaux.append(
-            f"{modele} : {entree} jetons entrée / {sortie} sortie (~{cout:.4f} $)"
+
+        ligne = f"{modele} : {entree_neuve} jetons entrée / {sortie} sortie"
+        if lecture or ecriture:
+            part_lue = 100.0 * lecture / entree_totale if entree_totale else 0.0
+            ligne += (
+                f" / {lecture} cache lu ({part_lue:.0f} % de l'entrée)"
+                f" / {ecriture} cache écrit"
+            )
+        ligne += " (tarif inconnu)" if tarifs is None else f" (~{cout:.4f} $)"
+        morceaux.append(ligne)
+
+    recapitulatif = " | ".join(morceaux) + f" | total estimé ~{total:.4f} $"
+    if tarif_manquant:
+        recapitulatif += (
+            " | ATTENTION : un modèle absent de TARIFS_USD_PAR_MTOK a été compté "
+            "pour 0 $ — le total est sous-estimé"
         )
-    return " | ".join(morceaux) + f" | total estimé ~{total:.4f} $"
+    return recapitulatif
 
 
 def normaliser_devise(devise: str | None) -> str | None:

@@ -36,6 +36,7 @@ python main.py \
     [--concurrence ../agent_analyse_concurrentielle/output.json] \
     [--plc ../agent_plc/output.json] \
     [--rapport rapport_etude.md] [--resume resume_executif.md] \
+    [--gabarit v2|v1] \
     [--langue-analyse fr] [--sortie output.json] [--stdout] [--verbose]
 ```
 
@@ -45,6 +46,7 @@ python main.py \
 | `--rapport` | `rapport_etude.md` | Chaîne vide = fichier non produit |
 | `--resume` | `resume_executif.md` | Chaîne vide = fichier non produit |
 | `--sortie` | `output.json` | Métadonnées `ResultatRestitution` ; chaîne vide = aucun fichier |
+| `--gabarit` | `v2` | `v2` : rapport décisionnel en cinq écrans. `v1` : ancien rendu en neuf sections, conservé le temps de la transition |
 
 | Code de sortie | Signification |
 |---|---|
@@ -80,27 +82,111 @@ Trois garanties structurent tout le module :
 
 ## 4. Le gabarit du rapport
 
-| # | Section | Contenu | Source | Narratif |
-|---|---|---|---|---|
-| — | En-tête | Titre, produit, marché, date, portée, avertissement de méthode | code | non |
-| 1 | Synthèse exécutive | Verdict + fiabilité, faits clés, 3 recommandations majeures, risque principal, **réserves majeures** | F5 | oui |
-| 2 | Verdict de potentiel : *mot du verdict* | Grille des 5 critères, règle littérale, **bascules calculées par le code**, données à compléter | F5 | oui |
-| 3 | Phase de cycle de vie | Phase, incertitude, signaux, recommandations de phase — ou **encart standard** de non-détermination | F6 | oui |
-| 4 | Demande observée | Indicateurs de recherche + rappel d'interprétation | F5 (écho Tendances) | oui |
-| 5 | Besoins et attentes exprimés | Besoins, attentes, top 5 des difficultés avec **1 extrait chacune**, sentiment par source, écarts entre sources | F3 (à défaut : écho F5) | oui |
-| 6 | Paysage concurrentiel | Intensité, top 8 concurrents, benchmark par source et devise, portée régionale, standards, angles peu exploités | F4 (à défaut : écho F5) | oui |
-| 7 | Recommandations | P1 → P3 en tableaux + positionnement prix | F5 (+ F6) | non |
-| 8 | Opportunités et risques | Opportunités et conditions de capture ; risques, gravité, atténuation | F5 | non |
-| 9 | Annexe | Sources et volumes, période, méthode en 10 points, **limites consolidées verbatim**, hypothèses, glossaire | toutes | non |
+Deux gabarits coexistent, sélectionnés par `--gabarit` (défaut : `v2`). Ils
+partagent le chargement, la préparation, la liste blanche, la simulation des
+bascules et le calcul de confiance : **seules la rédaction, l'assemblage et la
+post-validation diffèrent.** Les garanties de sûreté sont donc les mêmes des deux
+côtés, par construction et non par recopie.
 
-Chaque section porte, en fin de bloc, un commentaire HTML de traçabilité
-invisible au rendu :
+### 4.1 — `v2`, le rapport décisionnel (défaut)
 
-```html
-<!-- sources: recommandations.verdict_potentiel.grille; simulation_bascules (code) -->
+Cinq écrans, dans un ordre fixe. Chaque sous-titre est une **question métier**, et
+les puces y répondent. Tout narratif est en puces courtes — plus aucun paragraphe.
+
+| # | Écran (`##`) | Sous-blocs (`###`) | Budget | Source |
+|---|---|---|--:|---|
+| 0 | **Décision** | Pourquoi · Le risque principal · Ce qui ferait changer la décision · Ce qu'il manque pour trancher | 200 mots | F5 |
+| 1 | **Le consommateur** | Pourquoi ils achètent — ou non · Ce qu'ils apprécient · Ce qui les dérange · Ce qu'ils aimeraient trouver | 350 mots | F3 |
+| 2 | **Le marché et les concurrents** | Dynamique de la demande · Que font les concurrents ? · Exemples observés · Prix pratiqués · Les 5 forces · Ce que personne ne fait | 350 mots | F4 |
+| 3 | **Ce que nous recommandons** | Phase de vie du marché · Actions prioritaires · Prix · Entrée sur le marché · Opportunités et risques | 300 mots | F5, F6 |
+| 4 | **Méthode et limites** | replié dans un `<details>` | — | toutes |
+
+**Le résumé exécutif n'existe qu'à un seul endroit** : `resume_executif.md` est la
+copie exacte de l'écran 0. Le v1 le recopiait à l'identique en section 1 du
+rapport, et le lecteur lisait deux fois la même chose.
+
+Le titre de l'écran 0 porte le **libellé métier**, la ligne suivante le **verdict
+brut** :
+
+```markdown
+## Décision : Go conditionnel
+Verdict calculé : indéterminé · score 5/8 · fiabilité faible
 ```
 
----
+Les deux sont affichés, et la post-validation contrôle les deux. Traduire sans
+montrer l'original serait exactement l'adoucissement que ce module s'interdit.
+
+| Verdict de l'analyse | Libellé affiché |
+|---|---|
+| `positif` | **Go** |
+| `negatif` | **No-go** |
+| `indetermine` | **Go conditionnel** |
+
+Un « Go conditionnel » impose qu'au moins une condition soit affichée — une
+bascule simulée ou un manque identifié. Sans quoi la phrase standard
+« Conditions non déterminables à partir des analyses disponibles. » prend le
+relais, et l'écart est signalé.
+
+**Bornes de forme**, toutes dans `config.py` et toutes contrôlées : 3 faits clés,
+5 points de friction dont les 2 premiers portent un extrait, 6 concurrents,
+5 actions P1, 3 opportunités, 3 risques, 30 mots par puce (35 pour « Que font les
+concurrents ? »), 12 mots par cellule courte, 40 mots par action.
+
+**Aucune troncature à « … ».** Les cellules trop longues passent par une
+compression rédactionnelle ; une compression qui introduirait un chiffre absent
+de l'original est rejetée, et l'original coupé au dernier mot entier prend le
+relais. Les blocs secondaires ne sont pas supprimés mais **repliés** dans des
+`<details>` : le détail reste accessible, il ne s'impose plus.
+
+**Marqueurs pour le frontend** — `<!-- f7:v2 -->` en tête du fichier, et
+`<!-- widget:extraits source="…" -->` dans l'écran 2. Le Markdown reste lisible
+sans frontend : un tableau de repli des concurrents suit toujours les marqueurs.
+Les commentaires de traçabilité `<!-- sources: … -->` et `<!-- extrait: … -->`
+sont conservés — ils servent l'audit ; c'est au frontend de les masquer.
+
+### 4.2 — Les 5 forces
+
+Le tableau affiche **toujours ses cinq lignes**, « non évalué » compris : une
+ligne absente se lirait comme une force jugée sans intérêt.
+
+L'analyse de synthèse ne publie pas encore de bloc `cinq_forces`. En attendant,
+trois forces sont **estimées par une règle déterministe** et portent la mention
+« estimation par règle » ; les deux autres sont déclarées non évaluées. Les
+seuils sont publiés en hypothèse de travail dans l'écran méthode.
+
+| Force | Règle | Origine |
+|---|---|---|
+| Rivalité actuelle | élevée si ≥ 30 concurrents **ou** ≥ 100 offres cœur ; moyenne si ≥ 10 **ou** ≥ 30 | F4 |
+| Facilité d'entrée | élevée si la médiane du canal le moins cher < 15 (devise du benchmark) **et** aucun annonceur actif ; moyenne si l'une des deux | F4 |
+| Pouvoir des clients | élevé si un point de friction de nature économique ou d'accès est documenté **et** ≥ 30 offres cœur ; moyen si l'une des deux | F3 + F4 |
+| Pouvoir des fournisseurs | `non évalué` | — |
+| Menace des substituts | `non évalué` | — |
+
+> La détection d'un point de friction économique porte sur des **mots entiers**.
+> Une recherche par sous-chaîne trouvait « cher » dans « recherche » et « cout »
+> dans « couture », et faisait remonter « pouvoir des clients » d'un cran sans
+> qu'aucune donnée de prix ne le justifie.
+
+Sur le run de référence : rivalité **élevée** (50 concurrents, 189 offres),
+entrée **élevée** (médiane 9,64 EUR, 0 annonceur), clients **moyen** (choix large,
+mais aucun point de friction économique documenté).
+
+### 4.3 — `v1`, l'ancien rendu
+
+Neuf sections numérotées, narratif en paragraphes, annexe dépliée. Conservé le
+temps de la transition, sans duplication de la logique de sûreté.
+
+| # | Section | Source | Narratif |
+|---|---|---|---|
+| 1 | Synthèse exécutive | F5 | oui |
+| 2 | Verdict de potentiel : *mot du verdict* | F5 | oui |
+| 3 | Phase de cycle de vie | F6 | oui |
+| 4 | Demande observée | F5 | oui |
+| 5 | Besoins et attentes exprimés | F3 | oui |
+| 6 | Paysage concurrentiel | F4 | oui |
+| 7 | Recommandations | F5 (+ F6) | non |
+| 8 | Opportunités et risques | F5 | non |
+| 9 | Annexe | toutes | non |
 
 ## 5. La liste blanche numérique
 
@@ -264,21 +350,39 @@ post-validation silencieuse.
 
 ---
 
-## 11. Coûts et durée observés
+## 11. Coûts, durée et volume
 
-Mesuré le 06/08/2026 sur le run *ashwagandha-supplement-ES* (F5 verdict
-`indetermine`, F6 exécutée avec `--forcer`) :
+### 11.1 — Mesures v1 (06/08/2026, run *ashwagandha-supplement-ES*)
 
 | Scénario | Appels LLM | Coût estimé | Durée | Nombres vérifiés / retirés |
 |---|---|---|---|---|
 | Quatre entrées (F5 + F3 + F4 + F6) | 6 | ≈ 0,10 $ | 75 s | 604 / **0** |
 | F5 seule — toutes sections dégradées | 5 | ≈ 0,08 $ | 57 s | 496 / **0** |
 
-Modèle : `claude-sonnet-4-5-20250929`, température 0, une chaîne par section
-narrative. Préparation, assemblage et validation sont du **code pur**. Tarif
-saisi à la main dans `config.py`, à vérifier avant tout usage budgétaire.
+### 11.2 — Volume v1 / v2 (03/09/2026, run *ceinture-lombaire-FR*)
 
----
+| | v1 | v2 |
+|---|--:|--:|
+| Sections / écrans | 9 | 5 |
+| Document rendu | 430 lignes, 47 505 car. | **379 lignes, 33 500 car.** |
+| Appels de rédaction | 6 (une par section narrative) | **4 écrans + 1 compression** |
+| Budget de narratif | non borné | **1 200 mots, contrôlés** |
+| Annexe | dépliée, ≈ 1/3 du document | **repliée** |
+| Résumé exécutif | recopié en section 1 | **présent une seule fois** |
+
+> **Mesure honnête du volume rendu.** Hors tableaux, blocs repliés et titres, le
+> rapport v2 porte **892 mots produits par le code** — puces recopiées des
+> analyses amont, bascules simulées, lignes standard — auxquels s'ajoute le
+> narratif du modèle, plafonné à 1 200 mots. Le budget de 1 200 mots gouverne
+> **le narratif**, pas le document entier : la cible de 1 200 mots pour le rendu
+> complet n'est donc pas atteinte, et ne peut pas l'être sans couper dans des
+> contenus amont que le rapport a pour rôle de restituer. Les puces injectées par
+> le code sont en revanche ramenées à leur **première phrase**, plafonnée, ce qui
+> a retiré 139 mots sans retirer une seule information portée par un énoncé.
+
+Les chiffres de volume viennent d'un essai à blanc — préparation et assemblage
+réels, puces factices — donc ils ne comptent pas le narratif final. Ils sont à
+reprendre après le premier run complet en v2.
 
 ## 12. Ce que ce module ne fait pas
 
@@ -292,3 +396,27 @@ saisi à la main dans `config.py`, à vérifier avant tout usage budgétaire.
 - Aucun **adoucissement éditorial** : si le verdict est « indéterminé », le
   rapport titre « indéterminé » ; si une donnée est de fiabilité faible, le badge
   le dit.
+
+---
+
+## 13. Points ouverts amont
+
+Ces défauts appartiennent à F3, F4 ou F5. **F7 ne les corrige pas** : il les rend
+visibles, et les déclare en hypothèse ou en limite.
+
+| Point | Effet constaté | Où le corriger |
+|---|---|---|
+| **Offres AliExpress « sans marque » regroupées en un seul concurrent** | fausse la concentration des volumes (98,9 % sur le top 3) et le critère « intensité concurrentielle » | F4, puis F5 |
+| **Volumes de ventes de canaux différents sur un champ unique** | Amazon publie un volume **mensuel**, AliExpress un **cumul** depuis la mise en ligne ; `volume_ventes_cumule` les mélange | F4 |
+| **Limite F3 mentionnant une SERP États-Unis sur une étude FR** | limite recopiée verbatim, incohérente avec le marché étudié | F3 |
+| **Pas de bloc `cinq_forces`** | trois forces estimées par règle locale à la restitution, deux non évaluées | F5 |
+| **Pas de `clientele_cible` au comparatif** | le sous-bloc « Leur clientèle » affiche sa phrase standard | F4 |
+| **Échelle d'intensité des points de friction** | l'échelle va de **1 à 3** (« 1 = gêne, 2 = problème net, 3 = rédhibitoire »), pas de 1 à 5 ; le rapport affiche donc `x/3` | F3 (documentation) |
+
+Les deux premiers champs — `cinq_forces` et `clientele_cible` — sont **déjà
+déclarés en optionnel** dans `schemas.py` : F7 les consommera sans modification
+le jour où les analyses amont les publieront.
+
+F7 rétablit l'unité des volumes quand une ligne du comparatif ne porte qu'un
+canal ; quand elle en porte plusieurs, l'unité est déclarée **indéterminée**
+plutôt que devinée.

@@ -64,22 +64,41 @@ logger = logging.getLogger(NOM_LOGGER)
 # --------------------------------------------------------------------------- #
 # Modèle LLM — un seul niveau
 # --------------------------------------------------------------------------- #
-# La rédaction est le cœur de valeur de ce module : aucune étape mécanique ne
-# justifie un modèle d'extraction. Préparation, assemblage et validation sont
-# du code pur, sans LLM.
-#
-# Identifiant vérifié le 06/08/2026 : disponible à l'API Anthropic.
-# `claude-sonnet-4-5-20250929` est un modèle « legacy actif » ; la génération
-# courante `claude-sonnet-5` rejette toute `temperature` non par défaut, ce qui
-# est incompatible avec l'exigence de température 0.
+# `claude-sonnet-5` remplace `claude-sonnet-4-5-20250929` (02/09/2026) : même
+# famille, génération postérieure, et un tarif inférieur d'un tiers dans les deux
+# sens (2/10 $ contre 3/15 $ par million de jetons). Il refuse `temperature` ;
+# `construire_modele` ne la transmet donc qu'aux modèles qui l'acceptent.
 
-MODELE_SYNTHESE: str = "claude-sonnet-4-5-20250929"
+MODELE_SYNTHESE: str = "claude-sonnet-5"
 TEMPERATURE: float = 0.0
+
+MODELES_SANS_ECHANTILLONNAGE: frozenset[str] = frozenset(
+    {"claude-sonnet-5", "claude-opus-5"}
+)
+"""Modèles de génération courante : ils refusent tout paramètre d'échantillonnage.
+
+`temperature`, `top_p` et `top_k` y renvoient une erreur 400. Le déterminisme que
+`TEMPERATURE = 0` visait n'était de toute façon pas atteint : deux exécutions du
+même code sur les mêmes entrées produisent déjà des sorties différentes
+(cf. `docs/baseline_jetons.md` §7). `TEMPERATURE` reste transmise aux modèles qui
+l'acceptent encore, Haiku 4.5 en particulier.
+"""
+
+RAISONNEMENT_SYNTHESE: dict[str, str] = {"type": "disabled"}
+"""Raisonnement adaptatif de la génération courante, désactivé par défaut.
+
+Désactivé, le modèle se comporte comme Sonnet 4.5 — aucun jeton de raisonnement
+facturé — donc la baisse de tarif 3/15 → 2/10 $ par million de jetons est acquise
+sans contrepartie sur la sortie. Passer à `{"type": "adaptive"}`, éventuellement
+avec `output_config={"effort": "low"}`, est le seul arbitrage qualité/coût de ce
+module : il demande une campagne de mesure avant d'être adopté.
+"""
+
 MAX_TOKENS_SYNTHESE: int = 4000
 
 NOM_VARIABLE_CLE_API: str = "ANTHROPIC_API_KEY"
 
-TARIFS_USD_PAR_MTOK: dict[str, tuple[float, float]] = {MODELE_SYNTHESE: (3.00, 15.00)}
+TARIFS_USD_PAR_MTOK: dict[str, tuple[float, float]] = {MODELE_SYNTHESE: (2.00, 10.00)}
 """Tarif public (entrée, sortie) par million de jetons, pour estimation seule."""
 
 NB_TENTATIVES_LLM: int = 2
@@ -298,7 +317,8 @@ TERMES_JARGON: tuple[str, ...] = (
     "pain points",
 )
 """Jargon interne proscrit dans le corps du rapport. « pain point » en fait
-partie : le rapport dit « irritant » ou « difficulté rapportée »."""
+partie : le rapport dit « point de friction », terme masculin qui préserve les
+accords du texte amont."""
 
 NEGATIONS_TOLEREES: tuple[str, ...] = (
     "aucun",
@@ -345,19 +365,29 @@ SUBSTITUTIONS_TEXTE: tuple[tuple[str, str], ...] = (
     (r"\bLes acheteurs\b", "Les personnes dont les avis ont été analysés"),
     (r"\bles acheteurs\b", "les personnes dont les avis ont été analysés"),
     # --- Vocabulaire interne ------------------------------------------------ #
-    # Les formes déterminées passent d'abord : « ce pain point » est masculin,
-    # « cette difficulté rapportée » est féminin.
-    (r"\bCe pain point\b", "Cette difficulté rapportée"),
-    (r"\bce pain point\b", "cette difficulté rapportée"),
-    (r"\bLe pain point\b", "La difficulté rapportée"),
-    (r"\ble pain point\b", "la difficulté rapportée"),
-    (r"\bdu pain point\b", "de la difficulté rapportée"),
-    (r"\bUn pain point\b", "Une difficulté rapportée"),
-    (r"\bun pain point\b", "une difficulté rapportée"),
-    (r"\bPain points\b", "Difficultés rapportées"),
-    (r"\bpain points\b", "difficultés rapportées"),
-    (r"\bPain point\b", "Difficulté rapportée"),
-    (r"\bpain point\b", "difficulté rapportée"),
+    # « point de friction » est MASCULIN, comme « pain point » : le remplacement
+    # laisse les accords du texte amont intacts. « difficulté rapportée », féminin,
+    # produisait « une difficulté rapportée majeur » et « la difficulté rapportée le
+    # plus fréquent » — c'est le défaut relevé par le métier.
+    (r"\bCe pain point\b", "Ce point de friction"),
+    (r"\bce pain point\b", "ce point de friction"),
+    (r"\bLe pain point\b", "Le point de friction"),
+    (r"\ble pain point\b", "le point de friction"),
+    (r"\bdu pain point\b", "du point de friction"),
+    (r"\bUn pain point\b", "Un point de friction"),
+    (r"\bun pain point\b", "un point de friction"),
+    (r"\bPain points\b", "Points de friction"),
+    (r"\bpain points\b", "points de friction"),
+    (r"\bPain point\b", "Point de friction"),
+    (r"\bpain point\b", "point de friction"),
+    # Rattrapage du vocabulaire de la version 1, encore présent dans des textes
+    # amont produits avant la bascule.
+    (r"\bdifficultés rapportées\b", "points de friction"),
+    (r"\bDifficultés rapportées\b", "Points de friction"),
+    (r"\bune difficulté rapportée\b", "un point de friction"),
+    (r"\bla difficulté rapportée\b", "le point de friction"),
+    (r"\bdifficulté rapportée\b", "point de friction"),
+    (r"\bDifficulté rapportée\b", "Point de friction"),
     # « unités » n'est traduit que lorsqu'il désigne le corpus : « 3000 unités »
     # vendues doit rester intact.
     (r"\bd'unités\b", "de contributions"),
@@ -619,7 +649,7 @@ LIBELLES_ENTREES: dict[str, str] = {
 DETAILS_ENTREES: dict[str, str] = {
     ENTREE_INSIGHTS: (
         "verbatims, répartition du sentiment par source, hiérarchie complète des "
-        "difficultés rapportées"
+        "points de friction"
     ),
     ENTREE_CONCURRENCE: (
         "comparatif détaillé des concurrents, benchmark de prix par source et par "
@@ -636,7 +666,7 @@ METHODOLOGIE: tuple[str, ...] = (
     "Un marché bilingue donne lieu à une étude par langue, jamais à une moyenne.",
     "3. Les avis et discussions collectés sont découpés en contributions "
     "élémentaires, échantillonnés de façon stratifiée, puis cartographiés : "
-    "sentiment, thèmes, difficultés rapportées, besoins et attentes.",
+    "sentiment, thèmes, points de friction, besoins et attentes.",
     "4. Les offres, annonces et pages sont consolidées en concurrents, avec un "
     "niveau de certitude explicite sur chaque rapprochement.",
     "5. Le benchmark de prix est établi SOURCE PAR SOURCE ET DEVISE PAR DEVISE. "
@@ -777,12 +807,18 @@ def construire_modele() -> Any:
     """
     from langchain_anthropic import ChatAnthropic
 
+    options: dict[str, Any] = {}
+    if MODELE_SYNTHESE in MODELES_SANS_ECHANTILLONNAGE:
+        options["thinking"] = RAISONNEMENT_SYNTHESE
+    else:
+        options["temperature"] = TEMPERATURE
+
     return ChatAnthropic(
         model=MODELE_SYNTHESE,
-        temperature=TEMPERATURE,
         max_tokens=MAX_TOKENS_SYNTHESE,
         timeout=None,
         stop=None,
+        **options,
     )
 
 
@@ -829,11 +865,29 @@ def invoquer_structure(
     return None, NB_TENTATIVES_LLM, derniere_erreur
 
 
+# --------------------------------------------------------------------------- #
+# Comptabilité des jetons
+# --------------------------------------------------------------------------- #
+# Multiplicateurs appliqués au tarif d'entrée de base pour les jetons de cache.
+# Ces rapports sont les mêmes sur tous les modèles Claude : seule la base varie.
+MULT_CACHE_LECTURE: float = 0.10
+MULT_CACHE_ECRITURE_5MIN: float = 1.25
+MULT_CACHE_ECRITURE_1H: float = 2.00
+
+
 def resumer_consommation(usage: dict[str, Any]) -> str:
-    """Résume la consommation de jetons et son coût estimé.
+    """Résume la consommation de jetons d'une exécution et son coût estimé.
+
+    POURQUOI LE CACHE EST VENTILÉ — `langchain_anthropic` rajoute les jetons de
+    cache dans `input_tokens` (l'`input_tokens` d'Anthropic, lui, les exclut).
+    Les tarifer au tarif d'entrée plein surfacturerait une lecture de cache d'un
+    facteur dix et, surtout, afficherait un coût identique avec et sans mise en
+    cache : le rapport ne montrerait aucune économie là où elle serait pourtant
+    réelle. Le détail est donc repris de `input_token_details` et tarifé à part.
 
     Args:
-        usage: Dictionnaire `modèle → métadonnées d'usage`.
+        usage: Dictionnaire `modèle → métadonnées d'usage`, tel que produit par
+            `langchain_core.callbacks.get_usage_metadata_callback`.
 
     Returns:
         Une ligne de récapitulatif, vide si aucun appel n'a été passé.
@@ -842,13 +896,400 @@ def resumer_consommation(usage: dict[str, Any]) -> str:
         return ""
     morceaux: list[str] = []
     total = 0.0
+    tarif_manquant = False
     for modele, metriques in sorted(usage.items()):
-        entree = int(metriques.get("input_tokens", 0))
-        sortie = int(metriques.get("output_tokens", 0))
-        tarif_entree, tarif_sortie = TARIFS_USD_PAR_MTOK.get(modele, (0.0, 0.0))
-        cout = (entree * tarif_entree + sortie * tarif_sortie) / 1_000_000
+        details = metriques.get("input_token_details") or {}
+        lecture = int(details.get("cache_read", 0) or 0)
+        # `cache_creation` et la ventilation par TTL s'excluent mutuellement :
+        # `langchain_anthropic` remet la première à zéro dès que la seconde est
+        # renseignée. Les additionner ne double donc jamais le compte.
+        ecriture_5min = int(details.get("ephemeral_5m_input_tokens", 0) or 0)
+        ecriture_1h = int(details.get("ephemeral_1h_input_tokens", 0) or 0)
+        # Écriture dont le TTL n'est pas ventilé : tarifée au TTL par défaut.
+        ecriture_indistincte = int(details.get("cache_creation", 0) or 0)
+        ecriture = ecriture_5min + ecriture_1h + ecriture_indistincte
+
+        entree_totale = int(metriques.get("input_tokens", 0) or 0)
+        # Le solde est ce qui n'a été ni lu ni écrit en cache : plein tarif.
+        entree_neuve = max(entree_totale - lecture - ecriture, 0)
+        sortie = int(metriques.get("output_tokens", 0) or 0)
+
+        tarifs = TARIFS_USD_PAR_MTOK.get(modele)
+        if tarifs is None:
+            # Un modèle absent de la table valait auparavant 0 $ sans le dire :
+            # une migration de modèle rendait le rapport faux en silence.
+            tarif_manquant = True
+            tarif_entree, tarif_sortie = 0.0, 0.0
+        else:
+            tarif_entree, tarif_sortie = tarifs
+
+        cout = (
+            entree_neuve * tarif_entree
+            + lecture * tarif_entree * MULT_CACHE_LECTURE
+            + (ecriture_5min + ecriture_indistincte) * tarif_entree * MULT_CACHE_ECRITURE_5MIN
+            + ecriture_1h * tarif_entree * MULT_CACHE_ECRITURE_1H
+            + sortie * tarif_sortie
+        ) / 1_000_000
         total += cout
-        morceaux.append(
-            f"{modele} : {entree} jetons entrée / {sortie} sortie (~{cout:.4f} $)"
+
+        ligne = f"{modele} : {entree_neuve} jetons entrée / {sortie} sortie"
+        if lecture or ecriture:
+            part_lue = 100.0 * lecture / entree_totale if entree_totale else 0.0
+            ligne += (
+                f" / {lecture} cache lu ({part_lue:.0f} % de l'entrée)"
+                f" / {ecriture} cache écrit"
+            )
+        ligne += " (tarif inconnu)" if tarifs is None else f" (~{cout:.4f} $)"
+        morceaux.append(ligne)
+
+    recapitulatif = " | ".join(morceaux) + f" | total estimé ~{total:.4f} $"
+    if tarif_manquant:
+        recapitulatif += (
+            " | ATTENTION : un modèle absent de TARIFS_USD_PAR_MTOK a été compté "
+            "pour 0 $ — le total est sous-estimé"
         )
-    return " | ".join(morceaux) + f" | total estimé ~{total:.4f} $"
+    return recapitulatif
+
+
+# --------------------------------------------------------------------------- #
+# GABARIT V2 — « rapport décisionnel »
+# --------------------------------------------------------------------------- #
+# Décision métier du 03/09/2026 : le rapport v1 est jugé trop long, redondant et
+# organisé par blocs de données. Le v2 le réorganise en CINQ ÉCRANS répondant à
+# des questions métier, tout narratif en puces courtes, budget total ≈ 1 200 mots
+# contre ≈ 7 000. Les invariants de sûreté sont inchangés et partagés entre les
+# deux gabarits : liste blanche numérique, recopie du verdict, simulation des
+# bascules, limites verbatim, dégradation gracieuse.
+#
+# Le v1 reste sélectionnable (`--gabarit v1`) le temps de la transition : il
+# n'est pas dupliqué, seules les fonctions de rendu diffèrent.
+
+GABARIT_V1: str = "v1"
+GABARIT_V2: str = "v2"
+GABARITS_DISPONIBLES: tuple[str, ...] = (GABARIT_V1, GABARIT_V2)
+GABARIT_PAR_DEFAUT: str = GABARIT_V2
+
+MARQUEUR_GABARIT_V2: str = "<!-- f7:v2 -->"
+"""Marqueur de tête permettant au frontend de reconnaître le gabarit v2.
+
+Sans lui, le frontend applique son rendu historique — bandes d'extraits en bas de
+page. Sa présence est contrôlée par la post-validation.
+"""
+
+GABARIT_WIDGET_EXTRAITS: str = '<!-- widget:extraits source="{source}" -->'
+SOURCES_WIDGETS: tuple[str, ...] = ("amazon", "aliexpress", "meta_ads", "recherche_web")
+"""Sources pour lesquelles le frontend sait rendre une bande d'extraits."""
+
+ECRAN_DECISION: str = "decision"
+ECRAN_CONSOMMATEUR: str = "consommateur"
+ECRAN_CONCURRENCE: str = "concurrence_v2"
+ECRAN_RECOMMANDATIONS: str = "recommandations_v2"
+ECRAN_METHODE: str = "methode"
+
+# --- Sous-blocs : identifiant et question métier affichée ------------------- #
+# Le sous-titre EST la question à laquelle les puces répondent. C'est le cœur du
+# v2 : un décideur ne cherche pas « les besoins », il cherche « pourquoi
+# achètent-ils ? ».
+
+SB_POURQUOI: str = "pourquoi"
+SB_RISQUE_PRINCIPAL: str = "risque_principal"
+SB_CHANGER_DECISION: str = "changer_decision"
+SB_MANQUE_TRANCHER: str = "manque_trancher"
+
+SB_POURQUOI_ACHAT: str = "pourquoi_achat"
+SB_APPRECIENT: str = "apprecient"
+SB_DERANGE: str = "derange"
+SB_AIMERAIENT: str = "aimeraient"
+
+SB_DYNAMIQUE: str = "dynamique_demande"
+SB_QUE_FONT: str = "que_font_concurrents"
+SB_EXEMPLES: str = "exemples_observes"
+SB_PRIX_PRATIQUES: str = "prix_pratiques"
+SB_CINQ_FORCES: str = "cinq_forces"
+SB_PERSONNE_NE_FAIT: str = "personne_ne_fait"
+
+SB_PHASE: str = "phase_vie"
+SB_ACTIONS: str = "actions_prioritaires"
+SB_PRIX: str = "prix"
+SB_ENTREE_MARCHE: str = "entree_marche"
+SB_OPPORTUNITES_RISQUES: str = "opportunites_risques"
+
+GABARIT_RAPPORT_V2: tuple[dict[str, Any], ...] = (
+    {
+        "id": ECRAN_DECISION,
+        "titre": "Décision",
+        "entrees_requises": (ENTREE_RECOMMANDATIONS,),
+        "budget_mots": 200,
+        "narratif": True,
+        "sous_blocs": (
+            (SB_POURQUOI, "Pourquoi"),
+            (SB_RISQUE_PRINCIPAL, "Le risque principal"),
+            (SB_CHANGER_DECISION, "Ce qui ferait changer la décision"),
+            (SB_MANQUE_TRANCHER, "Ce qu'il manque pour trancher"),
+        ),
+    },
+    {
+        "id": ECRAN_CONSOMMATEUR,
+        "titre": "Le consommateur",
+        "entrees_requises": (ENTREE_INSIGHTS,),
+        "budget_mots": 350,
+        "narratif": True,
+        "sous_blocs": (
+            (SB_POURQUOI_ACHAT, "Pourquoi ils achètent — ou non"),
+            (SB_APPRECIENT, "Ce qu'ils apprécient"),
+            (SB_DERANGE, "Ce qui les dérange"),
+            (SB_AIMERAIENT, "Ce qu'ils aimeraient trouver"),
+        ),
+    },
+    {
+        "id": ECRAN_CONCURRENCE,
+        "titre": "Le marché et les concurrents",
+        "entrees_requises": (ENTREE_CONCURRENCE,),
+        "budget_mots": 350,
+        "narratif": True,
+        "sous_blocs": (
+            (SB_DYNAMIQUE, "Dynamique de la demande"),
+            (SB_QUE_FONT, "Que font les concurrents ?"),
+            (SB_EXEMPLES, "Exemples observés"),
+            (SB_PRIX_PRATIQUES, "Prix pratiqués"),
+            (SB_CINQ_FORCES, "Les 5 forces"),
+            (SB_PERSONNE_NE_FAIT, "Ce que personne ne fait"),
+        ),
+    },
+    {
+        "id": ECRAN_RECOMMANDATIONS,
+        "titre": "Ce que nous recommandons",
+        "entrees_requises": (ENTREE_RECOMMANDATIONS,),
+        "budget_mots": 300,
+        "narratif": True,
+        "sous_blocs": (
+            (SB_PHASE, "Phase de vie du marché"),
+            (SB_ACTIONS, "Actions prioritaires"),
+            (SB_PRIX, "Prix"),
+            (SB_ENTREE_MARCHE, "Entrée sur le marché"),
+            (SB_OPPORTUNITES_RISQUES, "Opportunités et risques"),
+        ),
+    },
+    {
+        "id": ECRAN_METHODE,
+        "titre": "Méthode et limites",
+        "entrees_requises": (ENTREE_RECOMMANDATIONS,),
+        "budget_mots": 0,
+        "narratif": False,
+        "sous_blocs": (),
+    },
+)
+
+ECRANS_NARRATIFS: tuple[str, ...] = tuple(
+    ecran["id"] for ecran in GABARIT_RAPPORT_V2 if ecran["narratif"]
+)
+
+ECRANS_HORS_CONTROLE_TERMES: tuple[str, ...] = (ECRAN_METHODE,)
+"""L'écran méthode recopie les limites amont verbatim : leur vocabulaire n'est
+pas le nôtre et ne se corrige pas."""
+
+SOUS_BLOCS_REDIGES: dict[str, tuple[str, ...]] = {
+    ECRAN_DECISION: (SB_POURQUOI, SB_RISQUE_PRINCIPAL),
+    ECRAN_CONSOMMATEUR: (SB_POURQUOI_ACHAT, SB_APPRECIENT, SB_DERANGE, SB_AIMERAIENT),
+    ECRAN_CONCURRENCE: (SB_DYNAMIQUE, SB_QUE_FONT, SB_PRIX_PRATIQUES),
+    ECRAN_RECOMMANDATIONS: (SB_PRIX, SB_ENTREE_MARCHE),
+}
+"""Sous-blocs confiés au modèle. Tous les autres sont produits par le code :
+tableaux, lignes standard, sélections.
+
+Deux sous-blocs en sont volontairement absents alors qu'ils portent du texte :
+
+- « Ce que personne ne fait » recopie les angles peu exploités de l'analyse
+  concurrentielle. Leur formulation — « non observé dans le corpus » — est une
+  précaution de méthode : la faire reformuler, c'est risquer de la perdre.
+- « Phase de vie du marché » recopie les recommandations de phase de l'analyse de
+  cycle de vie, pour la même raison."""
+
+BUDGET_MOTS: dict[str, int] = {
+    ecran["id"]: ecran["budget_mots"] for ecran in GABARIT_RAPPORT_V2
+}
+BUDGET_MOTS_TOTAL: int = 1200
+"""Budget total du narratif, hors tableaux et hors blocs repliés."""
+
+# --------------------------------------------------------------------------- #
+# Libellés de décision
+# --------------------------------------------------------------------------- #
+# Le métier décide en Go / No-go ; l'analyse conclut en positif / négatif /
+# indéterminé. Les DEUX sont affichés : le libellé en titre, le verdict brut sur
+# la ligne suivante. Aucun ne remplace l'autre — traduire sans montrer l'original
+# serait exactement l'adoucissement que ce module s'interdit.
+
+LIBELLES_VERDICT: dict[str, str] = {
+    VERDICT_POSITIF: "Go",
+    VERDICT_NEGATIF: "No-go",
+    VERDICT_INDETERMINE: "Go conditionnel",
+}
+
+PHRASE_GO_CONDITIONNEL_SANS_CONDITION: str = (
+    "Conditions non déterminables à partir des analyses disponibles."
+)
+"""Repli imposé : un « Go conditionnel » sans condition affichée ne dit rien au
+lecteur."""
+
+# --------------------------------------------------------------------------- #
+# Bornes de forme du gabarit v2
+# --------------------------------------------------------------------------- #
+
+NB_FAITS_CLES_DECISION: int = 3
+NB_POINTS_FRICTION: int = 5
+NB_VERBATIMS: int = 2
+NB_CONCURRENTS_TABLEAU_V2: int = 6
+NB_ACTIONS_P1: int = 5
+NB_OPPORTUNITES: int = 3
+NB_RISQUES: int = 3
+NB_MANQUES_DECISION: int = 3
+MAX_MOTS_PUCE: int = 30
+MAX_MOTS_PUCE_CONCURRENTS: int = 35
+MAX_MOTS_CELLULE_COURTE: int = 12
+MAX_MOTS_ACTION: int = 40
+
+# --------------------------------------------------------------------------- #
+# Les 5 forces
+# --------------------------------------------------------------------------- #
+# L'analyse de synthèse ne publie pas encore de bloc `cinq_forces`. Trois des
+# cinq forces sont donc ESTIMÉES par règle déterministe à partir des chiffres
+# disponibles, et les deux autres affichées « non évalué ». Les seuils ci-dessous
+# sont des HYPOTHÈSES DE TRAVAIL, publiées comme telles en annexe : ils ordonnent
+# des observations, ils ne mesurent rien.
+
+FORCE_RIVALITE: str = "rivalite"
+FORCE_ENTREE: str = "entree"
+FORCE_CLIENTS: str = "clients"
+FORCE_FOURNISSEURS: str = "fournisseurs"
+FORCE_SUBSTITUTS: str = "substituts"
+
+LIBELLES_CINQ_FORCES: tuple[tuple[str, str], ...] = (
+    (FORCE_RIVALITE, "Rivalité actuelle"),
+    (FORCE_ENTREE, "Facilité d'entrée de nouveaux concurrents"),
+    (FORCE_CLIENTS, "Pouvoir des clients"),
+    (FORCE_FOURNISSEURS, "Pouvoir des fournisseurs"),
+    (FORCE_SUBSTITUTS, "Menace des substituts"),
+)
+
+NIVEAU_FAIBLE: str = "faible"
+NIVEAU_MOYEN: str = "moyen"
+NIVEAU_ELEVE: str = "élevé"
+NIVEAU_NON_EVALUE: str = "non évalué"
+
+SEUILS_CINQ_FORCES: dict[str, int] = {
+    "rivalite_concurrents_eleve": 30,
+    "rivalite_offres_eleve": 100,
+    "rivalite_concurrents_moyen": 10,
+    "rivalite_offres_moyen": 30,
+    "clients_offres_coeur": 30,
+}
+SEUIL_PRIX_ENTREE_FACILE: float = 15.0
+"""Médiane du canal le moins cher sous laquelle l'entrée est réputée facile, dans
+la devise du benchmark — aucune conversion n'est faite, aucune n'est suggérée."""
+
+MENTION_ESTIMATION_REGLE: str = "estimation par règle"
+LECTURE_FORCE_NON_EVALUEE: str = "Non couvert par les analyses de cette version."
+
+CINQ_FORCES_SOURCE_F5: str = "f5"
+CINQ_FORCES_SOURCE_REGLES: str = "regles_locales"
+CINQ_FORCES_SOURCE_ABSENTE: str = "non_evalue"
+
+# --------------------------------------------------------------------------- #
+# Phases du cycle de vie — ligne d'affichage
+# --------------------------------------------------------------------------- #
+
+PHASES_PLC: tuple[tuple[str, str], ...] = (
+    ("introduction", "Introduction"),
+    ("croissance", "Croissance"),
+    ("maturite", "Maturité"),
+    ("declin", "Déclin"),
+)
+
+PHRASE_PLC_NON_EVALUEE: str = (
+    "Phase non évaluée : le cycle de vie n'est estimé que lorsque la décision est Go."
+)
+
+# --------------------------------------------------------------------------- #
+# Phrases standard des sous-blocs sans donnée
+# --------------------------------------------------------------------------- #
+# Un sous-bloc sans donnée affiche sa phrase — jamais une page vide, jamais une
+# invention. Le cas est tracé dans `statuts_analyse`.
+
+PHRASE_NON_DOCUMENTE: str = "Non documenté dans le corpus analysé."
+PHRASE_TENDANCES_ABSENTES: str = (
+    "Tendances de recherche non collectées pour cette étude : la dynamique de la "
+    "demande n'est pas évaluée."
+)
+PHRASE_CLIENTELE_NON_CARACTERISEE: str = (
+    "Clientèle visée : non caractérisée dans cette version de l'analyse."
+)
+PHRASE_AUCUNE_BASCULE: str = (
+    "Aucune amélioration d'un seul critère de la grille ne suffirait à changer la "
+    "décision."
+)
+PHRASE_RAPPEL_PRIX: str = (
+    "Positionnement de marché observé, jamais un calcul de rentabilité : aucune "
+    "donnée de coût n'est disponible."
+)
+ENCART_ETUDE_PARTIELLE_V2: str = "> **Étude partielle : {blocs} {accord}.**"
+"""Une ligne, jamais davantage. Le v1 consacrait une page à dire « indisponible ».
+
+L'accord est calculé plutôt que parenthésé : « non disponible(s) » est le même
+défaut de forme que « difficulté rapportée majeur » dans le corps du rapport."""
+
+# --------------------------------------------------------------------------- #
+# Unités de volume de ventes
+# --------------------------------------------------------------------------- #
+# L'analyse concurrentielle amont publie un unique `volume_ventes_cumule`, alors
+# que les canaux ne mesurent pas la même chose : Amazon publie un volume d'achats
+# MENSUEL, AliExpress un nombre de commandes CUMULÉ depuis la mise en ligne. Les
+# afficher sur une même colonne sans unité est trompeur. F7 rétablit l'unité
+# quand la ligne ne porte qu'une source ; quand elle en porte plusieurs, l'unité
+# est déclarée indéterminée plutôt que devinée.
+
+UNITES_VOLUME: dict[str, str] = {
+    "amazon": "/mois",
+    "aliexpress": "cumulé",
+}
+UNITE_VOLUME_INDETERMINEE: str = "unité indéterminée"
+
+BESOIN_UNITES_VOLUME: str = (
+    "Les volumes de ventes des canaux sont publiés par l'analyse concurrentielle "
+    "sur un champ unique, alors qu'ils ne mesurent pas la même chose : volume "
+    "mensuel d'un côté, cumul depuis la mise en ligne de l'autre. L'unité est "
+    "rétablie à la restitution quand la ligne ne porte qu'un canal ; elle reste "
+    "indéterminée quand elle en porte plusieurs."
+)
+
+BESOIN_CINQ_FORCES_AMONT: str = (
+    "Les cinq forces ne sont pas publiées par l'analyse de synthèse : trois d'entre "
+    "elles sont estimées à la restitution par une règle déterministe appliquée aux "
+    "chiffres disponibles, les deux autres sont déclarées non évaluées. Ces seuils "
+    "sont une hypothèse de travail, pas une mesure."
+)
+
+BESOIN_CLIENTELE_CIBLE: str = (
+    "La clientèle visée par chaque concurrent n'est pas caractérisée par l'analyse "
+    "concurrentielle : le sous-bloc correspondant affiche sa phrase standard."
+)
+
+# --------------------------------------------------------------------------- #
+# Règles de formulation propres au v2
+# --------------------------------------------------------------------------- #
+
+REGLES_FORMULATION_V2: str = (
+    "FORME IMPOSÉE — elle est vérifiée sur ta sortie :\n"
+    "- Tu écris des PUCES, jamais des paragraphes. Une puce est une phrase, au plus "
+    "{max_mots} mots. Aucune prose continue.\n"
+    "- Chaque sous-bloc porte une QUESTION en titre. Tes puces y répondent dès le "
+    "premier mot : pas d'introduction, pas de transition, pas de reformulation de la "
+    "question.\n"
+    "- Tu écris pour un décideur qui accorde deux minutes au rapport. Ce qui ne "
+    "l'aide pas à décider n'a pas à être écrit.\n"
+    "- Le terme admis pour ce qui gêne les personnes dont les avis ont été analysés "
+    "est « point de friction ». N'écris jamais « pain point » ni « difficulté "
+    "rapportée »."
+)
+
+TERME_FRICTION_SINGULIER: str = "point de friction"
+TERME_FRICTION_PLURIEL: str = "points de friction"

@@ -186,7 +186,7 @@ def cartographier_unites(
                 for u in lot
             ],
             ensure_ascii=False,
-            indent=1,
+            separators=(",", ":"),
         )
         resultat, tentatives, erreur = invoquer_structure(
             chaine,
@@ -276,7 +276,7 @@ def cartographier_documents(
                 for d in lot
             ],
             ensure_ascii=False,
-            indent=1,
+            separators=(",", ":"),
         )
         resultat, tentatives, erreur = invoquer_structure(
             chaine,
@@ -346,7 +346,7 @@ def normaliser_libelles(
             key=lambda e: -e["frequence"],
         ),
         ensure_ascii=False,
-        indent=1,
+        separators=(",", ":"),
     )
     resultat, tentatives, erreur = invoquer_structure(
         chaine,

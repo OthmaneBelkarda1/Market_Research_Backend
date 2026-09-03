@@ -712,6 +712,27 @@ CHAMPS_A_DEPOUILLER: tuple[str, ...] = (
     "portee_regionale",
     "tableaux_recommandations",
     "pain_points",
+    # --- Champs propres au gabarit v2 -------------------------------------- #
+    # Ils sont construits après `preparer()`, donc `depouiller_injectables` est
+    # rappelé à la fin de `preparation_v2.enrichir()`. Sans eux dans cette liste,
+    # le vocabulaire interne des textes amont ressortait dans les écrans.
+    "faits_cles_decision",
+    "risque_principal_decision",
+    "puces_changer_decision",
+    "puces_manque_trancher",
+    "puces_personne_ne_fait",
+    "puces_phase",
+    "puces_opportunites",
+    "puces_risques",
+    "conditions_prix",
+    "details_besoins_attentes",
+    "details_angles",
+    "details_opportunites_risques",
+    "tableau_actions_suivantes",
+    "tableau_cinq_forces",
+    "dynamique_demande",
+    "concurrents_v2",
+    "actions_p1",
 )
 """Champs injectables soumis au dépouillement.
 
@@ -793,7 +814,7 @@ def selectionner_verbatim(verbatims: list) -> Verbatim | None:
     extrait traduit ne serait plus un verbatim.
 
     Args:
-        verbatims: Extraits attachés à une difficulté rapportée.
+        verbatims: Extraits attachés à un point de friction.
 
     Returns:
         L'extrait retenu, ou `None` si aucun n'est exploitable.
@@ -1474,7 +1495,11 @@ def _annexe_sources(entrees: EntreesChargees) -> str:
     insights = entrees.insights
     if insights is not None and insights.stats_corpus is not None:
         for source, nombre in sorted(insights.stats_corpus.nb_unites_par_source.items()):
-            lignes.append([source, "avis et discussions", str(nombre), "contributions"])
+            # « analysées » : le volume publié est celui d'après échantillonnage,
+            # c'est-à-dire la base sur laquelle toutes les fréquences sont calculées.
+            lignes.append(
+                [source, "avis et discussions", str(nombre), "contributions analysées"]
+            )
         lignes.append(
             [
                 "recherche web",
@@ -1489,7 +1514,9 @@ def _annexe_sources(entrees: EntreesChargees) -> str:
         for source, nombre in sorted(stats.nb_offres_par_source.items()):
             lignes.append([source, "offres marchandes", str(nombre), "offres"])
         lignes.append(["publicité", "annonces", str(stats.nb_annonces), "annonces"])
-        lignes.append(["avis indexés", "avis clients", str(stats.nb_avis_indexes), "avis"])
+        # La ligne « avis indexés » de l'analyse concurrentielle recompte les avis
+        # Amazon déjà portés par la ligne Amazon ci-dessus. La publier deux fois
+        # laissait croire à deux corpus distincts : elle est retirée du tableau.
     return tableau(["Source", "Nature", "Volume", "Unité"], lignes)
 
 

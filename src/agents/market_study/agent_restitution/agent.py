@@ -15,13 +15,21 @@ from __future__ import annotations
 from pathlib import Path
 
 from assemblage import assembler_rapport, assembler_resume
+from assemblage_v2 import assembler_rapport_v2, assembler_resume_v2
 from chargement import charger_entrees, inventorier_blocs
 from config import (
     CONFIANCE_ELEVEE,
     CONFIANCE_FAIBLE,
     CONFIANCE_MOYENNE,
+    BUDGET_MOTS,
+    GABARIT_PAR_DEFAUT,
     GABARIT_RAPPORT,
+    GABARIT_RAPPORT_V2,
+    ECRAN_DECISION,
+    GABARIT_V2,
     HYPOTHESES_SYSTEMATIQUES,
+    MAX_MOTS_ACTION,
+    MAX_MOTS_CELLULE_COURTE,
     LIMITES_SYSTEMATIQUES,
     SECTIONS_NARRATIVES,
     SECTION_PLC,
@@ -29,8 +37,10 @@ from config import (
     logger,
     verifier_cle_api,
 )
-from preparation import horodatage, preparer
+from preparation import ListeBlanche, horodatage, preparer
+from preparation_v2 import enrichir
 from redaction import rediger_section
+from redaction_v2 import compresser_cellules, rediger_ecran
 from schemas import (
     ConfianceGlobale,
     EntreesChargees,
@@ -38,6 +48,7 @@ from schemas import (
     Injectables,
     ParametresMarche,
     ResultatRestitution,
+    SortieEcran,
     SortieNarratif,
     StatutAnalyse,
 )
@@ -46,6 +57,13 @@ from validation import (
     enregistrer_contenu_code,
     nettoyer_narratifs,
     sections_a_regenerer,
+)
+from validation_v2 import (
+    controler_v2,
+    couper_au_budget,
+    ecrans_a_regenerer,
+    nettoyer_ecrans,
+    retenir_compression,
 )
 
 CONSIGNE_REGENERATION: str = (
@@ -126,6 +144,233 @@ def _confiance_globale(entrees: EntreesChargees) -> ConfianceGlobale:
     )
 
 
+def _ecrire(chemin: str | None, contenu: str, libelle: str) -> str | None:
+    """Écrit un document, ou n'écrit rien si aucun chemin n'est demandé.
+
+    Args:
+        chemin: Chemin du fichier ; chaîne vide ou `None` pour ne rien écrire.
+        contenu: Markdown à écrire.
+        libelle: Nom du document, pour la journalisation.
+
+    Returns:
+        Le chemin écrit, ou `None`.
+    """
+    if not chemin:
+        return None
+    Path(chemin).write_text(contenu, encoding="utf-8")
+    ecrit = str(Path(chemin))
+    logger.info("%s écrit dans %s", libelle, ecrit)
+    return ecrit
+
+
+def _limites(
+    sources: list,
+    degradees: list[str],
+    absentes: list[str],
+    nb_nombres_retires: int,
+) -> list[str]:
+    """Consolide les limites publiées avec le rapport.
+
+    Args:
+        sources: Comptes rendus de chargement.
+        degradees: Sections construites depuis l'écho de synthèse.
+        absentes: Sections remplacées par un encart standard.
+        nb_nombres_retires: Nombres hors liste blanche retirés à la relecture.
+
+    Returns:
+        Les limites, dans l'ordre de publication.
+    """
+    limites = list(LIMITES_SYSTEMATIQUES)
+    for compte_rendu in sources:
+        limites.extend(
+            f"[{compte_rendu.source}] {avertissement}"
+            for avertissement in compte_rendu.avertissements
+        )
+    for section in degradees:
+        limites.append(
+            f"Section « {section} » construite depuis le rappel de l'analyse de "
+            f"synthèse : son analyse détaillée n'a pas été fournie."
+        )
+    for section in absentes:
+        limites.append(
+            f"Section « {section} » sans contenu : l'analyse correspondante n'a pas "
+            f"été fournie."
+        )
+    if nb_nombres_retires:
+        limites.append(
+            f"{nb_nombres_retires} nombre(s) proposés à la rédaction ne "
+            f"correspondaient à aucune donnée des analyses fournies : les phrases "
+            f"porteuses ont été retirées du rapport."
+        )
+    return limites
+
+
+CONSIGNE_BUDGET: str = (
+    "\n\nREPRISE — l'écran précédent dépassait son budget de mots. Produis les "
+    "mêmes idées, dans le même ordre, en supprimant tout ce qui n'aide pas à "
+    "décider : adverbes, redites, formules de liaison. Ne supprime aucune puce, "
+    "raccourcis-les."
+)
+
+
+def _comprimer_cellules_longues(
+    injectables: Injectables, langue_analyse: str
+) -> tuple[list[StatutAnalyse], int]:
+    """Raccourcit par rédaction les cellules qui dépassent leur budget.
+
+    C'est ce qui remplace la troncature à « … » du gabarit v1 : une cellule
+    longue est réécrite plus court, jamais coupée au milieu de son argument. Une
+    compression qui introduirait un chiffre absent de l'original est rejetée, et
+    l'original coupé au dernier mot entier prend le relais.
+
+    Args:
+        injectables: Données injectables, complétées sur place.
+        langue_analyse: Code langue de rédaction.
+
+    Returns:
+        Le couple `(statuts, nb_cellules_compressées)`.
+    """
+    statuts: list[StatutAnalyse] = []
+    compressees = 0
+
+    forces = [ligne["force_brute"] for ligne in injectables.concurrents_v2]
+    faiblesses = [ligne["faiblesse_brute"] for ligne in injectables.concurrents_v2]
+    cellules = forces + faiblesses
+    if any(cellules):
+        proposes, statut = compresser_cellules(
+            cellules, MAX_MOTS_CELLULE_COURTE, langue_analyse
+        )
+        statuts.append(statut)
+        retenus, acceptees = retenir_compression(
+            cellules, proposes, MAX_MOTS_CELLULE_COURTE
+        )
+        compressees += acceptees
+        milieu = len(forces)
+        for rang, ligne in enumerate(injectables.concurrents_v2):
+            ligne["force"] = retenus[rang]
+            ligne["faiblesse"] = retenus[milieu + rang]
+
+    longues = [
+        action["enonce_brut"]
+        for action in injectables.actions_p1
+        if not action.get("enonce")
+    ]
+    if longues:
+        proposes, statut = compresser_cellules(longues, MAX_MOTS_ACTION, langue_analyse)
+        statuts.append(statut)
+        retenus, acceptees = retenir_compression(longues, proposes, MAX_MOTS_ACTION)
+        compressees += acceptees
+        rang = 0
+        for action in injectables.actions_p1:
+            if not action.get("enonce"):
+                action["enonce"] = retenus[rang]
+                rang += 1
+    return statuts, compressees
+
+
+def _rediger_ecrans(
+    injectables: Injectables,
+    liste: ListeBlanche,
+    produit: str,
+    libelle_marche: str,
+    langue_analyse: str,
+) -> tuple[dict[str, SortieEcran | None], list[StatutAnalyse], dict]:
+    """Rédige les écrans narratifs, les nettoie, les régénère et les borne.
+
+    Trois passes au plus par écran : la rédaction, une régénération si le
+    nettoyage a trop retiré, une réduction si le budget de mots est dépassé. La
+    coupe finale retire des puces entières par la fin — jamais le contenu d'une
+    puce, qui produirait une phrase fausse.
+
+    Args:
+        injectables: Données injectables.
+        liste: Liste blanche numérique.
+        produit: Nom du produit étudié.
+        libelle_marche: Libellé du marché.
+        langue_analyse: Code langue de rédaction.
+
+    Returns:
+        Le triplet `(narratifs, statuts, compteurs)`.
+    """
+    statuts: list[StatutAnalyse] = []
+    narratifs: dict[str, SortieEcran | None] = {}
+    ecrans = {e["id"]: e for e in GABARIT_RAPPORT_V2 if e["narratif"]}
+
+    for identifiant, ecran in ecrans.items():
+        sortie, statut = rediger_ecran(
+            identifiant,
+            ecran["titre"],
+            ecran["budget_mots"],
+            injectables,
+            produit,
+            libelle_marche,
+            langue_analyse,
+        )
+        narratifs[identifiant] = sortie
+        statuts.append(statut)
+
+    narratifs, compteurs = nettoyer_ecrans(narratifs, liste)
+
+    for identifiant in ecrans_a_regenerer(compteurs):
+        logger.info("régénération de l'écran %s", identifiant)
+        sortie, statut = rediger_ecran(
+            identifiant,
+            ecrans[identifiant]["titre"],
+            ecrans[identifiant]["budget_mots"],
+            injectables,
+            produit,
+            libelle_marche,
+            langue_analyse,
+            consigne_supplementaire=CONSIGNE_REGENERATION,
+        )
+        statut.phase = f"regeneration_{identifiant}"
+        statuts.append(statut)
+        if sortie is not None:
+            reprises, compte = nettoyer_ecrans({identifiant: sortie}, liste)
+            narratifs[identifiant] = reprises[identifiant]
+            for cle, valeur in compte[identifiant].items():
+                compteurs[identifiant][cle] += valeur
+
+    for identifiant, sortie in list(narratifs.items()):
+        if sortie is None:
+            continue
+        budget = BUDGET_MOTS.get(identifiant, 0)
+        mots = sum(len(p.split()) for puces in sortie.sous_blocs.values() for p in puces)
+        if not budget or mots <= budget:
+            continue
+        logger.info("écran %s hors budget (%d mots > %d)", identifiant, mots, budget)
+        reprise, statut = rediger_ecran(
+            identifiant,
+            ecrans[identifiant]["titre"],
+            budget,
+            injectables,
+            produit,
+            libelle_marche,
+            langue_analyse,
+            consigne_supplementaire=CONSIGNE_BUDGET,
+        )
+        statut.phase = f"reduction_{identifiant}"
+        statuts.append(statut)
+        if reprise is not None:
+            nettoyee, _ = nettoyer_ecrans({identifiant: reprise}, liste)
+            sortie = nettoyee[identifiant] or sortie
+        sortie, retirees = couper_au_budget(sortie, budget)
+        narratifs[identifiant] = sortie
+        if retirees:
+            statuts.append(
+                StatutAnalyse(
+                    phase=f"reduction_{identifiant}",
+                    succes=True,
+                    message_erreur=(
+                        f"{retirees} puce(s) retirée(s) par la fin pour tenir le "
+                        f"budget de {budget} mots ; aucune puce n'a été amputée."
+                    ),
+                    nb_elements=retirees,
+                )
+            )
+    return narratifs, statuts, compteurs
+
+
 def restituer(
     chemin_recommandations: str,
     chemin_insights: str | None,
@@ -134,6 +379,7 @@ def restituer(
     chemin_rapport: str | None,
     chemin_resume: str | None,
     langue_analyse: str,
+    gabarit: str = GABARIT_PAR_DEFAUT,
 ) -> ResultatRestitution:
     """Produit le rapport d'étude de marché et son résumé exécutif.
 
@@ -145,6 +391,7 @@ def restituer(
         chemin_rapport: Fichier du rapport ; chaîne vide pour ne pas l'écrire.
         chemin_resume: Fichier du résumé ; chaîne vide pour ne pas l'écrire.
         langue_analyse: Code langue de rédaction.
+        gabarit: `v2` pour le rapport décisionnel, `v1` pour l'ancien rendu.
 
     Returns:
         Les métadonnées et contrôles de la restitution.
@@ -172,9 +419,56 @@ def restituer(
     injectables, liste, statuts, hypotheses_preparation = preparer(
         entrees, bruts, degradees, absentes
     )
+    if gabarit == GABARIT_V2:
+        statuts_v2, hypotheses_v2 = enrichir(injectables, entrees, degradees, absentes)
+        statuts.extend(statuts_v2)
+        hypotheses_preparation.extend(hypotheses_v2)
+        injectables.hypotheses = list(injectables.hypotheses) + hypotheses_v2
     enregistrer_contenu_code(liste, injectables)
 
     verifier_cle_api()
+
+    if gabarit == GABARIT_V2:
+        statuts_compression, nb_compressees = _comprimer_cellules_longues(
+            injectables, langue_analyse
+        )
+        statuts.extend(statuts_compression)
+        ecrans, statuts_ecrans, compteurs = _rediger_ecrans(
+            injectables, liste, produit.nom, libelle_marche, langue_analyse
+        )
+        statuts.extend(statuts_ecrans)
+        rapport, sections_produites = assembler_rapport_v2(injectables, ecrans)
+        resume = assembler_resume_v2(injectables, ecrans)
+        controles, statuts_validation = controler_v2(
+            rapport, resume, injectables, liste, compteurs, sections_produites
+        )
+        controles.nb_cellules_compressees = nb_compressees
+        statuts.extend(statuts_validation)
+        decision = ecrans.get(ECRAN_DECISION)
+        narratif_synthese_texte = "\n".join(
+            puce
+            for puces in (decision.sous_blocs.values() if decision else [])
+            for puce in puces
+        )
+        return ResultatRestitution(
+            produit=produit,
+            marche=marche,
+            horodatage_utc=horodatage(),
+            sources_utilisees=sources,
+            alertes_coherence=alertes,
+            sections_produites=sections_produites,
+            controles=controles,
+            chemin_rapport=_ecrire(chemin_rapport, rapport, "rapport"),
+            chemin_resume=_ecrire(chemin_resume, resume, "résumé"),
+            synthese_executive=narratif_synthese_texte,
+            statuts_analyse=statuts,
+            donnees_suffisantes=True,
+            confiance_globale=_confiance_globale(entrees),
+            limites=_limites(
+                sources, degradees, absentes, controles.nb_nombres_retires
+            ),
+            hypotheses=list(HYPOTHESES_SYSTEMATIQUES) + hypotheses_preparation,
+        )
 
     # --- Rédaction ---------------------------------------------------------- #
     narratifs: dict[str, SortieNarratif | None] = {}
@@ -222,41 +516,10 @@ def restituer(
     )
     statuts.extend(statuts_validation)
 
-    # --- Écriture ----------------------------------------------------------- #
-    chemin_rapport_ecrit: str | None = None
-    chemin_resume_ecrit: str | None = None
-    if chemin_rapport:
-        Path(chemin_rapport).write_text(rapport, encoding="utf-8")
-        chemin_rapport_ecrit = str(Path(chemin_rapport))
-        logger.info("rapport écrit dans %s", chemin_rapport_ecrit)
-    if chemin_resume:
-        Path(chemin_resume).write_text(resume, encoding="utf-8")
-        chemin_resume_ecrit = str(Path(chemin_resume))
-        logger.info("résumé écrit dans %s", chemin_resume_ecrit)
-
-    # --- Résultat ----------------------------------------------------------- #
-    limites = list(LIMITES_SYSTEMATIQUES)
-    for compte_rendu in sources:
-        limites.extend(
-            f"[{compte_rendu.source}] {avertissement}"
-            for avertissement in compte_rendu.avertissements
-        )
-    for section in degradees:
-        limites.append(
-            f"Section « {section} » construite depuis le rappel de l'analyse de "
-            f"synthèse : son analyse détaillée n'a pas été fournie."
-        )
-    for section in absentes:
-        limites.append(
-            f"Section « {section} » sans contenu : l'analyse correspondante n'a pas "
-            f"été fournie."
-        )
-    if controles.nb_nombres_retires:
-        limites.append(
-            f"{controles.nb_nombres_retires} nombre(s) proposés à la rédaction ne "
-            f"correspondaient à aucune donnée des analyses fournies : les phrases "
-            f"porteuses ont été retirées du rapport."
-        )
+    # --- Écriture et résultat ----------------------------------------------- #
+    chemin_rapport_ecrit = _ecrire(chemin_rapport, rapport, "rapport")
+    chemin_resume_ecrit = _ecrire(chemin_resume, resume, "résumé")
+    limites = _limites(sources, degradees, absentes, controles.nb_nombres_retires)
 
     narratif_synthese = narratifs.get(SECTION_SYNTHESE)
     resultat = ResultatRestitution(

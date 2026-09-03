@@ -17,6 +17,8 @@ from langchain_core.callbacks import get_usage_metadata_callback
 
 from agent import restituer
 from config import (
+    GABARITS_DISPONIBLES,
+    GABARIT_PAR_DEFAUT,
     CHEMIN_RAPPORT_DEFAUT,
     CHEMIN_RESUME_DEFAUT,
     CODE_ENTREE_INEXPLOITABLE,
@@ -80,6 +82,16 @@ def construire_analyseur() -> argparse.ArgumentParser:
         help="Fichier de métadonnées ; chaîne vide pour n'écrire aucun fichier.",
     )
     analyseur.add_argument(
+        "--gabarit",
+        choices=GABARITS_DISPONIBLES,
+        default=GABARIT_PAR_DEFAUT,
+        help=(
+            "Gabarit du rapport : « v2 » (défaut), rapport décisionnel en cinq "
+            "écrans ; « v1 », ancien rendu en neuf sections, conservé le temps de "
+            "la transition."
+        ),
+    )
+    analyseur.add_argument(
         "--stdout", action="store_true", help="Émet aussi le JSON sur stdout."
     )
     analyseur.add_argument(
@@ -110,6 +122,7 @@ def main(argv: list[str] | None = None) -> int:
                 chemin_rapport=arguments.rapport,
                 chemin_resume=arguments.resume,
                 langue_analyse=arguments.langue_analyse,
+                gabarit=arguments.gabarit,
             )
         recapitulatif = resumer_consommation(consommation.usage_metadata)
         if recapitulatif:

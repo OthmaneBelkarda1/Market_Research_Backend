@@ -15,9 +15,12 @@ Exemple :
 from __future__ import annotations
 
 import argparse
+import sys
+
+from langchain_core.callbacks import get_usage_metadata_callback
 
 from agent import collecter_reddit
-from config import configurer_logging
+from config import configurer_logging, resumer_consommation
 from schemas import FicheProduit, ParametresMarche
 
 _INDENTATION_JSON = 2
@@ -71,7 +74,11 @@ def main() -> None:
         langue=arguments.langue.strip().lower(),
     )
 
-    resultat = collecter_reddit(produit, marche)
+    with get_usage_metadata_callback() as consommation:
+        resultat = collecter_reddit(produit, marche)
+    recapitulatif = resumer_consommation(consommation.usage_metadata)
+    if recapitulatif:
+        print(f"Consommation LLM — {recapitulatif}", file=sys.stderr)
     print(resultat.model_dump_json(indent=_INDENTATION_JSON))
 
 
