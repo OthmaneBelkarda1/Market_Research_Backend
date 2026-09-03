@@ -239,9 +239,16 @@ async def test_progress_never_loses_an_entry(
 # ---------------------------------------------------------------------------
 # The bound is a real semaphore, not an unbounded gather
 # ---------------------------------------------------------------------------
-async def test_the_default_bound_is_six(pipeline: Path) -> None:
-    """The whole point of the change: the six collectors are no longer capped at two."""
-    assert studies_settings.COLLECT_PARALLEL == 6
+async def test_the_default_bound_leaves_room_for_the_api_process(pipeline: Path) -> None:
+    """The default is a memory budget, not a throughput setting.
+
+    It was 6 -- one subprocess per collector, all at once -- until an instance was
+    killed on Render for exceeding its memory limit. A collector is a whole Python
+    interpreter re-importing the LLM and scraping stack, so the bound is what decides
+    the peak. Pinned here because raising it is a deployment decision that has to be
+    matched by the instance, never a value that drifts up in a refactor.
+    """
+    assert studies_settings.COLLECT_PARALLEL == 2
 
 
 async def test_a_module_runs_on_a_subprocess_capable_loop() -> None:

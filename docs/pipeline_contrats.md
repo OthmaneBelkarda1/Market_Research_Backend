@@ -133,8 +133,8 @@ produit enrichi**) et `--annonces` (Meta facture **à l'annonce**).
 ## 8. Écarts assumés avec le script de référence
 
 1. **Parallélisme.** `etude_marche.ps1` est entièrement séquentiel. L'orchestrateur lance les
-   six collecteurs simultanément (`STUDY_COLLECT_PARALLEL`, défaut 6 — ils sont indépendants
-   par conception) et F3 ∥ F4 (entrées disjointes, 1 076 s → 666 s de mur). C'est une
+   six collecteurs par vagues concurrentes (`STUDY_COLLECT_PARALLEL`, défaut 2 — ils sont
+   indépendants par conception, la borne est un budget mémoire) et F3 ∥ F4 (entrées disjointes, 1 076 s → 666 s de mur). C'est une
    nouveauté, pas une reprise. Le coût API est inchangé : mêmes appels, mêmes tokens,
    simplement rapprochés dans le temps.
 2. **Pas d'études sœurs multi-langues** (§4).

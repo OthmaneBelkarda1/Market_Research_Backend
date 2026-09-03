@@ -22,8 +22,11 @@ class ProductsConfig(BaseSettings):
     # Comma-separated on purpose: pydantic-settings parses a `set[str]`/`list[str]`
     # field as JSON, which would reject the natural `EXTRACTION_ALLOWED_REGIONS=MA,FR`.
     EXTRACTION_ALLOWED_REGIONS: str = DEFAULT_ALLOWED_REGIONS
-    # One Chromium (~300 MB) per concurrent extraction: this bounds memory, not just load.
-    EXTRACTION_MAX_CONCURRENCY: int = Field(default=2, ge=1)
+    # One Chromium (~300 MB) per concurrent extraction: this bounds memory, not just
+    # load. Down from 2 after a Render instance was killed for exceeding its memory
+    # limit: an extraction can overlap a study's collection phase, and the browsers
+    # land on top of that peak rather than beside it. Raise it with the instance.
+    EXTRACTION_MAX_CONCURRENCY: int = Field(default=1, ge=1)
     # Global budget per extraction, queueing time included (see extraction.extract_product).
     EXTRACTION_TIMEOUT_SECONDS: float = Field(default=300.0, gt=0)
 

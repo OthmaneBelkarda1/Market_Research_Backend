@@ -207,6 +207,13 @@ REPORT_SPEC = AnalysisSpec(
 REPORT_MARKDOWN_FILE = "rapport_etude.md"
 REPORT_SUMMARY_FILE = "resume_executif.md"
 
+# Where a module's two streams are captured, inside the study's workdir. They go to
+# disk rather than through a pipe because the runner used to hold every byte a module
+# wrote in RAM until it exited -- see `_spawn_module`. Keeping them is a side benefit:
+# `stderr` is no longer truncated to its tail and thrown away, so a failed run can be
+# read in full next to the files it produced.
+MODULE_LOG_DIR = "logs"
+
 # Exit codes, shared by every module of the pipeline.
 EXIT_SUCCESS = 0
 EXIT_RUNTIME_ERROR = 1

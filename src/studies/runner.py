@@ -49,6 +49,7 @@ from src.studies.constants import (
     EXIT_SUCCESS,
     EXIT_UNUSABLE_INPUT,
     LANGUE_RESOLVER_SCRIPT,
+    MODULE_LOG_DIR,
     REPORT_MARKDOWN_FILE,
     REPORT_SPEC,
     REPORT_SUMMARY_FILE,
@@ -167,6 +168,10 @@ class ModuleRun:
     payload: dict[str, Any] | None = None
     error: str | None = None
     timed_out: bool = False
+    # Where the module's stdout was captured. The collectors that only talk on stdout
+    # promote this file to their output file, instead of the runner re-serializing the
+    # parsed payload -- one full copy of the JSON that never has to exist.
+    stdout_path: Path | None = None
 
     @property
     def succeeded(self) -> bool:
@@ -211,10 +216,19 @@ async def _spawn_module(
 ) -> ModuleRun:
     """Spawn the module, wait for it, and read what it produced.
 
-    ``stdout`` is read whole (it is the JSON contract), ``stderr`` concurrently (it is the
-    progress log): reading them one after the other would deadlock on the pipe buffer of a
-    module that talks a lot -- and every module talks a lot with ``--verbose``. That holds
-    for each of the six collectors running at once, since each drains its own two pipes.
+    Both streams are redirected to files in ``workdir/logs`` rather than to pipes.
+    That is a memory decision, not a tidiness one: with pipes, ``communicate()``
+    accumulates everything a module writes until it exits, and the runner then held
+    three representations of the same payload at once -- the raw bytes, the decoded
+    string, and the parsed dict -- times ``COLLECT_PARALLEL`` collectors finishing
+    together. A collector emits the whole Amazon review set on stdout, and every
+    module talks a lot on stderr with ``--verbose``. That peak is what pushed the
+    service past its memory limit on Render. Written to disk, stdout is read back
+    once and stderr is never fully loaded at all (see ``_tail_file``).
+
+    It also retires the pipe-buffer deadlock the previous implementation had to
+    dodge: with no pipe to drain, ``process.wait()`` is safe, and reading the two
+    streams concurrently is no longer a correctness requirement.
 
     The working directory is the study's, because three modules write ``output.json``
     relative to it when no ``--sortie`` is given.
@@ -227,28 +241,36 @@ async def _spawn_module(
     # decoding the modules' French output through the ANSI code page.
     env = {**os.environ, "PYTHONIOENCODING": "utf-8", "PYTHONUTF8": "1"}
 
-    process = await asyncio.create_subprocess_exec(
-        executable,
-        str(script_path),
-        *args,
-        cwd=str(workdir),
-        env=env,
-        stdout=asyncio.subprocess.PIPE,
-        stderr=asyncio.subprocess.PIPE,
-    )
+    slug = script.replace("/", "_").replace("\\", "_").removesuffix(".py")
+    log_dir = workdir / MODULE_LOG_DIR
+    log_dir.mkdir(parents=True, exist_ok=True)
+    stdout_path = log_dir / f"{slug}.stdout.json"
+    stderr_path = log_dir / f"{slug}.stderr.log"
 
     timed_out = False
-    try:
-        stdout, stderr = await asyncio.wait_for(process.communicate(), timeout=timeout_seconds)
-    except TimeoutError:
-        timed_out = True
-        stdout, stderr = b"", b""
-        process.terminate()
+    # The handles are the subprocess's stdout and stderr: they must stay open for as
+    # long as it runs, and be closed before anything reads what it wrote.
+    with stdout_path.open("wb") as out_handle, stderr_path.open("wb") as err_handle:
+        process = await asyncio.create_subprocess_exec(
+            executable,
+            str(script_path),
+            *args,
+            cwd=str(workdir),
+            env=env,
+            stdout=out_handle,
+            stderr=err_handle,
+        )
+
         try:
-            await asyncio.wait_for(process.wait(), timeout=10)
+            await asyncio.wait_for(process.wait(), timeout=timeout_seconds)
         except TimeoutError:
-            process.kill()
-            await process.wait()
+            timed_out = True
+            process.terminate()
+            try:
+                await asyncio.wait_for(process.wait(), timeout=10)
+            except TimeoutError:
+                process.kill()
+                await process.wait()
 
     duration = (datetime.now(UTC) - started).total_seconds()
     exit_code = process.returncode if process.returncode is not None else 1
@@ -261,7 +283,7 @@ async def _spawn_module(
             timed_out=True,
         )
 
-    stderr_tail = _tail(stderr.decode("utf-8", errors="replace"))
+    stderr_tail = _tail_file(stderr_path)
     if exit_code != EXIT_SUCCESS:
         return ModuleRun(exit_code=exit_code, duration_seconds=duration, error=stderr_tail)
 
@@ -269,7 +291,7 @@ async def _spawn_module(
         return ModuleRun(exit_code=exit_code, duration_seconds=duration, payload={})
 
     try:
-        payload = json.loads(stdout.decode("utf-8", errors="replace"))
+        payload = json.loads(stdout_path.read_text(encoding="utf-8", errors="replace"))
     except json.JSONDecodeError as exception:
         # Exit code 0 with unparsable stdout is a contract breach, not a module failure:
         # say so plainly instead of storing something the pipeline never produced.
@@ -284,7 +306,31 @@ async def _spawn_module(
             duration_seconds=duration,
             error=f"Exit code 0 but stdout is a {type(payload).__name__}, not a JSON object.",
         )
-    return ModuleRun(exit_code=exit_code, duration_seconds=duration, payload=payload)
+    return ModuleRun(
+        exit_code=exit_code,
+        duration_seconds=duration,
+        payload=payload,
+        stdout_path=stdout_path,
+    )
+
+
+def _tail_file(path: Path, *, max_bytes: int = 64 * 1024) -> str:
+    """The last lines of a module's stderr log, read from the end of the file.
+
+    Only the tail is loaded. Reading the file whole would put back exactly what
+    moving off pipes removed: a verbose module writes megabytes of progress log, and
+    none of it past the last few lines is ever used.
+    """
+    try:
+        size = path.stat().st_size
+    except OSError:  # the module died before writing anything
+        return ""
+    with path.open("rb") as handle:
+        if size > max_bytes:
+            handle.seek(size - max_bytes)
+            handle.readline()  # drop the partial line the seek landed in the middle of
+        chunk = handle.read()
+    return _tail(chunk.decode("utf-8", errors="replace"))
 
 
 def _tail(text: str) -> str:
@@ -564,13 +610,14 @@ async def _collect(
                 timeout_seconds=studies_settings.TIMEOUT_COLLECTOR_SECONDS,
             )
 
-            if run.succeeded and spec.stdout_only and run.payload is not None:
-                # These three only ever talk on stdout: the runner writes the file the
-                # analysis agents will read, exactly as the reference script does. Each
-                # collector writes its own file, so concurrency changes nothing here.
-                (workdir / spec.output_file).write_text(
-                    json.dumps(run.payload, ensure_ascii=False, indent=2), encoding="utf-8"
-                )
+            if run.succeeded and spec.stdout_only and run.stdout_path is not None:
+                # These three only ever talk on stdout: the file the analysis agents
+                # will read is that capture, promoted into place. A rename rather than
+                # a re-serialization of `run.payload` -- byte for byte what the module
+                # emitted, and one full copy of the JSON that never has to be built.
+                # Only on success, so a collector that died mid-write never leaves a
+                # truncated file behind for the agents to read as if it were complete.
+                run.stdout_path.replace(workdir / spec.output_file)
 
             status = _collector_status(run)
             statuses[spec.source] = status

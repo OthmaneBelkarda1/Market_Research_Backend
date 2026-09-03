@@ -85,7 +85,7 @@ Puis renseigner `.env` :
 | `APIFY_API_TOKEN` | Secret. Requis uniquement pour les places de marché (Amazon, Temu, AliExpress, Walmart, eBay). |
 | `PRODUCT_COUNTRY`, `PRODUCT_VARIANTS`, `OPENAI_MODEL` | Réglages de l'agent, lus **une seule fois** à son import. |
 | `EXTRACTION_ALLOWED_REGIONS` | Régions ISO acceptées. Défaut : `MA,FR,ES,US,AE`. |
-| `EXTRACTION_MAX_CONCURRENCY` | Extractions simultanées. Défaut : `2`. |
+| `EXTRACTION_MAX_CONCURRENCY` | Extractions simultanées. Défaut : `1`. |
 | `EXTRACTION_TIMEOUT_SECONDS` | Budget par extraction, attente incluse. Défaut : `300`. |
 | `STUDY_AUTO_START` | Une étude est créée automatiquement à l'enregistrement d'un produit. Défaut : `true`. |
 | `STUDY_ALLOWED_REGIONS` | Régions ISO pour lesquelles une étude peut être lancée. Défaut : `MA,FR,ES,US,AE`. |
@@ -343,7 +343,7 @@ est rejetée en `422` avec la liste des valeurs acceptées.
 |---|---|
 | Durée typique | **10 s à 2 min** — un vrai navigateur est démarré, ou un run de scraper hébergé est attendu |
 | Mesuré ici | 6,7 s books.toscrape.com et 10,7 s scrapeme.live (`use_agent: false`) ; 111 s gymshark.com (`use_agent: true`, boutique Shopify lourde) |
-| Concurrence | `EXTRACTION_MAX_CONCURRENCY` (défaut 2) — chaque extraction démarre son propre Chromium (~300 Mo) |
+| Concurrence | `EXTRACTION_MAX_CONCURRENCY` (défaut 1) — chaque extraction démarre son propre Chromium (~300 Mo) |
 | Timeout | `EXTRACTION_TIMEOUT_SECONDS` (défaut 300), attente d'un créneau incluse → `504` |
 
 L'appel est **synchrone** : le client attend la fin de l'extraction. C'est volontaire pour
@@ -513,22 +513,26 @@ La reprise fine (repartir de l'étape interrompue) est hors périmètre.
 ### Déroulé
 
 ```
-created → collecting : 6 collecteurs simultanés (STUDY_COLLECT_PARALLEL, défaut 6)
+created → collecting : 6 collecteurs, par vagues (STUDY_COLLECT_PARALLEL, défaut 2)
                        ── barrière : les 6 terminés, quel que soit leur statut ──
         → analyzing  : F3 ∥ F4, puis F5 (dès que les deux sont finis), puis F6
         → reporting  : F7 → table study_report
         → completed | partial | failed
 ```
 
-La phase de collecte coûte donc le **collecteur le plus lent**, pas leur somme : les six
-sont indépendants par conception (sources disjointes, fichiers de sortie disjoints, aucun
-ne lit la sortie d'un autre). Le coût API est inchangé — mêmes appels, mêmes tokens.
+Les six collecteurs sont indépendants par conception (sources disjointes, fichiers de
+sortie disjoints, aucun ne lit la sortie d'un autre), donc une vague coûte son collecteur
+le plus lent, pas la somme. Le coût API est inchangé quel que soit le réglage — mêmes
+appels, mêmes tokens, simplement étalés sur plus de temps de mur.
 
-Le parallélisme est **borné par un sémaphore**, jamais un `gather` libre : les vraies
-limites ne sont pas dans le code mais dans les comptes (runs d'actors Apify concurrents —
-5 collecteurs sur 6 passent par Apify —, débit Anthropic, RAM des 6 sous-processus). En cas
-d'erreurs de quota récurrentes, `STUDY_COLLECT_PARALLEL=3` est le levier de repli, sans
-redéploiement.
+Le parallélisme est **borné par un sémaphore**, jamais un `gather` libre, et la borne est
+un budget mémoire : un collecteur n'est pas une coroutine mais un **sous-processus Python
+entier**, qui réimporte toute la stack LLM et scraping sans rien partager avec le process
+API. Le défaut a été 6 jusqu'à ce qu'une instance soit tuée sur Render pour dépassement de
+mémoire ; il est à 2. Les autres plafonds à respecter avant de le remonter ne sont pas dans
+le code mais dans les comptes : runs d'actors Apify concurrents (5 collecteurs sur 6
+passent par Apify) et débit Anthropic. `STUDY_COLLECT_PARALLEL` reste le levier, sans
+redéploiement — à remonter sur une instance qui a la mémoire, en vérifiant le pic.
 
 Un échec ou un timeout de collecteur n'interrompt **jamais** les autres, et F5 démarre dès
 que F3 et F4 sont terminés *quel que soit leur statut* : la dégradation gracieuse appartient
@@ -591,7 +595,13 @@ sémaphore n'est libéré qu'à son retour réel.
 
 `var/studies/{study_id}/` (gitignoré) contient les fichiers du pipeline lui-même —
 `tendances.json`, `amazon.json`, …, `rapport_etude.md`. Ce sont eux qui font foi en cas de
-doute sur une formulation du rapport, d'où `STUDY_KEEP_WORKDIR=true` par défaut. **La purge
+doute sur une formulation du rapport, d'où `STUDY_KEEP_WORKDIR=true` par défaut.
+
+Le sous-dossier `logs/` recueille les deux flux de chaque module, `<module>.stdout.json` et
+`<module>.stderr.log`. Ils y sont écrits directement plutôt que lus par un tube : le runner
+gardait sinon en mémoire tout ce qu'un module écrit jusqu'à sa sortie. Effet de bord utile —
+`stderr` n'est plus tronqué à sa queue avant d'être jeté, et le log complet d'un module en
+échec se lit à côté des fichiers qu'il a produits. **La purge
 est manuelle** : `rm -rf var/studies/*` (Windows : `Remove-Item var\studies\* -Recurse`).
 
 ### Le pipeline

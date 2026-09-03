@@ -30,20 +30,25 @@ class StudyConfig(BaseSettings):
     # One study at a time. A study costs ~2,3 $ of LLM credits, Apify quota, and
     # holds several hundred MB: this bounds spend and memory, not just load.
     MAX_CONCURRENCY: int = Field(default=1, ge=1)
-    # All six collectors at once: they are independent by design (disjoint sources,
-    # disjoint output files, no module reads another's), so the phase costs the
-    # slowest collector instead of their sum.
+    # How many collectors run at once. They are independent by design (disjoint
+    # sources, disjoint output files, no module reads another's), so the phase costs
+    # the slowest of a batch rather than the sum of all six.
     #
-    # The API cost is unchanged -- same calls, same tokens, only closer together.
-    # The real ceilings are operational, and none of them is enforceable from here:
-    # concurrent Apify actor runs (five of the six go through Apify, and the cap
-    # depends on the account plan), Anthropic rate limits (every module calls the
-    # LLM), and RAM (six Python subprocesses at once).
+    # Six was the default until an instance on Render was killed for exceeding its
+    # memory limit. RAM is the binding constraint, and it was the one ceiling the
+    # original note listed without measuring: a collector is not a coroutine but a
+    # whole Python subprocess (`runner._spawn_module`), each re-importing the LLM and
+    # scraping stack from scratch, sharing nothing with the API process. Six of those
+    # plus the API is the peak that did not fit. Two does.
     #
-    # Which is why the mechanism stays bounded by a semaphore rather than being an
-    # unbounded gather: this setting is the rollback lever, with no redeployment. On
-    # recurring quota errors during a real run, drop it to 3-4 and document it.
-    COLLECT_PARALLEL: int = Field(default=6, ge=1)
+    # The API cost is unchanged either way -- same calls, same tokens, spread over
+    # more wall-clock. Nothing degrades: all six collectors still run, in batches.
+    #
+    # This stays the adjustment lever, with no redeployment. Raise it on an instance
+    # with the memory to back it, and watch the peak before trusting the new value;
+    # the other ceilings it has to clear are concurrent Apify actor runs (five of the
+    # six go through Apify, capped by the account plan) and Anthropic rate limits.
+    COLLECT_PARALLEL: int = Field(default=2, ge=1)
 
     # Measured on the reference run: 13 min for the six collectors, and 666 s for the
     # slowest analysis module (F4). Both defaults leave a wide margin.
