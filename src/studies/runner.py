@@ -631,12 +631,7 @@ async def _collect(
                 await _update_progress(db, study_id, spec.source, {"status": "running"})
             logger.info("[%s] study %s: started", spec.source, study_id)
 
-            run = await _run_module(
-                spec.script,
-                args,
-                workdir=workdir,
-                timeout_seconds=studies_settings.TIMEOUT_COLLECTOR_SECONDS,
-            )
+            run, tentatives = await _collecter_avec_reprises(spec, args, workdir, study_id)
 
             if run.succeeded and spec.stdout_only and run.stdout_path is not None:
                 # These three only ever talk on stdout: the file the analysis agents
@@ -654,7 +649,7 @@ async def _collect(
             if status == StudySourceStatus.FAILED and run.timed_out:
                 raisons[spec.source] = "delai_depasse"
             async with SessionFactory() as db:
-                await _persist_source(db, study_id, spec, run, status)
+                await _persist_source(db, study_id, spec, run, status, tentatives)
 
     # `gather` without `return_exceptions`: a collector never raises -- `_run_module` turns
     # every failure into a ModuleRun. An exception here would be a defect of the runner
@@ -768,6 +763,92 @@ def _nb_items(source: str, payload: dict[str, Any] | None) -> int:
     return len(valeur) if isinstance(valeur, list) else 0
 
 
+def _merite_une_reprise(spec: CollectorSpec, run: ModuleRun) -> bool:
+    """Dit si relancer ce collecteur a une chance de donner autre chose.
+
+    DEUX CAS NE SONT JAMAIS REJOUÉS, et ils sont l'essentiel de cette fonction.
+
+    Une **région non couverte** (code 3) est un résultat, pas une panne : Amazon
+    n'a pas de site marocain, et le relancer trois fois ne lui en donnera pas un.
+
+    Une **entrée inexploitable** (code 2) est un défaut de câblage : le module a
+    reçu quelque chose qu'il ne sait pas lire, et il recevra exactement la même
+    chose à la reprise. C'est la leçon du run 8609db9e, où huit invocations ont été
+    facturées pour huit fois la même erreur de gabarit.
+
+    Tout le reste se rejoue, y compris une **collecte vide**. C'est même le cas qui
+    motive cette reprise : sur l'étude 7a93b99d, trois collecteurs sont sortis en
+    code 0 avec zéro élément, parce que l'appel au modèle qui construit leur plan de
+    recherche avait échoué et que chacun l'avale en rendant un plan vide. Rien ne
+    distingue cela d'une vraie absence de résultats, vu du dehors — sinon qu'une
+    seconde tentative tranche la question pour quinze secondes.
+
+    Args:
+        spec: Le collecteur concerné.
+        run: Ce que le module vient de faire.
+
+    Returns:
+        `True` si une reprise a un sens.
+    """
+    if run.skipped_region:
+        return False
+    if run.exit_code == EXIT_UNUSABLE_INPUT:
+        return False
+    return not run.succeeded or not _a_recolte(spec.source, run.payload)
+
+
+async def _collecter_avec_reprises(
+    spec: CollectorSpec, args: list[str], workdir: Path, study_id: uuid.UUID
+) -> tuple[ModuleRun, int]:
+    """Lance un collecteur, et le relance tant qu'une reprise a un sens.
+
+    Au plus `STUDY_COLLECTOR_ATTEMPTS` lancements au total. La première tentative
+    qui rapporte quelque chose est retenue ; à défaut, c'est la DERNIÈRE qui est
+    conservée — pas la meilleure, car les comparer supposerait de savoir ce qu'est
+    une meilleure collecte, et deux échecs ne se départagent pas.
+
+    Args:
+        spec: Le collecteur à lancer.
+        args: Arguments de ligne de commande, déjà assemblés.
+        workdir: Répertoire de travail de l'étude.
+        study_id: Identifiant de l'étude, pour les traces.
+
+    Returns:
+        Le couple `(dernier_run, nombre_de_tentatives)`.
+    """
+    essais = max(1, studies_settings.COLLECTOR_ATTEMPTS)
+    run = ModuleRun(exit_code=1, duration_seconds=0.0, error="not started")
+
+    for tentative in range(1, essais + 1):
+        run = await _run_module(
+            spec.script,
+            args,
+            workdir=workdir,
+            timeout_seconds=studies_settings.TIMEOUT_COLLECTOR_SECONDS,
+        )
+        if not _merite_une_reprise(spec, run):
+            if tentative > 1:
+                logger.info(
+                    "[%s] study %s: recovered on attempt %d/%d",
+                    spec.source, study_id, tentative, essais,
+                )
+            return run, tentative
+        if tentative == essais:
+            break
+        attente = studies_settings.RETRY_BACKOFF_SECONDS
+        logger.warning(
+            "[%s] study %s: attempt %d/%d brought nothing back (exit=%s), "
+            "retrying in %.0f s",
+            spec.source, study_id, tentative, essais, run.exit_code, attente,
+        )
+        await asyncio.sleep(attente)
+
+    logger.warning(
+        "[%s] study %s: still nothing after %d attempt(s)", spec.source, study_id, essais
+    )
+    return run, essais
+
+
 def _collector_status(spec: CollectorSpec, run: ModuleRun) -> str:
     """Classify one collector run: did it work, and did it bring anything back?
 
@@ -840,6 +921,21 @@ async def _analyse(
 
 
 async def _run_analysis(spec: AnalysisSpec, workdir: Path) -> ModuleRun:
+    """Run one analysis agent, retrying a failure like a collector's.
+
+    The analyses call the same model as the collectors' planning step, so they meet
+    the same transient failures -- a saturated API answers them no differently.
+
+    A missing upstream output is NOT retried: the file will still be missing on the
+    second go. That case exits before launching anything at all.
+
+    Args:
+        spec: The analysis agent to run.
+        workdir: The study's working directory.
+
+    Returns:
+        What the module did on its final attempt.
+    """
     args = _input_args(spec, workdir)
     if args is None:
         return ModuleRun(
@@ -848,12 +944,30 @@ async def _run_analysis(spec: AnalysisSpec, workdir: Path) -> ModuleRun:
             error="A required upstream output is missing: the module was not launched.",
         )
     args += ["--sortie", spec.output_file, "--stdout"]
-    return await _run_module(
-        spec.script,
-        args,
-        workdir=workdir,
-        timeout_seconds=studies_settings.TIMEOUT_ANALYSIS_SECONDS,
-    )
+
+    essais = max(1, studies_settings.COLLECTOR_ATTEMPTS)
+    run = ModuleRun(exit_code=1, duration_seconds=0.0, error="not started")
+    for tentative in range(1, essais + 1):
+        run = await _run_module(
+            spec.script,
+            args,
+            workdir=workdir,
+            timeout_seconds=studies_settings.TIMEOUT_ANALYSIS_SECONDS,
+        )
+        # Ni `skipped_region` ni `empty` n'existent pour une analyse : elle aboutit
+        # ou elle échoue.
+        if run.succeeded or run.exit_code == EXIT_UNUSABLE_INPUT:
+            if tentative > 1 and run.succeeded:
+                logger.info("[%s] recovered on attempt %d/%d", spec.agent, tentative, essais)
+            return run
+        if tentative < essais:
+            logger.warning(
+                "[%s] attempt %d/%d failed (exit=%s), retrying in %.0f s",
+                spec.agent, tentative, essais, run.exit_code,
+                studies_settings.RETRY_BACKOFF_SECONDS,
+            )
+            await asyncio.sleep(studies_settings.RETRY_BACKOFF_SECONDS)
+    return run
 
 
 def _input_args(spec: AnalysisSpec, workdir: Path) -> list[str] | None:
@@ -1141,7 +1255,12 @@ async def launch_report_rebuild(study_id: uuid.UUID) -> None:
 # Persistence -- written as it happens, never at the end
 # ---------------------------------------------------------------------------
 async def _persist_source(
-    db: AsyncSession, study_id: uuid.UUID, spec: CollectorSpec, run: ModuleRun, status: str
+    db: AsyncSession,
+    study_id: uuid.UUID,
+    spec: CollectorSpec,
+    run: ModuleRun,
+    status: str,
+    tentatives: int = 1,
 ) -> None:
     """Write one collector's row, from that collector's own session.
 
@@ -1151,6 +1270,18 @@ async def _persist_source(
 
     ``updated_at`` is set explicitly because the ORM's ``onupdate`` does not fire on a Core
     ``ON CONFLICT DO UPDATE``.
+
+    ``tentatives`` lands in ``progress`` rather than in a column of its own: it is
+    operational detail, useful to see that a source needed two goes before answering,
+    and not worth a migration.
+
+    Args:
+        db: Database session.
+        study_id: Study identifier.
+        spec: The collector's specification.
+        run: What the module did on its final attempt.
+        status: The status to persist.
+        tentatives: How many times the collector was launched.
     """
     values = {
         "study_id": study_id,
@@ -1184,6 +1315,7 @@ async def _persist_source(
             "status": status,
             "exit_code": run.exit_code,
             "duration_seconds": round(run.duration_seconds, 1),
+            "nb_tentatives": tentatives,
         },
     )
     logger.info(

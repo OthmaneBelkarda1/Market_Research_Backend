@@ -585,6 +585,36 @@ Un échec ou un timeout de collecteur n'interrompt **jamais** les autres, et F5 
 que F3 et F4 sont terminés *quel que soit leur statut* : la dégradation gracieuse appartient
 aux modules, jamais à l'orchestrateur.
 
+### Reprises
+
+Un module qui ne rapporte rien est **relancé, au plus deux fois** de plus
+(`STUDY_COLLECTOR_ATTEMPTS`, défaut 3), avec vingt secondes d'attente entre deux essais.
+
+L'incident qui l'a rendu nécessaire : sur l'étude `7a93b99d`, trois collecteurs sur six
+sont revenus vides en quinze secondes chacun, avec le même message — « génération du plan
+de requêtes impossible ». Ils n'avaient pas échoué à collecter, ils n'avaient **jamais
+collecté** : l'appel au modèle qui construit leur plan de recherche avait échoué, et
+chacun de ces agents l'avale en rendant un plan vide sans jamais retenter. Trois échecs au
+même instant sur un produit parfaitement valide, c'est une saturation passagère de l'API.
+
+Une **collecte vide est donc rejouée** comme un échec franc : vue du dehors, rien ne les
+distingue, et quinze secondes de plus tranchent la question.
+
+Deux cas ne sont **jamais** rejoués, et c'est le cœur de la règle :
+
+- une **région non couverte** (code 3) est un résultat, pas une panne — Amazon n'a pas de
+  site marocain, et le relancer ne lui en donnera pas un ;
+- une **entrée inexploitable** (code 2) est un défaut de câblage : le module recevra
+  exactement la même entrée et rendra exactement la même erreur. C'est la leçon du run
+  `8609db9e`, où huit invocations ont été facturées pour huit fois la même erreur.
+
+Les analyses F3 à F6 suivent la même règle — elles appellent le même modèle, elles
+rencontrent les mêmes pannes. F7 en est exclu : son échec a sa propre réparation, avec
+`POST /studies/{id}/report/regenerate`, qui rejoue la rédaction sans rien recollecter.
+
+Le nombre de tentatives est publié dans `study.progress.<source>.nb_tentatives` : une
+valeur supérieure à 1 dit qu'une source a eu besoin d'être relancée.
+
 - `completed` : aucun module en échec et aucune source vide (`skipped_region` ne compte
   pas).
 - `partial` : au moins un module en échec ou une source `empty`, mais F7 a produit un

@@ -50,6 +50,26 @@ class StudyConfig(BaseSettings):
     # six go through Apify, capped by the account plan) and Anthropic rate limits.
     COLLECT_PARALLEL: int = Field(default=2, ge=1)
 
+    # Combien de fois un collecteur est lancé, reprises comprises. 3 = un essai et
+    # deux reprises.
+    #
+    # POURQUOI CELA VAUT LA DÉPENSE. Sur l'étude 7a93b99d, trois collecteurs sur six
+    # sont revenus vides en quinze secondes chacun, avec le même message : « plan de
+    # requêtes impossible ». Ils n'avaient pas échoué à collecter, ils n'avaient
+    # jamais collecté — l'appel au modèle qui construit leur plan de recherche avait
+    # échoué, et chacun de ces agents ne le tente qu'UNE fois avant d'abandonner
+    # (`_invoquer_plan` attrape l'exception et rend un plan vide). Trois échecs
+    # simultanés sur un produit parfaitement valide : une saturation passagère de
+    # l'API. Une reprise aurait sauvé l'étude.
+    #
+    # Ce qui n'est PAS rejoué : une région non couverte, qui est un résultat normal,
+    # et une entrée inexploitable, qui redonnerait exactement la même erreur. Voir
+    # `runner._merite_une_reprise`.
+    COLLECTOR_ATTEMPTS: int = Field(default=3, ge=1, le=5)
+    # Attente avant chaque reprise, en secondes. La cause la plus probable d'un échec
+    # simultané est un plafond de débit : réessayer aussitôt retomberait dessus.
+    RETRY_BACKOFF_SECONDS: float = Field(default=20.0, ge=0)
+
     # Measured on the reference run: 13 min for the six collectors, and 666 s for the
     # slowest analysis module (F4). Both defaults leave a wide margin.
     TIMEOUT_COLLECTOR_SECONDS: float = Field(default=1200.0, gt=0)
