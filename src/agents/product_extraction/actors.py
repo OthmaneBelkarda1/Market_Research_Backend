@@ -420,27 +420,68 @@ def map_ecommerce_tool(record: dict) -> dict[str, Any]:
     return {k: v for k, v in fields.items() if v not in (None, "", [], {})}
 
 
-def _aliexpress_canonical_url(url: str) -> str:
-    """Rewrite an AliExpress product URL to its scrapable form.
+_MOTIF_ALIEXPRESS_ITEM = re.compile(
+    r"^https?://(?:[\w-]+\.)*aliexpress\.(com|us|ru)(/[^?#]*item/[^?#]+)",
+    re.IGNORECASE,
+)
+_MOTIF_ALIEXPRESS_HOTE = re.compile(
+    r"^https?://(?:[\w-]+\.)*aliexpress\.(com|us|ru)\b", re.IGNORECASE
+)
+# L'identifiant d'un article AliExpress, tel qu'il apparaît dans les paramètres
+# des pages qui n'en sont pas une : `productIds=1005012768742030:12000059308786738`
+# (article:variante), `x_object_id:1005012768742030` niché dans `utparam-url`,
+# `productId=...`. Douze chiffres au moins — un identifiant d'article en compte
+# seize aujourd'hui, et le seuil évite d'attraper un identifiant de session.
+_MOTIF_ALIEXPRESS_ID = re.compile(
+    r"(?:productIds?|x_object_id|objectId)(?:%3A|%3D|[:=])(\d{12,20})",
+    re.IGNORECASE,
+)
 
-    Country hosts (`fr.`, `es.`, `pt.`, ...) 302 to
-    `www.aliexpress.com/item/<id>.html?gatewayAdapt=...`, and the actor comes
-    back with an empty dataset from that redirect — the run SUCCEEDs with 0
-    items, which surfaces as a 502. The same item id on `www.` scrapes fine, so
-    the host is normalised and the tracking query string (`spm`, `pdp_ext_f`,
-    ...) dropped, keeping only the `/item/<id>.html` path.
+
+def _aliexpress_canonical_url(url: str) -> str:
+    """Rewrite an AliExpress URL to the product page the actor can scrape.
+
+    TWO REWRITES, and the second is what this function existed without.
+
+    **Country hosts.** `fr.`, `es.`, `pt.` … 302 to
+    `www.aliexpress.com/item/<id>.html?gatewayAdapt=…`, and the actor comes back
+    with an empty dataset from that redirect — the run SUCCEEDs with 0 items,
+    which surfaces as a 502. The same item id on `www.` scrapes fine, so the host
+    is normalised and the tracking query string (`spm`, `pdp_ext_f`, …) dropped.
+
+    **Pages that are not product pages.** AliExpress hands out promotional URLs
+    that carry the product id in a query parameter rather than in the path:
+
+        /ssr/300000512/BundleDeals2?productIds=1005012768742030%3A12000059308786738…
+
+    There is no `item/` in that path, so the first rewrite left it untouched and
+    the whole promotional URL went to the actor, whose run ended in `FAILED`. The
+    extraction then burned its entire 300-second budget and surfaced as a
+    timeout — the most expensive way there is to say "wrong URL". The id is
+    recovered from the query string and the canonical page rebuilt.
+
+    An id found this way is not a promise that the product still exists: the
+    actor may still answer "no product". But it answers it in seconds, with a
+    message that names what is missing.
+
+    Args:
+        url: URL as received from the caller.
+
+    Returns:
+        The canonical product URL, or the URL unchanged when no id is found.
     """
-    match = re.match(
-        r"^https?://(?:[\w-]+\.)*aliexpress\.(com|us|ru)(/[^?#]*item/[^?#]+)",
-        url,
-        re.IGNORECASE,
-    )
-    if not match:
-        return url
-    # The TLD is kept: aliexpress.us is a separate storefront, not a translation
-    # of .com, so rewriting it would scrape a different listing.
-    tld, path = match.group(1).lower(), match.group(2)
-    return f"https://www.aliexpress.{tld}{path}"
+    match = _MOTIF_ALIEXPRESS_ITEM.match(url)
+    if match:
+        # The TLD is kept: aliexpress.us is a separate storefront, not a
+        # translation of .com, so rewriting it would scrape a different listing.
+        tld, path = match.group(1).lower(), match.group(2)
+        return f"https://www.aliexpress.{tld}{path}"
+
+    hote = _MOTIF_ALIEXPRESS_HOTE.match(url)
+    identifiant = _MOTIF_ALIEXPRESS_ID.search(url)
+    if hote and identifiant:
+        return f"https://www.aliexpress.{hote.group(1).lower()}/item/{identifiant.group(1)}.html"
+    return url
 
 
 def map_aliexpress(items: list[dict], url: str) -> dict[str, Any]:
