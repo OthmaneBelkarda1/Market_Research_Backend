@@ -41,13 +41,16 @@ from config import (
     MAX_MOTS_ACTION,
     MAX_MOTS_CELLULE_COURTE,
     MAX_MOTS_PUCE,
+    MAX_MOTS_PUCE_CONCURRENTS,
     CONTRAT_SOUS_BLOCS,
     LIMITES_SYSTEMATIQUES,
     SECTIONS_NARRATIVES,
     SECTION_PLC,
     SECTION_SYNTHESE,
     RedactionImpossible,
+    appliquer_lexique,
     logger,
+    termes_interdits_presents,
     verifier_cle_api,
 )
 from preparation import ListeBlanche, horodatage, preparer
@@ -58,6 +61,7 @@ from redaction_v2 import (
     ecarts_au_contrat,
     rangs_chiffrables,
     rediger_ecran,
+    reformuler_affirmatif,
     sous_blocs_a_rediger,
 )
 from schemas import (
@@ -293,6 +297,31 @@ def _comprimer_cellules_longues(
         for (source, rang, _), retenu in zip(puces_longues, retenus, strict=True):
             getattr(injectables, source)[rang] = retenu
 
+    # Les angles inexploités arrivent en double négation de l'analyse
+    # concurrentielle : « Aucun claim du corpus ne met en avant le prix… hormis
+    # un annonceur ». Il faut relire deux fois pour savoir si quelqu'un le fait.
+    if injectables.puces_personne_ne_fait:
+        # Le budget suit la LONGUEUR DES ORIGINAUX, il ne l'impose pas. Passer
+        # au style affirmatif est un changement de voix, pas un raccourcissement :
+        # borné à 35 mots, chaque réécriture de ces puces de cinquante mots était
+        # rejetée pour dépassement, et la double négation revenait intacte.
+        budget_affirmatif = max(
+            len(puce.split()) for puce in injectables.puces_personne_ne_fait
+        )
+        affirmatifs, statut = reformuler_affirmatif(
+            injectables.puces_personne_ne_fait, budget_affirmatif, langue_analyse
+        )
+        statuts.append(statut)
+        if affirmatifs is not None:
+            # `retenir_compression` reste : elle rejette toute réécriture qui
+            # introduirait un chiffre absent de l'original, et c'est un invariant
+            # qui ne dépend pas de la longueur.
+            retenus, acceptees = retenir_compression(
+                injectables.puces_personne_ne_fait, affirmatifs, budget_affirmatif
+            )
+            injectables.puces_personne_ne_fait = retenus
+            compressees += acceptees
+
     longues = [
         action["enonce_brut"]
         for action in injectables.actions_p1
@@ -361,6 +390,111 @@ def _comprimer_puces_hors_budget(
         sortie.sous_blocs[sous_bloc][rang] = retenu
     statut.phase = f"compression_puces_{ecran}"
     return sortie, statut
+
+
+def _tenir_le_lexique(
+    narratifs: dict[str, SortieEcran | None],
+    ecrans: dict[str, dict],
+    injectables: Injectables,
+    produit: str,
+    libelle_marche: str,
+    langue_analyse: str,
+) -> tuple[dict[str, SortieEcran | None], list[StatutAnalyse], dict[str, int]]:
+    """Fait tenir le lexique aux écrans narratifs : régénérer, puis substituer.
+
+    DEUX RECOURS, ET LEUR ORDRE COMPTE. La régénération d'abord : le modèle
+    reçoit la liste des termes qu'il a employés et réécrit sa réponse. C'est le
+    seul recours qui produise du français correct, parce qu'il refait la phrase
+    entière.
+
+    La substitution ensuite, si un terme survit. Elle ne fait PAS de grammaire :
+    remplacer « le claim » par « la promesse publicitaire » corrige l'article
+    parce que la table le prévoit, mais « 30 contributions positives » devient
+    « 30 avis et messages positives », l'adjectif restant au féminin. C'est un
+    filet, pas un rédacteur — et `controles.nb_termes_substitues` compte les fois
+    où il a fallu s'en servir. Un chiffre non nul dit que la consigne de rédaction
+    demande à être resserrée, pas que le rapport est bon.
+
+    Args:
+        narratifs: Sorties narratives par écran.
+        ecrans: Entrées de gabarit des écrans narratifs.
+        injectables: Données injectables.
+        produit: Nom du produit étudié.
+        libelle_marche: Libellé du marché.
+        langue_analyse: Code langue de rédaction.
+
+    Returns:
+        Le triplet `(narratifs, statuts, nb_substitutions_par_écran)`.
+    """
+    statuts: list[StatutAnalyse] = []
+    substitues: dict[str, int] = {}
+
+    for identifiant, sortie in narratifs.items():
+        if sortie is None:
+            continue
+        fautifs = _termes_fautifs(sortie)
+        if not fautifs:
+            continue
+
+        logger.info("écran %s : lexique non tenu (%s)", identifiant, ", ".join(fautifs))
+        reprise, statut = rediger_ecran(
+            identifiant,
+            ecrans[identifiant]["titre"],
+            ecrans[identifiant]["budget_mots"],
+            injectables,
+            produit,
+            libelle_marche,
+            langue_analyse,
+            erreur_precedente=(
+                "tu as employé des termes que le lecteur ne comprendra pas : "
+                + ", ".join(f"« {terme} »" for terme in fautifs)
+                + ". Réécris tes puces sans eux, avec leur équivalent courant."
+            ),
+        )
+        statut.phase = f"lexique_{identifiant}"
+        statuts.append(statut)
+        if reprise is not None and not _termes_fautifs(reprise):
+            narratifs[identifiant] = reprise
+            continue
+
+        # Le modèle n'a pas tenu : on substitue, et on le dit.
+        cible = reprise if reprise is not None else sortie
+        total = 0
+        for sous_bloc, puces in cible.sous_blocs.items():
+            reecrites = []
+            for puce in puces:
+                propre, nombre = appliquer_lexique(puce)
+                total += nombre
+                reecrites.append(propre)
+            cible.sous_blocs[sous_bloc] = reecrites
+        narratifs[identifiant] = cible
+        substitues[identifiant] = total
+        statuts.append(
+            StatutAnalyse(
+                phase=f"lexique_{identifiant}",
+                succes=True,
+                message_erreur=(
+                    f"{total} terme(s) remplacé(s) automatiquement après "
+                    f"régénération. La substitution ne corrige pas les accords : "
+                    f"relire ces puces."
+                ),
+                nb_elements=total,
+            )
+        )
+    return narratifs, statuts, substitues
+
+
+def _termes_fautifs(sortie: SortieEcran) -> list[str]:
+    """Relève les termes du lexique employés par un écran.
+
+    Args:
+        sortie: Sortie narrative d'un écran.
+
+    Returns:
+        Les termes trouvés, sans doublon.
+    """
+    texte = " ".join(puce for puces in sortie.sous_blocs.values() for puce in puces)
+    return termes_interdits_presents(texte)
 
 
 def _rediger_ecrans(
@@ -508,6 +642,18 @@ def _rediger_ecrans(
                     nb_elements=retirees,
                 )
             )
+
+    # EN DERNIER, et c'est le point. Chacune des reprises ci-dessus rappelle le
+    # modèle -- régénération après nettoyage, réduction au budget -- et chacune
+    # peut réintroduire un terme que la passe précédente avait retiré. Placée
+    # avant elles, cette passe travaillait sur un texte qui n'était pas le texte
+    # final.
+    narratifs, statuts_lexique, substitues = _tenir_le_lexique(
+        narratifs, ecrans, injectables, produit, libelle_marche, langue_analyse
+    )
+    statuts.extend(statuts_lexique)
+    for identifiant, nombre in substitues.items():
+        compteurs.setdefault(identifiant, {})["lexique"] = nombre
     return narratifs, statuts, compteurs
 
 

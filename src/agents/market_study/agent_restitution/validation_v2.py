@@ -23,6 +23,7 @@ import re
 
 from config import (
     CONTRAT_SOUS_BLOCS,
+    LEXIQUE_ENUMERATIONS,
     ECRANS_HORS_CONTROLE_TERMES,
     ECRAN_DECISION,
     ECRAN_METHODE,
@@ -38,12 +39,14 @@ from config import (
     REPLI_INTERDIT_V2,
     SEUIL_REGENERATION_PCT,
     SOURCES_LIGNE_SOURCES,
+    SIGLES_INTERDITS,
     SOUS_BLOCS_REDIGES,
     SUBSTITUTS_VERDICT_INTERDITS,
     TERMES_INTERDITS,
     TERMES_JARGON,
     VERDICT_LISIBLE,
     logger,
+    termes_interdits_presents,
 )
 from preparation import ListeBlanche, extraire_nombres
 from preparation_v2 import LIBELLES_SOURCES
@@ -59,7 +62,13 @@ from schemas import (
 
 PHASE_POST_VALIDATION_V2: str = "post_validation_v2"
 
-MOTIF_TITRE_DECISION = re.compile(r"^##\s+Décision\s*:\s*(.+)$", re.M)
+# Le titre porte le libellé métier PUIS sa traduction en clair, séparés d'un
+# tiret cadratin : « ## Décision : No-go — **ne pas lancer ce produit** ». Le
+# contrôle ne lit que le libellé, celui que l'analyse amont a produit et sur
+# lequel porte la traçabilité ; la traduction est un ajout d'affichage.
+MOTIF_TITRE_DECISION = re.compile(
+    r"^##\s+Décision\s*:\s*([^—]+?)\s*(?:—.*)?$", re.M
+)
 MOTIF_LIGNE_VERDICT = re.compile(r"^Verdict calculé\s*:\s*([^·]+)·", re.M)
 MOTIF_CELLULE_TRONQUEE = re.compile(r"…\s*(?:\||$)", re.M)
 
@@ -404,6 +413,95 @@ def controler_gabarit(
     return ecarts
 
 
+MOTIF_CITATION = re.compile(r"^\s*>.*$", re.M)
+MOTIF_COMMENTAIRE = re.compile(r"<!--.*?-->", re.S)
+MOTIF_IDENTIFIANT_CODE = re.compile(r"\b[a-zà-ÿ]+(?:_[a-zà-ÿ0-9]+)+\b")
+
+
+def corps_lisible(rapport: str) -> str:
+    """Isole ce qui doit être écrit en français courant, dans les écrans 0 à 3.
+
+    Trois retraits, et ils ne sont pas négociables :
+
+    - **l'écran 4**, où le vocabulaire technique reste admis et où le glossaire
+      le définit ;
+    - **les citations clients**, dans leur langue d'origine, qu'aucune règle de
+      vocabulaire ne doit atteindre ;
+    - **les commentaires HTML** de traçabilité, invisibles au lecteur.
+
+    Les noms de marques et de produits ne sont pas retirés : ils ne contiennent
+    pas de terme du lexique, et les retirer supposerait une liste que personne ne
+    tient à jour.
+
+    Args:
+        rapport: Rapport Markdown complet.
+
+    Returns:
+        Le texte soumis aux contrôles de vocabulaire.
+    """
+    corps = rapport.split("## Méthode et limites")[0]
+    corps = MOTIF_COMMENTAIRE.sub(" ", corps)
+    return MOTIF_CITATION.sub(" ", corps)
+
+
+def valeurs_techniques(texte: str) -> list[str]:
+    """Relève les identifiants de code et sigles internes d'un texte.
+
+    Un identifiant se reconnaît à son tiret bas — `effet_de_mode`,
+    `marketplace_pays`, `court_terme` — et un sigle interne à sa présence dans
+    `SIGLES_INTERDITS`. Les deux ont en commun de n'avoir jamais été écrits pour
+    un lecteur.
+
+    Args:
+        texte: Texte à contrôler.
+
+    Returns:
+        Les valeurs relevées, sans doublon.
+    """
+    trouves = list(MOTIF_IDENTIFIANT_CODE.findall(texte))
+    trouves += [
+        sigle
+        for sigle in SIGLES_INTERDITS
+        if re.search(rf"\b{re.escape(sigle)}\b", texte)
+    ]
+    return list(dict.fromkeys(trouves))
+
+
+def incoherences_inter_ecrans(rapport: str, injectables: Injectables) -> list[str]:
+    """Relève les affirmations d'absence contredites par un autre écran.
+
+    Le run de référence publiait « Aucun avis client n'est présent dans les
+    données fournies » à l'écran 2, alors que l'écran 1 analysait vingt-six avis
+    Amazon. Pour le lecteur, l'un des deux écrans ment, et il n'a aucun moyen de
+    savoir lequel — c'est le genre de contradiction qui disqualifie tout le
+    rapport, pas seulement la phrase.
+
+    Args:
+        rapport: Rapport Markdown complet.
+        injectables: Données injectables, qui disent ce qui a réellement été
+            collecté.
+
+    Returns:
+        Les contradictions constatées.
+    """
+    corps = corps_lisible(rapport)
+    a_des_avis = bool(injectables.pain_points or injectables.tableau_sentiment)
+    incoherences: list[str] = []
+    if a_des_avis:
+        for motif in (
+            r"[Aa]ucun avis client n'est présent",
+            r"[Aa]ucun avis n'est disponible",
+            r"[Pp]as d'avis client",
+        ):
+            if re.search(motif, corps):
+                incoherences.append(
+                    "un écran affirme qu'aucun avis client n'est disponible, alors "
+                    "que l'écran consommateur en analyse"
+                )
+                break
+    return incoherences
+
+
 def controler_v2(
     rapport: str,
     resume: str,
@@ -686,6 +784,43 @@ def controler_v2(
         echec(
             "le nombre de pages web de la ligne « Sources analysées » diffère de "
             "celui du tableau de méthode : deux compteurs pour une même collecte."
+        )
+
+    # --- 17. Lexique : le rapport se lit sans dictionnaire ------------------ #
+    corps_a_lire = corps_lisible(rapport)
+    termes = termes_interdits_presents(corps_a_lire)
+    controles.lexique_conforme = not termes
+    if termes:
+        echec(
+            f"{len(termes)} terme(s) d'analyste subsistent dans les écrans 0 à 3 : "
+            f"{', '.join(termes[:8])}. Le lecteur visé n'a jamais fait d'étude de "
+            f"marché.",
+            len(termes),
+        )
+
+    # --- 18. Aucun identifiant de code ni sigle interne --------------------- #
+    techniques = [
+        valeur
+        for valeur in valeurs_techniques(corps_a_lire)
+        # Une valeur déjà traduite par le code n'a pas à être relevée deux fois :
+        # si elle subsiste, c'est que la traduction n'a pas été appliquée là.
+        if valeur in LEXIQUE_ENUMERATIONS or "_" in valeur or valeur in SIGLES_INTERDITS
+    ]
+    controles.valeurs_techniques_absentes = not techniques
+    if techniques:
+        echec(
+            f"{len(techniques)} valeur(s) techniques atteignent le lecteur : "
+            f"{', '.join(techniques[:8])}. Ce sont des identifiants de code.",
+            len(techniques),
+        )
+
+    # --- 19. Cohérence entre écrans ----------------------------------------- #
+    contradictions = incoherences_inter_ecrans(rapport, injectables)
+    controles.coherence_inter_ecrans = not contradictions
+    if contradictions:
+        echec(
+            "contradiction entre écrans : " + " ; ".join(contradictions) + ".",
+            len(contradictions),
         )
 
     if not statuts:

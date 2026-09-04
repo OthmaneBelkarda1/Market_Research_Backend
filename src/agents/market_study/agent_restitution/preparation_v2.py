@@ -38,7 +38,17 @@ from config import (
     CINQ_FORCES_SOURCE_F5,
     CINQ_FORCES_SOURCE_REGLES,
     COLONNES_BENCHMARK_GABARIT,
+    COLONNE_LECTURE,
     DECIMALES_MONTANT,
+    LEXIQUE_ENUMERATIONS,
+    LIBELLES_INDICATEURS,
+    MOIS_EN_LETTRES,
+    appliquer_lexique,
+    nettoyer_sigles,
+    normaliser_valeurs_citees,
+    PUCE_TENDANCES_OPPOSEES,
+    TEXTES_LECTURE_INDICATEURS,
+    TEXTE_LECTURE_INTENSITE,
     ENCART_ETUDE_PARTIELLE_V2,
     INDICATEURS_DEMANDE_GABARIT,
     MOTS_OUTILS_FIN_INTERDITS,
@@ -654,7 +664,7 @@ def selectionner_actions(recommandations: Any) -> tuple[list[dict[str, str]], li
             if compter_mots(r.enonce) <= MAX_MOTS_ACTION
             else "",
             "domaine": r.domaine,
-            "horizon": r.horizon,
+            "horizon": traduire_valeur(r.horizon),
             "effort": r.effort_estime,
             "indicateur": r.indicateurs_suivi[0] if r.indicateurs_suivi else "—",
         }
@@ -666,6 +676,56 @@ def selectionner_actions(recommandations: Any) -> tuple[list[dict[str, str]], li
 # =========================================================================== #
 # Lignes de contexte
 # =========================================================================== #
+
+
+# --------------------------------------------------------------------------- #
+# Traduction des valeurs techniques
+# --------------------------------------------------------------------------- #
+
+
+def traduire_valeur(valeur: Any) -> Any:
+    """Remplace un identifiant de code par le libellé destiné au lecteur.
+
+    `effet_de_mode`, `court_terme`, `negatif` sans accent : ce sont des clés
+    d'énumération, écrites pour du code, et le run de référence les affichait
+    telles quelles au milieu de phrases françaises — « Profil de courbe ·
+    effet_de_mode ».
+
+    La traduction est appliquée à la VALEUR ENTIÈRE, jamais à un morceau : un
+    remplacement partiel dans une phrase risquerait de toucher un nom de produit
+    ou une citation. Une valeur inconnue de la table ressort intacte.
+
+    Args:
+        valeur: Valeur brute issue d'une analyse amont.
+
+    Returns:
+        Le libellé affichable, ou la valeur d'origine.
+    """
+    if not isinstance(valeur, str):
+        return valeur
+    return LEXIQUE_ENUMERATIONS.get(valeur.strip(), valeur)
+
+
+def mois_en_lettres(valeur: Any) -> str:
+    """Rend un numéro de mois en toutes lettres.
+
+    « Saisonnalité · 11 » ne disait pas que 11 est un mois. Le lecteur ne peut
+    pas deviner qu'un indicateur de saisonnalité se compte en mois plutôt qu'en
+    points d'indice.
+
+    Args:
+        valeur: Numéro de mois, de 1 à 12, sous n'importe quelle écriture.
+
+    Returns:
+        Le nom du mois, ou la valeur telle quelle si elle n'est pas un mois.
+    """
+    try:
+        rang = int(float(str(valeur).replace(",", ".")))
+    except (TypeError, ValueError):
+        return str(valeur)
+    if not 1 <= rang <= len(MOIS_EN_LETTRES):
+        return str(valeur)
+    return MOIS_EN_LETTRES[rang - 1]
 
 
 # --------------------------------------------------------------------------- #
@@ -704,6 +764,150 @@ def _indicateur_correspondant(elements: list, cle: str) -> Any:
     return None
 
 
+def _cle_indicateur(element: Any) -> str:
+    """Retrouve la clé de lecture d'un indicateur depuis sa référence amont.
+
+    Args:
+        element: Élément de `dossier.demande.indicateurs`.
+
+    Returns:
+        Le dernier segment de la référence, qui nomme l'indicateur.
+    """
+    return str(getattr(element, "ref", "")).rsplit(".", 1)[-1]
+
+
+def _cles_possibles(cle: str, element: Any) -> list[str]:
+    """Les clés sous lesquelles un indicateur peut être décrit.
+
+    Le gabarit nomme ses quatre lignes `profil`, `momentum_90j`, `pente_5ans`,
+    `saisonnalite` ; l'analyse amont les référence `…profil_courbe`,
+    `…pente_annuelle_5ans`. Les deux vocabulaires doivent être essayés, sans quoi
+    l'indicateur retombe sur le détail amont — la définition mathématique que
+    cette itération remplace précisément.
+
+    Args:
+        cle: Clé du gabarit.
+        element: Élément amont, ou `None`.
+
+    Returns:
+        Les clés à essayer, dans l'ordre.
+    """
+    candidates = [cle]
+    if element is not None:
+        reference = str(getattr(element, "ref", ""))
+        candidates.append(reference.rsplit(".", 1)[-1])
+        candidates.append(reference.rsplit(".", 2)[-2] if reference.count(".") > 1 else "")
+    for suffixe in MOTIFS_INDICATEURS_DEMANDE.get(cle, ()):
+        candidates.append(suffixe.rsplit(".", 1)[-1])
+    return [candidate for candidate in candidates if candidate]
+
+
+def _lecture(cle: str, element: Any) -> str:
+    """Donne le texte qui dit ce que le chiffre veut dire.
+
+    Il vient d'une table écrite à la main, jamais du détail publié en amont :
+    celui-ci donnait la définition mathématique — « coefficient de variation de
+    la série 5 ans » — là où le lecteur a besoin de l'échelle et du sens. À
+    défaut d'entrée dans la table, le détail amont sert de repli.
+
+    Args:
+        cle: Clé de l'indicateur.
+        element: Élément amont, ou `None` si l'indicateur n'est pas publié.
+
+    Returns:
+        Le texte de lecture, éventuellement vide.
+    """
+    for candidate in _cles_possibles(cle, element):
+        texte = TEXTES_LECTURE_INDICATEURS.get(candidate)
+        if texte:
+            return texte
+    return (getattr(element, "detail", "") or "").strip() if element else ""
+
+
+def _libelle_indicateur(element: Any) -> str:
+    """Donne le libellé de ligne d'un indicateur, en langage courant.
+
+    Args:
+        element: Élément amont.
+
+    Returns:
+        Le libellé traduit, ou celui de l'amont s'il est inconnu de la table.
+    """
+    for candidate in _cles_possibles("", element):
+        libelle = LIBELLES_INDICATEURS.get(candidate)
+        if libelle:
+            return libelle
+    return getattr(element, "libelle", "")
+
+
+def _valeur_indicateur(cle: str, element: Any) -> str:
+    """Rend la valeur d'un indicateur sous une forme lisible.
+
+    Deux cas particuliers, et ce sont ceux que le run de référence rendait
+    illisibles : la saisonnalité, dont la valeur est un NUMÉRO DE MOIS, et le
+    profil de courbe, dont la valeur est une clé d'énumération.
+
+    Args:
+        cle: Clé de l'indicateur.
+        element: Élément amont.
+
+    Returns:
+        La valeur affichable.
+    """
+    brute = getattr(element, "valeur", "")
+    if cle.endswith("saisonnalite") or cle.endswith("mois_pic"):
+        return mois_en_lettres(brute)
+    traduite = traduire_valeur(brute)
+    if traduite != brute:
+        return str(traduite)
+    return _valeur_lisible(getattr(element, "ref", ""), brute)
+
+
+def _valeur_numerique(element: Any) -> float | None:
+    """Lit la valeur d'un indicateur comme un nombre, quand elle en est un.
+
+    Args:
+        element: Élément de dossier, ou `None`.
+
+    Returns:
+        La valeur, ou `None` si elle n'est pas numérique.
+    """
+    if element is None:
+        return None
+    try:
+        return float(str(getattr(element, "valeur", "")).replace(",", "."))
+    except (TypeError, ValueError):
+        return None
+
+
+def _lecture_tendances_opposees(dossier: Any) -> str:
+    """Produit la puce obligatoire quand les deux tendances se contredisent.
+
+    Le run de référence affichait -54,6 % sur 90 jours et +5,6 points par an sur
+    cinq ans, sans un mot pour dire lequel croire. Deux chiffres de sens opposés
+    laissés côte à côte n'informent pas : ils annulent la confiance dans les deux.
+
+    Le texte est écrit en dur et ne conclut PAS à la place de l'analyse — il dit
+    que les données ne permettent pas de trancher, ce qui est le constat exact.
+
+    Args:
+        dossier: `dossier_synthese` de l'analyse de synthèse.
+
+    Returns:
+        La puce de lecture, vide si les deux indicateurs vont dans le même sens
+        ou si l'un des deux manque.
+    """
+    demande = getattr(dossier, "demande", None)
+    if demande is None:
+        return ""
+    elements = list(demande.indicateurs)
+    court = _valeur_numerique(_indicateur_correspondant(elements, "momentum_90j"))
+    long = _valeur_numerique(_indicateur_correspondant(elements, "pente_5ans"))
+    if court is None or long is None or court == 0 or long == 0:
+        return ""
+    return PUCE_TENDANCES_OPPOSEES if (court < 0) != (long < 0) else ""
+
+
 def construire_dynamique_demande(dossier: Any) -> tuple[str, str]:
     """Construit le tableau des quatre indicateurs, et le repli des autres.
 
@@ -732,28 +936,22 @@ def construire_dynamique_demande(dossier: Any) -> tuple[str, str]:
             # Une VALEUR explicite, jamais une ligne manquante : « non calculable »
             # est un constat que le lecteur peut opposer à l'analyse, une ligne
             # absente n'est rien du tout.
-            lignes.append([libelle, VALEUR_NON_CALCULABLE, ""])
+            lignes.append([libelle, VALEUR_NON_CALCULABLE, _lecture(cle, None)])
             continue
         retenus.append(element)
-        lignes.append(
-            [
-                libelle,
-                _valeur_lisible(element.ref, element.valeur),
-                (element.detail or "").strip(),
-            ]
-        )
-    principal = tableau(["Indicateur", "Valeur", "Comment le lire"], lignes)
+        lignes.append([libelle, _valeur_indicateur(cle, element), _lecture(cle, element)])
+    principal = tableau(["Indicateur", "Valeur", COLONNE_LECTURE], lignes)
 
     autres = [element for element in elements if element not in retenus]
     if not autres:
         return principal, ""
     corps = tableau(
-        ["Indicateur", "Valeur", "Comment le lire"],
+        ["Indicateur", "Valeur", COLONNE_LECTURE],
         [
             [
-                element.libelle,
-                _valeur_lisible(element.ref, element.valeur),
-                (element.detail or "").strip(),
+                _libelle_indicateur(element),
+                _valeur_indicateur(_cle_indicateur(element), element),
+                _lecture(_cle_indicateur(element), element),
             ]
             for element in autres
         ],
@@ -818,6 +1016,127 @@ def construire_benchmark_v2(concurrence: Any) -> str:
     return tableau([libelle for _, libelle in COLONNES_BENCHMARK_GABARIT], lignes)
 
 
+MOTIFS_ABSENCE_AVIS: tuple[str, ...] = (
+    "aucun avis client n'est présent",
+    "aucun avis n'est disponible",
+    "aucun avis client n'est disponible",
+    "pas d'avis client",
+)
+"""Formulations par lesquelles l'analyse concurrentielle nie l'existence d'avis.
+
+Elle raisonne sur SON corpus — les annonces et les pages — et écrit « aucun avis
+client n'est présent dans les données fournies » en voulant dire « pas dans les
+miennes ». Rendue telle quelle dans un rapport dont l'écran précédent analyse
+vingt-six avis Amazon, la phrase devient fausse."""
+
+
+def _sans_puce_contredite(
+    puces: list[str], injectables: Injectables
+) -> tuple[list[str], list[str]]:
+    """Retire les puces qu'un autre écran du même rapport contredit.
+
+    LA PUCE EST RETIRÉE, LE RAPPORT PART. Un lecteur qui voit un écran nier ce
+    qu'un autre affirme ne sait pas lequel croire, et cesse de croire les deux :
+    le coût de la contradiction porte sur tout le document, pas sur la phrase.
+    Mais le défaut est en amont, dans l'analyse concurrentielle, et arrêter la
+    restitution ne le réparerait pas — cela priverait seulement le lecteur des
+    quatre écrans corrects. Le retrait est tracé dans `statuts_analyse` et le
+    ticket amont est ouvert au README.
+
+    Args:
+        puces: Puces d'angles inexploités.
+        injectables: Données injectables, qui disent ce qui a été analysé.
+
+    Returns:
+        Le couple `(puces_conservées, puces_retirées)`.
+    """
+    a_des_avis = bool(injectables.pain_points or injectables.tableau_sentiment)
+    if not a_des_avis:
+        return puces, []
+    conservees, retirees = [], []
+    for puce in puces:
+        minuscule = puce.lower()
+        if any(motif in minuscule for motif in MOTIFS_ABSENCE_AVIS):
+            retirees.append(puce)
+        else:
+            conservees.append(puce)
+    return conservees, retirees
+
+
+def traduire_portee_regionale(lignes: list[str]) -> list[str]:
+    """Réécrit les lignes de portée régionale sans leur clé d'énumération.
+
+    Elles arrivent sous la forme « amazon (marketplace_pays) : … » : un nom de
+    source en minuscules et une clé de code entre parenthèses. Le lecteur n'a
+    aucun moyen de savoir ce que `marketplace_pays` recouvre, et la parenthèse
+    lui donne l'impression d'une précision qu'elle ne porte pas.
+
+    Args:
+        lignes: Lignes construites par `preparation.preparer`.
+
+    Returns:
+        Les mêmes lignes, source et portée en clair. Le commentaire amont n'est
+        pas touché : il est recopié verbatim.
+    """
+    traduites: list[str] = []
+    for ligne in lignes:
+        avant, separateur, commentaire = ligne.partition(" : ")
+        source, parenthese, reste = avant.partition(" (")
+        libelle = LIBELLES_SOURCES.get(source.strip(), source.strip())
+        portee = traduire_valeur(reste.rstrip(")").strip()) if parenthese else ""
+        entete = f"{libelle} — {portee}" if portee else libelle
+        propre = _sans_nom_de_champ(commentaire)
+        traduites.append(f"{entete}{separateur}{propre}" if separateur else entete)
+    return traduites
+
+
+NOMS_DE_CHAMPS_LISIBLES: dict[str, tuple[str, str]] = {
+    "portee_regionale": ("la portée déclarée", "portée déclarée"),
+    "type_source": ("le type de source", "type de source"),
+    "pertinence": ("la pertinence estimée", "pertinence estimée"),
+    "correspondance": ("la correspondance estimée", "correspondance estimée"),
+}
+"""Nom de champ cité par une analyse → groupe nominal, avec et sans article.
+
+Deux formes parce qu'il y a deux contextes. « le champ `portee_regionale` » est
+remplacé en entier, article compris, et la forme avec article s'y substitue ;
+un nom cité seul entre accents graves garde l'article de la phrase d'origine, et
+c'est la forme nue qui s'insère. Une seule forme produirait « le la portée » ou
+« portée déclarée de chaque page », selon celle qu'on aurait choisie."""
+
+MOTIF_CHAMP_NOMME = re.compile(r"(?:le |du |la )?champs?\s+`([a-zà-ÿ][a-zà-ÿ0-9_]*)`")
+MOTIF_NOM_DE_CHAMP = re.compile(r"`([a-zà-ÿ][a-zà-ÿ0-9_]*)`")
+
+
+def _sans_nom_de_champ(commentaire: str) -> str:
+    """Remplace les noms de champ cités dans un commentaire amont.
+
+    L'analyse concurrentielle explique sa méthode en citant ses propres champs :
+    « le champ `portee_regionale` de chaque page fait foi ». C'est exact, et
+    illisible — le lecteur n'a jamais vu ce champ et ne le verra jamais.
+
+    Le nom est remplacé par son libellé quand la table le connaît, et par une
+    tournure neutre sinon : la phrase reste grammaticale dans les deux cas, ce
+    qu'une simple suppression ne garantirait pas.
+
+    Args:
+        commentaire: Commentaire de validité régionale, tel que publié en amont.
+
+    Returns:
+        Le commentaire sans nom de champ.
+    """
+    def lisible(nom: str, avec_article: bool) -> str:
+        formes = NOMS_DE_CHAMPS_LISIBLES.get(
+            nom, ("l'information déclarée", "information déclarée")
+        )
+        return formes[0] if avec_article else formes[1]
+
+    # « le champ `portee_regionale` » d'abord, comme un tout : remplacer le seul
+    # nom laisserait « le champ portée déclarée », un mot de trop.
+    propre = MOTIF_CHAMP_NOMME.sub(lambda t: lisible(t.group(1), True), commentaire)
+    return MOTIF_NOM_DE_CHAMP.sub(lambda t: lisible(t.group(1), False), propre)
+
+
 def _volumes_par_source(entrees: Any) -> dict[str, int]:
     """Compte, pour chaque source, ce que les analyses amont en ont retenu.
 
@@ -850,7 +1169,38 @@ def _volumes_par_source(entrees: Any) -> dict[str, int]:
     }
 
 
-def _mention_source(source: str, volume: int, etat: dict[str, Any]) -> str:
+def _compte(volume: int, unite: str) -> str:
+    """Rend un volume et son unité, accordés.
+
+    Args:
+        volume: Nombre d'éléments.
+        unite: Unité au singulier.
+
+    Returns:
+        Par exemple « 58 offres », ou « 1 commande ».
+    """
+    pluriel = "" if volume == 1 or unite.endswith("s") else "s"
+    return f"{formater_nombre(volume, 0)} {unite}{pluriel}"
+
+
+def _avis_par_source(entrees: Any) -> dict[str, int]:
+    """Compte les avis clients rapportés par chaque place de marché.
+
+    Args:
+        entrees: Fichiers d'entrée validés.
+
+    Returns:
+        Le nombre d'avis par source, pour les seules sources qui en portent.
+    """
+    insights = entrees.insights
+    corpus = insights.stats_corpus if insights else None
+    par_source = corpus.nb_unites_par_source if corpus else {}
+    return {source: par_source.get(source, 0) for source in ("amazon", "aliexpress")}
+
+
+def _mention_source(
+    source: str, volume: int, etat: dict[str, Any], avis: int = 0
+) -> str:
     """Rend une source de la ligne « Sources analysées », vide ou non.
 
     Args:
@@ -858,6 +1208,9 @@ def _mention_source(source: str, volume: int, etat: dict[str, Any]) -> str:
         volume: Volume retenu par les analyses amont.
         etat: État transmis par l'orchestrateur pour cette source, éventuellement
             vide : `donnees_disponibles`, `nb_items`, `raison`.
+        avis: Nombre d'avis clients, pour les places de marché qui en portent.
+            La ligne annonçait « Amazon (58 offres) » alors que l'écran 1 analyse
+            ses avis : deux volumes distincts, et le lecteur n'en voyait qu'un.
 
     Returns:
         Le fragment de ligne, toujours non vide.
@@ -865,8 +1218,10 @@ def _mention_source(source: str, volume: int, etat: dict[str, Any]) -> str:
     libelle = LIBELLES_SOURCES.get(source, source)
     unite = UNITES_SOURCES.get(source, "élément")
     if volume:
-        pluriel = "" if volume == 1 or unite.endswith("s") else "s"
-        return f"{libelle} ({formater_nombre(volume, 0)} {unite}{pluriel})"
+        details = _compte(volume, unite)
+        if avis:
+            details += f", {_compte(avis, 'avis')}"
+        return f"{libelle} ({details})"
 
     # Volume nul : la source est nommée AVEC sa raison. C'est tout l'objet de ce
     # correctif — sur le run 8609db9e, AliExpress n'avait rapporté aucune offre
@@ -901,9 +1256,12 @@ def construire_ligne_sources(
         La ligne « Sources analysées : … ».
     """
     volumes = _volumes_par_source(entrees)
+    avis = _avis_par_source(entrees)
     etats = etat_sources or {}
     morceaux = [
-        _mention_source(source, volumes.get(source, 0), etats.get(source, {}))
+        _mention_source(
+            source, volumes.get(source, 0), etats.get(source, {}), avis.get(source, 0)
+        )
         for source in SOURCES_LIGNE_SOURCES
     ]
     return f"Sources analysées : {' · '.join(morceaux)}."
@@ -925,6 +1283,86 @@ def construire_ligne_phases(injectables: Injectables) -> str:
         for cle, libelle in PHASES_PLC
     ]
     return " · ".join(morceaux)
+
+
+CHAMPS_LEXIQUE_V2: tuple[str, ...] = (
+    # Écran 0
+    "ligne_verdict",
+    "faits_cles_decision",
+    "risque_principal_decision",
+    "puces_changer_decision",
+    "puces_manque_trancher",
+    # Écran 1
+    "tableau_besoins",
+    "tableau_attentes",
+    "tableau_sentiment",
+    "divergences",
+    "details_besoins_attentes",
+    "pain_points",
+    # Écran 2
+    "tableau_intensite",
+    "concurrents_v2",
+    "tableau_benchmark",
+    "portee_regionale",
+    "normes_marche",
+    "puces_personne_ne_fait",
+    "details_angles",
+    "tableau_cinq_forces",
+    # Écran 3
+    "puces_phase",
+    "tableau_actions_p1",
+    "actions_p1",
+    "tableau_actions_suivantes",
+    "conditions_prix",
+    "puces_opportunites",
+    "puces_risques",
+    "details_opportunites_risques",
+)
+"""Champs rendus aux écrans 0 à 3 dont le TEXTE vient des analyses amont.
+
+Ce sont eux qui portaient l'essentiel du vocabulaire d'analyste : le modèle
+n'écrit qu'un tiers du rapport, et les deux autres tiers sont des tableaux et
+des puces recopiés d'analyses écrites par et pour des analystes.
+
+TROIS ABSENCES VOLONTAIRES, et ce sont des invariants :
+
+- `verbatims` — les citations clients, dans leur langue d'origine. Réécrire ce
+  qu'un client a écrit n'est pas une amélioration de lisibilité, c'est un faux ;
+- `limites_par_famille` — recopiées mot pour mot à l'écran 4, où le vocabulaire
+  technique reste admis et où le glossaire le définit ;
+- `annexe_sources` et `hypotheses` — même raison, même écran.
+
+Les noms de marques et de produits ne sont pas protégés explicitement : aucun
+terme du lexique n'en est un, et tenir une liste de marques serait une dette que
+personne ne rembourserait."""
+
+
+def appliquer_lexique_aux_injectables(injectables: Injectables) -> int:
+    """Passe le lexique sur les textes que le code rend aux écrans 0 à 3.
+
+    Args:
+        injectables: Données injectables, modifiées sur place.
+
+    Returns:
+        Le nombre de termes remplacés.
+    """
+    total = 0
+
+    def normaliser(valeur):
+        nonlocal total
+        if isinstance(valeur, str):
+            propre, nombre = appliquer_lexique(normaliser_valeurs_citees(valeur))
+            total += nombre
+            return propre
+        if isinstance(valeur, list):
+            return [normaliser(element) for element in valeur]
+        if isinstance(valeur, dict):
+            return {cle: normaliser(sous) for cle, sous in valeur.items()}
+        return valeur
+
+    for champ in CHAMPS_LEXIQUE_V2:
+        setattr(injectables, champ, normaliser(getattr(injectables, champ)))
+    return total
 
 
 CHAMPS_SANS_ELLIPSE: tuple[str, ...] = (
@@ -1175,6 +1613,13 @@ def enrichir(
 
     injectables.ligne_sources = construire_ligne_sources(entrees, etat_sources)
 
+    # Les badges reprennent la justification de confiance écrite par les analyses
+    # amont : c'est du texte d'analyste, et il atterrit en tête d'écran, à
+    # l'endroit le plus lu du document.
+    injectables.badges = {
+        cle: appliquer_lexique(valeur)[0] for cle, valeur in injectables.badges.items()
+    }
+
     # L'étude est partielle dès qu'un BLOC d'analyse manque **ou** qu'une SOURCE
     # est revenue vide. Le second cas manquait : le run 8609db9e portait ses
     # quatre analyses et n'a affiché aucun encart, alors qu'AliExpress — l'un des
@@ -1266,11 +1711,15 @@ def enrichir(
         injectables.dynamique_demande, injectables.autres_indicateurs_demande = (
             construire_dynamique_demande(dossier)
         )
+        injectables.puce_tendances_opposees = _lecture_tendances_opposees(dossier)
     else:
         injectables.dynamique_demande = ""
         injectables.autres_indicateurs_demande = ""
         standards[SB_DYNAMIQUE] = PHRASE_TENDANCES_ABSENTES
 
+    injectables.portee_regionale = traduire_portee_regionale(
+        injectables.portee_regionale
+    )
     injectables.concurrents_v2 = selectionner_concurrents(concurrence)
     injectables.widgets_extraits = [
         GABARIT_WIDGET_EXTRAITS.format(source=source)
@@ -1322,6 +1771,23 @@ def enrichir(
         "Autres angles peu exploités",
         "\n".join(f"- {a}" for a in injectables.angles_peu_exploites[5:]),
     )
+    injectables.puces_personne_ne_fait, contredites = _sans_puce_contredite(
+        injectables.puces_personne_ne_fait, injectables
+    )
+    if contredites:
+        statuts.append(
+            StatutAnalyse(
+                phase=PHASE_PREPARATION_V2,
+                succes=True,
+                message_erreur=(
+                    f"{len(contredites)} puce(s) d'angles inexploités retirée(s) : "
+                    f"elles affirment qu'aucun avis client n'est disponible, alors "
+                    f"que l'écran consommateur en analyse. Défaut d'origine dans "
+                    f"l'analyse concurrentielle — voir « Points ouverts amont »."
+                ),
+                nb_elements=len(contredites),
+            )
+        )
     if not injectables.puces_personne_ne_fait:
         standards[SB_PERSONNE_NE_FAIT] = PHRASE_NON_DOCUMENTE
 
@@ -1336,7 +1802,10 @@ def enrichir(
     if not injectables.phase_brute:
         motif = ""
         if entrees.plc is not None and entrees.plc.declenchement.motif:
-            motif = f" ({entrees.plc.declenchement.motif})"
+            # Le motif vient de l'analyse de cycle de vie et cite le cahier des
+            # charges par son sigle. Le sigle part, le motif reste.
+            propre = nettoyer_sigles(entrees.plc.declenchement.motif)
+            motif = f" ({normaliser_valeurs_citees(propre)})"
         standards[SB_PHASE] = f"{PHRASE_PLC_NON_EVALUEE}{motif}"
 
     injectables.actions_p1, suivantes = selectionner_actions(recommandations)
@@ -1349,7 +1818,7 @@ def enrichir(
                     premiere_phrase(r.enonce),
                     r.domaine,
                     r.priorite,
-                    r.horizon,
+                    traduire_valeur(r.horizon),
                 ]
                 for r in suivantes
             ],
@@ -1430,6 +1899,21 @@ def enrichir(
     # mais les champs ci-dessus sont nés après lui : on le rappelle. Il est
     # idempotent — une substitution déjà faite ne se refait pas.
     substitutions = depouiller_injectables(injectables)
+    substitues = appliquer_lexique_aux_injectables(injectables)
+    if substitues:
+        statuts.append(
+            StatutAnalyse(
+                phase=PHASE_PREPARATION_V2,
+                succes=True,
+                message_erreur=(
+                    f"{substitues} terme(s) d'analyste remplacés dans les textes "
+                    f"recopiés des analyses amont. La substitution ne corrige pas "
+                    f"les accords : la réparation durable est en amont."
+                ),
+                nb_elements=substitues,
+            )
+        )
+
     ellipses = retirer_ellipses(injectables)
     if ellipses:
         statuts.append(

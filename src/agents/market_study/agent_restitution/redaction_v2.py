@@ -42,6 +42,7 @@ from config import (
     PHRASE_CLIENTELE_NON_CARACTERISEE,
     REGLES_FORMULATION,
     REGLES_FORMULATION_V2,
+    REGLES_LANGUE_V21,
     SB_AIMERAIENT,
     SB_APPRECIENT,
     SB_DERANGE,
@@ -57,6 +58,7 @@ from config import (
     ConfigurationRedactionInvalide,
     RedactionImpossible,
     construire_modele,
+    lexique_pour_prompt,
 )
 from schemas import Injectables, SortieCompression, SortieEcran, StatutAnalyse
 
@@ -69,9 +71,13 @@ _SYSTEME_ECRAN = (
     "Langue de rédaction : {langue_analyse} — rédige tout dans cette langue.\n\n"
     "Écran à rédiger : {titre_ecran}\n"
     "Budget de l'écran : {budget_mots} mots au total, toutes puces confondues.\n"
-    "Niveau de fiabilité : {badge}. Une fiabilité faible impose la modalisation : "
-    "« les données disponibles suggèrent », « dans le corpus collecté », jamais "
+    "Niveau de fiabilité : {badge}. Une fiabilité faible impose la prudence : "
+    "« les données disponibles suggèrent », « d'après les avis analysés », jamais "
     "l'affirmation.\n\n"
+    # Le lexique passe AVANT les règles de forme : c'est la contrainte la plus
+    # souvent oubliée, et un modèle applique mieux ce qu'il a lu en premier.
+    + REGLES_LANGUE_V21.format(lexique_impose=lexique_pour_prompt())
+    + "\n\n"
     + REGLES_FORMULATION_V2
     + "\n\n"
     + REGLES_FORMULATION
@@ -453,43 +459,46 @@ def donnees_ecran(ecran: str, injectables: Injectables) -> dict[str, Any]:
     if ecran == ECRAN_DECISION:
         return {
             "decision": injectables.decision_libelle,
-            "verdict_calcule": injectables.ligne_verdict,
-            "faits_cles": injectables.faits_cles_decision,
-            "risque_principal": injectables.risque_principal_decision,
+            "verdict calculé": injectables.ligne_verdict,
+            "faits clés": injectables.faits_cles_decision,
+            "risque principal": injectables.risque_principal_decision,
         }
     if ecran == ECRAN_CONSOMMATEUR:
         return {
             "besoins": injectables.tableau_besoins,
             "attentes": injectables.tableau_attentes,
-            "points_de_friction_dans_l_ordre": [
-                {"titre": p["libelle"], "ce_que_dit_le_corpus": p.get("description", "")}
+            "reproches, dans l'ordre": [
+                {"titre": p["libelle"], "ce que disent les avis": p.get("description", "")}
                 for p in injectables.pain_points
             ],
-            "sentiment_par_source": injectables.tableau_sentiment,
-            "divergences_entre_sources": injectables.divergences,
+            "tonalité des avis par source": injectables.tableau_sentiment,
+            "écarts entre sources": injectables.divergences,
         }
     if ecran == ECRAN_CONCURRENCE:
         return {
-            "indicateurs_de_demande": injectables.dynamique_demande,
+            "indicateurs de demande": injectables.dynamique_demande,
             "intensite": injectables.tableau_intensite,
             "concurrents": [
                 {cle: valeur for cle, valeur in ligne.items() if cle != "force_brute"}
                 for ligne in injectables.concurrents_v2
             ],
-            "benchmark_prix": injectables.tableau_benchmark,
-            "portee_regionale_des_sources": injectables.portee_regionale,
-            "standards_observes": injectables.normes_marche,
-            "clientele_cible": "",
+            "prix comparés": injectables.tableau_benchmark,
+            # Clé en français : le modèle recopie parfois le nom d'une clé dans
+            # sa phrase, et « portee_regionale_des_sources » atterrissait alors
+            # tel quel sous les yeux du lecteur.
+            "ce que couvre chaque source": injectables.portee_regionale,
+            "standards observés": injectables.normes_marche,
+            "clientèle visée": "",
         }
     if ecran == ECRAN_RECOMMANDATIONS:
         return {
-            "fourchette_proposee": injectables.fourchette_prix,
-            "conditions_de_prix": injectables.conditions_prix,
-            "actions_prioritaires": [
+            "fourchette proposée": injectables.fourchette_prix,
+            "conditions de prix": injectables.conditions_prix,
+            "actions prioritaires": [
                 a.get("enonce") or a.get("enonce_brut", "")
                 for a in injectables.actions_p1
             ],
-            "angles_satures_a_eviter": injectables.normes_marche,
+            "angles saturés à éviter": injectables.normes_marche,
         }
     return {}
 
@@ -908,6 +917,95 @@ def compresser_cellules(
         succes=True,
         nb_elements=len(resultat.textes),
         nb_tentatives=1,
+    )
+
+
+_SYSTEME_AFFIRMATIF = (
+    "Tu réécris des constats d'analyse concurrentielle pour un rapport destiné à "
+    "un commerçant, en français d'affaires courant.\n\n"
+    "Langue : {langue_analyse}.\n\n"
+    "RÈGLES — elles sont vérifiées sur ta sortie :\n"
+    "- Renvoie EXACTEMENT autant de textes qu'on t'en donne, dans le MÊME ORDRE.\n"
+    "- Chaque texte passe à la FORME AFFIRMATIVE. « Aucune annonce ne met en avant "
+    "la garantie » devient « Personne ne met en avant la garantie ». La double "
+    "négation est la seule chose que tu changes de fond.\n"
+    "- Tu ne peux employer AUCUN chiffre qui ne figure pas déjà dans le texte "
+    "d'origine correspondant. Aucun calcul, aucun arrondi. Un chiffre ajouté fait "
+    "rejeter toute la réécriture.\n"
+    "- Tu ne retires AUCUNE réserve de méthode : « non observé dans les données "
+    "collectées » dit que le constat porte sur ce qui a été vu, pas sur le marché "
+    "entier. Cette nuance reste.\n"
+    "- Au plus {max_mots} mots par texte."
+    "{erreur_precedente}"
+)
+
+_HUMAIN_AFFIRMATIF = "CONSTATS À RÉÉCRIRE, DANS L'ORDRE\n{textes}"
+
+
+def reformuler_affirmatif(
+    textes: list[str], max_mots: int, langue_analyse: str
+) -> tuple[list[str] | None, StatutAnalyse]:
+    """Passe des constats à la forme affirmative.
+
+    L'analyse concurrentielle publie ses angles inexploités en double négation :
+    « Aucun claim publicitaire du corpus ne met en avant le prix… hormis un seul
+    annonceur ». Il faut relire deux fois pour savoir si quelqu'un le fait ou non.
+    « Personne ne met en avant le prix, sauf un annonceur » dit la même chose et
+    se comprend du premier coup.
+
+    L'échec n'est pas fatal : les constats d'origine sont conservés. Ils sont
+    lourds, ils restent exacts — et c'est un texte d'analyse amont, que le module
+    n'a pas vocation à perdre.
+
+    Args:
+        textes: Constats d'origine, dans l'ordre.
+        max_mots: Nombre maximal de mots par texte produit.
+        langue_analyse: Code langue de rédaction.
+
+    Returns:
+        Le couple `(textes_réécrits_ou_None, statut)`.
+    """
+    if not textes:
+        return [], StatutAnalyse(phase="reformulation_affirmative", succes=True)
+
+    modele = construire_modele()
+    gabarit = ChatPromptTemplate.from_messages(
+        [("system", _SYSTEME_AFFIRMATIF), ("human", _HUMAIN_AFFIRMATIF)]
+    )
+    chaine = gabarit | modele.with_structured_output(SortieCompression)
+
+    try:
+        resultat = invoquer_ecran(
+            chaine,
+            {
+                "langue_analyse": langue_analyse,
+                "max_mots": max_mots,
+                "textes": json.dumps(textes, ensure_ascii=False, separators=(",", ":")),
+                "erreur_precedente": "",
+            },
+            "reformulation_affirmative",
+        )
+    except RedactionImpossible as erreur:
+        return None, StatutAnalyse(
+            phase="reformulation_affirmative",
+            succes=False,
+            message_erreur=str(erreur),
+            nb_elements=len(textes),
+        )
+    if len(resultat.textes) != len(textes):
+        return None, StatutAnalyse(
+            phase="reformulation_affirmative",
+            succes=False,
+            message_erreur=(
+                f"réécriture rejetée : {len(resultat.textes)} texte(s) renvoyé(s) "
+                f"pour {len(textes)} demandé(s)."
+            ),
+            nb_elements=len(textes),
+        )
+    return resultat.textes, StatutAnalyse(
+        phase="reformulation_affirmative",
+        succes=True,
+        nb_elements=len(resultat.textes),
     )
 
 

@@ -38,6 +38,7 @@ from config import (
     SB_ACTIONS,
     SB_AIMERAIENT,
     SB_APPRECIENT,
+    COLONNE_INDICATEUR_SUIVI,
     SB_CHANGER_DECISION,
     SB_CINQ_FORCES,
     SB_DERANGE,
@@ -54,6 +55,10 @@ from config import (
     SB_PRIX_PRATIQUES,
     SB_QUE_FONT,
     SB_RISQUE_PRINCIPAL,
+    RESUMES_FAMILLES_LIMITES,
+    TERMES_GLOSSAIRE_TECHNIQUE,
+    TITRE_TONALITE,
+    TRADUCTIONS_VERDICT,
 )
 from preparation import tableau
 from preparation_v2 import compter_mots
@@ -157,8 +162,15 @@ def ecran_decision(injectables: Injectables, narratif: SortieEcran | None) -> st
     Returns:
         Le corps de l'écran, titre `##` compris.
     """
+    traduction = TRADUCTIONS_VERDICT.get(injectables.decision_libelle, "")
+    titre = f"## Décision : {injectables.decision_libelle}"
+    if traduction:
+        # Le libellé métier est CONSERVÉ, la traduction lui est accolée : c'est
+        # sur lui que porte le contrôle `verdict_conforme`, et le remplacer
+        # romprait le lien avec le verdict amont pour un gain de forme.
+        titre += f" — **{traduction}**"
     return _bloc(
-        f"## Décision : {injectables.decision_libelle}",
+        titre,
         injectables.ligne_verdict,
         _sous_bloc(SB_POURQUOI, injectables, narratif),
         _sous_bloc(SB_RISQUE_PRINCIPAL, injectables, narratif),
@@ -204,8 +216,12 @@ def _points_de_friction(
         chiffres = " · ".join(
             partie
             for partie in (
-                f"{point['frequence']} des contributions" if point.get("frequence") else "",
-                f"intensité {point['intensite']}" if point.get("intensite") else "",
+                f"{point['frequence']} des avis et messages"
+                if point.get("frequence")
+                else "",
+                # « gravité » plutôt qu'« intensité » : le mot dit ce que
+                # l'échelle mesure, et le texte de lecture donne ses bornes.
+                f"gravité {point['intensite']}" if point.get("intensite") else "",
             )
             if partie
         )
@@ -246,7 +262,7 @@ def ecran_consommateur(injectables: Injectables, narratif: SortieEcran | None) -
         if friction
         else _sous_bloc(SB_DERANGE, injectables, narratif),
         _sous_bloc(SB_AIMERAIENT, injectables, narratif),
-        "**Répartition du sentiment par source**"
+        f"**{TITRE_TONALITE}**"
         if injectables.tableau_sentiment
         else "",
         injectables.tableau_sentiment,
@@ -338,7 +354,15 @@ def ecran_concurrence(injectables: Injectables, narratif: SortieEcran | None) ->
             injectables,
             narratif,
             avant=injectables.dynamique_demande,
-            apres=injectables.autres_indicateurs_demande,
+            # La puce de contradiction vient APRÈS la lecture du modèle et avant
+            # le repli des autres indicateurs : elle répond à la question que le
+            # lecteur se pose en voyant deux chiffres de sens opposés.
+            apres=_bloc(
+                _puces([injectables.puce_tendances_opposees])
+                if injectables.puce_tendances_opposees
+                else "",
+                injectables.autres_indicateurs_demande,
+            ),
         ),
         _sous_bloc(SB_QUE_FONT, injectables, narratif),
         exemples if injectables.concurrents_v2 else "",
@@ -363,7 +387,7 @@ def _tableau_actions(injectables: Injectables) -> str:
         Le tableau Markdown, ou une chaîne vide.
     """
     return tableau(
-        ["Action", "Domaine", "Horizon", "Effort", "Indicateur de suivi"],
+        ["Action", "Domaine", "Horizon", "Effort", COLONNE_INDICATEUR_SUIVI],
         [
             [
                 action.get("enonce") or action.get("enonce_brut", ""),
@@ -436,6 +460,40 @@ def ecran_recommandations(
 # =========================================================================== #
 
 
+def _cle_famille(famille: str) -> str:
+    """Ramène un nom de famille de limites à sa clé de résumé.
+
+    Args:
+        famille: Libellé de la famille, tel qu'affiché.
+
+    Returns:
+        La clé normalisée : minuscules, sans accent d'affichage.
+    """
+    return famille.strip().lower().replace(" ", "_").replace("é", "e")
+
+
+def _terme_present(terme: str, injectables: Injectables) -> bool:
+    """Dit si un terme technique figure réellement dans les limites de ce rapport.
+
+    Le glossaire ne liste que ce que le lecteur va rencontrer : y faire figurer
+    les cinq termes en toutes circonstances le transformerait en lexique
+    d'entreprise, que personne ne lit.
+
+    Args:
+        terme: Terme technique.
+        injectables: Données injectables.
+
+    Returns:
+        `True` si le terme apparaît dans une limite.
+    """
+    texte = " ".join(
+        element
+        for _famille, elements in injectables.limites_par_famille
+        for element in elements
+    )
+    return terme.lower() in texte.lower()
+
+
 def ecran_methode(injectables: Injectables) -> str:
     """Rend l'écran méthode, entièrement replié.
 
@@ -448,9 +506,25 @@ def ecran_methode(injectables: Injectables) -> str:
     limites: list[str] = []
     for famille, elements in injectables.limites_par_famille:
         limites.append(f"**{famille}**")
+        # Une phrase de résumé AVANT les limites elles-mêmes. Elles restent
+        # verbatim -- c'est un invariant -- et elles sont écrites par des
+        # analystes pour des analystes. Le résumé, lui, est produit par le code
+        # et dit en une phrase ce que la source ne peut pas prouver.
+        resume = RESUMES_FAMILLES_LIMITES.get(_cle_famille(famille), "")
+        if resume:
+            limites.append(f"*{resume}*")
         limites.append(_puces(elements))
+
     glossaire = _puces(
         [f"**{terme}** — {definition}" for terme, definition in GLOSSAIRE]
+        # Les termes d'outillage que les limites amont emploient : « SERP »,
+        # « actor », « TLD ». F7 n'a pas le droit de les retirer du texte, il a
+        # le devoir de les définir.
+        + [
+            f"**{terme}** — {definition}"
+            for terme, definition in TERMES_GLOSSAIRE_TECHNIQUE.items()
+            if _terme_present(terme, injectables)
+        ]
     )
     contenu = _bloc(
         "**Sources et volumes exploités**" if injectables.annexe_sources else "",

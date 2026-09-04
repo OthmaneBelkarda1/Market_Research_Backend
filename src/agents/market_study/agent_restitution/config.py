@@ -391,7 +391,11 @@ SUBSTITUTIONS_TEXTE: tuple[tuple[str, str], ...] = (
     # « unités » n'est traduit que lorsqu'il désigne le corpus : « 3000 unités »
     # vendues doit rester intact.
     (r"\bd'unités\b", "de contributions"),
-    (r"\bunités analysées\b", "contributions analysées"),
+    # « collectés », et non « analysées ». Le badge de l'écran 1 annonçait
+    # « 181 unités analysées » quand le tableau de tonalité en totalisait 55 :
+    # le premier chiffre est le volume COLLECTÉ, le second celui que l'analyse a
+    # retenu. Deux grandeurs différentes sous le même mot.
+    (r"\bunités analysées\b", "avis et messages collectés"),
     (r"\bunités (positives|négatives|neutres|mixtes)\b", r"contributions \1"),
     (r"\bverbatims\b", "extraits"),
     (r"\bverbatim\b", "extrait"),
@@ -580,7 +584,7 @@ LIMITES_FAMILLES: tuple[tuple[str, str, tuple[str, ...]], ...] = (
     ),
     (
         "representativite",
-        "Représentativité des corpus",
+        "Ce que les avis analysés représentent",
         (
             "représentat",
             "representat",
@@ -1014,6 +1018,21 @@ SB_PRIX: str = "prix"
 SB_ENTREE_MARCHE: str = "entree_marche"
 SB_OPPORTUNITES_RISQUES: str = "opportunites_risques"
 
+# --------------------------------------------------------------------------- #
+# Titres de section, en langage courant
+# --------------------------------------------------------------------------- #
+# Un titre de section est la première chose que le lecteur voit, et « Les 5
+# forces » ne lui dit rien : le modèle de Porter n'est ni nommé ni expliqué
+# ailleurs dans le rapport. « Dynamique de la demande » et « Ce que personne ne
+# fait » sont du même ordre — corrects, et écrits pour quelqu'un qui sait déjà.
+
+TITRE_CINQ_FORCES: str = "Ce qui rend ce marché facile ou difficile"
+TITRE_DYNAMIQUE: str = "La demande progresse-t-elle ?"
+TITRE_PERSONNE_NE_FAIT: str = "Les angles que personne n'exploite"
+TITRE_EXEMPLES: str = "Quelques concurrents en détail"
+TITRE_TONALITE: str = "Avis positifs et négatifs, source par source"
+COLONNE_INDICATEUR_SUIVI: str = "À surveiller pour savoir si ça évolue"
+
 GABARIT_RAPPORT_V2: tuple[dict[str, Any], ...] = (
     {
         "id": ECRAN_DECISION,
@@ -1048,12 +1067,12 @@ GABARIT_RAPPORT_V2: tuple[dict[str, Any], ...] = (
         "budget_mots": 350,
         "narratif": True,
         "sous_blocs": (
-            (SB_DYNAMIQUE, "Dynamique de la demande"),
+            (SB_DYNAMIQUE, TITRE_DYNAMIQUE),
             (SB_QUE_FONT, "Que font les concurrents ?"),
-            (SB_EXEMPLES, "Exemples observés"),
+            (SB_EXEMPLES, TITRE_EXEMPLES),
             (SB_PRIX_PRATIQUES, "Prix pratiqués"),
-            (SB_CINQ_FORCES, "Les 5 forces"),
-            (SB_PERSONNE_NE_FAIT, "Ce que personne ne fait"),
+            (SB_CINQ_FORCES, TITRE_CINQ_FORCES),
+            (SB_PERSONNE_NE_FAIT, TITRE_PERSONNE_NE_FAIT),
         ),
     },
     {
@@ -1164,12 +1183,18 @@ FORCE_FOURNISSEURS: str = "fournisseurs"
 FORCE_SUBSTITUTS: str = "substituts"
 
 LIBELLES_CINQ_FORCES: tuple[tuple[str, str], ...] = (
-    (FORCE_RIVALITE, "Rivalité actuelle"),
-    (FORCE_ENTREE, "Facilité d'entrée de nouveaux concurrents"),
-    (FORCE_CLIENTS, "Pouvoir des clients"),
-    (FORCE_FOURNISSEURS, "Pouvoir des fournisseurs"),
-    (FORCE_SUBSTITUTS, "Menace des substituts"),
+    (FORCE_RIVALITE, "Concurrence déjà en place"),
+    (FORCE_ENTREE, "Facilité pour un nouveau vendeur de se lancer"),
+    (FORCE_CLIENTS, "Capacité des clients à faire baisser les prix"),
+    (FORCE_FOURNISSEURS, "Dépendance aux fournisseurs"),
+    (FORCE_SUBSTITUTS, "Produits qui peuvent remplacer celui-ci"),
 )
+"""Les cinq forces, dites en langage courant.
+
+Le modèle de Porter n'est jamais nommé, et ses intitulés de manuel non plus :
+« pouvoir des fournisseurs » demande un cours pour être compris, « dépendance
+aux fournisseurs » se comprend seul. Les clés, elles, ne bougent pas — c'est sur
+elles que porte le calcul."""
 
 NIVEAU_FAIBLE: str = "faible"
 NIVEAU_MOYEN: str = "moyen"
@@ -1489,7 +1514,7 @@ figurait tout simplement pas. Une source sans donnée est nommée AVEC sa raison
 UNITES_SOURCES: dict[str, str] = {
     "amazon": "offre",
     "aliexpress": "offre",
-    "reddit": "contribution",
+    "reddit": "message",
     "recherche_web": "page",
     "meta_ads": "annonce",
     "google_trends": "série",
@@ -1523,15 +1548,37 @@ dit à la fois que la source était au programme et qu'elle n'a rien rendu."""
 # passent dans un bloc replié.
 
 INDICATEURS_DEMANDE_GABARIT: tuple[tuple[str, str], ...] = (
-    ("profil", "Profil de courbe"),
-    ("momentum_90j", "Momentum 90 j"),
-    ("pente_5ans", "Pente annuelle sur 5 ans"),
-    ("saisonnalite", "Saisonnalité"),
+    ("profil", "Forme de la courbe des recherches"),
+    ("momentum_90j", "Évolution des recherches sur 90 jours"),
+    ("pente_5ans", "Tendance de fond sur 5 ans"),
+    ("saisonnalite", "Mois le plus recherché"),
 )
 """Les quatre indicateurs du gabarit, dans l'ordre d'affichage.
 
 Un indicateur non calculable affiche « non calculable » comme VALEUR : une ligne
 absente se lit comme un oubli, une valeur explicite se lit comme un constat."""
+
+LIBELLES_INDICATEURS: dict[str, str] = {
+    "profil_courbe": "Forme de la courbe des recherches",
+    "momentum_90j": "Évolution des recherches sur 90 jours",
+    "pente_annuelle_5ans": "Tendance de fond sur 5 ans",
+    "saisonnalite": "Mois le plus recherché",
+    "mois_pic": "Mois le plus recherché",
+    "indice_moyen_12m": "Niveau moyen des recherches sur 12 mois",
+    "volatilite": "Régularité de la demande",
+    "amplitude": "Écart entre le meilleur et le pire mois",
+    "nb_breakout": "Recherches en forte hausse",
+    "signal_effet_de_mode": "Signal d'engouement passager",
+    # Pas « Région où l'on cherche le plus » : le contrôle de troncature lit un
+    # « plus » final comme le moignon d'une coupe, et il a raison de le faire.
+    "concentration_geo": "Région où les recherches se concentrent",
+}
+"""Référence amont → libellé de ligne, en langage courant.
+
+Les libellés publiés par les analyses sont écrits pour un analyste :
+« volatilité », « amplitude saisonnière », « pente annuelle sur 5 ans ». Ils
+sont ici traduits une fois, et le texte de lecture de la colonne voisine dit
+l'échelle."""
 
 VALEUR_NON_CALCULABLE: str = "non calculable"
 TITRE_AUTRES_INDICATEURS: str = "Autres indicateurs de tendance"
@@ -1555,3 +1602,555 @@ Trois segments plutôt que min/max : un décideur qui cherche où se placer lit 
 structure de marché, pas des extrêmes que la première annonce aberrante déplace."""
 
 VALEUR_NON_CALCULE: str = "non calculé"
+
+
+# --------------------------------------------------------------------------- #
+# v2.1 — Le rapport se lit sans dictionnaire
+# --------------------------------------------------------------------------- #
+# LE LECTEUR CIBLE est un e-commerçant ou un dirigeant de PME, sans culture
+# marketing ni statistique. Il doit lire les écrans 0 à 3 de bout en bout sans
+# jamais se demander « ça veut dire quoi ? ».
+#
+# LA RÈGLE UNIQUE : un terme qu'il ne comprendrait pas n'est pas expliqué en
+# note, il est REMPLACÉ. Trois traitements, dans cet ordre de préférence :
+# remplacer par un équivalent courant ; garder avec une glose de huit mots au
+# plus, quand le terme est celui que le client verra ailleurs (« place de
+# marché ») ou qu'il n'a pas d'équivalent (« cœur de marché ») ; reléguer à
+# l'écran 4, où le vocabulaire technique reste admis et où le glossaire fait foi.
+#
+# CE QUI N'EST JAMAIS RÉÉCRIT : les citations clients, dans leur langue
+# d'origine ; les noms de marques et de produits ; les libellés de sources ; les
+# limites recopiées verbatim des analyses amont. Une reformulation ne doit
+# jamais ajouter, retirer ni arrondir un chiffre — la liste blanche numérique
+# s'applique à toute sortie de modèle, libellés réécrits compris.
+
+LEXIQUE_INTERDIT: dict[str, str] = {
+    # --- Vocabulaire d'analyse ------------------------------------------- #
+    "le corpus collecté": "les données collectées",
+    "du corpus collecté": "des données collectées",
+    "corpus collecté": "données collectées",
+    "du corpus": "des avis et messages analysés",
+    "au corpus": "aux avis et messages analysés",
+    "le corpus": "les avis et messages analysés",
+    "ce corpus": "ces avis et messages",
+    "un corpus": "un ensemble d'avis et de messages",
+    "corpus": "avis et messages analysés",
+    "contributions": "avis et messages",
+    "contribution": "avis ou message",
+    # « collectés » : ce compteur est celui de la COLLECTE (181), pas celui de
+    # ce que l'analyse a retenu (55, au tableau de tonalité). Deux grandeurs,
+    # et le même mot les confondait — anomalie 2 du run 4faf8699.
+    "unités analysées": "avis et messages collectés",
+    "points de friction": "reproches",
+    "point de friction": "reproche",
+    "la répartition du sentiment": "la tonalité des avis",
+    "répartition du sentiment": "tonalité des avis",
+    "le sentiment": "la tonalité des avis",
+    "du sentiment": "de la tonalité des avis",
+    "sentiment": "tonalité des avis",
+    "signaux positifs": "ce que les clients apprécient",
+    "verbatims": "citations",
+    "le verbatim": "la citation",
+    "un verbatim": "une citation",
+    "verbatim": "citation",
+    "offres au cœur du benchmark": "offres comparées",
+    "benchmark": "comparatif",
+    # Sans ces trois entrées, « Évolution du momentum » devient « Évolution de
+    # l'évolution des recherches » : la substitution ne voit pas le mot qui la
+    # précède, et le remplacement fait doublon avec lui.
+    "évolution du momentum 90 j": "évolution des recherches sur 90 jours",
+    "évolution du momentum": "évolution des recherches",
+    "suivi du momentum": "suivi des recherches",
+    "le momentum 90 j": "l'évolution des recherches sur 90 jours",
+    "du momentum 90 j": "de l'évolution des recherches sur 90 jours",
+    "momentum 90 j": "évolution des recherches sur 90 jours",
+    "le momentum": "l'évolution des recherches",
+    "du momentum": "de l'évolution des recherches",
+    "momentum": "évolution des recherches",
+    "indice de recherche relatif": "niveau de recherches sur Google",
+    "pente annuelle sur 5 ans": "tendance de fond sur 5 ans",
+    "coefficient de variation": "régularité de la demande",
+    "volatilité": "régularité de la demande",
+    "amplitude saisonnière": "écart entre le meilleur et le pire mois",
+    "inférence": "conclusion",
+    "inférer": "conclure",
+    "agrégats inter-sources": "totaux toutes sources confondues",
+    "estimation par règle": (
+        "estimation automatique à partir des chiffres collectés, non vérifiée"
+    ),
+    "modalisation": "niveau de confiance",
+    "badge de fiabilité": "niveau de confiance",
+    # --- Vocabulaire marketing -------------------------------------------- #
+    "aucun claim publicitaire": "aucune promesse publicitaire",
+    "aucun claim": "aucune promesse publicitaire",
+    "les claims publicitaires": "les promesses publicitaires",
+    "des claims publicitaires": "des promesses publicitaires",
+    "claims publicitaires": "promesses publicitaires",
+    "claims marketing": "promesses publicitaires",
+    "les claims": "les promesses publicitaires",
+    "des claims": "des promesses publicitaires",
+    "claims": "promesses publicitaires",
+    "le claim publicitaire": "la promesse publicitaire",
+    "un claim publicitaire": "une promesse publicitaire",
+    "du claim publicitaire": "de la promesse publicitaire",
+    "claim publicitaire": "promesse publicitaire",
+    "le claim": "la promesse publicitaire",
+    "un claim": "une promesse publicitaire",
+    "claim": "promesse publicitaire",
+    "persona": "type de client",
+    "traction commerciale": "ventes réelles constatées",
+    "notoriété organique": "notoriété acquise sans publicité",
+    "base installée": "nombre de clients déjà équipés",
+    "portefeuille d'offres": "produits en vente",
+    "proposition de valeur": "argument de vente",
+    "pages tierces": "sites extérieurs à la marque",
+    "marketplace": "place de marché",
+    "plan média": "budget publicitaire",
+    "le pivot produit": "la modification du produit",
+    "un pivot produit": "une modification du produit",
+    "pivot produit": "modification du produit",
+    "angle différenciateur": "élément qui distingue vraiment le produit",
+    "différenciateur": "élément qui distingue vraiment le produit",
+    "positionnement soutenable": "positionnement tenable dans la durée",
+    "montée en gamme": "passage à un prix plus élevé",
+    "réassorts": "réapprovisionnements",
+    "lots courts": "petites quantités",
+    "fenêtre de sortie commerciale": "durée du test commercial",
+    "fenêtre de sortie": "durée du test commercial",
+    "critère d'arrêt": "seuil qui déclenche l'arrêt",
+    "seuil de réexamen": "seuil à partir duquel on réexamine la décision",
+    "plug-and-play": "prêt à l'emploi, sans installation",
+    "plug and play": "prêt à l'emploi, sans installation",
+    "top 3 des annonceurs": "les 3 plus gros annonceurs",
+    "portées régionales hétérogènes": "couverture géographique variable",
+}
+"""Terme d'analyste → équivalent courant. Contrôlé sur les écrans 0 à 3.
+
+Les clés sont cherchées en minuscules, sans casse. L'ordre compte : les
+expressions longues précèdent les mots seuls qu'elles contiennent, pour que
+« corpus collecté » soit remplacé avant « corpus ».
+
+« ancrage » n'y figure pas : le mot est ambigu hors contexte de prix, et sa
+seule occurrence utile est déjà glosée par la consigne du sous-bloc « Prix ».
+Ajouter un terme ici est une décision de vocabulaire, pas de code : la procédure
+est décrite au README."""
+
+TERMES_GLOSES: dict[str, str] = {
+    "entrée de gamme": "les prix les plus bas du marché",
+    "cœur de marché": "la fourchette où se situe la majorité des offres",
+    "premium": "les prix les plus élevés du marché",
+    "place de marché": "Amazon, AliExpress",
+    "effet de mode": "engouement passager, qui retombe",
+}
+"""Termes conservés AVEC une glose, à leur première occurrence seulement.
+
+Ils n'ont pas d'équivalent courant plus clair, ou bien le client les rencontrera
+ailleurs et gagne à les reconnaître. La glose fait huit mots au plus, entre
+parenthèses, et n'est posée qu'une fois par rapport : répétée, elle deviendrait
+elle-même du bruit."""
+
+LEXIQUE_ENUMERATIONS: dict[str, str] = {
+    "effet_de_mode": "effet de mode",
+    "court_terme": "Court terme",
+    "moyen_terme": "Moyen terme",
+    "long_terme": "Long terme",
+    "negatif": "négatif",
+    "positif": "positif",
+    "indetermine": "indéterminé",
+    "region_etude": "prix pour une livraison dans le pays étudié",
+    "marketplace_pays": "site national de la place de marché",
+    "diffusion_pays": "annonces diffusées dans le pays étudié",
+    "portee_regionale": "couverture géographique variable selon la page",
+    "mixte": "couverture géographique variable selon la page",
+    "unité indéterminée": "unité de mesure non précisée par la source",
+    "non_evalue": "non évalué",
+    # Clés de critères, citées telles quelles par l'analyse de synthèse dans ses
+    # phrases : « les critères "demande" et "differenciation" sont notés 0 ».
+    "differenciation": "différenciation",
+    "adequation": "adéquation",
+    "faisabilite": "faisabilité",
+    "rentabilite": "rentabilité",
+    "faible": "faible",
+    "moyen": "moyen",
+    "eleve": "élevé",
+}
+"""Valeur technique → libellé affiché.
+
+Ce sont des identifiants de code : `effet_de_mode`, `court_terme`, `negatif`
+sans accent. Ils n'ont jamais été écrits pour un lecteur, et le run de référence
+les affichait tels quels au milieu de phrases françaises."""
+
+SIGLES_INTERDITS: tuple[str, ...] = ("CDC", "F3", "F4", "F5", "F6", "F7", "SERP", "TLD")
+
+NETTOYAGES_SIGLES: dict[str, str] = {
+    "conformément au CDC": "comme prévu",
+    "selon le CDC": "comme prévu",
+    "prévu par le CDC": "prévu",
+    "du CDC": "des règles de l'étude",
+    "le CDC": "les règles de l'étude",
+    "CDC": "règles de l'étude",
+}
+"""Sigles retirés des textes amont RENDUS aux écrans 0 à 3.
+
+« Classification non déclenchée conformément au CDC » : trois lettres pour
+« cahier des charges », un document de projet que le client n'a jamais vu.
+Retirer le sigle seul laisserait « conformément au » ; l'expression entière est
+donc remplacée, la plus longue d'abord.
+
+Ce n'est PAS une réécriture des limites de l'écran 4, qui restent verbatim : ces
+nettoyages ne s'appliquent qu'aux textes que le code assemble lui-même dans le
+corps du rapport."""
+"""Sigles internes bannis des écrans 0 à 3.
+
+« CDC » est un cahier des charges de projet, « F3 » à « F7 » sont des noms
+d'agents du pipeline : trois lettres qui ne veulent rien dire hors de l'équipe.
+Ils restent admis à l'écran 4, où le glossaire les définit."""
+
+MOIS_EN_LETTRES: tuple[str, ...] = (
+    "janvier", "février", "mars", "avril", "mai", "juin",
+    "juillet", "août", "septembre", "octobre", "novembre", "décembre",
+)
+"""Le rapport affichait « Saisonnalité · 11 » sans dire que 11 est un mois."""
+
+# --------------------------------------------------------------------------- #
+# Textes de lecture des indicateurs chiffrés
+# --------------------------------------------------------------------------- #
+# Un chiffre sans échelle n'informe pas : « intensité 2,38/3 » ne dit pas ce que
+# vaut 3, « Pays de la Loire (0,07) » ne dit pas 0,07 de quoi. Ces textes donnent
+# l'ÉCHELLE ET LE SENS, jamais la définition mathématique — « coefficient de
+# variation de la série 5 ans » était plus obscur que l'indicateur qu'il glosait.
+#
+# Ils sont écrits ici, en dur, et jamais produits par le modèle : ce sont des
+# explications de méthode, elles ne doivent pas varier d'un rapport à l'autre.
+
+TEXTES_LECTURE_INDICATEURS: dict[str, str] = {
+    "profil_courbe": (
+        "Forme de la courbe des recherches sur 5 ans, classée automatiquement. "
+        "À vérifier avant d'en tirer une conclusion."
+    ),
+    "momentum_90j": (
+        "Comparaison avec les 90 jours précédents. Négatif = on cherche moins ce "
+        "produit qu'avant ; cela ne dit rien du nombre de ventes."
+    ),
+    "pente_annuelle_5ans": (
+        "Progression moyenne par an du niveau de recherches. Positive = intérêt "
+        "qui monte sur la durée, même si les 90 derniers jours baissent."
+    ),
+    "saisonnalite": (
+        "Mois de l'année où les recherches sont les plus fortes."
+    ),
+    "volatilite": (
+        "De 0 à 1 environ : plus le chiffre est élevé, plus la demande varie "
+        "fortement d'un mois à l'autre."
+    ),
+    "amplitude": (
+        "Écart entre le mois le plus fort et le mois le plus faible, rapporté à "
+        "la moyenne."
+    ),
+    "indice_moyen_12m": (
+        "Échelle de 0 à 100 par rapport au maximum de la période. Ne correspond "
+        "à aucun nombre de recherches réel."
+    ),
+    "concentration_geo": (
+        "Région où la part de recherches est la plus élevée, avec cette part "
+        "entre parenthèses."
+    ),
+    "nb_breakout": (
+        "Nombre de recherches associées dont la fréquence a brutalement bondi."
+    ),
+    "signal_effet_de_mode": (
+        "Le collecteur estime que l'engouement est passager. Estimation "
+        "automatique, à vérifier."
+    ),
+}
+"""Indicateur → ce que son chiffre veut dire, pour qui n'a jamais lu d'étude."""
+
+TEXTE_LECTURE_INTENSITE: str = (
+    "Gravité moyenne du reproche, de 1 (gêne mineure) à 3 (bloquant à l'achat)."
+)
+TEXTE_LECTURE_SCORE: str = (
+    "Total des points obtenus sur les critères notés de 0 à 2 "
+    "(0 = défavorable, 1 = mitigé, 2 = favorable)."
+)
+
+COLONNE_LECTURE: str = "Ce que ce chiffre veut dire"
+"""Remplace « Comment le lire » : le lecteur ne cherche pas une méthode."""
+
+PUCE_TENDANCES_OPPOSEES: str = (
+    "Ces deux chiffres vont en sens contraire : les recherches reculent sur les "
+    "90 derniers jours alors que la tendance de fond sur 5 ans monte. Cela peut "
+    "signaler un creux passager comme un retournement qui commence ; les données "
+    "collectées ne permettent pas de trancher."
+)
+"""Puce obligatoire quand évolution 90 jours et tendance 5 ans sont de signes
+opposés. Sans elle, le lecteur voit deux chiffres qui se contredisent et n'a
+aucun moyen de savoir lequel croire."""
+
+# --------------------------------------------------------------------------- #
+# Libellés de structure, en langage courant
+# --------------------------------------------------------------------------- #
+
+
+TRADUCTIONS_VERDICT: dict[str, str] = {
+    "Go": "lancer ce produit",
+    "No-go": "ne pas lancer ce produit en l'état",
+    "Go conditionnel": "lancer, mais seulement sous conditions",
+}
+"""Traduction accolée au libellé métier, jamais à sa place.
+
+CHOIX CONSERVATEUR ASSUMÉ. « Go / No-go » sont des anglicismes pour le lecteur
+cible, et le remplacement complet a été écarté : `LIBELLES_VERDICT` est comparé
+au verdict amont par le contrôle `verdict_conforme`, et le changer romprait ce
+lien de traçabilité pour un gain de forme. Le libellé reste donc, suivi de sa
+traduction en gras sur la même ligne. Un basculement complet en français est une
+décision métier — voir le README."""
+
+# --------------------------------------------------------------------------- #
+# Écran 4 : résumer les limites sans les réécrire
+# --------------------------------------------------------------------------- #
+# L'invariant tient : F7 ne touche pas aux limites, qui sont recopiées mot pour
+# mot des analyses amont. Elles y arrivent malheureusement pleines de jargon
+# d'outillage — « SERP », « actor », « serpProxyGroup », « TLD ». Deux ajouts
+# seulement, tous deux produits par le code : une phrase de résumé en tête de
+# chaque famille, et un glossaire des termes réellement rencontrés.
+#
+# La réparation durable est en amont, dans les collecteurs. Voir le README,
+# section « Points ouverts amont ».
+
+RESUMES_FAMILLES_LIMITES: dict[str, str] = {
+    "regles_d'analyse_en_hypothese_de_travail": (
+        "Ce que ces limites disent : certains calculs reposent sur des règles "
+        "choisies par l'analyse, et non sur une mesure."
+    ),
+    "signaux_publicitaires": (
+        "Ce que ces limites disent : une annonce diffusée ne prouve ni la "
+        "disponibilité du produit, ni une seule vente."
+    ),
+    "indicateurs_de_tendance": (
+        "Ce que ces limites disent : les niveaux de recherche se comparent entre "
+        "eux et ne correspondent à aucun nombre de recherches réel."
+    ),
+    "prix_et_devises": (
+        "Ce que ces limites disent : deux prix libellés dans deux devises "
+        "décrivent deux marchés ; aucune conversion n'a été faite."
+    ),
+    "classifications_automatiques_non_validees": (
+        "Ce que ces limites disent : ces étiquettes ont été posées par un "
+        "programme, sans vérification humaine."
+    ),
+    "couverture_des_plateformes": (
+        "Ce que ces limites disent : chaque source couvre une partie du marché, "
+        "jamais son ensemble."
+    ),
+    "ce_que_les_avis_analyses_representent": (
+        "Ce que ces limites disent : les avis viennent des personnes qui ont pris "
+        "la peine d'en écrire, pas de tous les acheteurs."
+    ),
+    "autres_limites": (
+        "Ce que ces limites disent : des points de méthode signalés par les "
+        "analyses, qui n'entrent dans aucune des familles ci-dessus."
+    ),
+}
+
+TERMES_GLOSSAIRE_TECHNIQUE: dict[str, str] = {
+    "SERP": "La page de résultats d'un moteur de recherche.",
+    "actor": "Le programme automatique qui va chercher les données sur un site.",
+    "TLD": "La terminaison d'une adresse web : .fr, .com, .es.",
+    "échantillonnage stratifié": (
+        "Méthode de sélection qui garde des proportions comparables entre "
+        "catégories, plutôt que de prendre au hasard."
+    ),
+    "indice normalisé": (
+        "Chiffre ramené à une échelle commune, de 0 à 100, pour permettre une "
+        "comparaison. Il ne correspond à aucune quantité réelle."
+    ),
+    "re-scoring": "Nouveau calcul des notes après un premier passage.",
+    "heuristique": (
+        "Règle de calcul approchée : elle donne un ordre de grandeur, pas une "
+        "mesure."
+    ),
+}
+"""Termes techniques réellement présents dans les limites du run de référence.
+
+Ils ne sont pas retirés — l'invariant l'interdit — mais définis, une phrase
+chacun, à l'écran 4."""
+
+# --------------------------------------------------------------------------- #
+# Consignes de langue ajoutées aux chaînes de rédaction
+# --------------------------------------------------------------------------- #
+
+REGLES_LANGUE_V21: str = (
+    "LECTEUR — un commerçant ou un dirigeant de PME, SANS culture marketing ni "
+    "statistique. Il doit te lire sans dictionnaire.\n"
+    "- Écris en français d'affaires courant. Si un mot ne serait pas compris par "
+    "quelqu'un qui n'a jamais fait d'étude de marché, tu ne l'emploies pas — tu "
+    "ne l'expliques pas non plus, tu écris autrement.\n"
+    "- VOIX ACTIVE. « Les clients reprochent le bruit de fond », jamais « un "
+    "bruit de fond est reproché ».\n"
+    "- AUCUNE DOUBLE NÉGATION. « Personne ne met en avant la garantie », jamais "
+    "« aucune annonce ne mentionne de garantie hormis une ».\n"
+    "- Une idée par puce, 25 mots au maximum par phrase.\n"
+    "- Aucun anglicisme hors ceux qui figurent dans les données elles-mêmes "
+    "(noms de marques, de produits, de sources).\n"
+    "- N'emploie AUCUN de ces termes, emploie leur équivalent :\n"
+    "{lexique_impose}"
+)
+"""En tête des prompts de rédaction, avant les consignes de sous-bloc.
+
+Le lexique est interpolé depuis `LEXIQUE_INTERDIT` : une seule table nourrit à
+la fois la consigne donnée au modèle et le contrôle appliqué à sa sortie, donc
+les deux ne peuvent pas diverger."""
+
+
+def lexique_pour_prompt(maximum: int = 24) -> str:
+    """Rend le lexique sous la forme d'une liste de consignes.
+
+    Les entrées les plus longues d'abord : ce sont les expressions, et les faire
+    lire en premier évite au modèle de remplacer un mot isolé qu'une expression
+    contenait déjà.
+
+    Args:
+        maximum: Nombre d'entrées citées. Le lexique entier saturerait le prompt
+            sans que le modèle en retienne davantage ; le contrôle de sortie, lui,
+            porte sur la table complète.
+
+    Returns:
+        Les lignes de consigne, une par terme.
+    """
+    entrees = sorted(LEXIQUE_INTERDIT.items(), key=lambda paire: -len(paire[0]))
+    return "\n".join(
+        f"    « {terme} » → « {remplacement} »"
+        for terme, remplacement in entrees[:maximum]
+    )
+
+
+import re as _re  # noqa: E402 — utilisé par la substitution ci-dessous
+
+
+def _termes_du_plus_long_au_plus_court() -> list[tuple[str, str, _re.Pattern[str]]]:
+    """Ordonne le lexique pour une substitution en plusieurs passes.
+
+    L'ORDRE EST LE CŒUR DU PROBLÈME. Une alternative unique — `(a|b|c)` — retient
+    la correspondance la plus À GAUCHE, pas la plus longue : sur « dans le corpus
+    collecté », elle attrapait « le corpus » et laissait « les avis et messages
+    analysés collecté ». Passer terme par terme, du plus long au plus court,
+    consomme d'abord les expressions entières et rend le résultat déterministe.
+
+    Les frontières `\b` empêchent de couper à l'intérieur d'un mot : sans elles,
+    « claim » atteindrait « réclamation ».
+
+    Returns:
+        Les triplets `(terme, remplacement, motif)`, triés par longueur
+        décroissante.
+    """
+    return [
+        (terme, remplacement, _re.compile(rf"\b{_re.escape(terme)}\b", _re.IGNORECASE))
+        for terme, remplacement in sorted(
+            LEXIQUE_INTERDIT.items(), key=lambda paire: -len(paire[0])
+        )
+    ]
+
+
+LEXIQUE_ORDONNE = _termes_du_plus_long_au_plus_court()
+
+
+def appliquer_lexique(texte: str) -> tuple[str, int]:
+    """Remplace les termes d'analyste par leur équivalent courant.
+
+    La casse initiale est conservée : un terme en tête de phrase ressort avec sa
+    majuscule.
+
+    CE FILET NE FAIT PAS DE GRAMMAIRE. Remplacer un nom peut changer son genre —
+    « le claim » est masculin, « la promesse publicitaire » est féminine — et
+    seules les entrées qui portent leur article traitent le cas. C'est pourquoi
+    la substitution automatique est le DERNIER recours du contrôle, après une
+    régénération : le bon endroit pour écrire une phrase correcte est la
+    rédaction, pas la relecture mécanique.
+
+    CE QU'ELLE NE DOIT JAMAIS TOUCHER : les citations clients, les noms de
+    marques et de produits, les limites recopiées verbatim. L'appelant borne le
+    champ d'application ; cette fonction ne le fait pas à sa place.
+
+    Args:
+        texte: Texte à normaliser.
+
+    Returns:
+        Le couple `(texte, nb_substitutions)`.
+    """
+    if not texte:
+        return texte, 0
+    compteur = 0
+
+    for _terme, remplacement, motif in LEXIQUE_ORDONNE:
+
+        def remplacer(trouve: _re.Match[str], cible: str = remplacement) -> str:
+            nonlocal compteur
+            compteur += 1
+            if trouve.group(0)[:1].isupper():
+                return cible[:1].upper() + cible[1:]
+            return cible
+
+        texte = motif.sub(remplacer, texte)
+    return texte, compteur
+
+
+def nettoyer_sigles(texte: str) -> str:
+    """Retire les sigles internes d'un texte destiné aux écrans 0 à 3.
+
+    Args:
+        texte: Texte amont rendu dans le corps du rapport.
+
+    Returns:
+        Le texte sans sigle interne.
+    """
+    for sigle, remplacement in sorted(
+        NETTOYAGES_SIGLES.items(), key=lambda paire: -len(paire[0])
+    ):
+        texte = _re.sub(_re.escape(sigle), remplacement, texte, flags=_re.IGNORECASE)
+    return texte
+
+
+MOTIF_VALEUR_CITEE = _re.compile(r"«\s*([a-z_]+)\s*»")
+
+
+def normaliser_valeurs_citees(texte: str) -> str:
+    """Accentue les valeurs d'énumération que les analyses citent entre guillemets.
+
+    L'analyse de synthèse écrit « verdict amont « negatif » » et « les critères
+    « demande » et « differenciation » » : elle cite ses propres clés, sans
+    accent, au milieu d'une phrase française. Le lecteur y voit des fautes
+    d'orthographe, ce qui est pire qu'un terme technique — cela met en doute le
+    soin apporté au reste.
+
+    Seules les valeurs CITÉES sont touchées, et seulement celles que la table
+    connaît : un mot entre guillemets qui n'en est pas une ressort intact.
+
+    Args:
+        texte: Texte amont rendu dans le corps du rapport.
+
+    Returns:
+        Le texte, valeurs citées accentuées.
+    """
+    return MOTIF_VALEUR_CITEE.sub(
+        lambda trouve: f"« {LEXIQUE_ENUMERATIONS.get(trouve.group(1), trouve.group(1))} »",
+        texte,
+    )
+
+
+def termes_interdits_presents(texte: str) -> list[str]:
+    """Relève les termes du lexique encore présents dans un texte.
+
+    Args:
+        texte: Texte à contrôler.
+
+    Returns:
+        Les termes trouvés, sans doublon, dans leur écriture d'origine.
+    """
+    if not texte:
+        return []
+    trouves = [
+        motif.search(texte).group(0)
+        for _terme, _remplacement, motif in LEXIQUE_ORDONNE
+        if motif.search(texte)
+    ]
+    return list(dict.fromkeys(trouves))

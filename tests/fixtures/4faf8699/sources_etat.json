@@ -1,0 +1,32 @@
+{
+ "google_trends": {
+  "donnees_disponibles": true,
+  "nb_items": 0,
+  "raison": null
+ },
+ "recherche_web": {
+  "donnees_disponibles": true,
+  "nb_items": 10,
+  "raison": null
+ },
+ "reddit": {
+  "donnees_disponibles": true,
+  "nb_items": 110,
+  "raison": null
+ },
+ "meta_ads": {
+  "donnees_disponibles": true,
+  "nb_items": 6,
+  "raison": null
+ },
+ "amazon": {
+  "donnees_disponibles": true,
+  "nb_items": 58,
+  "raison": null
+ },
+ "aliexpress": {
+  "donnees_disponibles": true,
+  "nb_items": 94,
+  "raison": null
+ }
+}

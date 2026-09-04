@@ -523,3 +523,150 @@ Trois règles depuis :
    forte, sinon dernier mot qui ne soit pas un mot-outil. Le contrôle
    `aucune_troncature` cherche les trois signatures d'une coupe machine — ellipse,
    virgule finale, mot-outil final — et il est bloquant.
+
+---
+
+## 15. Vocabulaire — le rapport se lit sans dictionnaire (v2.1)
+
+### 15.1 — Le lecteur, et la règle unique
+
+**Le lecteur cible est un e-commerçant ou un dirigeant de PME, sans culture
+marketing ni statistique.** Il lit les écrans 0 à 3 de bout en bout, une fois,
+et décide. Il ne consulte pas de glossaire et ne relit pas une phrase.
+
+> **Si un terme ne serait pas compris par un commerçant qui n'a jamais fait
+> d'étude de marché, il n'apparaît pas dans les écrans 0 à 3 — et il n'y est pas
+> expliqué en note, il est remplacé.**
+
+Trois traitements, dans cet ordre de préférence :
+
+1. **Remplacer** par un équivalent courant — le cas par défaut, `LEXIQUE_INTERDIT` ;
+2. **Garder avec une glose** de huit mots au plus, quand le terme n'a pas
+   d'équivalent (« cœur de marché ») ou que le client le rencontrera ailleurs
+   (« place de marché ») — `TERMES_GLOSES` ;
+3. **Reléguer à l'écran 4**, où le vocabulaire technique reste admis et où le
+   glossaire fait foi.
+
+**Ce qui n'est jamais réécrit** : les citations clients, dans leur langue
+d'origine ; les noms de marques et de produits ; les libellés de sources ; les
+limites recopiées verbatim à l'écran 4. Et la règle qui prime sur toutes les
+autres : **une reformulation n'ajoute, ne retire et n'arrondit aucun chiffre.**
+La liste blanche numérique s'applique à toute sortie de modèle, y compris aux
+libellés réécrits.
+
+### 15.2 — Où le vocabulaire est tenu, et dans quel ordre
+
+Trois endroits, et leur ordre est celui de leur qualité :
+
+| Rang | Mécanisme | Ce qu'il produit |
+|---|---|---|
+| 1 | **La consigne de rédaction** (`REGLES_LANGUE_V21`, en tête du prompt) | Du français correct, écrit du premier coup |
+| 2 | **La régénération** (`agent._tenir_le_lexique`), avec la liste des termes fautifs | Du français correct, réécrit |
+| 3 | **La substitution** (`config.appliquer_lexique`) | Le bon mot, pas toujours le bon accord |
+
+**La substitution ne fait pas de grammaire.** Remplacer un nom change son genre :
+les entrées qui portent leur article traitent le cas (« le claim » → « la
+promesse publicitaire »), les autres non — « 30 contributions positives » devient
+« 30 avis et messages positives ». C'est un filet, et `nb_termes_substitues` le
+compte : un chiffre non nul ne dit pas que le rapport est bon, il dit que la
+consigne de rédaction demande à être resserrée.
+
+Les textes que le **code** recopie des analyses amont — tableaux, puces de
+bascules, opportunités, risques — n'ont ni consigne ni régénération : ils
+n'ont que la substitution (`preparation_v2.CHAMPS_LEXIQUE_V2`). C'est pourquoi
+la réparation durable de ce vocabulaire est **en amont**, dans les analyses.
+
+### 15.3 — Ajouter un terme au lexique
+
+1. Ajouter l'entrée à `LEXIQUE_INTERDIT`, en minuscules.
+2. Si le remplacement **change le genre du nom**, ajouter aussi les formes qui
+   portent l'article (`le X` → `la Y`, `un X` → `une Y`, `du X` → `de la Y`).
+   Sans elles, la substitution produira un article faux.
+3. Si le terme en contient un autre déjà listé, vérifier que la forme longue est
+   bien la plus longue : la substitution traite les termes du plus long au plus
+   court, et c'est ce qui garantit que « corpus collecté » passe avant « corpus ».
+4. Rejouer un run de référence et lire la section concernée à voix haute.
+
+### 15.4 — Les indicateurs disent leur échelle
+
+Chaque chiffre du tableau de la demande porte un texte de lecture qui donne
+**l'échelle et le sens**, jamais la définition mathématique :
+`TEXTES_LECTURE_INDICATEURS`. Ces textes sont écrits en dur et ne sont **jamais**
+produits par le modèle — ce sont des explications de méthode, elles ne doivent
+pas varier d'un rapport à l'autre.
+
+Le mois de saisonnalité est rendu en toutes lettres, les séparateurs décimaux
+sont des virgules, et une puce de lecture apparaît **automatiquement** lorsque
+l'évolution sur 90 jours et la tendance de fond sur 5 ans sont de signes opposés
+(`PUCE_TENDANCES_OPPOSEES`) : deux chiffres qui se contredisent sans un mot
+d'explication n'informent pas, ils annulent la confiance dans les deux.
+
+### 15.5 — Le libellé de décision
+
+Le titre porte le libellé métier **puis** sa traduction en clair :
+`## Décision : No-go — **ne pas lancer ce produit en l'état**`.
+
+Choix conservateur assumé. `LIBELLES_VERDICT` est comparé au verdict amont par
+le contrôle `verdict_conforme` ; remplacer « No-go » par « Ne pas lancer »
+romprait ce lien de traçabilité pour un gain de forme. Un basculement complet en
+français est une **décision métier**, pas un changement de code : elle touche la
+constante, le contrôle et le frontend.
+
+### 15.6 — Les contrôles de vocabulaire
+
+| Contrôle | Ce qu'il vérifie |
+|---|---|
+| `lexique_conforme` | Aucun terme de `LEXIQUE_INTERDIT` dans les écrans 0 à 3 — citations et commentaires HTML exclus du périmètre |
+| `valeurs_techniques_absentes` | Aucun identifiant à tiret bas (`effet_de_mode`), aucun sigle interne (`CDC`, `F3`…) |
+| `coherence_inter_ecrans` | Aucun écran n'affirme l'absence d'une source qu'un autre exploite |
+| `nb_termes_substitues` | Combien de fois le filet a dû servir |
+
+`coherence_inter_ecrans` **ne bloque pas** le rapport : la puce contredite est
+retirée et le retrait est tracé. Le défaut est en amont (voir §16, anomalie 1),
+et arrêter la restitution ne le réparerait pas — cela priverait seulement le
+lecteur des quatre écrans corrects.
+
+---
+
+## 16. Points ouverts amont — les dix anomalies du run `4faf8699`
+
+Relevées pendant la revue de lisibilité du 04/09/2026. **Celles qui ne relèvent
+pas de F7 sont tracées ici, pas corrigées en silence** : les réécrire dans la
+restitution masquerait un défaut qui continuerait de produire de mauvaises
+données pour tous les autres consommateurs de ces analyses.
+
+| # | Constat | Ressort | État |
+|---|---|---|---|
+| 1 | « Aucun avis client n'est présent dans les données fournies » (angles inexploités) contredit l'écran 1, qui analyse 26 avis Amazon. F4 raisonne sur *son* corpus — annonces et pages — et écrit une phrase fausse hors de ce contexte | **F4** | Contourné dans F7 : la puce est retirée et le retrait tracé (`coherence_inter_ecrans`). **Ticket amont à ouvrir** : F4 doit borner son affirmation à ses propres sources |
+| 2 | Écran 1 : « 181 unités analysées sur 3 sources » alors que le tableau de tonalité totalise 55. Le 181 est le volume **collecté** | **F7** | Corrigé : le badge dit « collectés », le tableau dit « analysés » |
+| 3 | Écran 0 : « Web (10 pages) » alors que l'écran 4 déclare 5 documents | À investiguer (F24 ou comptage F7) | Un **seul** compteur est désormais utilisé (`referentiel_stats.nb_pages`) et `compteurs_coherents` vérifie l'égalité. Si l'écart réapparaît, il vient de F24 |
+| 4 | Écran 0 : « Amazon (58 offres) » sans le nombre d'avis | **F7** | Corrigé : « Amazon (58 offres, 26 avis) » |
+| 5 | Intensité des reproches sur 3 alors que le gabarit v2 spécifiait `/5` | **F7** | Tranché : l'échelle de F3 va de 1 à 3, le gabarit portait l'erreur (amendement A1). Le mot « intensité » devient « gravité », et son texte de lecture donne les bornes |
+| 6 | Vignettes AliExpress : « −−6 % », prix barré inférieur au prix courant, « 1 commandes », prix au format anglo-saxon | **Frontend + F21** | Tracé. Voir le message Lovable |
+| 7 | Segment d'entrée AliExpress démarrant à 0,37 € : très probablement un accessoire, pas un micro. Fausse la fourchette et la recommandation de prix | **F4** | **Ticket amont à ouvrir** : filtrage des valeurs aberrantes du benchmark |
+| 8 | Évolution 90 jours à −54,6 % mais tendance de fond à +5,6 points/an, sans explication | **F7** | Corrigé : une puce de lecture apparaît automatiquement quand les deux indicateurs sont de signes opposés |
+| 9 | Titres de produits Amazon affichés en anglais dans une étude FR | **Frontend / F21** | Signalé, **non traduit** : c'est la donnée source |
+| 10 | Volume concurrent « 49 538 · unité indéterminée » sur une colonne qui porte ailleurs « /mois » | **F4** | Déjà tracé en v2, à relancer |
+
+### Le jargon d'outillage dans les limites
+
+Les limites produites par les collecteurs contiennent **SERP**, **actor**,
+**serpProxyGroup**, **TLD**, **échantillonnage stratifié**, **re-scoring**. F7
+n'a pas le droit de les réécrire — les limites sont recopiées verbatim, c'est un
+invariant du module — et fait donc deux choses : il précède chaque famille d'une
+phrase de résumé en langage courant (`RESUMES_FAMILLES_LIMITES`) et définit dans
+son glossaire les termes réellement rencontrés (`TERMES_GLOSSAIRE_TECHNIQUE`).
+
+**Ticket amont à ouvrir** : ces textes doivent être réécrits **à la source**, en
+français d'affaires, sans nom d'outil ni de paramètre technique. F7 les
+recopiera alors proprement, sans que l'invariant bouge.
+
+### La double négation de F4
+
+Les angles inexploités arrivent sous la forme « Aucun claim publicitaire ne met
+en avant… hormis un seul annonceur ». F7 les repasse à l'affirmative par une
+chaîne dédiée (`redaction_v2.reformuler_affirmatif`), qui préserve les réserves
+de méthode et rejette toute réécriture introduisant un chiffre.
+
+**Ticket amont à ouvrir** : demander à F4 une formulation affirmative
+(« Personne ne met en avant… »). L'appel LLM de F7 disparaîtrait alors.

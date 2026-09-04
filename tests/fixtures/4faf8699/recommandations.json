@@ -1,0 +1,1444 @@
+{
+ "marche": {
+  "geo": "FR",
+  "devise": null,
+  "langue": "fr"
+ },
+ "limites": [
+  "[insights] [reddit] Reddit n'est pas représentatif de la population d'un marché : la base d'utilisateurs est documentée comme jeune, majoritairement masculine, technophile et anglophone. Le corpus ne constitue en aucun cas un échantillon de consommateurs.",
+  "[insights] [reddit] Reddit n'offre aucun filtre géographique natif : la « régionalisation » repose uniquement sur le choix des subreddits et sur la langue des requêtes. C'est une approximation, à interpréter comme telle.",
+  "[insights] [reddit] La couverture varie fortement selon le pays : pour les marchés non anglophones, le volume de discussions peut être très faible. L'absence de discussions ne constitue pas un signal d'absence de marché.",
+  "[insights] [reddit] Le score de pertinence est une heuristique LLM non validée empiriquement et le seuil de rétention est arbitraire.",
+  "[insights] [reddit] La recherche Reddit est non exhaustive : toute liste de résultats est plafonnée à environ 1 000 posts côté Reddit, le mode rapide de l'actor (actif d'office sur les recherches par mots-clés) peut manquer des posts, et le tri par pertinence est opaque.",
+  "[insights] [reddit] Les contenus collectés se limitent à la fenêtre de recherche configurée (`searchTime=year`) : les opinions exprimées ont pu évoluer depuis.",
+  "[insights] [reddit] Les posts annonçant zéro commentaire sont écartés de la phase B : les interroger coûterait un item facturé pour un rendement nul.",
+  "[insights] [amazon] Le corpus provient d'UNE seule marketplace Amazon, celle du pays étudié. Il décrit l'offre présente sur ce site, et non l'ensemble du commerce en ligne du pays : les places de marché concurrentes et le commerce local en sont absents.",
+  "[insights] [amazon] Aucun filtre de livraison n'est appliqué : le corpus est le catalogue complet de la marketplace, y compris des produits qui ne seraient pas expédiables vers la région d'étude. C'est un choix assumé — restreindre à l'expédiable amputerait l'étude de marché de l'essentiel de l'offre.",
+  "[insights] [amazon] Les prix sont exprimés dans la devise de la marketplace et ne sont NI convertis, NI comparables d'une marketplace à l'autre. Ils sont relevés à l'instant du run : les prix Amazon varient de jour en jour.",
+  "[insights] [amazon] Amazon bloque une part variable des requêtes automatisées. Un corpus court ou vide peut être le fait de l'anti-bot et non du catalogue : les runs concernés sont signalés dans `statuts_collecte`.",
+  "[insights] [amazon] Le classement d'Amazon est commercial : il mêle publicité, performance vendeur et ancienneté de l'annonce. L'ordre de collecte n'est pas un classement de qualité, et le corpus n'est pas exhaustif.",
+  "[insights] [amazon] Les avis collectés sont les « meilleurs avis » retenus par Amazon, quelques-uns par produit et sur une fenêtre récente : ils illustrent des retours d'usage, ils ne constituent en aucun cas un échantillon représentatif ni une base de mesure de satisfaction.",
+  "[insights] [amazon] `pertinence` et `correspondance` sont des heuristiques produites par un LLM, sans validation sur un échantillon annoté.",
+  "[insights] [amazon] Un compte Apify en fin de quota tronque les runs SANS les faire échouer : ils remontent en statut SUCCEEDED avec un dataset incomplet. Vérifier le quota avant toute interprétation d'un volume de produits.",
+  "[insights] [recherche_web] La SERP interrogée est géolocalisée aux États-Unis et en anglais : l'actor n'expose aucun paramètre de pays ni de langue de recherche (`serpProxyGroup` ne sert pas à choisir un pays). Le ciblage régional par TLD et par mots-clés géographiques est donc une APPROXIMATION — le classement des résultats reste celui que verrait un utilisateur américain, pas un consommateur du marché étudié.",
+  "[insights] [recherche_web] L'opérateur `site:.<tld>` exclut mécaniquement les acteurs locaux hébergés en .com, qui sont nombreux sur la plupart des marchés. Les requêtes à mots-clés géographiques compensent partiellement ce biais, sans aucune garantie d'exhaustivité.",
+  "[insights] [recherche_web] Le corpus se limite aux premiers résultats Google de chaque requête : il n'est pas exhaustif et reflète les biais du référencement (optimisation SEO, contenu affilié, pages générées). Chaque page est un SIGNAL À RECOUPER, jamais un fait ; les chiffres qui y figurent (prix, parts de marché, classements) doivent être revalidés sur des sources structurées.",
+  "[insights] [recherche_web] `type_source`, `portee_regionale` et `pertinence` sont des heuristiques produites par un LLM, sans validation sur un échantillon annoté.",
+  "[insights] [recherche_web] Une redondance avec les corpus des autres collecteurs reste possible malgré l'exclusion de domaines : un même contenu peut être republié sur un domaine non listé.",
+  "[insights] [recherche_web] La fraîcheur des contenus n'est pas garantie : ce mode de collecte n'expose aucun filtre de date fiable, et les pages retenues peuvent dater de plusieurs années.",
+  "[insights] 2 unité(s) écartée(s) comme doublons de texte : les republications et citations gonflaient artificiellement les fréquences.",
+  "[insights] Le corpus analysé n'est pas exhaustif et reflète les biais de collecte des agents amont (moteurs de recherche, plafonds de collecte, seuils de pertinence). Il ne constitue en aucun cas un échantillon représentatif de la population d'un marché.",
+  "[insights] La classification des sentiments, thèmes et pain points est produite par un modèle de langage et n'a pas été validée empiriquement contre un codage humain.",
+  "[insights] Les populations diffèrent fortement d'une source à l'autre (contributeurs Reddit, acheteurs Amazon, rédacteurs web) : les agrégats inter-sources mélangent des publics qui ne sont pas comparables.",
+  "[insights] Aucune inférence sur la taille du marché ne peut être tirée de ces volumes : un nombre d'unités mesure l'activité de discussion collectée, pas la demande.",
+  "[concurrence] [aliexpress] Biais de couverture : l'API Dropshipping n'expose que les produits éligibles au programme dropshipping ET livrables dans la région demandée. L'absence d'un produit dans cette collecte ne constitue en aucun cas un signal d'absence de ce produit sur le marché.",
+  "[concurrence] [aliexpress] Les prix renvoyés par l'API sont des prix de référence : ils excluent les Welcome Deals, coupons panier et promotions de session. Le prix perçu par l'acheteur sur le site peut être inférieur. L'écart avec une source de scraping est un signal d'intensité promotionnelle, pas une erreur.",
+  "[concurrence] [aliexpress] Les prix et les stocks sont un instantané horodaté, valable pour le seul triplet {pays de livraison, devise, langue} demandé. Toute comparaison exige le même triplet et un horodatage proche.",
+  "[concurrence] [aliexpress] Aucune conversion de change n'est effectuée : l'API ne fournit pas de taux. Les montants ne sont comparables qu'au sein d'une même exécution, dans la devise d'étude.",
+  "[concurrence] [aliexpress] Le quota journalier n'est pas confirmé officiellement (console développeur sans limite affichée ; ~5 000 requêtes/jour selon des sources secondaires). Un plafond de débit non documenté a en revanche été constaté sur la méthode de recherche.",
+  "[concurrence] [aliexpress] La sélection des produits soumis au détail (phase B) repose sur une heuristique déterministe — similarité de titre puis tri par volume de commandes et note — qui n'a pas été validée empiriquement.",
+  "[concurrence] [aliexpress] Le champ `discount` de la recherche est incohérent avec les prix cibles (observé à « 0 % » sur un produit affichant −50 %) : il n'est pas exploité, la remise est recalculée à partir des prix cibles.",
+  "[concurrence] [aliexpress] La méthode de recherche est instable par fenêtres de quelques minutes (erreur NGSELECTION_SEARCH_ERROR mesurée sur 8 appels valides sur 11 le 03/08/2026, indépendamment de l'espacement). Le module insiste, mais une requête peut rester en échec : la couverture d'une exécution n'est pas reproductible à l'identique, et un écart de volume entre deux exécutions peut n'être qu'un artefact de disponibilité de la passerelle.",
+  "[concurrence] [aliexpress] Incohérence de prix détectée : prix de vente supérieur au prix de base sur une ou plusieurs lignes. Les lignes sont conservées et signalées.",
+  "[concurrence] [amazon] Le corpus provient d'UNE seule marketplace Amazon, celle du pays étudié. Il décrit l'offre présente sur ce site, et non l'ensemble du commerce en ligne du pays : les places de marché concurrentes et le commerce local en sont absents.",
+  "[concurrence] [amazon] Aucun filtre de livraison n'est appliqué : le corpus est le catalogue complet de la marketplace, y compris des produits qui ne seraient pas expédiables vers la région d'étude. C'est un choix assumé — restreindre à l'expédiable amputerait l'étude de marché de l'essentiel de l'offre.",
+  "[concurrence] [amazon] Les prix sont exprimés dans la devise de la marketplace et ne sont NI convertis, NI comparables d'une marketplace à l'autre. Ils sont relevés à l'instant du run : les prix Amazon varient de jour en jour.",
+  "[concurrence] [amazon] Amazon bloque une part variable des requêtes automatisées. Un corpus court ou vide peut être le fait de l'anti-bot et non du catalogue : les runs concernés sont signalés dans `statuts_collecte`.",
+  "[concurrence] [amazon] Le classement d'Amazon est commercial : il mêle publicité, performance vendeur et ancienneté de l'annonce. L'ordre de collecte n'est pas un classement de qualité, et le corpus n'est pas exhaustif.",
+  "[concurrence] [amazon] Les avis collectés sont les « meilleurs avis » retenus par Amazon, quelques-uns par produit et sur une fenêtre récente : ils illustrent des retours d'usage, ils ne constituent en aucun cas un échantillon représentatif ni une base de mesure de satisfaction.",
+  "[concurrence] [amazon] `pertinence` et `correspondance` sont des heuristiques produites par un LLM, sans validation sur un échantillon annoté.",
+  "[concurrence] [amazon] Un compte Apify en fin de quota tronque les runs SANS les faire échouer : ils remontent en statut SUCCEEDED avec un dataset incomplet. Vérifier le quota avant toute interprétation d'un volume de produits.",
+  "[concurrence] [meta_ads] Le corpus ne décrit QUE la publicité payante diffusée sur les plateformes de Meta (Facebook, Instagram, Messenger, Audience Network). Google, TikTok, les places de marché et le référencement naturel en sont absents : ce n'est pas une photographie de la pression publicitaire totale sur le marché.",
+  "[concurrence] [meta_ads] La bibliothèque publicitaire n'expose durablement que les annonces COMMERCIALES ACTIVES : une annonce arrêtée en sort, sauf dans l'Union européenne où le règlement sur les services numériques impose un archivage, et sauf pour les annonces politiques et de société, archivées sept ans. Une recherche sur les annonces inactives est donc normalement vide hors UE — ce point est tiré de la politique affichée par Meta et n'a pas été vérifié run à run.",
+  "[concurrence] [meta_ads] Aucune donnée de diffusion n'est publiée pour les annonces commerciales : ni portée, ni dépense, ni ciblage, ni performance. `portee_estimee` et `depense` restent nuls hors annonces politiques. Rien dans ce corpus ne dit qu'une annonce a marché.",
+  "[concurrence] [meta_ads] `duree_diffusion_jours` est un indicateur de LONGÉVITÉ, pas de rentabilité. Une annonce diffusée longtemps est un indice qu'un annonceur y trouve son compte, jamais une preuve : un budget mal suivi produit la même trace.",
+  "[concurrence] [meta_ads] Le moteur de recherche de la bibliothèque apparie des mots sur le TEXTE des annonces. Un produit vendu par une créative purement visuelle, ou décrit avec un autre vocabulaire, est invisible à ce corpus.",
+  "[concurrence] [meta_ads] Un même créatif est diffusé sous de nombreux identifiants d'annonce. Le module les rapproche par annonceur et par texte, mais un rapprochement reste approximatif : le décompte d'annonces n'est pas un décompte de campagnes.",
+  "[concurrence] [meta_ads] `pertinence` et `correspondance` sont des heuristiques produites par un LLM, sans validation sur un échantillon annoté.",
+  "[concurrence] [meta_ads] Le corpus est plafonné par recherche et n'est en aucun cas exhaustif : l'ordre servi par la bibliothèque n'est pas documenté et ne constitue pas un classement de notoriété ou de budget.",
+  "[concurrence] [meta_ads] Un compte Apify en fin de quota tronque les runs SANS les faire échouer : ils remontent en statut SUCCEEDED avec un dataset incomplet. Vérifier le quota avant toute interprétation d'un volume d'annonces.",
+  "[concurrence] [meta_ads] Une ou plusieurs recherches se sont terminées sans aucune annonce. Sur la bibliothèque publicitaire, c'est le plus souvent un constat réel — personne n'annonce sur ces mots dans ce pays — mais cela peut aussi venir d'une formulation trop étroite ou d'un filtre de statut trop restrictif.",
+  "[concurrence] [meta_ads] Au moins une recherche a atteint le plafond d'annonces par run : la bibliothèque en contenait davantage. Le corpus est un ÉCHANTILLON tronqué de cette recherche, dans un ordre non documenté, et aucun volume ne doit en être déduit.",
+  "[concurrence] [recherche_web] La SERP interrogée est géolocalisée aux États-Unis et en anglais : l'actor n'expose aucun paramètre de pays ni de langue de recherche (`serpProxyGroup` ne sert pas à choisir un pays). Le ciblage régional par TLD et par mots-clés géographiques est donc une APPROXIMATION — le classement des résultats reste celui que verrait un utilisateur américain, pas un consommateur du marché étudié.",
+  "[concurrence] [recherche_web] L'opérateur `site:.<tld>` exclut mécaniquement les acteurs locaux hébergés en .com, qui sont nombreux sur la plupart des marchés. Les requêtes à mots-clés géographiques compensent partiellement ce biais, sans aucune garantie d'exhaustivité.",
+  "[concurrence] [recherche_web] Le corpus se limite aux premiers résultats Google de chaque requête : il n'est pas exhaustif et reflète les biais du référencement (optimisation SEO, contenu affilié, pages générées). Chaque page est un SIGNAL À RECOUPER, jamais un fait ; les chiffres qui y figurent (prix, parts de marché, classements) doivent être revalidés sur des sources structurées.",
+  "[concurrence] [recherche_web] `type_source`, `portee_regionale` et `pertinence` sont des heuristiques produites par un LLM, sans validation sur un échantillon annoté.",
+  "[concurrence] [recherche_web] Une redondance avec les corpus des autres collecteurs reste possible malgré l'exclusion de domaines : un même contenu peut être republié sur un domaine non listé.",
+  "[concurrence] [recherche_web] La fraîcheur des contenus n'est pas garantie : ce mode de collecte n'expose aucun filtre de date fiable, et les pages retenues peuvent dater de plusieurs années.",
+  "[concurrence] Les offres AliExpress ne portent aucune qualification de correspondance amont : contrairement à Amazon et Meta Ads, le collecteur AliExpress ne classe pas ses résultats. Elles sont toutes considérées comme relevant du cœur du benchmark, ce qui peut y faire entrer des produits éloignés.",
+  "[concurrence] Les volumes de ventes Amazon sont des mentions par paliers (« 1K+ achetés le mois dernier ») : la valeur retenue est le PLANCHER du palier. Tout cumul de volumes est donc une borne inférieure, et les parts de concentration qui en découlent sont approximatives.",
+  "[concurrence] Le corpus concurrentiel n'est pas exhaustif : il hérite intégralement des biais de collecte amont (requêtes choisies, plafonds d'items, seuils de pertinence, blocages anti-bot). Aucune part de marché ne peut en être déduite.",
+  "[concurrence] Les rapprochements de concurrents reposent sur la seule similarité de nom. Deux entités distinctes portant un nom voisin peuvent être fusionnées à tort, et une même entreprise vendant sous deux marques restera séparée.",
+  "[concurrence] Les portées régionales sont hétérogènes entre sources : un prix Amazon décrit le marché de sa marketplace, une annonce Meta décrit un pays de diffusion, une offre AliExpress un pays de livraison. Ces plans ne sont pas superposables.",
+  "[concurrence] La longévité d'une annonce publicitaire mesure une durée de diffusion, jamais une rentabilité : une campagne peut être diffusée longtemps à perte.",
+  "[concurrence] La classification des correspondances et l'extraction des claims sont produites par des modèles de langage et n'ont pas été validées empiriquement.",
+  "[concurrence] Seuls les 8 premiers concurrents (par volume puis présence multi-sources) ont fait l'objet d'une analyse qualitative ; les 43 suivants ne portent que leurs statistiques.",
+  "[tendances] L'indice Google Trends est relatif (0-100) : il ne représente ni un volume de recherche, ni une taille de marché.",
+  "[tendances] Les valeurs sont normalisées par requête : deux exécutions distinctes ne sont pas comparables entre elles.",
+  "[tendances] Les données Google Trends sont échantillonnées : les résultats ne sont pas strictement reproductibles d'un appel à l'autre.",
+  "[tendances] Le classement `profil_courbe` est une heuristique, pas une méthode statistiquement validée.",
+  "[tendances] Aucun filtre de catégorie n'est disponible dans le mode `keyword` de l'actor : les homonymes du terme interrogé ne peuvent pas être écartés.",
+  "[tendances] L'absence de données de tendance ne constitue pas un signal négatif sur le potentiel du produit.",
+  "[tendances] L'actor data_xplorer/google-trends-fast-scraper ne renvoie ni requêtes associées ni sujets associés en mode `keyword` : `requetes_emergentes`, `sujets_associes` et `nb_breakout` sont donc toujours vides ou nuls, ce qui ne signifie pas qu'aucune requête émergente n'existe.",
+  "[tendances] L'horizon 5 ans est renvoyé au pas hebdomadaire : la saisonnalité et la pente annuelle sont calculées après agrégation mensuelle des semaines.",
+  "[tendances] L'actor ne prend pas de paramètre de langue : la langue d'interface est déduite du code pays. `ParametresMarche.langue` ne sert qu'à rédiger le mot-clé interrogé.",
+  "[tendances] Le terme interrogé « micro cravate sans fil » ne porte pas l'attribut différenciant « USB Type-C » : les indicateurs décrivent la catégorie générique, pas le segment spécifique du produit.",
+  "La règle de verdict appliquée est une HYPOTHÈSE DE TRAVAIL, non un arbitrage validé : ni le cahier des charges ni la spécification fonctionnelle ne définissent le « potentiel commercial ». Ses seuils doivent être recalibrés sur des cas réels avant tout usage décisionnel.",
+  "La qualité de ces recommandations est bornée par celle des analyses amont : un pain point mal caractérisé ou un benchmark biaisé se propage ici sans être détecté.",
+  "Les recommandations reposent sur un corpus non exhaustif, hérité des biais de collecte des agents amont. Aucune part de marché, aucun volume de demande et aucune projection de vente n'en découlent.",
+  "Aucune donnée financière interne (coûts d'achat, marges, frais logistiques, budget publicitaire) n'est disponible : les recommandations de prix sont des POSITIONNEMENTS DE MARCHÉ, jamais des calculs de rentabilité.",
+  "[insights] confiance amont déclarée faible",
+  "[tendances] le contrat du collecteur Tendances ne porte aucun horodatage : la fraîcheur de cette entrée ne peut pas être qualifiée",
+  "Verdict négatif : les recommandations livrées se limitent à l'essentiel défendable et à des pivots, conformément à la règle."
+ ],
+ "produit": {
+  "nom": "Type-C Wireless Lavalier Microphone",
+  "categorie": "Lavalier Microphone",
+  "description": "Wireless lavalier clip-on microphone with a USB Type-C receiver, sold on AliExpress for $0.99 (down from $8.25). It is an omnidirectional condenser mic with a built-in battery, plug-and-play with smartphones, computers and cameras. Rated 4.3/5 from 337 reviews, in stock and shipped from China for $1.99."
+ },
+ "risques": [
+  {
+   "type": "effet_de_mode",
+   "gravite": "elevee",
+   "libelle": "Effet de mode sur la demande de recherche, avec risque de retournement rapide et de stock obsolète.",
+   "fondements": [
+    {
+     "ref": "tendances.indicateurs.signal_effet_de_mode",
+     "type": "fait",
+     "detail": "Signal d'effet de mode explicitement levé par le collecteur."
+    },
+    {
+     "ref": "tendances.indicateurs.profil_courbe",
+     "type": "fait",
+     "detail": "Profil de la courbe classé en 'effet_de_mode'."
+    },
+    {
+     "ref": "tendances.indicateurs.momentum_90j",
+     "type": "fait",
+     "detail": "Momentum sur 90 jours négatif à -0,55, signe de déclin récent de l'intérêt de recherche."
+    },
+    {
+     "ref": "tendances.indicateurs.volatilite",
+     "type": "fait",
+     "detail": "Volatilité élevée (0,83) accentuant l'incertitude sur la trajectoire de la demande."
+    }
+   ],
+   "attenuation": "Limiter les engagements de stock à des lots courts et réapprovisionnables rapidement, fixer une fenêtre de sortie commerciale courte (test sur un trimestre), et définir un critère d'arrêt explicite (ex. poursuite du momentum négatif sur deux périodes consécutives) déclenchant l'arrêt des réassorts."
+  },
+  {
+   "type": "marche",
+   "gravite": "elevee",
+   "libelle": "Positionnement prix extrêmement bas par rapport aux segments d'entrée du marché, risquant d'accentuer la perception de faible qualité déjà signalée par les pain points consommateurs.",
+   "fondements": [
+    {
+     "ref": "concurrence.differenciation.attributs_distinctifs_potentiels[0]",
+     "type": "fait",
+     "detail": "Prix affiché largement inférieur au minimum observé sur AliExpress (0,37€) et au segment entrée (0,37–8,49€)."
+    },
+    {
+     "ref": "insights.pain_points[0]",
+     "type": "fait",
+     "detail": "Qualité audio insuffisante citée dans 14,55% des unités du corpus consommateur."
+    },
+    {
+     "ref": "insights.pain_points[4]",
+     "type": "fait",
+     "detail": "Coût élevé pour qualité insuffisante cité dans 9,09% des unités, signe d'une sensibilité au rapport qualité/prix."
+    }
+   ],
+   "attenuation": "Documenter et communiquer sur des preuves de qualité (tests indépendants, spécifications précises) pour contrer l'association prix bas = qualité faible, plutôt que de concourir uniquement sur le prix."
+  },
+  {
+   "type": "produit",
+   "gravite": "moyenne",
+   "libelle": "Absence de fonctionnalités jugées courantes chez la concurrence (réduction de bruit, écran LED, portée sans fil précisée, appairage automatique, garantie, statut professionnel), positionnant le produit en retrait perçu.",
+   "fondements": [
+    {
+     "ref": "concurrence.differenciation.desavantages_apparents[0]",
+     "type": "fait",
+     "detail": "Absence de réduction/annulation de bruit, présente chez au moins 15 offres concurrentes."
+    },
+    {
+     "ref": "concurrence.differenciation.desavantages_apparents[1]",
+     "type": "fait",
+     "detail": "Absence d'écran LED numérique de contrôle, présent chez 9 offres concurrentes."
+    },
+    {
+     "ref": "concurrence.differenciation.desavantages_apparents[2]",
+     "type": "fait",
+     "detail": "Absence de portée sans fil spécifiée, mise en avant chez au moins 3 offres concurrentes."
+    },
+    {
+     "ref": "concurrence.differenciation.desavantages_apparents[3]",
+     "type": "fait",
+     "detail": "Absence d'appairage automatique et de configuration à deux microphones, présentes chez 4 offres chacune."
+    },
+    {
+     "ref": "concurrence.differenciation.desavantages_apparents[5]",
+     "type": "fait",
+     "detail": "Absence de revendication de statut 'professionnel', utilisé par 6 offres concurrentes."
+    }
+   ],
+   "attenuation": "Prioriser le développement ou la mise en avant de fonctionnalités manquantes jugées standards sur ce marché (réduction de bruit en premier lieu, corrélée aux pain points consommateurs), ou à défaut assumer explicitement un positionnement entrée de gamme clairement communiqué."
+  },
+  {
+   "type": "concurrentiel",
+   "gravite": "moyenne",
+   "libelle": "Marché concurrentiel fragmenté et à forte concentration publicitaire sur un petit nombre d'acteurs, rendant la visibilité difficile pour un nouvel entrant.",
+   "fondements": [
+    {
+     "ref": "concurrence.intensite.nb_concurrents_identifies",
+     "type": "fait",
+     "detail": "51 concurrents identifiés sur le marché."
+    },
+    {
+     "ref": "concurrence.intensite.concentration_volumes_top3_pct",
+     "type": "fait",
+     "detail": "Le top 3 des annonceurs capte 95,2% des volumes publicitaires."
+    },
+    {
+     "ref": "concurrence.intensite.nb_annonceurs",
+     "type": "fait",
+     "detail": "Seulement 5 annonceurs actifs identifiés pour 51 concurrents, signe d'une bataille publicitaire concentrée."
+    }
+   ],
+   "attenuation": "Éviter la confrontation frontale sur les canaux publicitaires dominés par les leaders (Insta360, BOYA Audio) et privilégier des angles de niche non couverts (ex. persona/usage spécifique) identifiés comme peu exploités dans le corpus."
+  },
+  {
+   "type": "donnees",
+   "gravite": "elevee",
+   "libelle": "Décision fondée sur des données consommateur de confiance faible et sur une entrée Tendances sans horodatage qualifiable, augmentant le risque de décision sur base incomplète.",
+   "fondements": [
+    {
+     "ref": "insights.sentiment",
+     "type": "fait",
+     "detail": "Confiance F3 déclarée faible sur les données consommateur (30 positifs/18 négatifs/7 neutres sur 55 unités, corpus limité)."
+    },
+    {
+     "ref": "tendances.indicateurs.nb_breakout",
+     "type": "fait",
+     "detail": "Aucun horodatage disponible pour l'entrée Tendances, la fraîcheur de cette source ne peut être qualifiée."
+    }
+   ],
+   "attenuation": "Compléter le corpus consommateur par une collecte additionnelle d'avis ciblés sur le produit précis avant d'engager des décisions structurantes, et solliciter une actualisation datée de la source Tendances pour vérifier la fraîcheur du signal d'effet de mode."
+  }
+ ],
+ "diagnostic": {
+  "convergences": [
+   {
+    "constat": "La face concurrence signale l'absence de garantie ou de politique de retour affichée dans les claims publicitaires, et la face consommateur ne fournit aucun signal positif structuré permettant de contrebalancer ce constat, ce qui laisse la question de la réassurance client ouverte sur les deux faces.",
+    "fondements": [
+     {
+      "ref": "concurrence.positionnement.angles_peu_exploites[1]",
+      "type": "fait",
+      "detail": "Absence de garantie/politique de retour dans les claims publicitaires agrégés."
+     },
+     {
+      "ref": "concurrence.differenciation.desavantages_apparents[4]",
+      "type": "fait",
+      "detail": "Aucune garantie ou politique de retour mentionnée sur la fiche produit étudiée."
+     }
+    ]
+   },
+   {
+    "constat": "La qualité audio et la fiabilité matérielle apparaissent comme des points de friction identifiés côté consommateur, tandis que côté offre, la réduction de bruit et la qualité audio comparée à des références haut de gamme sont mises en avant comme facteur de réassurance publicitaire — signe que ces dimensions sont jugées critiques par les deux faces, sans que l'on sache si le produit étudié y répond.",
+    "fondements": [
+     {
+      "ref": "insights.pain_points[0]",
+      "type": "fait",
+      "detail": "Qualité audio insuffisante, score 43,29, la plus élevée des pain points."
+     },
+     {
+      "ref": "insights.pain_points[1]",
+      "type": "fait",
+      "detail": "Défaillances matérielles et fiabilité, score 28,41."
+     },
+     {
+      "ref": "concurrence.positionnement.facteurs_cles_succes[0]",
+      "type": "fait",
+      "detail": "Réduction de bruit et qualité audio mises en avant comme facteur de réassurance publicitaire."
+     },
+     {
+      "ref": "concurrence.differenciation.desavantages_apparents[0]",
+      "type": "fait",
+      "detail": "Absence de fonctionnalité de réduction/annulation de bruit sur la fiche du produit étudié, alors que présente chez au moins 15 offres concurrentes."
+     }
+    ]
+   }
+  ],
+  "contradictions": [
+   {
+    "constat": "L'offre étudiée affiche un prix très inférieur (0,99 $, livré 1,99 $) au segment « entrée » observé sur AliExpress (0,37–8,49 €) et à la médiane amazon (14,99 €), alors que le consommateur signale des pain points de qualité audio et de fiabilité qui pourraient être accentués par un positionnement aussi bas.",
+    "fondements": [
+     {
+      "ref": "concurrence.differenciation.attributs_distinctifs_potentiels[0]",
+      "type": "fait",
+      "detail": "Prix affiché largement sous le segment entrée AliExpress (0,37–8,49€)."
+     },
+     {
+      "ref": "insights.pain_points[0]",
+      "type": "fait",
+      "detail": "Qualité audio insuffisante citée dans 14,55% des unités."
+     },
+     {
+      "ref": "insights.pain_points[4]",
+      "type": "fait",
+      "detail": "Coût élevé pour qualité insuffisante cité dans 9,09% des unités."
+     }
+    ],
+    "lecture_prudente": "Il est possible que le prix extrêmement bas serve justement d'offre d'appel dans un marché où le consommateur reste sensible à la qualité perçue, ou au contraire qu'il renforce les craintes de faible fiabilité déjà exprimées ailleurs sur des produits différents. Le dossier ne permet pas de savoir si les avis à l'origine des pain points concernent des produits à prix similaire ou des produits premium ; il faudrait observer la distribution des avis par tranche de prix pour départager ces lectures."
+   },
+   {
+    "constat": "La demande de recherche est qualifiée d'« effet de mode » avec un momentum négatif sur 90 jours, tandis que l'offre concurrentielle montre une intensité publicitaire notable (51 concurrents identifiés, 152 offres cœur) suggérant un marché encore actif commercialement.",
+    "fondements": [
+     {
+      "ref": "tendances.indicateurs.signal_effet_de_mode",
+      "type": "fait",
+      "detail": "Signal d'effet de mode levé par le collecteur."
+     },
+     {
+      "ref": "tendances.indicateurs.momentum_90j",
+      "type": "fait",
+      "detail": "Momentum sur 90 jours à -0,55, soit une baisse marquée."
+     },
+     {
+      "ref": "concurrence.intensite.nb_concurrents_identifies",
+      "type": "fait",
+      "detail": "51 concurrents identifiés."
+     },
+     {
+      "ref": "concurrence.intensite.nb_offres_coeur",
+      "type": "fait",
+      "detail": "152 offres au cœur du benchmark."
+     }
+    ],
+    "lecture_prudente": "Un momentum de recherche déclinant peut coexister avec une offre encore nombreuse si celle-ci reflète un stock ou un positionnement antérieur à la baisse d'intérêt, ou si la baisse de recherche ne traduit pas une baisse de vente réelle (l'indice est relatif, sans volume absolu). Il faudrait un indicateur de volume de vente réel ou une évolution du nombre d'annonceurs actifs dans le temps pour trancher entre déclin de marché et simple fluctuation de l'intérêt de recherche."
+   },
+   {
+    "constat": "L'intensité publicitaire est décrite comme forte par la lecture F4 (51 concurrents, concentration du top 3 à 95,2%), mais le nombre d'annonces actives constatées est de 0 et la durée médiane de diffusion n'est que de 2 jours.",
+    "fondements": [
+     {
+      "ref": "concurrence.intensite.nb_annonces_actives",
+      "type": "fait",
+      "detail": "0 annonce active constatée."
+     },
+     {
+      "ref": "concurrence.intensite.duree_diffusion_mediane_jours",
+      "type": "fait",
+      "detail": "Durée de diffusion médiane de 2 jours."
+     },
+     {
+      "ref": "concurrence.intensite.concentration_volumes_top3_pct",
+      "type": "fait",
+      "detail": "Top 3 des annonceurs capte 95,2% des volumes."
+     },
+     {
+      "ref": "concurrence.intensite.lecture",
+      "type": "fait",
+      "detail": "Lecture F4 évoquant une forte pression publicitaire concentrée sur quelques acteurs."
+     }
+    ],
+    "lecture_prudente": "L'absence d'annonces actives au moment de la collecte peut simplement signifier une photographie instantanée dans un cycle publicitaire court (2 jours de durée médiane), sans indiquer un désintérêt structurel des annonceurs ; ou elle peut refléter un retrait récent et significatif de la pression publicitaire. Il faudrait une série temporelle du nombre d'annonces actives sur plusieurs semaines pour distinguer un creux passager d'un déclin réel."
+   }
+  ],
+  "lecture_marche": "Le dossier établit que la demande de recherche pour le terme pivot est classée en effet de mode par le collecteur, avec un momentum récent négatif et une volatilité élevée (0,83), tout en portant une saisonnalité marquée culminant au mois 11. Côté consommateur, les pain points dominants concernent la qualité audio, la fiabilité matérielle et l'ergonomie de placement, sur un corpus de confiance déclarée faible et sans besoins ni attentes structurés remontés. Côté offre, le marché apparaît fragmenté avec 51 concurrents identifiés et 152 offres cœur, une concentration publicitaire forte sur un petit nombre d'annonceurs (5) et de volumes (top 3 à 95,2%), pour une durée de diffusion médiane très courte (2 jours). Le prix du produit étudié se situe très en dessous des segments d'entrée observés sur AliExpress et Amazon, ce qui le distingue nettement de la structure de prix du marché sans que l'on puisse en déduire un avantage ou un désavantage concurrentiel certain. Plusieurs attributs jugés courants chez la concurrence (réduction de bruit, écran LED, portée sans fil précisée, appairage automatique, garantie étendue, statut « professionnel ») sont absents de la fiche du produit étudié, ce qui constitue un désavantage apparent documenté mais non nécessairement décisif. Le dossier ne permet pas de conclure sur la taille réelle du marché, sur le lien entre les pain points remontés et le produit précis étudié, ni sur l'évolution future de la demande au-delà des indicateurs relatifs fournis. La confiance portée aux données consommateur est qualifiée de faible, ce qui limite la portée des pain points identifiés, tandis que la confiance sur les données concurrentielles est élevée. Aucune donnée ne permet d'établir un lien de causalité entre le momentum de recherche déclinant et l'activité publicitaire ou commerciale observée sur l'offre.",
+  "fenetre_opportunite": "Le dossier indique un pic saisonnier de la demande au mois 11 avec une amplitude saisonnière de 1,09, mais le momentum sur 90 jours est négatif (-0,55) et la durée de diffusion publicitaire médiane observée n'est que de 2 jours : ces éléments temporels sont hétérogènes et ne permettent pas de définir une fenêtre d'opportunité fiable, seulement de noter l'existence d'une saisonnalité marquée à un moment donné de l'année."
+ },
+ "faits_cles": [
+  {
+   "ref": "tendances.indicateurs.profil_courbe",
+   "enonce": "Profil de la courbe de demande classé « effet de mode » par le collecteur, signal explicite levé",
+   "valeur": "effet_de_mode"
+  },
+  {
+   "ref": "tendances.indicateurs.momentum_90j",
+   "enonce": "Momentum de la demande sur 90 jours fortement négatif, signe d'un repli récent marqué",
+   "valeur": "-0.5455801104972375"
+  },
+  {
+   "ref": "concurrence.differenciation.attributs_partages[0]",
+   "enonce": "Attributs revendiqués (sans fil, USB-C, condensateur, plug-and-play, batterie intégrée) tous classés comme partagés avec la concurrence, sans différenciateur confirmé",
+   "valeur": "hypothese"
+  },
+  {
+   "ref": "concurrence.differenciation.desavantages_apparents[0]",
+   "enonce": "Absence de fonctionnalité de réduction/annulation de bruit sur la fiche produit, alors que présente chez au moins 15 offres concurrentes",
+   "valeur": "fait"
+  },
+  {
+   "ref": "concurrence.differenciation.desavantages_apparents[4]",
+   "enonce": "Absence de garantie ou politique de retour mentionnée sur la fiche produit étudiée",
+   "valeur": "fait"
+  },
+  {
+   "ref": "insights.pain_points[0]",
+   "enonce": "Qualité audio insuffisante identifiée comme pain point dominant côté consommateur",
+   "valeur": "14.55 % des unités, intensité 2.38, score 43.29"
+  },
+  {
+   "ref": "concurrence.intensite.concentration_volumes_top3_pct",
+   "enonce": "Concentration extrême des volumes publicitaires sur le top 3 des annonceurs, pour seulement 5 annonceurs actifs identifiés",
+   "valeur": "95.2"
+  },
+  {
+   "ref": "concurrence.benchmark_prix[aliexpress][EUR].mediane",
+   "enonce": "Prix médian du marché sur AliExpress et Amazon, servant de référentiel au positionnement prix très bas du produit étudié",
+   "valeur": "11.44"
+  },
+  {
+   "ref": "insights.sentiment",
+   "enonce": "Confiance déclarée faible sur les données consommateur ayant nourri le critère adéquation",
+   "valeur": "30 positifs / 18 négatifs / 7 neutres / 0 mixtes sur 55 unités"
+  }
+ ],
+ "hypotheses": [
+  "Seuils de la règle de verdict : positif si score ≥ 6, négatif si score ≤ 3, minimum de 4 critères évalués (heuristiques non validées).",
+  "Bornes du dossier de synthèse : 8 pain points, 6 besoins, 6 angles. Au-delà, les éléments les moins prioritaires n'atteignent pas les chaînes d'analyse.",
+  "Une entrée horodatée de plus de 30 jours est signalée comme potentiellement périmée ; les entrées sans horodatage ne peuvent pas être qualifiées."
+ ],
+ "opportunites": [
+  {
+   "libelle": "Corriger les défaillances de qualité audio et de fiabilité matérielle, identifiées comme les pain points les plus lourds côté consommateur, pour se différencier sur un critère jugé décisif par les deux faces du marché.",
+   "fondements": [
+    {
+     "ref": "insights.pain_points[0]",
+     "type": "fait",
+     "detail": "Qualité audio insuffisante, score 43,29, pain point le plus élevé du corpus."
+    },
+    {
+     "ref": "insights.pain_points[1]",
+     "type": "fait",
+     "detail": "Défaillances matérielles et fiabilité, score 28,41."
+    },
+    {
+     "ref": "concurrence.positionnement.facteurs_cles_succes[0]",
+     "type": "fait",
+     "detail": "Réduction de bruit et qualité audio mises en avant comme facteur de réassurance publicitaire par la concurrence."
+    }
+   ],
+   "description": "Les pain points 'qualité audio insuffisante' (score le plus élevé) et 'défaillances matérielles/fiabilité' convergent avec le fait que la réduction de bruit et la qualité audio sont valorisées comme facteur de réassurance publicitaire chez la concurrence. Une offre qui traiterait explicitement ces points pourrait se différencier, sous réserve de validation produit réelle.",
+   "conditions_de_capture": [
+    "Valider par des tests produit indépendants que le micro répond effectivement aux critiques de qualité audio et de fiabilité relevées dans le corpus.",
+    "Documenter et communiquer sur des spécifications techniques concrètes (réduction de bruit, portée, fiabilité) plutôt que des affirmations génériques.",
+    "Vérifier que les pain points identifiés concernent bien des produits comparables en gamme de prix, faute de quoi la lecture reste fragile (confiance F3 déclarée faible)."
+   ]
+  },
+  {
+   "libelle": "Afficher une garantie ou une politique de retour explicite dans la communication publicitaire, angle absent du corpus d'annonces observé.",
+   "fondements": [
+    {
+     "ref": "concurrence.positionnement.angles_peu_exploites[1]",
+     "type": "fait",
+     "detail": "Absence de garantie/politique de retour dans les claims publicitaires agrégés du corpus (6 annonces)."
+    },
+    {
+     "ref": "concurrence.differenciation.desavantages_apparents[4]",
+     "type": "fait",
+     "detail": "Aucune garantie ou politique de retour mentionnée sur la fiche produit étudiée elle-même, ce qui doit d'abord être corrigé avant de pouvoir capter cet angle."
+    }
+   ],
+   "description": "Le corpus d'annonces agrégées ne mentionne aucune garantie étendue ni politique de retour, alors que cet élément existe sur certaines pages marchandes concurrentes. Cette absence, constatée dans le corpus et non nécessairement dans le marché réel, pourrait constituer un angle de réassurance différenciant si elle est confirmée et exploitée.",
+   "conditions_de_capture": [
+    "Mettre en place une politique de garantie et de retour réelle et documentée pour le produit étudié avant toute communication.",
+    "Vérifier auprès d'un échantillon élargi d'annonces si l'absence constatée dans le corpus (6 annonces seulement) se confirme sur un corpus plus large avant d'investir sur cet angle.",
+    "Formuler la garantie comme argument publicitaire explicite, ce qui n'est fait par aucun annonceur du corpus actuel."
+   ]
+  },
+  {
+   "libelle": "Exploiter la fenêtre saisonnière de pic de demande au mois 11, sous réserve de confirmation par des données de vente réelles.",
+   "fondements": [
+    {
+     "ref": "tendances.indicateurs.saisonnalite.mois_pic",
+     "type": "fait",
+     "detail": "Mois de pic saisonnier identifié au mois 11."
+    },
+    {
+     "ref": "tendances.indicateurs.saisonnalite.amplitude",
+     "type": "fait",
+     "detail": "Amplitude saisonnière de 1,09, indiquant une variation marquée entre mois haut et bas."
+    },
+    {
+     "ref": null,
+     "type": "hypothese",
+     "detail": "L'existence d'un pic saisonnier passé ne garantit pas sa reproduction, d'autant que le momentum récent est négatif."
+    }
+   ],
+   "description": "Le dossier signale un pic saisonnier au mois 11 avec une amplitude marquée, mais cette lecture est fragilisée par un momentum à 90 jours négatif et l'absence de volumes absolus : il s'agit d'un signal relatif à confirmer plutôt qu'une fenêtre d'opportunité établie.",
+   "conditions_de_capture": [
+    "Confirmer sur plusieurs années la récurrence du pic au mois 11 avant d'engager des investissements marketing ou stock significatifs.",
+    "Croiser ce signal avec une donnée de volume de vente réel, absente du dossier, avant de dimensionner une campagne saisonnière.",
+    "Prévoir une fenêtre de lancement/relance courte autour du mois 11 pour limiter l'exposition si le signal ne se confirme pas."
+   ]
+  }
+ ],
+ "horodatage_utc": "2026-09-04T07:15:51Z",
+ "statuts_analyse": [
+  {
+   "phase": "diagnostic_croise",
+   "succes": true,
+   "nb_elements": 5,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "notation_grille",
+   "succes": true,
+   "nb_elements": 5,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "conditions_reexamen",
+   "succes": true,
+   "nb_elements": 6,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "recommandations",
+   "succes": true,
+   "nb_elements": 4,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "opportunites_risques",
+   "succes": true,
+   "nb_elements": 8,
+   "nb_tentatives": 2,
+   "message_erreur": null
+  },
+  {
+   "phase": "faits_cles_synthese",
+   "succes": true,
+   "nb_elements": 9,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "post_validation",
+   "succes": true,
+   "nb_elements": 9,
+   "nb_tentatives": 0,
+   "message_erreur": "9 valeur(s) de fait clé réécrite(s) depuis le dossier de synthèse."
+  },
+  {
+   "phase": "post_validation",
+   "succes": true,
+   "nb_elements": 3,
+   "nb_tentatives": 0,
+   "message_erreur": "3 valeur(s) hors vocabulaire contrôlé ramenée(s) à une valeur admise (domaine, priorité, horizon, effort, type ou gravité de risque)."
+  }
+ ],
+ "dossier_synthese": {
+  "demande": {
+   "indicateurs": [
+    {
+     "ref": "tendances.indicateurs.profil_courbe",
+     "detail": "Classification produite par le collecteur, non validée empiriquement.",
+     "valeur": "effet_de_mode",
+     "libelle": "Profil de la courbe de demande"
+    },
+    {
+     "ref": "tendances.indicateurs.indice_moyen_12m",
+     "detail": "Indice relatif de 0 à 100 : aucun volume absolu n'en découle.",
+     "valeur": "48.40384615384615",
+     "libelle": "Indice moyen sur 12 mois"
+    },
+    {
+     "ref": "tendances.indicateurs.momentum_90j",
+     "detail": "Variation relative ; 0.19 signifie +19 %.",
+     "valeur": "-0.5455801104972375",
+     "libelle": "Momentum sur 90 jours"
+    },
+    {
+     "ref": "tendances.indicateurs.pente_annuelle_5ans",
+     "detail": "Points d'indice par an.",
+     "valeur": "5.5970386039132745",
+     "libelle": "Pente annuelle sur 5 ans"
+    },
+    {
+     "ref": "tendances.indicateurs.volatilite",
+     "detail": "Coefficient de variation de la série 5 ans.",
+     "valeur": "0.8264449712490752",
+     "libelle": "Volatilité"
+    },
+    {
+     "ref": "tendances.indicateurs.nb_breakout",
+     "detail": "",
+     "valeur": "0",
+     "libelle": "Nombre de requêtes en explosion"
+    },
+    {
+     "ref": "tendances.indicateurs.signal_effet_de_mode",
+     "detail": "",
+     "valeur": "True",
+     "libelle": "Signal d'effet de mode"
+    },
+    {
+     "ref": "tendances.indicateurs.saisonnalite.mois_pic",
+     "detail": "",
+     "valeur": "11",
+     "libelle": "Mois de pic saisonnier"
+    },
+    {
+     "ref": "tendances.indicateurs.saisonnalite.amplitude",
+     "detail": "(max − min) / moyenne des indices mensuels.",
+     "valeur": "1.0912215744832086",
+     "libelle": "Amplitude saisonnière"
+    },
+    {
+     "ref": "tendances.indicateurs.concentration_geo",
+     "detail": "",
+     "valeur": "Pays de la Loire (0.06896551724137931)",
+     "libelle": "Zone la plus concentrée"
+    }
+   ],
+   "terme_pivot": "micro cravate sans fil",
+   "effet_de_mode": true,
+   "fallback_applique": false,
+   "motif_effet_de_mode": "`signal_effet_de_mode` levé par le collecteur et `profil_courbe` classé « effet_de_mode »",
+   "requetes_emergentes": []
+  },
+  "concurrence": {
+   "menaces": [
+    {
+     "ref": "concurrence.concurrents[0]",
+     "detail": "91 offre(s), fourchettes {'EUR': '0.37–58.99'}",
+     "valeur": "menace fort",
+     "libelle": "Offres sans marque identifiable"
+    },
+    {
+     "ref": "concurrence.concurrents[1]",
+     "detail": "3 offre(s), fourchettes {'EUR': '12.99–23.39'}",
+     "valeur": "menace moyen",
+     "libelle": "WARM BOX"
+    },
+    {
+     "ref": "concurrence.concurrents[2]",
+     "detail": "5 offre(s), fourchettes {'EUR': '27.00–141.99'}",
+     "valeur": "menace fort",
+     "libelle": "DJI"
+    },
+    {
+     "ref": "concurrence.concurrents[3]",
+     "detail": "3 offre(s), fourchettes {'EUR': '11.99–17.69'}",
+     "valeur": "menace moyen",
+     "libelle": "Uewpv"
+    },
+    {
+     "ref": "concurrence.concurrents[4]",
+     "detail": "3 offre(s), fourchettes {'EUR': '13.99–19.99'}",
+     "valeur": "menace moyen",
+     "libelle": "XIXIXIAXIA"
+    },
+    {
+     "ref": "concurrence.concurrents[5]",
+     "detail": "2 offre(s), fourchettes {'EUR': '25.99–29.99'}",
+     "valeur": "menace moyen",
+     "libelle": "HMKCH"
+    },
+    {
+     "ref": "concurrence.concurrents[6]",
+     "detail": "6 offre(s), fourchettes {'EUR': '19.99–52.62'}",
+     "valeur": "menace fort",
+     "libelle": "BOYA"
+    },
+    {
+     "ref": "concurrence.concurrents[7]",
+     "detail": "2 offre(s), fourchettes {'EUR': '16.99–17.99'}",
+     "valeur": "menace moyen",
+     "libelle": "Newmight"
+    }
+   ],
+   "benchmark": [
+    {
+     "ref": "concurrence.benchmark_prix[aliexpress][EUR].mediane",
+     "detail": "sur 94 offres, étendue 0.37–60.69, dispersion 0.99",
+     "valeur": "11.44",
+     "libelle": "Prix médian aliexpress en EUR"
+    },
+    {
+     "ref": "concurrence.benchmark_prix[aliexpress][EUR].etendue",
+     "detail": "",
+     "valeur": "0.37–60.69",
+     "libelle": "Étendue de prix aliexpress en EUR"
+    },
+    {
+     "ref": "concurrence.benchmark_prix[aliexpress][EUR].segment.entree",
+     "detail": "",
+     "valeur": "0.37–8.49",
+     "libelle": "Segment entree aliexpress en EUR"
+    },
+    {
+     "ref": "concurrence.benchmark_prix[aliexpress][EUR].segment.coeur",
+     "detail": "",
+     "valeur": "8.49–13.99",
+     "libelle": "Segment coeur aliexpress en EUR"
+    },
+    {
+     "ref": "concurrence.benchmark_prix[aliexpress][EUR].segment.premium",
+     "detail": "",
+     "valeur": "13.99–60.69",
+     "libelle": "Segment premium aliexpress en EUR"
+    },
+    {
+     "ref": "concurrence.benchmark_prix[amazon][EUR].mediane",
+     "detail": "sur 58 offres, étendue 8.49–141.99, dispersion 1.315",
+     "valeur": "14.99",
+     "libelle": "Prix médian amazon en EUR"
+    },
+    {
+     "ref": "concurrence.benchmark_prix[amazon][EUR].etendue",
+     "detail": "",
+     "valeur": "8.49–141.99",
+     "libelle": "Étendue de prix amazon en EUR"
+    },
+    {
+     "ref": "concurrence.benchmark_prix[amazon][EUR].segment.entree",
+     "detail": "",
+     "valeur": "8.49–12.99",
+     "libelle": "Segment entree amazon en EUR"
+    },
+    {
+     "ref": "concurrence.benchmark_prix[amazon][EUR].segment.coeur",
+     "detail": "",
+     "valeur": "12.99–23.39",
+     "libelle": "Segment coeur amazon en EUR"
+    },
+    {
+     "ref": "concurrence.benchmark_prix[amazon][EUR].segment.premium",
+     "detail": "",
+     "valeur": "23.39–141.99",
+     "libelle": "Segment premium amazon en EUR"
+    }
+   ],
+   "intensite": [
+    {
+     "ref": "concurrence.intensite.nb_concurrents_identifies",
+     "detail": "",
+     "valeur": "51",
+     "libelle": "Concurrents identifiés"
+    },
+    {
+     "ref": "concurrence.intensite.nb_offres_coeur",
+     "detail": "",
+     "valeur": "152",
+     "libelle": "Offres au cœur du benchmark"
+    },
+    {
+     "ref": "concurrence.intensite.nb_annonceurs",
+     "detail": "",
+     "valeur": "5",
+     "libelle": "Annonceurs actifs"
+    },
+    {
+     "ref": "concurrence.intensite.nb_annonces_actives",
+     "detail": "",
+     "valeur": "0",
+     "libelle": "Annonces actives"
+    },
+    {
+     "ref": "concurrence.intensite.duree_diffusion_mediane_jours",
+     "detail": "",
+     "valeur": "2.0",
+     "libelle": "Longévité publicitaire médiane (jours)"
+    },
+    {
+     "ref": "concurrence.intensite.concentration_volumes_top3_pct",
+     "detail": "",
+     "valeur": "95.2",
+     "libelle": "Concentration des volumes du top 3 (%)"
+    },
+    {
+     "ref": "concurrence.intensite.lecture",
+     "detail": "",
+     "valeur": "Les indicateurs fournis dessinent un marché à forte pression publicitaire mais très concentrée : 5 annonceurs seulement pour 51 concurrents identifiés, avec un top 3 qui capte 95,2% des volumes, ce qui suggère une bataille publicitaire dominée par une poignée d'acteurs (Insta360, BOYA Audio notamment, présents plusieurs fois dans les annonces). La durée de diffusion médiane de 2 jours contre un ma",
+     "libelle": "Lecture de l'intensité par F4"
+    }
+   ],
+   "confiance_f4": "elevee",
+   "position_prix": null,
+   "differenciation": [
+    {
+     "ref": "concurrence.differenciation.attributs_distinctifs_potentiels[0]",
+     "detail": "",
+     "valeur": "hypothese",
+     "libelle": "Attribut distinctif potentiel : Le prix affiché ($0.99, soit une réduction de 88% par rapport à $8.25, et un prix final livré de $1.99) est très inférieur au minimum observé sur AliExpress (0.37€) et largement sous le segment « entrée » (0.37€–8.49€), ce qui pourrait positionner le produit comme une offre d'appel extrême sur ce marché."
+    },
+    {
+     "ref": "concurrence.differenciation.attributs_distinctifs_potentiels[1]",
+     "detail": "",
+     "valeur": "hypothese",
+     "libelle": "Attribut distinctif potentiel : La note de 4.3/5 sur 337 avis, si confirmée, situerait le produit dans une fourchette de satisfaction correcte, mais aucun avis client n'est disponible dans le corpus concurrentiel pour comparer ce niveau à celui des concurrents, ce qui limite la portée de cette comparaison."
+    },
+    {
+     "ref": "concurrence.differenciation.attributs_distinctifs_potentiels[2]",
+     "detail": "",
+     "valeur": "hypothese",
+     "libelle": "Attribut distinctif potentiel : Le positionnement combinant un rabais promotionnel affiché (« down from $8.25 ») avec le prix très bas pourrait s'inscrire dans une pratique de réduction immédiate déjà observée chez des annonceurs concurrents, mais à une échelle de remise nettement supérieure (88% contre 40-50% chez les concurrents)."
+    },
+    {
+     "ref": "concurrence.differenciation.attributs_partages[0]",
+     "detail": "",
+     "valeur": "hypothese",
+     "libelle": "Attribut partagé : Le produit est présenté comme sans fil, ce qui correspond à l'attribut le plus fréquent du corpus concurrentiel (46 offres recensées)."
+    },
+    {
+     "ref": "concurrence.differenciation.attributs_partages[1]",
+     "detail": "",
+     "valeur": "hypothese",
+     "libelle": "Attribut partagé : Le produit utilise un récepteur USB Type-C, attribut partagé avec 8 à 11 offres concurrentes selon la dénomination (« USB-C » ou « Type-C »)."
+    },
+    {
+     "ref": "concurrence.differenciation.attributs_partages[2]",
+     "detail": "",
+     "valeur": "hypothese",
+     "libelle": "Attribut partagé : Le produit est un microphone à condensateur omnidirectionnel, catégorie partagée avec au moins 7 offres concurrentes affichant ce même attribut."
+    },
+    {
+     "ref": "concurrence.differenciation.attributs_partages[3]",
+     "detail": "",
+     "valeur": "hypothese",
+     "libelle": "Attribut partagé : Le produit annonce une compatibilité plug-and-play avec smartphones, ordinateurs et caméras, un positionnement multi-usage que l'on retrouve chez des offres mentionnant « iPhone Android » ou « Smartphone »."
+    },
+    {
+     "ref": "concurrence.differenciation.attributs_partages[4]",
+     "detail": "",
+     "valeur": "hypothese",
+     "libelle": "Attribut partagé : Le produit dispose d'une batterie intégrée, comme certaines offres concurrentes qui mettent en avant une « Batterie externe » ou des capacités précises (ex. 300000 mAh, 20000mAh) — bien que la nature exacte de la batterie du produit étudié ne soit pas précisée."
+    },
+    {
+     "ref": "concurrence.differenciation.desavantages_apparents[0]",
+     "detail": "",
+     "valeur": "fait",
+     "libelle": "Désavantage apparent : Contrairement à plusieurs offres concurrentes, la fiche produit ne mentionne aucune fonctionnalité de réduction ou d'annulation de bruit, alors que cet attribut est présent chez au moins 15 offres (« Réduction bruit ») et 10 autres (« Réduction du bruit »), en faisant un attribut courant sur ce marché."
+    },
+    {
+     "ref": "concurrence.differenciation.desavantages_apparents[1]",
+     "detail": "",
+     "valeur": "fait",
+     "libelle": "Désavantage apparent : La fiche produit ne mentionne aucun écran LED numérique de contrôle, fonctionnalité présente chez 9 offres concurrentes, qui pourrait être perçue comme un gage de fiabilité ou de contrôle utilisateur supplémentaire."
+    },
+    {
+     "ref": "concurrence.differenciation.desavantages_apparents[2]",
+     "detail": "",
+     "valeur": "fait",
+     "libelle": "Désavantage apparent : La fiche produit ne mentionne pas de portée sans fil spécifique (ex. 20m), alors que cette donnée technique est mise en avant chez au moins 3 offres concurrentes comme argument de performance."
+    },
+    {
+     "ref": "concurrence.differenciation.desavantages_apparents[3]",
+     "detail": "",
+     "valeur": "fait",
+     "libelle": "Désavantage apparent : La fiche produit ne mentionne pas de fonction d'appairage automatique, présente chez 4 offres concurrentes, ni de configuration à deux microphones, présente chez 4 autres offres — deux fonctionnalités qui simplifient l'usage en interview ou tournage à plusieurs intervenants."
+    },
+    {
+     "ref": "concurrence.differenciation.desavantages_apparents[4]",
+     "detail": "",
+     "valeur": "fait",
+     "libelle": "Désavantage apparent : Aucune garantie ou politique de retour n'est mentionnée dans la fiche produit, alors que certaines pages marchandes concurrentes affichent une garantie étendue (ex. 3 ans), ce qui pourrait être perçu comme un désavantage en termes de réassurance client — sans que cela signifie une absence réelle de garantie sur le produit étudié."
+    },
+    {
+     "ref": "concurrence.differenciation.desavantages_apparents[5]",
+     "detail": "",
+     "valeur": "fait",
+     "libelle": "Désavantage apparent : La fiche produit ne revendique pas de statut « professionnel », qualificatif utilisé par 6 offres concurrentes, ce qui pourrait positionner le produit étudié comme davantage orienté grand public ou entrée de gamme dans la perception des acheteurs."
+    }
+   ],
+   "bornes_benchmark": {
+    "EUR": {
+     "max": 141.99,
+     "min": 0.37
+    }
+   },
+   "devises_benchmark": [
+    "EUR"
+   ],
+   "validite_regionale": [
+    "aliexpress (region_etude) : prix AliExpress pour une livraison en FR.",
+    "amazon (marketplace_pays) : les prix et avis décrivent le marché de amazon.fr, soit FR — c'est bien la région d'étude.",
+    "meta_ads (diffusion_pays) : annonces diffusées en FR, quel que soit le pays de l'annonceur : la présence publicitaire n'implique ni disponibilité produit, ni volume de vente.",
+    "recherche_web (mixte) : pages web de portées hétérogènes (régionales et globales) : le champ `portee_regionale` de chaque page fait foi, pas la source."
+   ],
+   "angles_peu_exploites": [
+    {
+     "ref": "concurrence.positionnement.angles_peu_exploites[0]",
+     "detail": "Absence constatée dans le corpus F4, jamais une absence de marché.",
+     "valeur": "fait",
+     "libelle": "Aucun claim publicitaire du corpus ne met en avant le prix comme argument unique sans référence à la qualité ou à l'innovation, hormis un seul annonceur : la segmentation par persona ou usage spécifique (ex. enseignant, guide touristique, sport) n'est pas observée dans le corpus (6 annonces, 10 pages)."
+    },
+    {
+     "ref": "concurrence.positionnement.angles_peu_exploites[1]",
+     "detail": "Absence constatée dans le corpus F4, jamais une absence de marché.",
+     "valeur": "fait",
+     "libelle": "Aucune garantie étendue ou politique de retour n'est mentionnée dans les claims publicitaires agrégés, alors qu'elle apparaît dans certaines pages marchandes (ex. garantie 3 ans) : l'articulation entre promesse publicitaire et garantie n'est pas observée dans le corpus d'annonces (6 annonces)."
+    },
+    {
+     "ref": "concurrence.positionnement.angles_peu_exploites[2]",
+     "detail": "Absence constatée dans le corpus F4, jamais une absence de marché.",
+     "valeur": "fait",
+     "libelle": "Aucun avis client n'est présent dans les données fournies : la lecture de la satisfaction réelle des utilisateurs n'est pas observée dans le corpus (0 avis, 6 annonces, 10 pages)."
+    }
+   ],
+   "facteurs_cles_succes": [
+    {
+     "ref": "concurrence.positionnement.facteurs_cles_succes[0]",
+     "detail": "",
+     "valeur": "fait",
+     "libelle": "La réduction de bruit et la qualité audio comparée à des références haut de gamme apparaissent comme facteur de réassurance mis en avant dans les publicités."
+    },
+    {
+     "ref": "concurrence.positionnement.facteurs_cles_succes[1]",
+     "detail": "",
+     "valeur": "fait",
+     "libelle": "L'autonomie de batterie élevée et la polyvalence de configuration sont mises en avant comme argument de différenciation par un annonceur premium."
+    },
+    {
+     "ref": "concurrence.positionnement.facteurs_cles_succes[2]",
+     "detail": "",
+     "valeur": "hypothese",
+     "libelle": "La présence de comparatifs indépendants multiples sur le marché (blogs, sites de tests) suggère que la validation tierce et le classement contribuent à la crédibilité perçue des produits."
+    }
+   ]
+  },
+  "consommateur": {
+   "besoins": [],
+   "attentes": [],
+   "sentiment": {
+    "ref": "insights.sentiment",
+    "detail": "",
+    "valeur": "30 positifs / 18 négatifs / 7 neutres / 0 mixtes sur 55 unités",
+    "libelle": "Répartition des sentiments"
+   },
+   "pain_points": [
+    {
+     "ref": "insights.pain_points[0]",
+     "detail": " (portée mixte, confiance moyenne)",
+     "valeur": "14.55 % des unités, intensité 2.38, score 43.29",
+     "libelle": "Qualité audio insuffisante"
+    },
+    {
+     "ref": "insights.pain_points[1]",
+     "detail": " (portée regionale, confiance moyenne)",
+     "valeur": "9.09 % des unités, intensité 2.5, score 28.41",
+     "libelle": "Défaillances matérielles et fiabilité"
+    },
+    {
+     "ref": "insights.pain_points[2]",
+     "detail": " (portée regionale, confiance moyenne)",
+     "valeur": "14.55 % des unités, intensité 1.5, score 27.28",
+     "libelle": "Problèmes de placement et ergonomie"
+    },
+    {
+     "ref": "insights.pain_points[3]",
+     "detail": " (portée mixte, confiance moyenne)",
+     "valeur": "10.91 % des unités, intensité 2.5, score 27.27",
+     "libelle": "Saturation et distorsion audio"
+    },
+    {
+     "ref": "insights.pain_points[4]",
+     "detail": " (portée mixte, confiance moyenne)",
+     "valeur": "9.09 % des unités, intensité 1.8, score 16.36",
+     "libelle": "Coût élevé pour qualité insuffisante"
+    },
+    {
+     "ref": "insights.pain_points[5]",
+     "detail": " (portée regionale, confiance moyenne)",
+     "valeur": "9.09 % des unités, intensité 1.6, score 14.54",
+     "libelle": "Limitations des micros cravate"
+    },
+    {
+     "ref": "insights.pain_points[6]",
+     "detail": " (portée mixte, confiance moyenne)",
+     "valeur": "7.27 % des unités, intensité 2.0, score 14.54",
+     "libelle": "Problèmes de compatibilité équipement"
+    },
+    {
+     "ref": "insights.pain_points[7]",
+     "detail": " (portée globale, confiance faible)",
+     "valeur": "5.45 % des unités, intensité 2.0, score 13.62",
+     "libelle": "Contrôle uniquement par application téléphone"
+    }
+   ],
+   "confiance_f3": "faible",
+   "sensibilite_prix": {
+    "ref": "insights.comportements_achat.sensibilite_prix",
+    "detail": "",
+    "valeur": "indeterminee",
+    "libelle": "Sensibilité au prix"
+   },
+   "signaux_positifs": [],
+   "divergences_sources": []
+  },
+  "qualite_donnees": {
+   "entrees": [
+    {
+     "entree": "insights",
+     "presente": true,
+     "age_jours": 0,
+     "horodatage": "2026-09-04T07:11:13Z",
+     "avertissements": [
+      "confiance amont déclarée faible"
+     ],
+     "confiance_heritee": "faible",
+     "donnees_suffisantes": true,
+     "fraicheur_qualifiable": true
+    },
+    {
+     "entree": "concurrence",
+     "presente": true,
+     "age_jours": 0,
+     "horodatage": "2026-09-04T07:12:02Z",
+     "avertissements": [],
+     "confiance_heritee": "elevee",
+     "donnees_suffisantes": true,
+     "fraicheur_qualifiable": true
+    },
+    {
+     "entree": "tendances",
+     "presente": true,
+     "age_jours": null,
+     "horodatage": null,
+     "avertissements": [
+      "le contrat du collecteur Tendances ne porte aucun horodatage : la fraîcheur de cette entrée ne peut pas être qualifiée"
+     ],
+     "confiance_heritee": null,
+     "donnees_suffisantes": true,
+     "fraicheur_qualifiable": false
+    }
+   ],
+   "nb_entrees_degradees": 1,
+   "nb_entrees_presentes": 3
+  }
+ },
+ "alertes_coherence": [],
+ "confiance_globale": {
+  "niveau": "moyenne",
+  "facteurs": [
+   "3 entrée(s) sur 3 présente(s)",
+   "5 critère(s) évalué(s) sur 5",
+   "[insights] confiance amont déclarée faible",
+   "[tendances] le contrat du collecteur Tendances ne porte aucun horodatage : la fraîcheur de cette entrée ne peut pas être qualifiée"
+  ],
+  "justification": "1 entrée(s) dégradée(s) (données insuffisantes ou confiance amont faible) : la qualité de ces recommandations est bornée par celle des analyses amont."
+ },
+ "sources_utilisees": [
+  {
+   "source": "insights",
+   "fichier": "insights.json",
+   "avertissements": [],
+   "nb_items_charges": 15,
+   "nb_items_exploites": 15,
+   "donnees_disponibles": true
+  },
+  {
+   "source": "concurrence",
+   "fichier": "concurrence.json",
+   "avertissements": [],
+   "nb_items_charges": 53,
+   "nb_items_exploites": 53,
+   "donnees_disponibles": true
+  },
+  {
+   "source": "tendances",
+   "fichier": "tendances.json",
+   "avertissements": [],
+   "nb_items_charges": 1,
+   "nb_items_exploites": 1,
+   "donnees_disponibles": true
+  }
+ ],
+ "verdict_potentiel": {
+  "grille": [
+   {
+    "score": 0,
+    "critere": "demande",
+    "fondements": [
+     {
+      "ref": "tendances.indicateurs.profil_courbe",
+      "type": "fait",
+      "detail": "Profil de courbe classé « effet_de_mode »"
+     },
+     {
+      "ref": "tendances.indicateurs.signal_effet_de_mode",
+      "type": "fait",
+      "detail": "Signal d'effet de mode levé (True)"
+     },
+     {
+      "ref": "tendances.indicateurs.momentum_90j",
+      "type": "fait",
+      "detail": "Momentum à -0.5456, soit environ -55% sur 90 jours"
+     },
+     {
+      "ref": "tendances.indicateurs.pente_annuelle_5ans",
+      "type": "fait",
+      "detail": "Pente annuelle positive de 5.6 points/an sur 5 ans, en contraste avec le repli récent"
+     }
+    ],
+    "justification": "Le profil de courbe est classé « effet_de_mode » avec signal explicite levé par le collecteur, et le momentum sur 90 jours est fortement négatif (environ -55%), ce qui indique un repli marqué de la demande récente malgré une pente annuelle sur 5 ans positive. La combinaison d'un effet de mode confirmé et d'un momentum très négatif l'emporte sur la tendance longue, suggérant un pic déjà passé plutôt qu'une dynamique établie. Pour fiabiliser la note, il manquerait une décomposition plus fine du momentum (est-ce saisonnier ou structurel) et une confirmation sur plusieurs fenêtres temporelles récentes.",
+    "non_evaluable": false,
+    "plafonnement_applique": null
+   },
+   {
+    "score": 1,
+    "critere": "intensite",
+    "fondements": [
+     {
+      "ref": "concurrence.intensite.nb_concurrents_identifies",
+      "type": "fait",
+      "detail": "51 concurrents identifiés"
+     },
+     {
+      "ref": "concurrence.intensite.nb_annonceurs",
+      "type": "fait",
+      "detail": "Seulement 5 annonceurs actifs"
+     },
+     {
+      "ref": "concurrence.intensite.concentration_volumes_top3_pct",
+      "type": "fait",
+      "detail": "Top 3 capte 95,2% des volumes"
+     },
+     {
+      "ref": "concurrence.intensite.duree_diffusion_mediane_jours",
+      "type": "fait",
+      "detail": "Durée de diffusion médiane de 2 jours seulement"
+     },
+     {
+      "ref": "concurrence.intensite.lecture",
+      "type": "fait",
+      "detail": "Lecture F4 : marché à forte pression publicitaire mais très concentrée sur quelques acteurs (Insta360, BOYA)"
+     }
+    ],
+    "justification": "Le nombre de concurrents identifiés est élevé (51) mais le nombre d'annonceurs publicitaires actifs est très restreint (5), avec une concentration extrême des volumes sur le top 3 (95,2%), ce qui signale une bataille publicitaire dominée par une poignée d'acteurs plutôt qu'un marché fragmenté. La durée de diffusion médiane très courte (2 jours) et l'absence d'annonces actives au moment de la collecte compliquent la lecture d'une pression publicitaire soutenue en continu. Ce tableau mixte — beaucoup d'offres marchandes mais peu d'annonceurs dominants — laisse une place possible à un entrant sur le plan publicitaire, mais la concentration des volumes reste un frein. Pour trancher plus nettement, il manquerait une mesure de la part de marché réelle en volume de ventes plutôt qu'en présence publicitaire.",
+    "non_evaluable": false,
+    "plafonnement_applique": null
+   },
+   {
+    "score": 0,
+    "critere": "differenciation",
+    "fondements": [
+     {
+      "ref": "concurrence.differenciation.desavantages_apparents[0]",
+      "type": "fait",
+      "detail": "Absence de réduction/annulation de bruit, présente chez au moins 25 offres concurrentes"
+     },
+     {
+      "ref": "concurrence.differenciation.desavantages_apparents[1]",
+      "type": "fait",
+      "detail": "Absence d'écran LED numérique, présent chez 9 offres concurrentes"
+     },
+     {
+      "ref": "concurrence.differenciation.desavantages_apparents[4]",
+      "type": "fait",
+      "detail": "Absence de garantie ou politique de retour mentionnée"
+     },
+     {
+      "ref": "concurrence.differenciation.attributs_distinctifs_potentiels[0]",
+      "type": "hypothese",
+      "detail": "Prix extrêmement bas comme potentiel unique avantage, mais non confirmé comme différenciateur soutenable"
+     }
+    ],
+    "justification": "Les attributs revendiqués (sans fil, USB-C, condensateur omnidirectionnel, plug-and-play, batterie intégrée) sont tous classés comme attributs partagés avec de nombreuses offres concurrentes, sans aucun élément confirmé (tous en hypothèse) de différenciation réelle. À l'inverse, plusieurs désavantages apparents sont établis comme faits : absence de réduction de bruit (présente chez 25 offres concurrentes), absence d'écran LED, absence de portée sans fil annoncée, absence d'appairage automatique ou de config à deux micros, absence de garantie mentionnée, et absence de revendication « professionnel ». Le seul angle distinctif potentiel (prix extrêmement bas) reste une hypothèse non confirmée en tant qu'avantage concurrentiel réel. Il manquerait une validation terrain de la perception client de ces manques pour confirmer qu'ils pèsent réellement sur les ventes.",
+    "non_evaluable": false,
+    "plafonnement_applique": null
+   },
+   {
+    "score": 1,
+    "critere": "adequation",
+    "fondements": [
+     {
+      "ref": "insights.pain_points[0]",
+      "type": "fait",
+      "detail": "Qualité audio insuffisante : 14,55% des unités, intensité 2,38"
+     },
+     {
+      "ref": "insights.pain_points[3]",
+      "type": "fait",
+      "detail": "Saturation et distorsion audio : 10,91% des unités"
+     },
+     {
+      "ref": "insights.pain_points[2]",
+      "type": "fait",
+      "detail": "Problèmes de placement et ergonomie : 14,55% des unités"
+     },
+     {
+      "ref": "insights.sentiment",
+      "type": "fait",
+      "detail": "30 positifs / 18 négatifs / 7 neutres sur 55 unités, tableau mitigé"
+     }
+    ],
+    "justification": "Le corpus consommateur documente des pain points pertinents pour la catégorie (qualité audio insuffisante à 14,55% des unités, saturation/distorsion à 10,91%, problèmes de placement/ergonomie à 14,55%), ce qui montre que des besoins réels existent sur ce type de produit. Cependant rien dans la fiche produit étudiée ne permet de vérifier si elle répond spécifiquement à ces pain points (pas de mention de réduction de bruit, de qualité audio spécifique testée) et les besoins/attentes du corpus sont vides dans le dossier. La confiance déclarée sur cette entrée est par ailleurs qualifiée de faible. Pour améliorer la note, il manquerait un rapprochement explicite entre les caractéristiques déclarées du produit et chaque pain point, ainsi que des données sur les besoins et attentes qui sont actuellement absentes.",
+    "non_evaluable": false,
+    "plafonnement_applique": null
+   },
+   {
+    "score": 2,
+    "critere": "viabilite_prix",
+    "fondements": [
+     {
+      "ref": "concurrence.benchmark_prix[aliexpress][EUR].segment.entree",
+      "type": "fait",
+      "detail": "Segment entrée AliExpress : 0,37–8,49 EUR"
+     },
+     {
+      "ref": "concurrence.benchmark_prix[aliexpress][EUR].mediane",
+      "type": "fait",
+      "detail": "Prix médian AliExpress : 11,44 EUR"
+     },
+     {
+      "ref": "concurrence.benchmark_prix[amazon][EUR].mediane",
+      "type": "fait",
+      "detail": "Prix médian Amazon : 14,99 EUR"
+     },
+     {
+      "ref": "insights.comportements_achat.sensibilite_prix",
+      "type": "hypothese",
+      "detail": "Sensibilité au prix déclarée indéterminée, limitant la certitude sur la réceptivité du marché à ce niveau de prix"
+     }
+    ],
+    "justification": "Le prix affiché du produit ($0.99, ou $1.99 livré) se situe très nettement sous le segment « entrée » observé sur AliExpress (0,37–8,49 EUR) et sous la médiane du marché (11,44 EUR sur AliExpress, 14,99 EUR sur Amazon), ce qui rend un positionnement prix extrêmement compétitif tout à fait soutenable si les coûts de sourcing le permettent. Cette marge de manœuvre tarifaire est un signal favorable net pour l'entrée sur le marché du point de vue du prix, même si elle ne garantit pas la marge ni la perception qualité associée à un prix aussi bas. Pour affiner, il manquerait une donnée de sensibilité au prix des consommateurs (actuellement indéterminée) et une connaissance des coûts logistiques/marge réels.",
+    "non_evaluable": false,
+    "plafonnement_applique": null
+   }
+  ],
+  "verdict": "negatif",
+  "confiance": "moyenne",
+  "score_total": 4,
+  "statut_regle": "hypothese_de_travail_a_valider",
+  "declenche_plc": false,
+  "regle_appliquee": "Règle appliquée par le code (HYPOTHÈSE DE TRAVAIL, non validée) : si moins de 4 critères sont évalués, le verdict est « indetermine » d'office. Sinon, verdict « positif » si score_total ≥ 6 ET aucun critère noté 0 ET au plus 1 critère non évaluable. Verdict « negatif » si score_total ≤ 3 OU si les critères « demande » et « differenciation » sont tous deux notés 0. Sinon « indetermine ». Barème par critère : 0 = signal défavorable net ; 1 = signal mitigé ou contrasté ; 2 = signal favorable net. Plafond « effet de mode » : le critère « demande » est ramené à 1 au maximum lorsque la source Tendances signale un effet de mode.",
+  "conditions_reexamen": [
+   "Réexaminer le critère « demande » si le momentum sur 90 jours redevient positif ou se stabilise au-dessus de -10% sur deux collectes consécutives, infirmant la lecture d'un pic déjà passé",
+   "Relancer la collecte tendances à 30/60/90 jours pour décomposer le momentum et vérifier s'il s'agit d'un effet saisonnier ou d'un déclin structurel, et lever le signal « effet_de_mode » si le profil de courbe repasse en tendance stable ou croissante",
+   "Réexaminer le critère « differenciation » si une vérification terrain confirme qu'au moins un attribut (ex. prix bas, plug-and-play) est perçu par les consommateurs comme un avantage réel et non comme un simple attribut partagé",
+   "Recollecter les avis consommateurs pour vérifier si les pain points identifiés (qualité audio insuffisante 14,55%, saturation 10,91%) sont explicitement adressés par les caractéristiques du produit, ce qui relèverait le critère « adequation »",
+   "Suivre l'évolution du nombre d'annonceurs actifs et de la concentration top 3 (actuellement 95,2%) : une baisse significative de cette concentration ou une hausse du nombre d'annonceurs signalerait une ouverture du marché à réexaminer sur le critère « intensite »",
+   "Vérifier si un rapport marge/coût de sourcing devient disponible pour confirmer la soutenabilité du prix à $0.99-$1.99, condition nécessaire pour valider durablement le signal favorable du critère « viabilite_prix »"
+  ],
+  "nb_criteres_evalues": 5
+ },
+ "synthese_executive": "Verdict : négatif, confiance moyenne — issu d'une règle de calcul explicitement qualifiée d'hypothèse de travail non validée, et non d'une validation de marché.\n\nJustifications principales : (1) la demande présente un profil « effet de mode » avec momentum à -55% sur 90 jours (tendances.indicateurs.momentum_90j) ; (2) la différenciation est nulle, tous les attributs revendiqués étant partagés avec la concurrence tandis que des désavantages factuels s'accumulent — absence de réduction de bruit, d'écran LED, de garantie (concurrence.differenciation.desavantages_apparents[0,1,4]) ; (3) l'adéquation aux besoins reste mitigée, la qualité audio étant le premier pain point consommateur (insights.pain_points[0]) sur un corpus de confiance faible.\n\nRecommandations majeures : ne pas lancer le produit en l'état ; suspendre tout investissement média tant que le verdict reste négatif, dans un marché publicitaire déjà très concentré (top 3 à 95,2% des volumes) ; en cas de pivot, intégrer réduction de bruit et portée sans fil annoncée avant tout repositionnement.\n\nRisque principal : décision fondée en partie sur des données de confiance faible (consommateur) et sur un signal de demande sans horodatage qualifiable (tendances), pouvant conduire à un rejet prématuré si ces signaux s'avéraient temporaires ou biaisés.\n\nDonnées à compléter prioritairement : décomposition du momentum sur plusieurs fenêtres temporelles, volume de vente réel, et rapprochement explicite entre caractéristiques produit et pain points consommateurs.",
+ "donnees_a_completer": [
+  "Décomposition du momentum de demande sur plusieurs fenêtres (30/60/90 jours) pour distinguer effet saisonnier et déclin structurel",
+  "Volume de vente réel ou part de marché en volume, non disponible dans le dossier",
+  "Rapprochement explicite entre les caractéristiques du produit étudié et chaque pain point consommateur documenté",
+  "Données de coût de sourcing et de marge pour toute analyse de rentabilité, actuellement absentes",
+  "Corrélation entre tranche de prix et sentiment des avis pour trancher la contradiction sur le positionnement prix bas",
+  "Série temporelle du nombre d'annonces actives sur plusieurs semaines pour qualifier l'intensité concurrentielle dans le temps"
+ ],
+ "donnees_suffisantes": true,
+ "hypotheses_globales": [
+  "La règle de verdict (score_total ≤ 3, ou critères « demande » et « differenciation » tous deux à 0 → verdict négatif) est une hypothèse de travail non validée empiriquement par le code, explicitement qualifiée de statut « hypothese_de_travail_a_valider » avec confiance moyenne : elle ne constitue pas une preuve de rejet de marché.",
+  "La classification « effet de mode » de la demande est une lecture automatique du collecteur, non confirmée par une analyse qualitative indépendante ; le plafonnement du critère « demande » à 1 maximum en cas d'effet de mode est lui aussi une convention du code.",
+  "L'indice de demande est relatif (0-100) et ne permet aucune déduction de volume de vente ou de part de marché absolue.",
+  "L'entrée Tendances ne porte aucun horodatage : sa fraîcheur n'est pas qualifiable, ce qui fragilise la robustesse temporelle du signal d'effet de mode.",
+  "Les « attributs partagés » et « attributs distinctifs potentiels » en différenciation sont majoritairement classés comme hypothèses, non comme faits vérifiés sur le produit réel.",
+  "La confiance sur les données consommateur (F3) est déclarée faible, ce qui limite la portée du critère « adéquation » aux pain points."
+ ],
+ "recommandation_prix": {
+  "strategie": "Aucune stratégie de lancement n'est recommandée : le produit est déconseillé au lancement (voir reco-produit-1). À titre indicatif seulement, si un pivot corrigeant la différenciation aboutissait, le positionnement prix devrait se situer dans le segment cœur du marché plutôt que reproduire l'écart extrême actuel par rapport aux benchmarks EUR.",
+  "conditions": [
+   "Cette fourchette est un positionnement de marché basé sur les segments observés en EUR, pas un calcul de rentabilité : aucune donnée de coût de sourcing ou de marge n'est disponible dans le dossier.",
+   "Applicable uniquement en cas de pivot produit corrigeant les désavantages apparents documentés (reco-produit-2) ; sans ce pivot, aucun positionnement prix n'est pertinent puisque le lancement n'est pas recommandé.",
+   "Ne couvre que le marché AliExpress en EUR ; aucune fourchette n'est proposée en dehors des devises présentes au benchmark."
+  ],
+  "fondements": [
+   {
+    "ref": "concurrence.benchmark_prix[aliexpress][EUR].segment.coeur",
+    "type": "fait",
+    "detail": "Segment cœur AliExpress en EUR : 8,49–13,99."
+   },
+   {
+    "ref": "concurrence.differenciation.attributs_distinctifs_potentiels[0]",
+    "type": "fait",
+    "detail": "Le prix actuel ($0.99/$1.99) est largement sous le segment entrée AliExpress (0,37–8,49€), écart jugé extrême."
+   }
+  ],
+  "fourchettes": [
+   {
+    "max": 13.99,
+    "min": 8.49,
+    "devise": "EUR",
+    "logique_ancrage": "Segment cœur du benchmark AliExpress (8,49–13,99 EUR) : évite l'écart extrême actuel du prix affiché par rapport à la médiane du marché, sans viser le premium faute d'attributs différenciateurs confirmés."
+   }
+  ]
+ },
+ "recommandations_produit": [
+  {
+   "enonce": "Ne pas lancer le Type-C Wireless Lavalier Microphone en l'état sur le marché FR : les critères « demande » et « differenciation » sont tous deux notés 0 dans la grille, ce qui déclenche mécaniquement le verdict négatif, et le critère « adequation » aux pain points consommateur reste mitigé (score 1).",
+   "domaine": "produit",
+   "horizon": "court_terme",
+   "id_reco": "reco-produit-1",
+   "priorite": "P1",
+   "fondements": [
+    {
+     "ref": "tendances.indicateurs.profil_courbe",
+     "type": "fait",
+     "detail": "Profil de courbe classé « effet_de_mode »."
+    },
+    {
+     "ref": "tendances.indicateurs.momentum_90j",
+     "type": "fait",
+     "detail": "Momentum à -0,55 sur 90 jours, repli marqué de la demande récente."
+    },
+    {
+     "ref": "concurrence.differenciation.desavantages_apparents[0]",
+     "type": "fait",
+     "detail": "Absence de réduction/annulation de bruit, présente chez au moins 15 offres concurrentes."
+    },
+    {
+     "ref": "concurrence.differenciation.desavantages_apparents[4]",
+     "type": "fait",
+     "detail": "Aucune garantie ou politique de retour mentionnée sur la fiche produit, contrairement à certaines pages marchandes concurrentes."
+    },
+    {
+     "ref": "concurrence.differenciation.attributs_partages[0]",
+     "type": "fait",
+     "detail": "L'attribut « sans fil » est partagé avec 46 offres concurrentes recensées, sans caractère distinctif."
+    },
+    {
+     "ref": "insights.pain_points[0]",
+     "type": "fait",
+     "detail": "Qualité audio insuffisante citée dans 14,55% des unités du corpus consommateur, score le plus élevé des pain points."
+    }
+   ],
+   "effort_estime": "faible",
+   "justification": "La demande de recherche est classée en effet de mode avec un momentum sur 90 jours fortement négatif, et le produit ne présente aucun attribut différenciateur confirmé face à une concurrence qui documente plusieurs manques factuels (absence de réduction de bruit, d'écran LED, de portée annoncée, d'appairage automatique, de garantie, de statut professionnel).",
+   "impact_attendu": "Évite l'engagement de ressources (stock, publicité, contenu) sur un produit dont les deux faces demande et différenciation sont défavorables selon le dossier.",
+   "risques_associes": [
+    "Coût d'opportunité si le momentum de demande se révélait être une fluctuation saisonnière passagère plutôt qu'un déclin structurel",
+    "Risque de sous-estimer un segment de niche non documenté dans le corpus si celui-ci évolue favorablement"
+   ],
+   "indicateurs_suivi": [
+    "Évolution du momentum sur 90 jours sur les prochaines collectes (seuil de réexamen : stabilisation au-dessus de -10% sur deux collectes consécutives)",
+    "Évolution du signal d'effet de mode et du profil de courbe lors des prochaines collectes tendances"
+   ]
+  },
+  {
+   "enonce": "Si un pivot est envisagé, étudier une version intégrant une fonctionnalité de réduction de bruit et une portée sans fil annoncée explicitement, ces deux attributs étant identifiés comme courants chez la concurrence et absents de la fiche actuelle.",
+   "domaine": "produit",
+   "horizon": "moyen_terme",
+   "id_reco": "reco-produit-2",
+   "priorite": "P2",
+   "fondements": [
+    {
+     "ref": "concurrence.differenciation.desavantages_apparents[0]",
+     "type": "fait",
+     "detail": "Absence de fonctionnalité de réduction/annulation de bruit, présente chez au moins 15 offres concurrentes."
+    },
+    {
+     "ref": "concurrence.differenciation.desavantages_apparents[2]",
+     "type": "fait",
+     "detail": "Absence de portée sans fil spécifique annoncée, alors que mise en avant chez au moins 3 offres concurrentes."
+    }
+   ],
+   "effort_estime": "eleve",
+   "justification": "Le dossier documente factuellement l'absence de ces attributs sur la fiche étudiée alors qu'ils sont présents chez un nombre significatif de concurrents, ce qui constitue un désavantage apparent mesurable plutôt qu'une hypothèse.",
+   "impact_attendu": "Réduction du désavantage apparent documenté face à la concurrence sur les critères différenciation.",
+   "risques_associes": [
+    "Aucune donnée de coût ou de faisabilité technique n'est disponible dans le dossier pour chiffrer cet effort",
+    "Le pivot ne résout pas le signal défavorable sur la demande, qui reste classé effet de mode"
+   ],
+   "indicateurs_suivi": [
+    "Présence effective de la fonctionnalité de réduction de bruit sur une éventuelle nouvelle fiche produit",
+    "Nombre d'attributs différenciateurs confirmés (non hypothèse) lors d'une prochaine collecte concurrence"
+   ]
+  },
+  {
+   "enonce": "Si un pivot est envisagé, documenter et vérifier terrain si le prix extrêmement bas ($0.99/$1.99 livré) constitue réellement un avantage perçu par les consommateurs plutôt qu'un signal de qualité insuffisante, avant toute décision de repositionnement.",
+   "domaine": "produit",
+   "horizon": "moyen_terme",
+   "id_reco": "reco-produit-3",
+   "priorite": "P3",
+   "fondements": [
+    {
+     "ref": "concurrence.differenciation.attributs_distinctifs_potentiels[0]",
+     "type": "hypothese",
+     "detail": "Prix affiché très inférieur au segment entrée AliExpress, hypothèse d'avantage non confirmée."
+    },
+    {
+     "ref": "insights.pain_points[4]",
+     "type": "fait",
+     "detail": "Coût élevé pour qualité insuffisante cité dans 9,09% des unités du corpus consommateur."
+    }
+   ],
+   "effort_estime": "moyen",
+   "justification": "Le dossier relève une contradiction non tranchée entre un prix d'appel extrême et des pain points documentés de coût élevé pour qualité insuffisante et de qualité audio insuffisante, sans pouvoir établir si les avis concernés portent sur des produits à prix comparable.",
+   "impact_attendu": "Clarifie si le prix bas est un facteur de différenciation soutenable ou un facteur aggravant la perception de faible fiabilité.",
+   "risques_associes": [
+    "Le dossier ne permet pas de relier les avis pain points à des produits de prix comparable, toute conclusion reste une hypothèse à valider"
+   ],
+   "indicateurs_suivi": [
+    "Corrélation observée entre tranche de prix et sentiment des avis lors d'une prochaine collecte insights"
+   ]
+  }
+ ],
+ "recommandations_marketing": [
+  {
+   "enonce": "Suspendre tout plan média pour ce produit : ne pas engager de budget publicitaire tant que le verdict reste négatif, notamment au regard de la concentration publicitaire extrême déjà observée sur le marché (top 3 des annonceurs captant 95,2% des volumes pour seulement 5 annonceurs actifs).",
+   "domaine": "marketing",
+   "horizon": "court_terme",
+   "id_reco": "reco-marketing-1",
+   "priorite": "P1",
+   "fondements": [
+    {
+     "ref": "concurrence.intensite.concentration_volumes_top3_pct",
+     "type": "fait",
+     "detail": "Le top 3 des annonceurs capte 95,2% des volumes publicitaires observés."
+    },
+    {
+     "ref": "concurrence.intensite.nb_annonceurs",
+     "type": "fait",
+     "detail": "Seulement 5 annonceurs actifs identifiés sur 51 concurrents."
+    },
+    {
+     "ref": "concurrence.intensite.duree_diffusion_mediane_jours",
+     "type": "fait",
+     "detail": "Durée de diffusion médiane de 2 jours seulement, signal d'un cycle publicitaire très court ou instable."
+    }
+   ],
+   "effort_estime": "faible",
+   "justification": "S'engager dans une bataille publicitaire sur un marché où 3 acteurs dominent à 95,2% des volumes, avec une durée de diffusion médiane de seulement 2 jours, représente un effort disproportionné pour un produit dont la différenciation n'est pas établie.",
+   "impact_attendu": "Évite un investissement publicitaire dans un contexte de concentration concurrentielle extrême et de différenciation non confirmée.",
+   "risques_associes": [
+    "Si un pivot produit aboutissait ultérieurement, un plan marketing spécifique devrait être reconstruit avec des données de conversion réelles, non disponibles ici"
+   ],
+   "indicateurs_suivi": [
+    "Évolution du nombre d'annonceurs actifs et de la concentration top 3 lors des prochaines collectes concurrence, condition de réexamen du critère intensité"
+   ]
+  }
+ ],
+ "recommandation_positionnement": {
+  "enonce": "Ne pas déployer de positionnement marché pour ce produit dans sa configuration actuelle : le dossier ne documente aucun segment cible ni angle différenciateur confirmé qui justifierait un positionnement soutenable, conformément au verdict négatif.",
+  "domaine": "positionnement",
+  "horizon": "court_terme",
+  "id_reco": "reco-positionnement-1",
+  "priorite": "P1",
+  "fondements": [
+   {
+    "ref": "concurrence.differenciation.attributs_partages[0]",
+    "type": "fait",
+    "detail": "Attribut « sans fil » partagé avec 46 offres concurrentes."
+   },
+   {
+    "ref": "concurrence.positionnement.angles_peu_exploites[0]",
+    "type": "fait",
+    "detail": "Absence de segmentation par persona ou usage spécifique observée dans le corpus publicitaire (6 annonces, 10 pages)."
+   },
+   {
+    "ref": "concurrence.positionnement.angles_peu_exploites[2]",
+    "type": "fait",
+    "detail": "Aucun avis client présent dans le corpus concurrentiel, limitant la lecture de la satisfaction réelle."
+   }
+  ],
+  "effort_estime": "faible",
+  "justification": "Les attributs revendiqués (sans fil, USB-C, condensateur omnidirectionnel, plug-and-play, batterie intégrée) sont tous classés comme partagés avec la concurrence et non comme distinctifs confirmés, tandis que les angles peu exploités identifiés dans le corpus publicitaire (persona spécifique, garantie, avis clients) ne sont pas matérialisés sur la fiche produit étudiée.",
+  "impact_attendu": "Évite de construire une promesse de marque sur des attributs non différenciateurs.",
+  "risques_associes": [
+   "Un pivot produit ultérieur pourrait ouvrir un angle persona non exploité par la concurrence, mais cela n'est pas documenté comme faisable dans le dossier actuel"
+  ],
+  "indicateurs_suivi": [
+   "Apparition d'un attribut confirmé comme distinctif (non hypothèse) lors d'une prochaine collecte concurrence, condition de réexamen du positionnement"
+  ]
+ }
+}

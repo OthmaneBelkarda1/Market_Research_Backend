@@ -298,13 +298,56 @@ def test_un_collecteur_sans_recolte_n_est_pas_un_succes() -> None:
     from src.studies.runner import ModuleRun, _collector_status
 
     aliexpress = next(spec for spec in COLLECTORS if spec.source == "aliexpress")
-    vide = ModuleRun(exit_code=0, duration_seconds=1.0, payload={"produits": []})
+    vide = ModuleRun(
+        exit_code=0,
+        duration_seconds=1.0,
+        payload={"donnees_disponibles": False, "produits": []},
+    )
     plein = ModuleRun(
-        exit_code=0, duration_seconds=1.0, payload={"produits": [{"sku": "a"}]}
+        exit_code=0,
+        duration_seconds=1.0,
+        payload={"donnees_disponibles": True, "produits": [{"sku": "a"}]},
     )
 
     assert _collector_status(aliexpress, vide) == StudySourceStatus.EMPTY
     assert _collector_status(aliexpress, plein) == StudySourceStatus.SUCCEEDED
+
+
+def test_un_collecteur_qui_ne_liste_rien_peut_avoir_reussi() -> None:
+    """`google_trends` rend des indicateurs, pas une liste d'éléments.
+
+    Déduire la récolte de la longueur d'une liste le classait vide sur TOUTES ses
+    collectes, y compris les bonnes : son `sujets_associes` est vide même sur un
+    run parfait. Le drapeau que le module publie lui-même fait foi.
+    """
+    from src.studies.constants import COLLECTORS, StudySourceStatus
+    from src.studies.runner import ModuleRun, _collector_status
+
+    trends = next(spec for spec in COLLECTORS if spec.source == "google_trends")
+    bonne = ModuleRun(
+        exit_code=0,
+        duration_seconds=1.0,
+        payload={
+            "donnees_disponibles": True,
+            "sujets_associes": [],
+            "indicateurs": {"profil_courbe": "stable"},
+        },
+    )
+    assert _collector_status(trends, bonne) == StudySourceStatus.SUCCEEDED
+
+
+def test_sans_drapeau_le_decompte_de_liste_prend_le_relais() -> None:
+    """Un module qui ne publierait pas le drapeau reste classé correctement."""
+    from src.studies.constants import COLLECTORS, StudySourceStatus
+    from src.studies.runner import ModuleRun, _collector_status
+
+    amazon = next(spec for spec in COLLECTORS if spec.source == "amazon")
+    sans_drapeau_vide = ModuleRun(exit_code=0, duration_seconds=1.0, payload={"produits": []})
+    sans_drapeau_plein = ModuleRun(
+        exit_code=0, duration_seconds=1.0, payload={"produits": [{"asin": "B0"}]}
+    )
+    assert _collector_status(amazon, sans_drapeau_vide) == StudySourceStatus.EMPTY
+    assert _collector_status(amazon, sans_drapeau_plein) == StudySourceStatus.SUCCEEDED
 
 
 def test_une_region_non_couverte_reste_un_resultat_normal() -> None:
@@ -338,3 +381,179 @@ def test_le_code_de_sortie_de_f7_ne_recouvre_aucun_autre() -> None:
     ]
     assert len(set(codes)) == len(codes)
     assert EXIT_REDACTION_IMPOSSIBLE == config.CODE_REDACTION_IMPOSSIBLE
+
+
+# ---------------------------------------------------------------------------
+# 6. v2.1 — le rapport se lit sans dictionnaire
+# ---------------------------------------------------------------------------
+def test_les_termes_du_lexique_sont_remplaces() -> None:
+    """La règle unique : un terme d'analyste n'est pas expliqué, il est remplacé."""
+    propre, nombre = config.appliquer_lexique(
+        "Dans le corpus collecté, 30 contributions positives."
+    )
+    assert "corpus" not in propre
+    assert "contributions" not in propre
+    assert nombre == 2
+
+
+def test_une_expression_est_traitee_avant_le_mot_qu_elle_contient() -> None:
+    """« corpus collecté » avant « corpus », sinon la phrase sort bancale.
+
+    Une alternative de motifs unique retient la correspondance la plus À GAUCHE,
+    pas la plus longue : elle produisait « les avis et messages analysés
+    collecté ». La substitution passe donc terme par terme, du plus long au plus
+    court.
+    """
+    propre, _ = config.appliquer_lexique("Dans le corpus collecté, on observe.")
+    assert propre == "Dans les données collectées, on observe."
+
+
+def test_l_article_suit_le_genre_du_remplacement() -> None:
+    """« le claim » est masculin, « la promesse publicitaire » est féminine."""
+    propre, _ = config.appliquer_lexique("Le claim publicitaire met en avant le prix.")
+    assert propre.startswith("La promesse publicitaire")
+
+
+def test_un_mot_qui_contient_un_terme_du_lexique_est_epargne() -> None:
+    """Sans frontières de mot, « claim » atteindrait « réclamation »."""
+    propre, nombre = config.appliquer_lexique("Une réclamation sur la garantie.")
+    assert nombre == 0
+    assert propre == "Une réclamation sur la garantie."
+
+
+def test_les_valeurs_techniques_sont_traduites_a_l_affichage() -> None:
+    """`effet_de_mode` et `court_terme` sont des clés de code, pas des libellés."""
+    assert preparation_v2.traduire_valeur("effet_de_mode") == "effet de mode"
+    assert preparation_v2.traduire_valeur("court_terme") == "Court terme"
+    # Une valeur inconnue de la table ressort intacte plutôt que déformée.
+    assert preparation_v2.traduire_valeur("Wireless Microphone") == "Wireless Microphone"
+
+
+def test_un_numero_de_mois_est_rendu_en_lettres() -> None:
+    """« Saisonnalité · 11 » ne disait pas que 11 est un mois."""
+    assert preparation_v2.mois_en_lettres(11) == "novembre"
+    assert preparation_v2.mois_en_lettres("7") == "juillet"
+    # Hors bornes : la valeur n'est pas un mois, on ne la travestit pas.
+    assert preparation_v2.mois_en_lettres(48.4) == "48.4"
+
+
+def test_un_identifiant_de_code_est_detecte_dans_le_corps() -> None:
+    assert "effet_de_mode" in validation_v2.valeurs_techniques(
+        "Profil de courbe · effet_de_mode"
+    )
+    assert "CDC" in validation_v2.valeurs_techniques("conformément au CDC")
+    assert not validation_v2.valeurs_techniques("Profil de courbe · effet de mode")
+
+
+def test_le_sigle_interne_disparait_sans_casser_la_phrase() -> None:
+    """Retirer « CDC » seul laisserait « conformément au »."""
+    assert config.nettoyer_sigles("non déclenchée conformément au CDC") == (
+        "non déclenchée comme prévu"
+    )
+
+
+def test_l_ecran_methode_echappe_au_controle_de_vocabulaire() -> None:
+    """Le vocabulaire technique y reste admis, et le glossaire l'y définit."""
+    rapport = (
+        "## Décision : No-go\n\nUn texte lisible.\n\n"
+        "## Méthode et limites\n\nSERP, actor, TLD, corpus stratifié.\n"
+    )
+    corps = validation_v2.corps_lisible(rapport)
+    assert "SERP" not in corps
+    assert "Un texte lisible." in corps
+
+
+def test_une_citation_client_n_est_jamais_reecrite() -> None:
+    """Réécrire ce qu'un client a écrit n'est pas de la lisibilité, c'est un faux."""
+    rapport = (
+        "## Décision : No-go\n\n"
+        "- Un constat.\n"
+        "  > « the corpus of this claim is a marketplace verbatim »\n"
+    )
+    corps = validation_v2.corps_lisible(rapport)
+    assert "marketplace" not in corps, "la citation doit sortir du périmètre"
+
+
+def test_deux_tendances_de_signes_opposes_declenchent_une_lecture() -> None:
+    """Un recul de 54,6 % sur 90 jours et +5,6 points par an : le lecteur ne peut pas trancher."""
+
+    class Indicateur:
+        def __init__(self, ref: str, valeur: str) -> None:
+            self.ref = ref
+            self.valeur = valeur
+            self.libelle = ref
+            self.detail = ""
+
+    class Demande:
+        def __init__(self, court: str, long: str) -> None:
+            self.indicateurs = [
+                Indicateur("tendances.indicateurs.momentum_90j", court),
+                Indicateur("tendances.indicateurs.pente_annuelle_5ans", long),
+            ]
+
+    class Dossier:
+        def __init__(self, demande: Demande) -> None:
+            self.demande = demande
+
+    opposes = preparation_v2._lecture_tendances_opposees(Dossier(Demande("-54.6", "5.6")))
+    assert opposes == config.PUCE_TENDANCES_OPPOSEES
+
+    accordes = preparation_v2._lecture_tendances_opposees(Dossier(Demande("12.0", "5.6")))
+    assert accordes == ""
+
+
+def test_une_puce_contredite_par_un_autre_ecran_est_retiree() -> None:
+    """F4 nie l'existence d'avis que l'écran consommateur analyse.
+
+    Le rapport part quand même, amputé de la seule phrase fausse : le défaut est
+    en amont, et arrêter la restitution priverait le lecteur des quatre écrans
+    corrects sans rien réparer.
+    """
+    injectables = schemas.Injectables(pain_points=[{"libelle": "Bruit", "cle": "i-1"}])
+    conservees, retirees = preparation_v2._sans_puce_contredite(
+        [
+            "Aucun avis client n'est présent dans les données fournies.",
+            "Personne ne met en avant la garantie.",
+        ],
+        injectables,
+    )
+    assert len(conservees) == 1
+    assert len(retirees) == 1
+    assert conservees[0].startswith("Personne")
+
+
+def test_sans_avis_analyse_la_puce_est_conservee() -> None:
+    """La même phrase est vraie quand aucun écran ne la contredit."""
+    conservees, retirees = preparation_v2._sans_puce_contredite(
+        ["Aucun avis client n'est présent dans les données fournies."],
+        schemas.Injectables(),
+    )
+    assert len(conservees) == 1
+    assert not retirees
+
+
+def test_le_titre_de_decision_garde_son_libelle_metier() -> None:
+    """La traduction est accolée, jamais substituée : `verdict_conforme` en dépend."""
+    trouve = validation_v2.MOTIF_TITRE_DECISION.search(
+        "## Décision : No-go — **ne pas lancer ce produit en l'état**"
+    )
+    assert trouve is not None
+    assert trouve.group(1) == "No-go"
+
+
+def test_les_cinq_forces_ne_nomment_plus_le_modele_de_porter() -> None:
+    libelles = [libelle for _, libelle in config.LIBELLES_CINQ_FORCES]
+    assert "Rivalité actuelle" not in libelles
+    assert "Concurrence déjà en place" in libelles
+    assert config.TITRE_CINQ_FORCES == "Ce qui rend ce marché facile ou difficile"
+
+
+def test_chaque_indicateur_du_gabarit_porte_un_texte_de_lecture() -> None:
+    """Un chiffre sans échelle n'informe pas."""
+    for cle, _libelle in config.INDICATEURS_DEMANDE_GABARIT:
+        suffixes = preparation_v2.MOTIFS_INDICATEURS_DEMANDE.get(cle, (cle,))
+        assert any(
+            config.TEXTES_LECTURE_INDICATEURS.get(suffixe.rsplit(".", 1)[-1])
+            or config.TEXTES_LECTURE_INDICATEURS.get(cle)
+            for suffixe in suffixes
+        ), f"« {cle} » n'a pas de texte de lecture"

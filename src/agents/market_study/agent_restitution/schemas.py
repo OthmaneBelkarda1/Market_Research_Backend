@@ -635,6 +635,7 @@ class Injectables(BaseModel):
     ligne_meta: str = ""
     ligne_sources: str = ""
     autres_indicateurs_demande: str = ""
+    puce_tendances_opposees: str = ""
     encart_partielle_v2: str = ""
     faits_cles_decision: list[str] = Field(default_factory=list)
     risque_principal_decision: str = ""
@@ -843,6 +844,34 @@ class ControlesRestitution(BaseModel):
         default=True,
         description=(
             "Vrai : le nombre de pages web de l'écran 0 est celui de l'écran méthode."
+        ),
+    )
+    lexique_conforme: bool = Field(
+        default=True,
+        description=(
+            "Vrai : aucun terme d'analyste du lexique ne subsiste dans les écrans "
+            "0 à 3 — citations clients et noms de marques exclus du contrôle."
+        ),
+    )
+    nb_termes_substitues: int = Field(
+        default=0,
+        description=(
+            "Termes remplacés automatiquement après régénération. Un chiffre non "
+            "nul signale que la rédaction n'a pas tenu le lexique d'elle-même."
+        ),
+    )
+    valeurs_techniques_absentes: bool = Field(
+        default=True,
+        description=(
+            "Vrai : aucun identifiant de code, sigle interne ni nom d'agent dans "
+            "les écrans 0 à 3."
+        ),
+    )
+    coherence_inter_ecrans: bool = Field(
+        default=True,
+        description=(
+            "Vrai : aucun écran n'affirme l'absence d'une source qu'un autre écran "
+            "exploite."
         ),
     )
 
