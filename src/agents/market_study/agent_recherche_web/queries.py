@@ -24,6 +24,7 @@ from langchain_anthropic import ChatAnthropic
 from langchain_core.prompts import ChatPromptTemplate
 
 from config import (
+    invoquer_avec_reprises,
     ANTHROPIC_API_KEY,
     AXES_ANALYSE,
     AXE_MIXTE,
@@ -521,11 +522,12 @@ def _invoquer_plan(
         Le plan produit, ou `None` si l'appel a échoué.
     """
     chaine = prompt | _modele().with_structured_output(PlanRequetes)
-    try:
-        return chaine.invoke(entree)
-    except Exception as exception:  # noqa: BLE001 — converti en absence de plan
-        _LOG.error("Génération des requêtes (%s) en échec : %s", contexte, exception)
-        return None
+    # Sans plan, il n'y a pas de collecte du tout : c'est l'appel le plus coûteux
+    # à perdre de tout l'agent, et le seul essai unique qu'il avait est ce qui a
+    # vidé trois collecteurs de l'étude 7a93b99d.
+    return invoquer_avec_reprises(
+        lambda: chaine.invoke(entree), f"Génération des requêtes ({contexte})"
+    )
 
 
 def generer_plan_requetes(

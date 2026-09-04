@@ -28,6 +28,7 @@ from langchain_anthropic import ChatAnthropic
 from langchain_core.prompts import ChatPromptTemplate
 
 from config import (
+    invoquer_avec_reprises,
     ANTHROPIC_API_KEY,
     CLES_TRI_AMAZON,
     MARKETPLACE_PAR_PAYS,
@@ -272,11 +273,10 @@ def _resoudre_par_llm(lieu: str) -> RegionResolue | None:
         Le pays identifié, ou `None` si l'appel a échoué.
     """
     chaine = _PROMPT_REGION | _modele().with_structured_output(RegionResolue)
-    try:
-        return chaine.invoke({"lieu": lieu})
-    except Exception as exception:  # noqa: BLE001 — converti en région non résolue
-        _LOG.error("Résolution de la région « %s » en échec : %s", lieu, exception)
-        return None
+    # Une région non résolue arrête la collecte avant qu'elle commence.
+    return invoquer_avec_reprises(
+        lambda: chaine.invoke({"lieu": lieu}), f"Résolution de la région « {lieu} »"
+    )
 
 
 def resoudre_marketplace(
@@ -684,11 +684,12 @@ def _invoquer_plan(
         Le plan produit, ou `None` si l'appel a échoué.
     """
     chaine = prompt | _modele().with_structured_output(PlanRecherches)
-    try:
-        return chaine.invoke(entree)
-    except Exception as exception:  # noqa: BLE001 — converti en absence de plan
-        _LOG.error("Génération des recherches (%s) en échec : %s", contexte, exception)
-        return None
+    # Sans plan, il n'y a pas de collecte du tout : c'est l'appel le plus coûteux
+    # à perdre de tout l'agent, et le seul essai unique qu'il avait est ce qui a
+    # vidé trois collecteurs de l'étude 7a93b99d.
+    return invoquer_avec_reprises(
+        lambda: chaine.invoke(entree), f"Génération des recherches ({contexte})"
+    )
 
 
 def _tracer(recherches: list[RecherchePlanifiee], prefixe: str) -> None:

@@ -10,7 +10,9 @@ from __future__ import annotations
 import logging
 import os
 import sys
-from typing import Any
+import time
+from collections.abc import Callable
+from typing import Any, TypeVar
 
 from dotenv import find_dotenv, load_dotenv
 
@@ -494,3 +496,90 @@ def resumer_consommation(usage: dict[str, Any]) -> str:
             "pour 0 $ — le total est sous-estimé"
         )
     return recapitulatif
+
+
+# --------------------------------------------------------------------------- #
+# Reprise des appels au modèle qui conditionnent toute la collecte
+# --------------------------------------------------------------------------- #
+# `NB_TENTATIVES_MAX` et `BACKOFF_TENTATIVES_SECS` ne gouvernaient que les runs
+# Apify. Les appels au modèle, eux, n'avaient AUCUNE reprise : une exception était
+# attrapée, journalisée, et convertie en « pas de plan » — ce qui abandonne la
+# collecte entière, en code de sortie 0 et en quinze secondes.
+#
+# L'étude 7a93b99d a perdu trois collecteurs sur six ainsi, au même instant, sur un
+# produit parfaitement valide : l'API était saturée. Un module rejoué depuis
+# l'orchestrateur répare le symptôme, mais relance un sous-processus entier — vingt
+# minutes de collecte possibles pour refaire un appel d'une seconde. La reprise est
+# ici, au plus près de ce qui a échoué.
+
+_T = TypeVar("_T")
+
+_ERREURS_TRANSITOIRES: frozenset[str] = frozenset({
+    "APIConnectionError",
+    "APITimeoutError",
+    "InternalServerError",
+    "OverloadedError",
+    "RateLimitError",
+    "ServiceUnavailableError",
+})
+"""Erreurs du SDK qui se réparent en réessayant, reconnues par leur NOM.
+
+Par leur nom et non par `isinstance` : ce module ne doit pas échouer à s'importer
+parce qu'une version d'`anthropic` a déplacé une classe."""
+
+
+def _reprise_utile(erreur: Exception) -> bool:
+    """Dit si relancer cet appel a une chance de donner autre chose.
+
+    Une erreur de gabarit ou de schéma redonnera exactement la même chose, et la
+    rejouer revient à la payer deux fois — c'est ce qui est arrivé au run
+    8609db9e, où huit invocations ont été facturées pour huit fois le même
+    `KeyError`.
+
+    Args:
+        erreur: Exception levée par la chaîne.
+
+    Returns:
+        `True` si une nouvelle tentative a un sens.
+    """
+    if isinstance(erreur, KeyError | TypeError | AttributeError):
+        return False
+    if isinstance(erreur, TimeoutError | ConnectionError):
+        return True
+    if type(erreur).__name__ not in _ERREURS_TRANSITOIRES:
+        return False
+    code = getattr(erreur, "status_code", None)
+    return code is None or code == 429 or 500 <= code < 600
+
+
+def invoquer_avec_reprises(appel: Callable[[], _T], contexte: str) -> _T | None:
+    """Exécute un appel au modèle, en le rejouant si l'échec est passager.
+
+    Args:
+        appel: Fonction sans argument qui effectue l'appel.
+        contexte: Libellé de l'étape, pour les traces.
+
+    Returns:
+        Le résultat de l'appel, ou `None` si toutes les tentatives ont échoué.
+    """
+    journal = obtenir_logger("reprises")
+    total = NB_TENTATIVES_MAX + 1
+    for tentative in range(1, total + 1):
+        try:
+            return appel()
+        except Exception as erreur:  # noqa: BLE001 — reclassée juste en dessous
+            if not _reprise_utile(erreur) or tentative == total:
+                journal.error(
+                    "%s en échec (tentative %d/%d) : %s",
+                    contexte, tentative, total, erreur,
+                )
+                return None
+            attente = BACKOFF_TENTATIVES_SECS[
+                min(tentative - 1, len(BACKOFF_TENTATIVES_SECS) - 1)
+            ]
+            journal.warning(
+                "%s en échec (tentative %d/%d) : %s — reprise dans %s s",
+                contexte, tentative, total, erreur, attente,
+            )
+            time.sleep(attente)
+    return None
