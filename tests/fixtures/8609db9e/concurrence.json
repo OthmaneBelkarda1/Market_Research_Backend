@@ -1,0 +1,3128 @@
+{
+ "marche": {
+  "geo": "ES",
+  "devise": null,
+  "langue": "es"
+ },
+ "limites": [
+  "[amazon] Le corpus provient d'UNE seule marketplace Amazon, celle du pays étudié. Il décrit l'offre présente sur ce site, et non l'ensemble du commerce en ligne du pays : les places de marché concurrentes et le commerce local en sont absents.",
+  "[amazon] Aucun filtre de livraison n'est appliqué : le corpus est le catalogue complet de la marketplace, y compris des produits qui ne seraient pas expédiables vers la région d'étude. C'est un choix assumé — restreindre à l'expédiable amputerait l'étude de marché de l'essentiel de l'offre.",
+  "[amazon] Les prix sont exprimés dans la devise de la marketplace et ne sont NI convertis, NI comparables d'une marketplace à l'autre. Ils sont relevés à l'instant du run : les prix Amazon varient de jour en jour.",
+  "[amazon] Amazon bloque une part variable des requêtes automatisées. Un corpus court ou vide peut être le fait de l'anti-bot et non du catalogue : les runs concernés sont signalés dans `statuts_collecte`.",
+  "[amazon] Le classement d'Amazon est commercial : il mêle publicité, performance vendeur et ancienneté de l'annonce. L'ordre de collecte n'est pas un classement de qualité, et le corpus n'est pas exhaustif.",
+  "[amazon] Les avis collectés sont les « meilleurs avis » retenus par Amazon, quelques-uns par produit et sur une fenêtre récente : ils illustrent des retours d'usage, ils ne constituent en aucun cas un échantillon représentatif ni une base de mesure de satisfaction.",
+  "[amazon] `pertinence` et `correspondance` sont des heuristiques produites par un LLM, sans validation sur un échantillon annoté.",
+  "[amazon] Un compte Apify en fin de quota tronque les runs SANS les faire échouer : ils remontent en statut SUCCEEDED avec un dataset incomplet. Vérifier le quota avant toute interprétation d'un volume de produits.",
+  "[meta_ads] Le corpus ne décrit QUE la publicité payante diffusée sur les plateformes de Meta (Facebook, Instagram, Messenger, Audience Network). Google, TikTok, les places de marché et le référencement naturel en sont absents : ce n'est pas une photographie de la pression publicitaire totale sur le marché.",
+  "[meta_ads] La bibliothèque publicitaire n'expose durablement que les annonces COMMERCIALES ACTIVES : une annonce arrêtée en sort, sauf dans l'Union européenne où le règlement sur les services numériques impose un archivage, et sauf pour les annonces politiques et de société, archivées sept ans. Une recherche sur les annonces inactives est donc normalement vide hors UE — ce point est tiré de la politique affichée par Meta et n'a pas été vérifié run à run.",
+  "[meta_ads] Aucune donnée de diffusion n'est publiée pour les annonces commerciales : ni portée, ni dépense, ni ciblage, ni performance. `portee_estimee` et `depense` restent nuls hors annonces politiques. Rien dans ce corpus ne dit qu'une annonce a marché.",
+  "[meta_ads] `duree_diffusion_jours` est un indicateur de LONGÉVITÉ, pas de rentabilité. Une annonce diffusée longtemps est un indice qu'un annonceur y trouve son compte, jamais une preuve : un budget mal suivi produit la même trace.",
+  "[meta_ads] Le moteur de recherche de la bibliothèque apparie des mots sur le TEXTE des annonces. Un produit vendu par une créative purement visuelle, ou décrit avec un autre vocabulaire, est invisible à ce corpus.",
+  "[meta_ads] Un même créatif est diffusé sous de nombreux identifiants d'annonce. Le module les rapproche par annonceur et par texte, mais un rapprochement reste approximatif : le décompte d'annonces n'est pas un décompte de campagnes.",
+  "[meta_ads] `pertinence` et `correspondance` sont des heuristiques produites par un LLM, sans validation sur un échantillon annoté.",
+  "[meta_ads] Le corpus est plafonné par recherche et n'est en aucun cas exhaustif : l'ordre servi par la bibliothèque n'est pas documenté et ne constitue pas un classement de notoriété ou de budget.",
+  "[meta_ads] Un compte Apify en fin de quota tronque les runs SANS les faire échouer : ils remontent en statut SUCCEEDED avec un dataset incomplet. Vérifier le quota avant toute interprétation d'un volume d'annonces.",
+  "[meta_ads] Une ou plusieurs recherches se sont terminées sans aucune annonce. Sur la bibliothèque publicitaire, c'est le plus souvent un constat réel — personne n'annonce sur ces mots dans ce pays — mais cela peut aussi venir d'une formulation trop étroite ou d'un filtre de statut trop restrictif.",
+  "[meta_ads] Le corpus reste sous le seuil d'annonces après le cycle de repli. Il est insuffisant pour conclure — et notamment pour conclure à une absence de pression publicitaire sur ce marché.",
+  "[recherche_web] La SERP interrogée est géolocalisée aux États-Unis et en anglais : l'actor n'expose aucun paramètre de pays ni de langue de recherche (`serpProxyGroup` ne sert pas à choisir un pays). Le ciblage régional par TLD et par mots-clés géographiques est donc une APPROXIMATION — le classement des résultats reste celui que verrait un utilisateur américain, pas un consommateur du marché étudié.",
+  "[recherche_web] L'opérateur `site:.<tld>` exclut mécaniquement les acteurs locaux hébergés en .com, qui sont nombreux sur la plupart des marchés. Les requêtes à mots-clés géographiques compensent partiellement ce biais, sans aucune garantie d'exhaustivité.",
+  "[recherche_web] Le corpus se limite aux premiers résultats Google de chaque requête : il n'est pas exhaustif et reflète les biais du référencement (optimisation SEO, contenu affilié, pages générées). Chaque page est un SIGNAL À RECOUPER, jamais un fait ; les chiffres qui y figurent (prix, parts de marché, classements) doivent être revalidés sur des sources structurées.",
+  "[recherche_web] `type_source`, `portee_regionale` et `pertinence` sont des heuristiques produites par un LLM, sans validation sur un échantillon annoté.",
+  "[recherche_web] Une redondance avec les corpus des autres collecteurs reste possible malgré l'exclusion de domaines : un même contenu peut être republié sur un domaine non listé.",
+  "[recherche_web] La fraîcheur des contenus n'est pas garantie : ce mode de collecte n'expose aucun filtre de date fiable, et les pages retenues peuvent dater de plusieurs années.",
+  "[recherche_web] Un ou plusieurs axes restent sous le seuil de pages après le cycle de repli (voir `stats.axes_sous_couverts`) : le corpus est insuffisant pour ces axes et ne doit pas être interprété comme un signal d'absence.",
+  "Les volumes de ventes Amazon sont des mentions par paliers (« 1K+ achetés le mois dernier ») : la valeur retenue est le PLANCHER du palier. Tout cumul de volumes est donc une borne inférieure, et les parts de concentration qui en découlent sont approximatives.",
+  "Le corpus concurrentiel n'est pas exhaustif : il hérite intégralement des biais de collecte amont (requêtes choisies, plafonds d'items, seuils de pertinence, blocages anti-bot). Aucune part de marché ne peut en être déduite.",
+  "Les rapprochements de concurrents reposent sur la seule similarité de nom. Deux entités distinctes portant un nom voisin peuvent être fusionnées à tort, et une même entreprise vendant sous deux marques restera séparée.",
+  "Les portées régionales sont hétérogènes entre sources : un prix Amazon décrit le marché de sa marketplace, une annonce Meta décrit un pays de diffusion, une offre AliExpress un pays de livraison. Ces plans ne sont pas superposables.",
+  "La longévité d'une annonce publicitaire mesure une durée de diffusion, jamais une rentabilité : une campagne peut être diffusée longtemps à perte.",
+  "La classification des correspondances et l'extraction des claims sont produites par des modèles de langage et n'ont pas été validées empiriquement.",
+  "Seuls les 8 premiers concurrents (par volume puis présence multi-sources) ont fait l'objet d'une analyse qualitative ; les 23 suivants ne portent que leurs statistiques."
+ ],
+ "produit": {
+  "nom": "Wireless Lavalier Microphone Type-C",
+  "categorie": "Lavalier Microphone",
+  "description": "Micro-cravate sans fil HITOZON à connecteur USB Type-C, prévu pour smartphones, ordinateurs et tablettes en plug and play. Il s'agit d'un micro à condensateur omnidirectionnel avec batterie intégrée, vendu en set émetteur(s) + récepteur. Affiché à 0,99 USD au lieu de 8,46 USD, plus 1,99 USD de livraison depuis la Chine. En stock (2 174 pièces), noté 4,7/5 sur 1 585 avis."
+ },
+ "hypotheses": [
+  "Seuil de pertinence amont retenu : 0.5 (heuristique).",
+  "Prix de référence d'une offre AliExpress : le prix de vente de l'annonce, et non le prix du SKU le moins cher ; les SKU ne servent qu'aux fourchettes.",
+  "Les segments de prix sont définis par terciles des prix constatés dans la source, non par des paliers de marché : ce découpage est arbitraire.",
+  "La concentration publiée est la part de volume des 3 premiers concurrents, calculée sur les seuls volumes disponibles.",
+  "Les codes de devises sont normalisés depuis les symboles émis par les collecteurs (« € » → « EUR ») ; aucun montant n'est converti."
+ ],
+ "concurrents": [
+  {
+   "stats": {
+    "nb_offres": 4,
+    "nb_annonces": 0,
+    "note_moyenne": 4.3,
+    "longevite_max_jours": null,
+    "nb_annonces_actives": 0,
+    "prix_max_par_devise": {
+     "EUR": 18.99
+    },
+    "prix_min_par_devise": {
+     "EUR": 14.99
+    },
+    "nb_pages_mentionnant": 0,
+    "volume_ventes_cumule": 600,
+    "fourchette_prix_par_devise": {
+     "EUR": "14.99–18.99"
+    }
+   },
+   "analyse": {
+    "forces": [
+     {
+      "point": "Volume d'avis cumulé très élevé sur plusieurs références, signe d'une forte adoption sur Amazon",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0D9CRZM8Y"
+       },
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0GTTW452K"
+       }
+      ]
+     },
+     {
+      "point": "Notes clients élevées et homogènes entre 4.2 et 4.4 sur l'ensemble des offres",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0F99F1Y8P"
+       },
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0D9CRZM8Y"
+       },
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0GTTW452K"
+       }
+      ]
+     },
+     {
+      "point": "Bonnes positions dans les classements best-seller Amazon, notamment un rang 43 sur deux fiches",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0D9CRZM8Y"
+       },
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0GTTW452K"
+       }
+      ]
+     },
+     {
+      "point": "Présence sur le segment d'entrée de gamme (14,99 €) pouvant capter une clientèle sensible au prix",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0F99F1Y8P"
+       }
+      ]
+     }
+    ],
+    "faiblesses": [
+     {
+      "point": "Aucune annonce publicitaire active détectée, ce qui limite la visibilité et la preuve d'investissement marketing soutenu",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0F99F1Y8P"
+       }
+      ]
+     },
+     {
+      "point": "Multiplication de références quasi identiques (fiches redondantes) pouvant diluer les avis et la lisibilité de l'offre pour l'acheteur",
+      "statut": "hypothese",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": "Mini Wireless Microphone for Android/iPhone/iOS/PC/Laptop Lapel Lavalier Microphone with Noise Reduction for Recording Clip Microphone for Video Recording Tikto",
+        "id_reference": "amz-B0D9CRZM8Y"
+       },
+       {
+        "type": "offre",
+        "extrait": "Mini Wireless Microphone for Android/iPhone/iOS/PC/Laptop Lapel Lavalier Microphone with Noise Reduction for Recording Clip-on Microphone for Video Recording Ti",
+        "id_reference": "amz-B0GTTW452K"
+       }
+      ]
+     },
+     {
+      "point": "Positionnement prix hétérogène selon les fiches (14,99 € à 18,99 €) sans différenciation claire de valeur entre elles",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0F99F1Y8P"
+       },
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0GTTW452K"
+       }
+      ]
+     }
+    ],
+    "niveau_menace": "moyen",
+    "proposition_valeur": "Microphones lavaliers sans fil compacts, plug-and-play, avec réduction de bruit, compatibles iPhone/Android/PC, positionnés sur l'entrée et le cœur de gamme (14,99–18,99 €) pour la création de contenu vidéo et TikTok.",
+    "arguments_marketing": [],
+    "justification_menace": "Les données disponibles se limitent à 4 offres Amazon, sans aucune annonce publicitaire, avis textuels détaillés, ni mention sur des pages web tierces. La menace est jugée moyenne : le concurrent affiche des volumes d'avis élevés (jusqu'à 1724) et de bonnes notes (4.2 à 4.4) sur plusieurs fiches actives avec de bons rangs best-seller, ce qui traduit une traction commerciale réelle sur Amazon. Toutefois, l'absence totale de données publicitaires, de mentions externes et de détail sur les avis empêche d'évaluer la solidité de sa stratégie marketing ou sa présence hors marketplace, ce qui limite la confiance dans une menace de niveau fort.",
+    "segment_prix_par_source": {
+     "amazon": "entree"
+    }
+   },
+   "concurrent": {
+    "type": "marque_marketplace",
+    "alias": [],
+    "presence": {
+     "amazon": 4,
+     "meta_ads": 0,
+     "aliexpress": 0,
+     "recherche_web": 0
+    },
+    "ids_pages": [],
+    "ids_offres": [
+     "amz-B0F99F1Y8P",
+     "amz-B0DSJ4CB1D",
+     "amz-B0D9CRZM8Y",
+     "amz-B0GTTW452K"
+    ],
+    "ids_annonces": [],
+    "nom_canonique": "XIXIXIAXIA",
+    "niveau_certitude_rapprochement": "sur"
+   }
+  },
+  {
+   "stats": {
+    "nb_offres": 1,
+    "nb_annonces": 0,
+    "note_moyenne": 4.1,
+    "longevite_max_jours": null,
+    "nb_annonces_actives": 0,
+    "prix_max_par_devise": {
+     "EUR": 10.99
+    },
+    "prix_min_par_devise": {
+     "EUR": 10.99
+    },
+    "nb_pages_mentionnant": 0,
+    "volume_ventes_cumule": 600,
+    "fourchette_prix_par_devise": {
+     "EUR": "10.99"
+    }
+   },
+   "analyse": {
+    "forces": [
+     {
+      "point": "Très bon rapport qualité-prix largement salué par les clients, avec des comparaisons favorables à des produits plus chers.",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "avis",
+        "extrait": "Tuve unos de 50 euros y sonaban igual o peor que estos por 10, ha sido muy buena compra",
+        "id_reference": "amz-B0F1M43DKY-avis-0"
+       },
+       {
+        "type": "avis",
+        "extrait": "Creo que calidad/precio es ESPECTACULAR y nunca he encontrado por ese precio un micrófono que de esta calidad de recepción.",
+        "id_reference": "amz-B0F1M43DKY-avis-8"
+       }
+      ]
+     },
+     {
+      "point": "Note moyenne élevée (4,1/5) sur un volume conséquent d'avis (526), avec une écrasante majorité de notes 5 étoiles dans l'échantillon fourni.",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0F1M43DKY"
+       }
+      ]
+     },
+     {
+      "point": "Volume de ventes cumulé notable (600) associé à un badge de type best-seller sur Amazon.",
+      "statut": "hypothese",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0F1M43DKY"
+       }
+      ]
+     },
+     {
+      "point": "Qualité audio et facilité d'usage plug-and-play reconnues par plusieurs avis, avec compatibilité multi-appareils (iPhone/Android) et accessoires inclus (housse, adaptateurs, bonnettes).",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "avis",
+        "extrait": "Traen todos los accesorios necesarios para poder usarles con cualquier dispositivo tanto de android o de Apple. Son muy faciles de usar, conectar y comenzar a usar.",
+        "id_reference": "amz-B0F1M43DKY-avis-1"
+       },
+       {
+        "type": "avis",
+        "extrait": "Se escucha super bien y vienen dos pompones para utilizar en la calle, además te incluye una funda para transportarlos",
+        "id_reference": "amz-B0F1M43DKY-avis-2"
+       },
+       {
+        "type": "avis",
+        "extrait": "Me ha sorprendido muchísimo la calidad de sonido: nítida, potente y muy limpia incluso en exteriores. El emparejamiento es rapidísimo, prácticamente instantáneo.",
+        "id_reference": "amz-B0F1M43DKY-avis-9"
+       }
+      ]
+     }
+    ],
+    "faiblesses": [
+     {
+      "point": "Portefeuille produit très limité : une seule offre référencée, sans annonces publicitaires actives détectées, ce qui limite la visibilité et la diversification du concurrent.",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0F1M43DKY"
+       }
+      ]
+     },
+     {
+      "point": "Système de pince jugé peu adapté à certains tissus par un client, ce qui peut nuire à l'usage sur certains vêtements.",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "avis",
+        "extrait": "Incorporan una pinza que no es lo mas adecuado para algunos tejidos pero no los dañan.",
+        "id_reference": "amz-B0F1M43DKY-avis-3"
+       }
+      ]
+     },
+     {
+      "point": "Aucune présence détectée dans les pages web ou contenus tiers mentionnant la marque, ce qui suggère une notoriété hors-marketplace potentiellement faible.",
+      "statut": "hypothese",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0F1M43DKY"
+       }
+      ]
+     }
+    ],
+    "niveau_menace": "moyen",
+    "proposition_valeur": "Micro-cravate sans fil vendu en pack de 2, positionné en entrée de gamme (10,99€), mettant en avant un rapport qualité-prix fort, une compatibilité universelle (iPhone/Android/iPad/PC), un usage plug-and-play et une réduction de bruit, à destination des créateurs de contenu et du streaming mobile.",
+    "arguments_marketing": [],
+    "justification_menace": "Données limitées à une seule offre Amazon sans aucune annonce publicitaire active ni mention sur des pages web tierces, ce qui empêche d'évaluer la longévité marketing ou la diffusion multi-canal. Cependant, le volume d'avis (526) et de ventes cumulées (600) associé à une note moyenne solide (4,1/5) et un badge best-seller indiquent une traction réelle sur le canal Amazon, justifiant une menace moyenne malgré l'absence de diversification observée.",
+    "segment_prix_par_source": {
+     "amazon": "entree"
+    }
+   },
+   "concurrent": {
+    "type": "marque_marketplace",
+    "alias": [],
+    "presence": {
+     "amazon": 1,
+     "meta_ads": 0,
+     "aliexpress": 0,
+     "recherche_web": 0
+    },
+    "ids_pages": [],
+    "ids_offres": [
+     "amz-B0F1M43DKY"
+    ],
+    "ids_annonces": [],
+    "nom_canonique": "Nyxia",
+    "niveau_certitude_rapprochement": "sur"
+   }
+  },
+  {
+   "stats": {
+    "nb_offres": 1,
+    "nb_annonces": 0,
+    "note_moyenne": 4.5,
+    "longevite_max_jours": null,
+    "nb_annonces_actives": 0,
+    "prix_max_par_devise": {
+     "EUR": 19.99
+    },
+    "prix_min_par_devise": {
+     "EUR": 19.99
+    },
+    "nb_pages_mentionnant": 0,
+    "volume_ventes_cumule": 400,
+    "fourchette_prix_par_devise": {
+     "EUR": "19.99"
+    }
+   },
+   "analyse": {
+    "forces": [
+     {
+      "point": "Note moyenne élevée de 4,5/5 sur un volume conséquent de 640 avis, signal de satisfaction client robuste.",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0DYDRDNGX"
+       }
+      ]
+     },
+     {
+      "point": "Statut de best-seller (rang 97) sur Amazon pour son offre principale.",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0DYDRDNGX"
+       }
+      ]
+     },
+     {
+      "point": "Volume de ventes cumulé de 400 unités constaté, indiquant une traction commerciale réelle sur cette offre.",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0DYDRDNGX"
+       }
+      ]
+     }
+    ],
+    "faiblesses": [
+     {
+      "point": "Portefeuille produit très limité : une seule offre référencée, aucune annonce publicitaire active détectée, ce qui limite la visibilité et la diversification des sources d'acquisition.",
+      "statut": "hypothese",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0DYDRDNGX"
+       }
+      ]
+     },
+     {
+      "point": "Aucune preuve textuelle d'avis disponible dans le corpus pour étayer la qualité perçue au-delà de la note chiffrée.",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0DYDRDNGX"
+       }
+      ]
+     }
+    ],
+    "niveau_menace": "moyen",
+    "proposition_valeur": "Microphone sans fil avec affichage numérique de batterie, positionné sur le segment de prix cœur de marché (19,99 EUR).",
+    "arguments_marketing": [],
+    "justification_menace": "Les données disponibles sont très pauvres : une seule offre, aucune annonce publicitaire, aucun avis textuel et aucune page web mentionnant le concurrent. Le niveau de menace est jugé moyen car l'unique offre affiche des indicateurs positifs tangibles (note 4,5/5 sur 640 avis, badge best-seller, 400 ventes cumulées), mais l'absence de multi-sources, de diversification produit et de présence publicitaire mesurée empêche de conclure à une menace forte. Aucune part de marché ni performance économique ne peut être déduite de ces seules statistiques.",
+    "segment_prix_par_source": {
+     "amazon": "coeur"
+    }
+   },
+   "concurrent": {
+    "type": "marque_marketplace",
+    "alias": [],
+    "presence": {
+     "amazon": 1,
+     "meta_ads": 0,
+     "aliexpress": 0,
+     "recherche_web": 0
+    },
+    "ids_pages": [],
+    "ids_offres": [
+     "amz-B0DYDRDNGX"
+    ],
+    "ids_annonces": [],
+    "nom_canonique": "YEJATA",
+    "niveau_certitude_rapprochement": "sur"
+   }
+  },
+  {
+   "stats": {
+    "nb_offres": 2,
+    "nb_annonces": 0,
+    "note_moyenne": 4.2,
+    "longevite_max_jours": null,
+    "nb_annonces_actives": 0,
+    "prix_max_par_devise": {
+     "EUR": 19.99
+    },
+    "prix_min_par_devise": {
+     "EUR": 10.79
+    },
+    "nb_pages_mentionnant": 0,
+    "volume_ventes_cumule": 300,
+    "fourchette_prix_par_devise": {
+     "EUR": "10.79–19.99"
+    }
+   },
+   "analyse": {
+    "forces": [
+     {
+      "point": "Note moyenne de 4,2/5 constatée sur les deux offres, avec un volume conséquent de 271 avis chacune",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0F6YH4SXQ"
+       },
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0H7JMLZ28"
+       }
+      ]
+     },
+     {
+      "point": "Volume de ventes cumulé constaté de 300 unités sur l'offre d'entrée de gamme, avec badge best-seller (rang 155)",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0F6YH4SXQ"
+       }
+      ]
+     },
+     {
+      "point": "Offre d'entrée de gamme positionnée à un prix très bas (10,79€), pouvant attirer les acheteurs sensibles au prix",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0F6YH4SXQ"
+       }
+      ]
+     },
+     {
+      "point": "Compatibilité USB-C et Lightning mise en avant, couvrant un large parc d'appareils (iPhone, iPad, Android)",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": "Wireless Microphone for iPhone iPad & Android – 2 Pack Mini Clip-On Mobile Microphone with Noise Cancellation, USB-C/Lightning – for TikTok, Youtube, Podcast, L",
+        "id_reference": "amz-B0F6YH4SXQ"
+       }
+      ]
+     }
+    ],
+    "faiblesses": [
+     {
+      "point": "Aucune annonce publicitaire active recensée, donc aucune preuve de visibilité acquise ou de discours marketing structuré",
+      "statut": "hypothese",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0F6YH4SXQ"
+       }
+      ]
+     },
+     {
+      "point": "Gamme resserrée à seulement 2 offres, avec un positionnement variable (entrée vs cœur de gamme) qui peut brouiller le positionnement prix",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0F6YH4SXQ"
+       },
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0H7JMLZ28"
+       }
+      ]
+     },
+     {
+      "point": "Absence de volume de ventes chiffré pour l'offre au prix le plus haut (19,99€), ce qui ne permet pas d'évaluer sa traction commerciale",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0H7JMLZ28"
+       }
+      ]
+     }
+    ],
+    "niveau_menace": "moyen",
+    "proposition_valeur": "Microphones sans fil clip-on compatibles USB-C/Lightning avec réduction de bruit, positionnés en entrée de gamme (10,79€) et en cœur de gamme (19,99€), ciblant les créateurs de contenu (TikTok, YouTube, podcast).",
+    "arguments_marketing": [],
+    "justification_menace": "Les données disponibles sont limitées : seulement 2 offres Amazon, aucune annonce publicitaire, aucun avis textuel détaillé et aucune page web mentionnant ce concurrent. La menace est jugée moyenne sur la base des seuls signaux constatés (note de 4,2/5 sur 271 avis par offre et 300 ventes cumulées avec badge best-seller), qui indiquent une présence commerciale réelle mais restreinte, sans preuve de déploiement marketing (publicité, présence multi-sources) ni de largeur de gamme.",
+    "segment_prix_par_source": {
+     "amazon": "entree"
+    }
+   },
+   "concurrent": {
+    "type": "marque_marketplace",
+    "alias": [],
+    "presence": {
+     "amazon": 2,
+     "meta_ads": 0,
+     "aliexpress": 0,
+     "recherche_web": 0
+    },
+    "ids_pages": [],
+    "ids_offres": [
+     "amz-B0F6YH4SXQ",
+     "amz-B0H7JMLZ28"
+    ],
+    "ids_annonces": [],
+    "nom_canonique": "Uewpv",
+    "niveau_certitude_rapprochement": "sur"
+   }
+  },
+  {
+   "stats": {
+    "nb_offres": 2,
+    "nb_annonces": 0,
+    "note_moyenne": 4.3,
+    "longevite_max_jours": null,
+    "nb_annonces_actives": 0,
+    "prix_max_par_devise": {
+     "EUR": 29.99
+    },
+    "prix_min_par_devise": {
+     "EUR": 19.99
+    },
+    "nb_pages_mentionnant": 0,
+    "volume_ventes_cumule": 100,
+    "fourchette_prix_par_devise": {
+     "EUR": "19.99–29.99"
+    }
+   },
+   "analyse": {
+    "forces": [
+     {
+      "point": "Notes moyennes élevées sur les deux offres (4.4 et 4.2), avec un volume d'avis conséquent (269 et 261 avis).",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": "Micrófono de Solapa Inalámbrico para iPhone y Android",
+        "id_reference": "amz-B0FSRVJQMG"
+       },
+       {
+        "type": "offre",
+        "extrait": "Wireless Microphone for iPhone Android, Noise Reduction",
+        "id_reference": "amz-B0FYFVTYQQ"
+       }
+      ]
+     },
+     {
+      "point": "Les deux offres portent un badge de type best-seller, signe d'une visibilité correcte sur la marketplace Amazon.",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": "Micrófono de Solapa Inalámbrico para iPhone y Android",
+        "id_reference": "amz-B0FSRVJQMG"
+       },
+       {
+        "type": "offre",
+        "extrait": "Wireless Microphone for iPhone Android, Noise Reduction",
+        "id_reference": "amz-B0FYFVTYQQ"
+       }
+      ]
+     },
+     {
+      "point": "Positionnement couvrant deux segments de prix (cœur et premium), permettant une couverture partielle de la gamme tarifaire.",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": "Micrófono de Solapa Inalámbrico para iPhone y Android",
+        "id_reference": "amz-B0FSRVJQMG"
+       },
+       {
+        "type": "offre",
+        "extrait": "Wireless Microphone for iPhone Android, Noise Reduction",
+        "id_reference": "amz-B0FYFVTYQQ"
+       }
+      ]
+     }
+    ],
+    "faiblesses": [
+     {
+      "point": "Aucune donnée publicitaire disponible : impossible d'évaluer la présence en annonces ou la longévité publicitaire de la marque.",
+      "statut": "hypothese",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0FSRVJQMG"
+       },
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0FYFVTYQQ"
+       }
+      ]
+     },
+     {
+      "point": "Aucun avis client détaillé n'est rattaché aux offres, limitant l'évaluation qualitative de la satisfaction malgré les notes moyennes affichées.",
+      "statut": "hypothese",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0FSRVJQMG"
+       },
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0FYFVTYQQ"
+       }
+      ]
+     },
+     {
+      "point": "Portefeuille d'offres restreint à seulement 2 références sur Amazon, sans diversification constatée sur d'autres canaux.",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": "Micrófono de Solapa Inalámbrico para iPhone y Android",
+        "id_reference": "amz-B0FSRVJQMG"
+       },
+       {
+        "type": "offre",
+        "extrait": "Wireless Microphone for iPhone Android, Noise Reduction",
+        "id_reference": "amz-B0FYFVTYQQ"
+       }
+      ]
+     }
+    ],
+    "niveau_menace": "moyen",
+    "proposition_valeur": "Microphone lavalière sans fil pour iPhone et Android, avec une déclinaison mettant l'accent sur la réduction de bruit ; positionnement multi-segment (cœur et premium) sur Amazon.",
+    "arguments_marketing": [],
+    "justification_menace": "Les données disponibles sont limitées : seulement 2 offres Amazon, aucune annonce publicitaire, aucun avis client détaillé et aucune page web mentionnant la marque. Le volume de ventes cumulé (100 unités) et le nombre d'offres restent faibles, mais les notes moyennes (4.3) et le volume d'avis agrégé (530) sur les deux références suggèrent une présence établie et appréciée sur Amazon. Faute de données publicitaires et de diversification de canaux, la menace est jugée moyenne : la marque est active et bien notée sur sa marketplace principale, mais son empreinte globale reste non démontrée par le corpus.",
+    "segment_prix_par_source": {
+     "amazon": "premium"
+    }
+   },
+   "concurrent": {
+    "type": "marque_marketplace",
+    "alias": [],
+    "presence": {
+     "amazon": 2,
+     "meta_ads": 0,
+     "aliexpress": 0,
+     "recherche_web": 0
+    },
+    "ids_pages": [],
+    "ids_offres": [
+     "amz-B0FSRVJQMG",
+     "amz-B0FYFVTYQQ"
+    ],
+    "ids_annonces": [],
+    "nom_canonique": "UROLMIC",
+    "niveau_certitude_rapprochement": "sur"
+   }
+  },
+  {
+   "stats": {
+    "nb_offres": 1,
+    "nb_annonces": 0,
+    "note_moyenne": 4.4,
+    "longevite_max_jours": null,
+    "nb_annonces_actives": 0,
+    "prix_max_par_devise": {
+     "EUR": 12.99
+    },
+    "prix_min_par_devise": {
+     "EUR": 12.99
+    },
+    "nb_pages_mentionnant": 0,
+    "volume_ventes_cumule": 100,
+    "fourchette_prix_par_devise": {
+     "EUR": "12.99"
+    }
+   },
+   "analyse": {
+    "forces": [
+     {
+      "point": "Note moyenne élevée (4.4/5) sur un volume conséquent de 497 avis, avec best-seller ranking sur Amazon",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0F7WSFGN6"
+       }
+      ]
+     },
+     {
+      "point": "Positionnement prix d'entrée de gamme très agressif (12.99 EUR)",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0F7WSFGN6"
+       }
+      ]
+     },
+     {
+      "point": "Retours clients positifs sur la qualité sonore et la facilité d'usage pour la création de contenu",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "avis",
+        "extrait": "El audio es bueno. Para mi que empiezo a crear contenido ha sido un gran acierto. Sonido genial y muy fácil de usar. Lo recomiendo",
+        "id_reference": "amz-B0F7WSFGN6-avis-5"
+       },
+       {
+        "type": "avis",
+        "extrait": "Excelente calidad, son perfectos, me encantan. El sonido se escucha súper limpio y profesional. Súper recomendados.",
+        "id_reference": "amz-B0F7WSFGN6-avis-9"
+       }
+      ]
+     },
+     {
+      "point": "Confort d'utilisation apprécié grâce à la fixation magnétique",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "avis",
+        "extrait": "Tras unos meses de uso debo decir que es un producto que cumple con todas mis expectativas. Buen sonido, fácil puesta en marcha y tremendamente cómodos, gracias al imán.",
+        "id_reference": "amz-B0F7WSFGN6-avis-3"
+       }
+      ]
+     }
+    ],
+    "faiblesses": [
+     {
+      "point": "Problèmes de compatibilité rapportés par certains clients, notamment avec iPhone",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "avis",
+        "extrait": "Lo devolví. Aseguraros bien de que sea compatible. En mi caso, finalmente no lo era aunque según la información, si lo era. No sirve para todo.",
+        "id_reference": "amz-B0F7WSFGN6-avis-6"
+       },
+       {
+        "type": "avis",
+        "extrait": "No funciona para iPhone!",
+        "id_reference": "amz-B0F7WSFGN6-avis-8"
+       }
+      ]
+     },
+     {
+      "point": "Qualité sonore jugée moyenne par certains utilisateurs, dépendante des conditions d'utilisation",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "avis",
+        "extrait": "El sonido no es súper limpio, también influye mucho el lugar donde se use. En ambientes tranquilos tendrás algo bastante funcional.",
+        "id_reference": "amz-B0F7WSFGN6-avis-7"
+       }
+      ]
+     },
+     {
+      "point": "Présence commerciale très limitée : une seule offre référencée, aucune annonce publicitaire active et aucune mention sur des pages web tierces",
+      "statut": "hypothese",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0F7WSFGN6"
+       }
+      ]
+     }
+    ],
+    "niveau_menace": "moyen",
+    "proposition_valeur": "Micro-cravate sans fil compatible iPhone, Android et USB-C, positionné en entrée de gamme, misant sur un bon rapport qualité/prix et une fixation magnétique pratique pour les créateurs de contenu débutants.",
+    "arguments_marketing": [],
+    "justification_menace": "Les données disponibles sont limitées à une seule offre Amazon sans aucune annonce publicitaire ni mention sur pages web, ce qui empêche d'évaluer la présence multi-canal du concurrent. Cependant, cette offre unique affiche une note moyenne solide (4.4/5) appuyée par un volume significatif de 497 avis et un badge de best-seller, signe d'une traction réelle sur ce canal. En l'absence de données sur la longévité publicitaire ou la diversité des sources, la menace ne peut être qualifiée de forte, mais le volume d'avis et la note incitent à ne pas la sous-estimer non plus.",
+    "segment_prix_par_source": {
+     "amazon": "entree"
+    }
+   },
+   "concurrent": {
+    "type": "marque_marketplace",
+    "alias": [],
+    "presence": {
+     "amazon": 1,
+     "meta_ads": 0,
+     "aliexpress": 0,
+     "recherche_web": 0
+    },
+    "ids_pages": [],
+    "ids_offres": [
+     "amz-B0F7WSFGN6"
+    ],
+    "ids_annonces": [],
+    "nom_canonique": "Newmight",
+    "niveau_certitude_rapprochement": "sur"
+   }
+  },
+  {
+   "stats": {
+    "nb_offres": 1,
+    "nb_annonces": 0,
+    "note_moyenne": 4.1,
+    "longevite_max_jours": null,
+    "nb_annonces_actives": 0,
+    "prix_max_par_devise": {
+     "EUR": 15.99
+    },
+    "prix_min_par_devise": {
+     "EUR": 15.99
+    },
+    "nb_pages_mentionnant": 0,
+    "volume_ventes_cumule": 100,
+    "fourchette_prix_par_devise": {
+     "EUR": "15.99"
+    }
+   },
+   "analyse": {
+    "forces": [
+     {
+      "point": "Offre à prix bas (15,99 EUR) pour un pack de 2 microphones, ce qui abaisse le coût unitaire perçu.",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": "Mini Mic Pro Wireless Microphone for iPhone, iPad and Android (2 Pack) - Lapel Microphone with USB-C for Video Recording, Interviews, Podcasts, Vlogs, ASMR, Tik",
+        "id_reference": "amz-B0FC5T84QD"
+       }
+      ]
+     },
+     {
+      "point": "Note moyenne correcte (4,1/5) avec un volume d'avis conséquent (322 avis) suggérant une adoption significative.",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0FC5T84QD"
+       }
+      ]
+     },
+     {
+      "point": "Badge « best_seller_rang_157 » sur Amazon, signalant une bonne visibilité dans la catégorie.",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0FC5T84QD"
+       }
+      ]
+     },
+     {
+      "point": "Compatibilité multi-plateforme annoncée (iPhone, iPad et Android) via USB-C, ce qui élargit l'audience potentielle par rapport à des produits mono-plateforme.",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": "Mini Mic Pro Wireless Microphone for iPhone, iPad and Android (2 Pack) - Lapel Microphone with USB-C",
+        "id_reference": "amz-B0FC5T84QD"
+       }
+      ]
+     }
+    ],
+    "faiblesses": [
+     {
+      "point": "Présence commerciale limitée à une seule offre recensée, sur une seule source (Amazon), sans diversification de canaux.",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0FC5T84QD"
+       }
+      ]
+     },
+     {
+      "point": "Aucune annonce publicitaire active recensée, ce qui traduit une absence apparente d'investissement marketing mesurable dans le corpus.",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0FC5T84QD"
+       }
+      ]
+     },
+     {
+      "point": "Volume de ventes cumulé modeste (100 unités) au regard du nombre d'avis (322), ce qui interroge sur la cohérence ou l'ancienneté des chiffres disponibles.",
+      "statut": "hypothese",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0FC5T84QD"
+       }
+      ]
+     },
+     {
+      "point": "Aucune mention sur des pages web tierces détectée, limitant la visibilité hors marketplace.",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0FC5T84QD"
+       }
+      ]
+     }
+    ],
+    "niveau_menace": "faible",
+    "proposition_valeur": "Micro-cravate sans fil vendu en pack de 2, compatible iPhone/iPad/Android avec connectique USB-C, positionné sur un usage large (vidéo, interviews, podcasts, vlogs, ASMR, TikTok) à prix d'entrée de gamme.",
+    "arguments_marketing": [
+     "2 Pack",
+     "Sans fil",
+     "USB-C",
+     "Compatible iPhone, iPad et Android",
+     "Usage vidéo, interviews, podcasts, vlogs, ASMR, TikTok"
+    ],
+    "justification_menace": "Les données disponibles sont très pauvres : une seule offre, aucune annonce publicitaire, aucune page web mentionnant la marque et aucun avis client détaillé fourni. Malgré une note correcte (4,1) et un volume d'avis notable (322), l'absence de diversification des sources, de longévité publicitaire mesurée et de multi-présence limite la portée de la menace concurrentielle telle qu'observable dans ce corpus.",
+    "segment_prix_par_source": {
+     "amazon": "coeur"
+    }
+   },
+   "concurrent": {
+    "type": "marque_marketplace",
+    "alias": [],
+    "presence": {
+     "amazon": 1,
+     "meta_ads": 0,
+     "aliexpress": 0,
+     "recherche_web": 0
+    },
+    "ids_pages": [],
+    "ids_offres": [
+     "amz-B0FC5T84QD"
+    ],
+    "ids_annonces": [],
+    "nom_canonique": "voijump",
+    "niveau_certitude_rapprochement": "sur"
+   }
+  },
+  {
+   "stats": {
+    "nb_offres": 2,
+    "nb_annonces": 0,
+    "note_moyenne": 4.4,
+    "longevite_max_jours": null,
+    "nb_annonces_actives": 0,
+    "prix_max_par_devise": {
+     "EUR": 14.99
+    },
+    "prix_min_par_devise": {
+     "EUR": 14.99
+    },
+    "nb_pages_mentionnant": 0,
+    "volume_ventes_cumule": 50,
+    "fourchette_prix_par_devise": {
+     "EUR": "14.99"
+    }
+   },
+   "analyse": {
+    "forces": [
+     {
+      "point": "Note moyenne élevée (4.4/5) sur un volume d'avis conséquent (132 avis par offre), signal de satisfaction client cohérent sur les deux annonces.",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0GXDQX9GL"
+       },
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0GXDVHX3V"
+       }
+      ]
+     },
+     {
+      "point": "Badge best-seller (rang 415) sur les deux offres, indiquant une bonne visibilité marketplace.",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0GXDQX9GL"
+       },
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0GXDVHX3V"
+       }
+      ]
+     },
+     {
+      "point": "Facilité d'installation et de prise en main plébiscitée par les avis (plug & play, sans application).",
+      "statut": "hypothese",
+      "preuves": [
+       {
+        "type": "avis",
+        "extrait": "La instalación es muy sencilla. Es conectar el receptor al dispositivo, encender los micrófonos y empezar a grabar. No he tenido que instalar apli",
+        "id_reference": "amz-B0GXDQX9GL-avis-4"
+       },
+       {
+        "type": "avis",
+        "extrait": "Súper fáciles de usar: enchufas el receptor al móvil, enciendes los micros y listo, sin apps ni configuraciones raras.",
+        "id_reference": "amz-B0GXDVHX3V-avis-1"
+       }
+      ]
+     },
+     {
+      "point": "Qualité audio perçue comme nettement supérieure au micro intégré du smartphone, avec réduction de bruit efficace.",
+      "statut": "hypothese",
+      "preuves": [
+       {
+        "type": "avis",
+        "extrait": "el salto de calidad frente al micrófono integrado del teléfono es brutal",
+        "id_reference": "amz-B0GXDQX9GL-avis-6"
+       },
+       {
+        "type": "avis",
+        "extrait": "ofrecen un sonido limpio gracias a su cancelación de ruido inteligente",
+        "id_reference": "amz-B0GXDVHX3V-avis-9"
+       }
+      ]
+     },
+     {
+      "point": "Design et packaging valorisés (coloris rose, finition, kit complet), élément de différenciation esthétique.",
+      "statut": "hypothese",
+      "preuves": [
+       {
+        "type": "avis",
+        "extrait": "Diseño muy bonito: Tiene un acabado muy cuidado y un color rosa precioso que lo hace destacar. • Kit muy completo",
+        "id_reference": "amz-B0GXDQX9GL-avis-2"
+       },
+       {
+        "type": "avis",
+        "extrait": "La presentación del embalaje parece de lujo.",
+        "id_reference": "amz-B0GXDVHX3V-avis-8"
+       }
+      ]
+     },
+     {
+      "point": "Positionnement prix d'entrée de gamme perçu comme un bon rapport qualité-prix par les utilisateurs.",
+      "statut": "hypothese",
+      "preuves": [
+       {
+        "type": "avis",
+        "extrait": "Muy buena calidad del producto por el precio que tiene.",
+        "id_reference": "amz-B0GXDQX9GL-avis-8"
+       },
+       {
+        "type": "avis",
+        "extrait": "Recomendable, calidad, precio.",
+        "id_reference": "amz-B0GXDVHX3V-avis-5"
+       }
+      ]
+     }
+    ],
+    "faiblesses": [
+     {
+      "point": "Duplication de la même fiche produit sous deux ASIN distincts avec titre, prix, note et nombre d'avis identiques, ce qui suggère une stratégie de multiplication d'annonces plutôt qu'une différenciation produit réelle.",
+      "statut": "hypothese",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0GXDQX9GL"
+       },
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0GXDVHX3V"
+       }
+      ]
+     },
+     {
+      "point": "Le même produit semble revendu sous plusieurs marques différentes (CoolSwan, VEZQUA, WARM BOX), ce qui interroge sur l'identité de marque propre et la fidélisation client à long terme.",
+      "statut": "hypothese",
+      "preuves": [
+       {
+        "type": "avis",
+        "extrait": "comercializado bajo marcas como CoolSwan, VEZQUA o WARM BOX",
+        "id_reference": "amz-B0GXDQX9GL-avis-5"
+       }
+      ]
+     },
+     {
+      "point": "Aucune présence détectée en dehors d'Amazon (pas d'annonces publicitaires actives, aucune page web mentionnant la marque), ce qui limite la visibilité et la capacité d'analyse de sa stratégie marketing globale.",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0GXDQX9GL"
+       }
+      ]
+     },
+     {
+      "point": "Volume de ventes cumulé renseigné très faible (50 unités) au regard du nombre d'avis (132), ce qui interroge sur la fiabilité ou l'exhaustivité des données de ventes disponibles.",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0GXDQX9GL"
+       }
+      ]
+     }
+    ],
+    "niveau_menace": "moyen",
+    "proposition_valeur": "Pack de 2 micros lavalier sans fil à prix d'entrée de gamme (14,99 €), positionné sur la simplicité d'usage (plug & play, USB-C avec adaptateur Lightning inclus), la réduction de bruit et un design soigné (coloris rose distinctif), ciblant créateurs de contenu, vlogueurs et interviews à deux voix.",
+    "arguments_marketing": [
+     "Sonido mucho más profesional para vídeos y directos",
+     "Crystal Sound",
+     "Plug & Play, sin apps ni configuraciones raras",
+     "Reducción de ruido / cancelación de ruido inteligente",
+     "Compatible con iPhone, Android, iPad y PC",
+     "Kit completo con diseño premium"
+    ],
+    "justification_menace": "Les données disponibles sont limitées à Amazon (2 offres quasi-identiques, aucune annonce publicitaire active, aucune page web mentionnant la marque), ce qui empêche d'évaluer la portée marketing réelle du concurrent. Cependant, la note moyenne élevée (4.4/5), le volume d'avis conséquent (132 par offre, cohérent sur les deux fiches) et le badge best-seller constituent des signaux de traction commerciale réels sur le canal marketplace. Le fait que le produit soit revendu sous plusieurs marques (CoolSwan, VEZQUA, WARM BOX) suggère un acteur générique multi-marques plutôt qu'une marque forte et pérenne, ce qui limite la menace à moyen terme malgré la bonne performance ponctuelle observée.",
+    "segment_prix_par_source": {
+     "amazon": "entree"
+    }
+   },
+   "concurrent": {
+    "type": "marque_marketplace",
+    "alias": [],
+    "presence": {
+     "amazon": 2,
+     "meta_ads": 0,
+     "aliexpress": 0,
+     "recherche_web": 0
+    },
+    "ids_pages": [],
+    "ids_offres": [
+     "amz-B0GXDQX9GL",
+     "amz-B0GXDVHX3V"
+    ],
+    "ids_annonces": [],
+    "nom_canonique": "CoolSwan",
+    "niveau_certitude_rapprochement": "sur"
+   }
+  },
+  {
+   "stats": {
+    "nb_offres": 1,
+    "nb_annonces": 0,
+    "note_moyenne": 4.6,
+    "longevite_max_jours": null,
+    "nb_annonces_actives": 0,
+    "prix_max_par_devise": {
+     "EUR": 27.27
+    },
+    "prix_min_par_devise": {
+     "EUR": 27.27
+    },
+    "nb_pages_mentionnant": 0,
+    "volume_ventes_cumule": 50,
+    "fourchette_prix_par_devise": {
+     "EUR": "27.27"
+    }
+   },
+   "analyse": null,
+   "concurrent": {
+    "type": "marque_etablie",
+    "alias": [],
+    "presence": {
+     "amazon": 1,
+     "meta_ads": 0,
+     "aliexpress": 0,
+     "recherche_web": 0
+    },
+    "ids_pages": [],
+    "ids_offres": [
+     "amz-B0DDLC57C3"
+    ],
+    "ids_annonces": [],
+    "nom_canonique": "DJI",
+    "niveau_certitude_rapprochement": "sur"
+   }
+  },
+  {
+   "stats": {
+    "nb_offres": 3,
+    "nb_annonces": 1,
+    "note_moyenne": 4.13,
+    "longevite_max_jours": 30,
+    "nb_annonces_actives": 1,
+    "prix_max_par_devise": {
+     "EUR": 49.0
+    },
+    "prix_min_par_devise": {
+     "EUR": 21.8
+    },
+    "nb_pages_mentionnant": 0,
+    "volume_ventes_cumule": null,
+    "fourchette_prix_par_devise": {
+     "EUR": "21.80–49.00"
+    }
+   },
+   "analyse": null,
+   "concurrent": {
+    "type": "marque_etablie",
+    "alias": [
+     "BOYA Audio"
+    ],
+    "presence": {
+     "amazon": 3,
+     "meta_ads": 1,
+     "aliexpress": 0,
+     "recherche_web": 0
+    },
+    "ids_pages": [],
+    "ids_offres": [
+     "amz-B0BPSGKH2W",
+     "amz-B09QKYWPMD",
+     "amz-B0BPY4V7TM"
+    ],
+    "ids_annonces": [
+     "ads-1822696475380213"
+    ],
+    "nom_canonique": "BOYA",
+    "niveau_certitude_rapprochement": "probable"
+   }
+  },
+  {
+   "stats": {
+    "nb_offres": 6,
+    "nb_annonces": 0,
+    "note_moyenne": 4.02,
+    "longevite_max_jours": null,
+    "nb_annonces_actives": 0,
+    "prix_max_par_devise": {
+     "EUR": 27.49
+    },
+    "prix_min_par_devise": {
+     "EUR": 11.99
+    },
+    "nb_pages_mentionnant": 0,
+    "volume_ventes_cumule": null,
+    "fourchette_prix_par_devise": {
+     "EUR": "11.99–27.49"
+    }
+   },
+   "analyse": null,
+   "concurrent": {
+    "type": "marque_marketplace",
+    "alias": [],
+    "presence": {
+     "amazon": 6,
+     "meta_ads": 0,
+     "aliexpress": 0,
+     "recherche_web": 0
+    },
+    "ids_pages": [],
+    "ids_offres": [
+     "amz-B0D73BBW7G",
+     "amz-B0D95GSZXP",
+     "amz-B0F6XYVRTC",
+     "amz-B0D737C2T3",
+     "amz-B0CF98W74J",
+     "amz-B0D9D5285R"
+    ],
+    "ids_annonces": [],
+    "nom_canonique": "OSA",
+    "niveau_certitude_rapprochement": "sur"
+   }
+  },
+  {
+   "stats": {
+    "nb_offres": 2,
+    "nb_annonces": 0,
+    "note_moyenne": 3.8,
+    "longevite_max_jours": null,
+    "nb_annonces_actives": 0,
+    "prix_max_par_devise": {
+     "EUR": 18.95
+    },
+    "prix_min_par_devise": {
+     "EUR": 16.95
+    },
+    "nb_pages_mentionnant": 0,
+    "volume_ventes_cumule": null,
+    "fourchette_prix_par_devise": {
+     "EUR": "16.95–18.95"
+    }
+   },
+   "analyse": null,
+   "concurrent": {
+    "type": "marque_marketplace",
+    "alias": [],
+    "presence": {
+     "amazon": 2,
+     "meta_ads": 0,
+     "aliexpress": 0,
+     "recherche_web": 0
+    },
+    "ids_pages": [],
+    "ids_offres": [
+     "amz-B09X629VRD",
+     "amz-B08G7XP4DC"
+    ],
+    "ids_annonces": [],
+    "nom_canonique": "Daffodil",
+    "niveau_certitude_rapprochement": "sur"
+   }
+  },
+  {
+   "stats": {
+    "nb_offres": 2,
+    "nb_annonces": 0,
+    "note_moyenne": 4.05,
+    "longevite_max_jours": null,
+    "nb_annonces_actives": 0,
+    "prix_max_par_devise": {
+     "EUR": 65.99
+    },
+    "prix_min_par_devise": {
+     "EUR": 59.99
+    },
+    "nb_pages_mentionnant": 0,
+    "volume_ventes_cumule": null,
+    "fourchette_prix_par_devise": {
+     "EUR": "59.99–65.99"
+    }
+   },
+   "analyse": null,
+   "concurrent": {
+    "type": "marque_marketplace",
+    "alias": [],
+    "presence": {
+     "amazon": 2,
+     "meta_ads": 0,
+     "aliexpress": 0,
+     "recherche_web": 0
+    },
+    "ids_pages": [],
+    "ids_offres": [
+     "amz-B0D734Z79P",
+     "amz-B0D734Q4LD"
+    ],
+    "ids_annonces": [],
+    "nom_canonique": "KIMAFUN",
+    "niveau_certitude_rapprochement": "sur"
+   }
+  },
+  {
+   "stats": {
+    "nb_offres": 1,
+    "nb_annonces": 0,
+    "note_moyenne": 5.0,
+    "longevite_max_jours": null,
+    "nb_annonces_actives": 0,
+    "prix_max_par_devise": {
+     "EUR": 10.99
+    },
+    "prix_min_par_devise": {
+     "EUR": 10.99
+    },
+    "nb_pages_mentionnant": 0,
+    "volume_ventes_cumule": null,
+    "fourchette_prix_par_devise": {
+     "EUR": "10.99"
+    }
+   },
+   "analyse": null,
+   "concurrent": {
+    "type": "marque_marketplace",
+    "alias": [],
+    "presence": {
+     "amazon": 1,
+     "meta_ads": 0,
+     "aliexpress": 0,
+     "recherche_web": 0
+    },
+    "ids_pages": [],
+    "ids_offres": [
+     "amz-B08YYSW4H2"
+    ],
+    "ids_annonces": [],
+    "nom_canonique": "ANCLLO",
+    "niveau_certitude_rapprochement": "sur"
+   }
+  },
+  {
+   "stats": {
+    "nb_offres": 1,
+    "nb_annonces": 0,
+    "note_moyenne": 4.7,
+    "longevite_max_jours": null,
+    "nb_annonces_actives": 0,
+    "prix_max_par_devise": {
+     "EUR": 9.56
+    },
+    "prix_min_par_devise": {
+     "EUR": 9.56
+    },
+    "nb_pages_mentionnant": 0,
+    "volume_ventes_cumule": null,
+    "fourchette_prix_par_devise": {
+     "EUR": "9.56"
+    }
+   },
+   "analyse": null,
+   "concurrent": {
+    "type": "marque_marketplace",
+    "alias": [],
+    "presence": {
+     "amazon": 1,
+     "meta_ads": 0,
+     "aliexpress": 0,
+     "recherche_web": 0
+    },
+    "ids_pages": [],
+    "ids_offres": [
+     "amz-B08VMV7TJW"
+    ],
+    "ids_annonces": [],
+    "nom_canonique": "ASHATA",
+    "niveau_certitude_rapprochement": "sur"
+   }
+  },
+  {
+   "stats": {
+    "nb_offres": 1,
+    "nb_annonces": 0,
+    "note_moyenne": 3.2,
+    "longevite_max_jours": null,
+    "nb_annonces_actives": 0,
+    "prix_max_par_devise": {
+     "EUR": 27.47
+    },
+    "prix_min_par_devise": {
+     "EUR": 27.47
+    },
+    "nb_pages_mentionnant": 0,
+    "volume_ventes_cumule": null,
+    "fourchette_prix_par_devise": {
+     "EUR": "27.47"
+    }
+   },
+   "analyse": null,
+   "concurrent": {
+    "type": "marque_etablie",
+    "alias": [],
+    "presence": {
+     "amazon": 1,
+     "meta_ads": 0,
+     "aliexpress": 0,
+     "recherche_web": 0
+    },
+    "ids_pages": [],
+    "ids_offres": [
+     "amz-B086CV7FX3"
+    ],
+    "ids_annonces": [],
+    "nom_canonique": "Audio-Technica",
+    "niveau_certitude_rapprochement": "sur"
+   }
+  },
+  {
+   "stats": {
+    "nb_offres": 1,
+    "nb_annonces": 0,
+    "note_moyenne": null,
+    "longevite_max_jours": null,
+    "nb_annonces_actives": 0,
+    "prix_max_par_devise": {
+     "EUR": 21.36
+    },
+    "prix_min_par_devise": {
+     "EUR": 21.36
+    },
+    "nb_pages_mentionnant": 0,
+    "volume_ventes_cumule": null,
+    "fourchette_prix_par_devise": {
+     "EUR": "21.36"
+    }
+   },
+   "analyse": null,
+   "concurrent": {
+    "type": "marque_marketplace",
+    "alias": [],
+    "presence": {
+     "amazon": 1,
+     "meta_ads": 0,
+     "aliexpress": 0,
+     "recherche_web": 0
+    },
+    "ids_pages": [],
+    "ids_offres": [
+     "amz-B0FJY515LR"
+    ],
+    "ids_annonces": [],
+    "nom_canonique": "Bontempi",
+    "niveau_certitude_rapprochement": "sur"
+   }
+  },
+  {
+   "stats": {
+    "nb_offres": 1,
+    "nb_annonces": 0,
+    "note_moyenne": 2.8,
+    "longevite_max_jours": null,
+    "nb_annonces_actives": 0,
+    "prix_max_par_devise": {
+     "EUR": 20.11
+    },
+    "prix_min_par_devise": {
+     "EUR": 20.11
+    },
+    "nb_pages_mentionnant": 0,
+    "volume_ventes_cumule": null,
+    "fourchette_prix_par_devise": {
+     "EUR": "20.11"
+    }
+   },
+   "analyse": null,
+   "concurrent": {
+    "type": "marque_marketplace",
+    "alias": [],
+    "presence": {
+     "amazon": 1,
+     "meta_ads": 0,
+     "aliexpress": 0,
+     "recherche_web": 0
+    },
+    "ids_pages": [],
+    "ids_offres": [
+     "amz-B0CBBVKBKL"
+    ],
+    "ids_annonces": [],
+    "nom_canonique": "DYNASONIC",
+    "niveau_certitude_rapprochement": "sur"
+   }
+  },
+  {
+   "stats": {
+    "nb_offres": 1,
+    "nb_annonces": 0,
+    "note_moyenne": 3.8,
+    "longevite_max_jours": null,
+    "nb_annonces_actives": 0,
+    "prix_max_par_devise": {
+     "EUR": 18.37
+    },
+    "prix_min_par_devise": {
+     "EUR": 18.37
+    },
+    "nb_pages_mentionnant": 0,
+    "volume_ventes_cumule": null,
+    "fourchette_prix_par_devise": {
+     "EUR": "18.37"
+    }
+   },
+   "analyse": null,
+   "concurrent": {
+    "type": "marque_marketplace",
+    "alias": [],
+    "presence": {
+     "amazon": 1,
+     "meta_ads": 0,
+     "aliexpress": 0,
+     "recherche_web": 0
+    },
+    "ids_pages": [],
+    "ids_offres": [
+     "amz-B0FHVGRKBX"
+    ],
+    "ids_annonces": [],
+    "nom_canonique": "GEEKRIA",
+    "niveau_certitude_rapprochement": "sur"
+   }
+  },
+  {
+   "stats": {
+    "nb_offres": 1,
+    "nb_annonces": 0,
+    "note_moyenne": 4.2,
+    "longevite_max_jours": null,
+    "nb_annonces_actives": 0,
+    "prix_max_par_devise": {
+     "EUR": 13.02
+    },
+    "prix_min_par_devise": {
+     "EUR": 13.02
+    },
+    "nb_pages_mentionnant": 0,
+    "volume_ventes_cumule": null,
+    "fourchette_prix_par_devise": {
+     "EUR": "13.02"
+    }
+   },
+   "analyse": null,
+   "concurrent": {
+    "type": "marque_marketplace",
+    "alias": [],
+    "presence": {
+     "amazon": 1,
+     "meta_ads": 0,
+     "aliexpress": 0,
+     "recherche_web": 0
+    },
+    "ids_pages": [],
+    "ids_offres": [
+     "amz-B0FF4HVY13"
+    ],
+    "ids_annonces": [],
+    "nom_canonique": "HONGJIEYUAN",
+    "niveau_certitude_rapprochement": "sur"
+   }
+  },
+  {
+   "stats": {
+    "nb_offres": 1,
+    "nb_annonces": 0,
+    "note_moyenne": 4.2,
+    "longevite_max_jours": null,
+    "nb_annonces_actives": 0,
+    "prix_max_par_devise": {
+     "EUR": 14.34
+    },
+    "prix_min_par_devise": {
+     "EUR": 14.34
+    },
+    "nb_pages_mentionnant": 0,
+    "volume_ventes_cumule": null,
+    "fourchette_prix_par_devise": {
+     "EUR": "14.34"
+    }
+   },
+   "analyse": null,
+   "concurrent": {
+    "type": "marque_etablie",
+    "alias": [],
+    "presence": {
+     "amazon": 1,
+     "meta_ads": 0,
+     "aliexpress": 0,
+     "recherche_web": 0
+    },
+    "ids_pages": [],
+    "ids_offres": [
+     "amz-B09QPNCDQQ"
+    ],
+    "ids_annonces": [],
+    "nom_canonique": "JOBY",
+    "niveau_certitude_rapprochement": "sur"
+   }
+  },
+  {
+   "stats": {
+    "nb_offres": 1,
+    "nb_annonces": 0,
+    "note_moyenne": null,
+    "longevite_max_jours": null,
+    "nb_annonces_actives": 0,
+    "prix_max_par_devise": {
+     "EUR": 43.39
+    },
+    "prix_min_par_devise": {
+     "EUR": 43.39
+    },
+    "nb_pages_mentionnant": 0,
+    "volume_ventes_cumule": null,
+    "fourchette_prix_par_devise": {
+     "EUR": "43.39"
+    }
+   },
+   "analyse": null,
+   "concurrent": {
+    "type": "marque_marketplace",
+    "alias": [],
+    "presence": {
+     "amazon": 1,
+     "meta_ads": 0,
+     "aliexpress": 0,
+     "recherche_web": 0
+    },
+    "ids_pages": [],
+    "ids_offres": [
+     "amz-B0GK6GGWL2"
+    ],
+    "ids_annonces": [],
+    "nom_canonique": "KKPLZZ",
+    "niveau_certitude_rapprochement": "sur"
+   }
+  },
+  {
+   "stats": {
+    "nb_offres": 1,
+    "nb_annonces": 0,
+    "note_moyenne": 4.3,
+    "longevite_max_jours": null,
+    "nb_annonces_actives": 0,
+    "prix_max_par_devise": {
+     "EUR": 21.62
+    },
+    "prix_min_par_devise": {
+     "EUR": 21.62
+    },
+    "nb_pages_mentionnant": 0,
+    "volume_ventes_cumule": null,
+    "fourchette_prix_par_devise": {
+     "EUR": "21.62"
+    }
+   },
+   "analyse": null,
+   "concurrent": {
+    "type": "marque_marketplace",
+    "alias": [],
+    "presence": {
+     "amazon": 1,
+     "meta_ads": 0,
+     "aliexpress": 0,
+     "recherche_web": 0
+    },
+    "ids_pages": [],
+    "ids_offres": [
+     "amz-B0F3W1LF2Y"
+    ],
+    "ids_annonces": [],
+    "nom_canonique": "KZZOUY",
+    "niveau_certitude_rapprochement": "sur"
+   }
+  },
+  {
+   "stats": {
+    "nb_offres": 1,
+    "nb_annonces": 0,
+    "note_moyenne": 4.1,
+    "longevite_max_jours": null,
+    "nb_annonces_actives": 0,
+    "prix_max_par_devise": {
+     "EUR": 10.89
+    },
+    "prix_min_par_devise": {
+     "EUR": 10.89
+    },
+    "nb_pages_mentionnant": 0,
+    "volume_ventes_cumule": null,
+    "fourchette_prix_par_devise": {
+     "EUR": "10.89"
+    }
+   },
+   "analyse": null,
+   "concurrent": {
+    "type": "marque_marketplace",
+    "alias": [],
+    "presence": {
+     "amazon": 1,
+     "meta_ads": 0,
+     "aliexpress": 0,
+     "recherche_web": 0
+    },
+    "ids_pages": [],
+    "ids_offres": [
+     "amz-B0D3G3R31W"
+    ],
+    "ids_annonces": [],
+    "nom_canonique": "MXTIMWAN",
+    "niveau_certitude_rapprochement": "sur"
+   }
+  },
+  {
+   "stats": {
+    "nb_offres": 1,
+    "nb_annonces": 0,
+    "note_moyenne": 3.9,
+    "longevite_max_jours": null,
+    "nb_annonces_actives": 0,
+    "prix_max_par_devise": {
+     "EUR": 5.97
+    },
+    "prix_min_par_devise": {
+     "EUR": 5.97
+    },
+    "nb_pages_mentionnant": 0,
+    "volume_ventes_cumule": null,
+    "fourchette_prix_par_devise": {
+     "EUR": "5.97"
+    }
+   },
+   "analyse": null,
+   "concurrent": {
+    "type": "marque_marketplace",
+    "alias": [],
+    "presence": {
+     "amazon": 1,
+     "meta_ads": 0,
+     "aliexpress": 0,
+     "recherche_web": 0
+    },
+    "ids_pages": [],
+    "ids_offres": [
+     "amz-B0CMGLGLGD"
+    ],
+    "ids_annonces": [],
+    "nom_canonique": "Moman",
+    "niveau_certitude_rapprochement": "sur"
+   }
+  },
+  {
+   "stats": {
+    "nb_offres": 1,
+    "nb_annonces": 0,
+    "note_moyenne": 4.8,
+    "longevite_max_jours": null,
+    "nb_annonces_actives": 0,
+    "prix_max_par_devise": {
+     "EUR": 29.99
+    },
+    "prix_min_par_devise": {
+     "EUR": 29.99
+    },
+    "nb_pages_mentionnant": 0,
+    "volume_ventes_cumule": null,
+    "fourchette_prix_par_devise": {
+     "EUR": "29.99"
+    }
+   },
+   "analyse": null,
+   "concurrent": {
+    "type": "marque_etablie",
+    "alias": [],
+    "presence": {
+     "amazon": 1,
+     "meta_ads": 0,
+     "aliexpress": 0,
+     "recherche_web": 0
+    },
+    "ids_pages": [],
+    "ids_offres": [
+     "amz-B0G8HVWR67"
+    ],
+    "ids_annonces": [],
+    "nom_canonique": "NEEWER",
+    "niveau_certitude_rapprochement": "sur"
+   }
+  },
+  {
+   "stats": {
+    "nb_offres": 1,
+    "nb_annonces": 0,
+    "note_moyenne": 3.5,
+    "longevite_max_jours": null,
+    "nb_annonces_actives": 0,
+    "prix_max_par_devise": {
+     "EUR": 13.49
+    },
+    "prix_min_par_devise": {
+     "EUR": 13.49
+    },
+    "nb_pages_mentionnant": 0,
+    "volume_ventes_cumule": null,
+    "fourchette_prix_par_devise": {
+     "EUR": "13.49"
+    }
+   },
+   "analyse": null,
+   "concurrent": {
+    "type": "marque_marketplace",
+    "alias": [],
+    "presence": {
+     "amazon": 1,
+     "meta_ads": 0,
+     "aliexpress": 0,
+     "recherche_web": 0
+    },
+    "ids_pages": [],
+    "ids_offres": [
+     "amz-B0CD3RZCJG"
+    ],
+    "ids_annonces": [],
+    "nom_canonique": "Reditainer",
+    "niveau_certitude_rapprochement": "sur"
+   }
+  },
+  {
+   "stats": {
+    "nb_offres": 1,
+    "nb_annonces": 0,
+    "note_moyenne": 4.0,
+    "longevite_max_jours": null,
+    "nb_annonces_actives": 0,
+    "prix_max_par_devise": {
+     "EUR": 13.99
+    },
+    "prix_min_par_devise": {
+     "EUR": 13.99
+    },
+    "nb_pages_mentionnant": 0,
+    "volume_ventes_cumule": null,
+    "fourchette_prix_par_devise": {
+     "EUR": "13.99"
+    }
+   },
+   "analyse": null,
+   "concurrent": {
+    "type": "marque_marketplace",
+    "alias": [],
+    "presence": {
+     "amazon": 1,
+     "meta_ads": 0,
+     "aliexpress": 0,
+     "recherche_web": 0
+    },
+    "ids_pages": [],
+    "ids_offres": [
+     "amz-B0BVMFV1X3"
+    ],
+    "ids_annonces": [],
+    "nom_canonique": "VOVIGGOL",
+    "niveau_certitude_rapprochement": "sur"
+   }
+  },
+  {
+   "stats": {
+    "nb_offres": 0,
+    "nb_annonces": 0,
+    "note_moyenne": null,
+    "longevite_max_jours": null,
+    "nb_annonces_actives": 0,
+    "prix_max_par_devise": {},
+    "prix_min_par_devise": {},
+    "nb_pages_mentionnant": 1,
+    "volume_ventes_cumule": null,
+    "fourchette_prix_par_devise": {}
+   },
+   "analyse": null,
+   "concurrent": {
+    "type": "marque_etablie",
+    "alias": [],
+    "presence": {
+     "amazon": 0,
+     "meta_ads": 0,
+     "aliexpress": 0,
+     "recherche_web": 1
+    },
+    "ids_pages": [
+     "web-3"
+    ],
+    "ids_offres": [],
+    "ids_annonces": [],
+    "nom_canonique": "Rode",
+    "niveau_certitude_rapprochement": "sur"
+   }
+  },
+  {
+   "stats": {
+    "nb_offres": 0,
+    "nb_annonces": 2,
+    "note_moyenne": null,
+    "longevite_max_jours": 10,
+    "nb_annonces_actives": 0,
+    "prix_max_par_devise": {},
+    "prix_min_par_devise": {},
+    "nb_pages_mentionnant": 0,
+    "volume_ventes_cumule": null,
+    "fourchette_prix_par_devise": {}
+   },
+   "analyse": null,
+   "concurrent": {
+    "type": "annonceur_seul",
+    "alias": [],
+    "presence": {
+     "amazon": 0,
+     "meta_ads": 2,
+     "aliexpress": 0,
+     "recherche_web": 0
+    },
+    "ids_pages": [],
+    "ids_offres": [],
+    "ids_annonces": [
+     "ads-2034541487297884",
+     "ads-4374931862791348"
+    ],
+    "nom_canonique": "Sonido Fácil",
+    "niveau_certitude_rapprochement": "sur"
+   }
+  },
+  {
+   "stats": {
+    "nb_offres": 0,
+    "nb_annonces": 0,
+    "note_moyenne": null,
+    "longevite_max_jours": null,
+    "nb_annonces_actives": 0,
+    "prix_max_par_devise": {},
+    "prix_min_par_devise": {},
+    "nb_pages_mentionnant": 1,
+    "volume_ventes_cumule": null,
+    "fourchette_prix_par_devise": {}
+   },
+   "analyse": null,
+   "concurrent": {
+    "type": "marque_marketplace",
+    "alias": [],
+    "presence": {
+     "amazon": 0,
+     "meta_ads": 0,
+     "aliexpress": 0,
+     "recherche_web": 1
+    },
+    "ids_pages": [
+     "web-2"
+    ],
+    "ids_offres": [],
+    "ids_annonces": [],
+    "nom_canonique": "Your Dual",
+    "niveau_certitude_rapprochement": "sur"
+   }
+  }
+ ],
+ "benchmark_prix": [
+  {
+   "devise": "EUR",
+   "source": "amazon",
+   "prix_max": 65.99,
+   "prix_min": 5.97,
+   "segments": [
+    {
+     "nom": "entree",
+     "nb_offres": 16,
+     "borne_basse": 5.97,
+     "borne_haute": 14.99
+    },
+    {
+     "nom": "coeur",
+     "nb_offres": 13,
+     "borne_basse": 14.99,
+     "borne_haute": 21.36
+    },
+    {
+     "nom": "premium",
+     "nb_offres": 14,
+     "borne_basse": 21.36,
+     "borne_haute": 65.99
+    }
+   ],
+   "dispersion": 0.498,
+   "commentaire": "",
+   "prix_mediane": 18.37,
+   "nb_offres_avec_prix": 43
+  }
+ ],
+ "horodatage_utc": "2026-09-03T18:53:55Z",
+ "positionnement": {
+  "axes_observes": [
+   "Angle publicitaire (innovation vs qualité audio)",
+   "Prix (segmentation entrée/coeur/premium)",
+   "Attributs techniques déclarés (connectivité, directivité, format de pack)",
+   "Type de source (site marchand, blog, marketplace)"
+  ],
+  "normes_marche": [
+   {
+    "point": "La livraison rapide/gratuite est utilisée comme argument commercial récurrent, à des seuils différents selon les sites (24h en publicité, gratuite dès 20€ ou dès 150€ selon la boutique).",
+    "statut": "fait",
+    "preuves": [
+     {
+      "type": "annonce",
+      "extrait": "Escucha la diferencia 🎧\nSuena PRO por 24,97 €: escucha el antes/después. Plug & Play (Lightning/Type-C), cancelación de ruido y envío 24 h.\nAudio nítido en segundos\nhttps://sonidofacil.com/",
+      "id_reference": "ads-2034541487297884"
+     },
+     {
+      "type": "page",
+      "extrait": "🚚 Envío Express GRATIS a partir de 20€",
+      "id_reference": "web-0"
+     },
+     {
+      "type": "page",
+      "extrait": "Envío gratuito a partir de 150€",
+      "id_reference": "web-1"
+     }
+    ]
+   },
+   {
+    "point": "Le format « 2 pack » (probablement 2 émetteurs) est une norme d'offre fréquente sur le marché.",
+    "statut": "hypothese",
+    "preuves": []
+   },
+   {
+    "point": "Le marché est structuré en trois segments de prix nets (entrée, coeur, premium) avec un cœur de marché resserré autour de 15-21€.",
+    "statut": "hypothese",
+    "preuves": []
+   }
+  ],
+  "messages_dominants": [
+   {
+    "point": "La promesse de polyvalence pour créateurs de contenu (vlog, interview, streaming) portée sur un angle d'innovation.",
+    "statut": "fait",
+    "preuves": [
+     {
+      "type": "annonce",
+      "extrait": "🔥Today Only: 40% OFF  AI-powered mic ⏳\n🔥Today Only: 40% OFF  AI-powered mic ⏳\n🎙️ One Mic. Four Forms. Endless Possibilities.\nWhy carry multiple microphones when one can do it all? 👀\nMeet BOYA Magic — the ultimate wireless mic for creators.\n📱 Vlog with your phone\n🎥 Shoot with your camera\n🎤 Record int",
+      "id_reference": "ads-1822696475380213"
+     }
+    ]
+   },
+   {
+    "point": "La promesse d'un audio professionnel avec nettoyage du bruit automatique et rapide, répétée à l'identique sur deux annonces d'un même annonceur.",
+    "statut": "fait",
+    "preuves": [
+     {
+      "type": "annonce",
+      "extrait": "Escucha la diferencia 🎧\nSuena PRO por 24,97 €: escucha el antes/después. Plug & Play (Lightning/Type-C), cancelación de ruido y envío 24 h.\nAudio nítido en segundos\nhttps://sonidofacil.com/",
+      "id_reference": "ads-2034541487297884"
+     },
+     {
+      "type": "annonce",
+      "extrait": "Escucha la diferencia 🎧\nSuena PRO por 24,97 €: escucha el antes/después. Plug & Play (Lightning/Type-C), cancelación de ruido y envío 24 h.\nAudio nítido en segundos\nhttps://sonidofacil.com/",
+      "id_reference": "ads-4374931862791348"
+     }
+    ]
+   },
+   {
+    "point": "Sur les offres produits, les attributs les plus cités mettent en avant le caractère sans fil et omnidirectionnel du micro, avant même la mention explicite du Type-C.",
+    "statut": "hypothese",
+    "preuves": []
+   }
+  ],
+  "angles_peu_exploites": [
+   {
+    "point": "Aucun claim publicitaire ou attribut d'offre ne met en avant explicitement la durée de vie de la batterie comme argument central de communication (l'attribut « Batterie 40h » existe mais reste marginal), non observé comme message dominant dans le corpus (3 annonces, 5 pages, 39 attributs recensés).",
+    "statut": "hypothese",
+    "preuves": []
+   },
+   {
+    "point": "Aucune annonce publicitaire du corpus ne mentionne de garantie constructeur ou de politique de retour, alors que ces éléments figurent parfois sur les pages marchandes du secteur plus large ; angle non observé dans le corpus (3 annonces, 5 pages).",
+    "statut": "hypothese",
+    "preuves": [
+     {
+      "type": "annonce",
+      "extrait": null,
+      "id_reference": "ads-1822696475380213"
+     },
+     {
+      "type": "annonce",
+      "extrait": null,
+      "id_reference": "ads-2034541487297884"
+     },
+     {
+      "type": "annonce",
+      "extrait": null,
+      "id_reference": "ads-4374931862791348"
+     }
+    ]
+   },
+   {
+    "point": "Le prix n'apparaît jamais comme argument publicitaire direct hormis une remise ponctuelle (« 40% de réduction aujourd'hui uniquement ») ; l'argument de prix bas ou de rapport qualité-prix n'est pas observé comme angle dominant dans le corpus (3 annonces, 2 annonceurs).",
+    "statut": "fait",
+    "preuves": [
+     {
+      "type": "annonce",
+      "extrait": "🔥Today Only: 40% OFF  AI-powered mic ⏳\n🔥Today Only: 40% OFF  AI-powered mic ⏳\n🎙️ One Mic. Four Forms. Endless Possibilities.\nWhy carry multiple microphones when one can do it all? 👀\nMeet BOYA Magic — the ultimate wireless mic for creators.\n📱 Vlog with your phone\n🎥 Shoot with your camera\n🎤 Record int",
+      "id_reference": "ads-1822696475380213"
+     }
+    ]
+   }
+  ],
+  "facteurs_cles_succes": [
+   {
+    "point": "La réduction de bruit / nettoyage audio automatique apparaît comme un argument de différenciation repris à la fois dans les claims publicitaires et dans les attributs d'offres, suggérant qu'il s'agit d'un facteur clé d'achat perçu.",
+    "statut": "hypothese",
+    "preuves": [
+     {
+      "type": "annonce",
+      "extrait": "Escucha la diferencia 🎧\nSuena PRO por 24,97 €: escucha el antes/después. Plug & Play (Lightning/Type-C), cancelación de ruido y envío 24 h.\nAudio nítido en segundos\nhttps://sonidofacil.com/",
+      "id_reference": "ads-2034541487297884"
+     }
+    ]
+   },
+   {
+    "point": "La compatibilité multi-appareils (iPhone, iPad, Android, USB-C, Lightning) semble être un critère de choix, plusieurs offres cumulant les connecteurs pour élargir l'audience adressable.",
+    "statut": "hypothese",
+    "preuves": []
+   }
+  ]
+ },
+ "differenciation": {
+  "attributs_partages": [
+   {
+    "point": "Micro sans fil, positionné comme la quasi-totalité des offres concurrentes qui affichent également « sans fil » comme attribut central.",
+    "statut": "hypothese",
+    "preuves": [
+     {
+      "type": "offre",
+      "extrait": "Nyxia® 2 Pack Wireless Microphone | Wireless Lapel Microphone | Plug&Play, for iPhone Android iPad PC | Noise Reduction | Professional Sound | Mobile Streaming Youtube TikTok Instagram Podcast",
+      "id_reference": "amz-B0F1M43DKY"
+     },
+     {
+      "type": "offre",
+      "extrait": "Mini Pink Microphone for iphone Android Phone Tablet ipad PC, Usb C Wireless Lavalier Mic for Video Recording Vlogging Youtube Tiktok Podcast Interview content creators, Tiny Microphones Type C Mics",
+      "id_reference": "amz-B0F3W1LF2Y"
+     }
+    ]
+   },
+   {
+    "point": "Micro à condensateur omnidirectionnel, une combinaison technique déjà présente chez plusieurs concurrents.",
+    "statut": "hypothese",
+    "preuves": [
+     {
+      "type": "offre",
+      "extrait": "Moman S8 Lavalier Microphone with Clip – 8 Meters Cable, Mini Omnidirectional Capacitor for DSLR Camera/Mobile Phone/Recorder",
+      "id_reference": "amz-B0CMGLGLGD"
+     },
+     {
+      "type": "offre",
+      "extrait": "BOYA Mini Wireless Lapel Microphone for iPhone iPad - Dual Omnidirectional Condenser Video Recording for Interview Podcast Vlog Youtube Live Stream (TX+TX+RX)",
+      "id_reference": "amz-B0BPSGKH2W"
+     }
+    ]
+   },
+   {
+    "point": "Format lavalière (micro-cravate), catégorie partagée par un nombre significatif d'offres du corpus.",
+    "statut": "hypothese",
+    "preuves": [
+     {
+      "type": "offre",
+      "extrait": "Micrófono de Solapa Inalámbrico para iPhone y Android",
+      "id_reference": "amz-B0FSRVJQMG"
+     },
+     {
+      "type": "offre",
+      "extrait": "BOYA Mini Wireless Lapel Microphone for iPhone iPad - Dual Omnidirectional Condenser Video Recording for Interview Podcast Vlog Youtube Live Stream (TX+TX+RX)",
+      "id_reference": "amz-B0BPSGKH2W"
+     }
+    ]
+   },
+   {
+    "point": "Connecteur Type-C, présent chez un sous-groupe restreint mais réel de concurrents.",
+    "statut": "hypothese",
+    "preuves": [
+     {
+      "type": "offre",
+      "extrait": "Type-C",
+      "id_reference": "amz-B09X629VRD"
+     },
+     {
+      "type": "offre",
+      "extrait": "Type-C",
+      "id_reference": "amz-B0D73BBW7G"
+     }
+    ]
+   },
+   {
+    "point": "Positionnement plug and play multi-usage (smartphone/ordinateur/tablette), déjà revendiqué par d'autres offres compatibles iPhone/iPad/Android.",
+    "statut": "hypothese",
+    "preuves": [
+     {
+      "type": "offre",
+      "extrait": "2 Pack Wireless Lapel Microphone for iPhone, iPad and Android, Clip-on Microphone with Noise Reduction for Video Recording, Plug & Play, Crystal Sound, TikTok, Youtube, Vlog",
+      "id_reference": "amz-B0GXDQX9GL"
+     },
+     {
+      "type": "offre",
+      "extrait": "Plug&Play Wireless Lapel Microphone for iPhone/iOS/Android, Wireless Microphone for Youtube, Facebook, Twitter, TIK Tok Video and Live Streaming.(Comes with an Adapter)",
+      "id_reference": "amz-B0CD3RZCJG"
+     }
+    ]
+   }
+  ],
+  "desavantages_apparents": [
+   {
+    "point": "Absence de mention d'un format « 2 pack » (2 émetteurs), alors que cette configuration est une norme d'offre fréquente chez les concurrents (7 offres identifiées) et peut être perçue comme un manque pour les usages multi-intervenants.",
+    "statut": "hypothese",
+    "preuves": []
+   },
+   {
+    "point": "Aucune mention de fonction de réduction de bruit, alors que cet attribut est mis en avant par un nombre significatif de concurrents (6 offres avec « réduction bruit », 3 avec « Réduction bruit », 3 avec « Réduction de bruit »).",
+    "statut": "fait",
+    "preuves": [
+     {
+      "type": "offre",
+      "extrait": "Nyxia® 2 Pack Wireless Microphone | Wireless Lapel Microphone | Plug&Play, for iPhone Android iPad PC | Noise Reduction | Professional Sound | Mobile Streaming Youtube TikTok Instagram Podcast",
+      "id_reference": "amz-B0F1M43DKY"
+     },
+     {
+      "type": "offre",
+      "extrait": "Mini Wireless Microphone for Android/iPhone/iOS/PC/Laptop Lapel Lavalier Microphone with Noise Reduction for Recording Clip-on Microphone for Video Recording Tiktok Youtube Vlog (PINK)",
+      "id_reference": "amz-B0GTTW452K"
+     }
+    ]
+   },
+   {
+    "point": "Aucune indication d'autonomie de batterie chiffrée (ex. « Batterie 40h »), argument pourtant utilisé par certains concurrents pour rassurer sur l'usage prolongé.",
+    "statut": "fait",
+    "preuves": [
+     {
+      "type": "offre",
+      "extrait": "Micrófono inalámbrico para iPhone, Android, cámara, Mini micrófono con reducción de Ruido, microfono solapa para iPhone 15/16, iPad, grabación de video, Vlog, Tk, estuche de carga de 40 h, 2TX+2RX",
+      "id_reference": "amz-B0F6XYVRTC"
+     }
+    ]
+   },
+   {
+    "point": "Pas de mention de portée sans fil (ex. « 65ft portée » chez un concurrent), information absente de la fiche alors qu'elle peut être un critère d'achat pour un usage vidéo/tournage.",
+    "statut": "fait",
+    "preuves": [
+     {
+      "type": "offre",
+      "extrait": "Wireless Lavalier Microphone for iPhone and Android, Mini Clip-On Microphone with Noise Reduction, 65ft Range, 8H Battery, USB-C/Lightning, for TikTok, YouTube, Podcast",
+      "id_reference": "amz-B0FF4HVY13"
+     }
+    ]
+   },
+   {
+    "point": "Aucune offre de livraison rapide ou gratuite mise en avant, alors que la livraison rapide/gratuite est un argument commercial récurrent chez les concurrents (livraison 24h, gratuite dès seuils) ; le produit étudié annonce au contraire une livraison payante (1,99 USD) depuis la Chine, ce qui peut être perçu comme un délai plus long.",
+    "statut": "fait",
+    "preuves": [
+     {
+      "type": "annonce",
+      "extrait": "Escucha la diferencia 🎧\nSuena PRO por 24,97 €: escucha el antes/después. Plug & Play (Lightning/Type-C), cancelación de ruido y envío 24 h.\nAudio nítido en segundos\nhttps://sonidofacil.com/",
+      "id_reference": "ads-2034541487297884"
+     },
+     {
+      "type": "page",
+      "extrait": "🚚 Envío Express GRATIS a partir de 20€",
+      "id_reference": "web-0"
+     }
+    ]
+   },
+   {
+    "point": "Absence de mention d'accessoires différenciants observés chez certains concurrents (clip, jack 3.5mm, anneau lumineux), qui peuvent constituer un plus perçu par l'acheteur.",
+    "statut": "fait",
+    "preuves": [
+     {
+      "type": "offre",
+      "extrait": "Clip",
+      "id_reference": "amz-B0CMGLGLGD"
+     },
+     {
+      "type": "offre",
+      "extrait": "Bontempi | 2 Wireless Lavalier Microphones with Ring Light, Compatible with Smartphone, Tablet, Laptop, PC, 8.5x8.5x2.8cm",
+      "id_reference": "amz-B0FJY515LR"
+     }
+    ]
+   }
+  ],
+  "attributs_distinctifs_potentiels": [
+   {
+    "point": "Prix affiché à 0,99 USD (contre un prix barré de 8,46 USD), très en dessous du segment « entrée » du marché Amazon qui démarre à 5,97 EUR ; positionnement potentiellement très agressif si confirmé après livraison.",
+    "statut": "hypothese",
+    "preuves": []
+   },
+   {
+    "point": "Volume d'avis élevé (1 585) avec note de 4,7/5, potentiellement supérieur en volume à une partie des offres du corpus, mais aucune donnée comparative d'avis n'est fournie dans le corpus concurrentiel pour le vérifier.",
+    "statut": "hypothese",
+    "preuves": []
+   },
+   {
+    "point": "Stock affiché élevé (2 174 pièces), pouvant suggérer une disponibilité et une capacité de réassort supérieures à celles de concurrents plus petits, sans preuve comparative dans le corpus.",
+    "statut": "hypothese",
+    "preuves": []
+   }
+  ]
+ },
+ "statuts_analyse": [
+  {
+   "phase": "extraction_attributs",
+   "succes": true,
+   "nb_elements": 12,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "extraction_attributs",
+   "succes": true,
+   "nb_elements": 12,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "extraction_attributs",
+   "succes": true,
+   "nb_elements": 12,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "extraction_attributs",
+   "succes": true,
+   "nb_elements": 7,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "extraction_claims",
+   "succes": true,
+   "nb_elements": 3,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "consolidation_concurrents",
+   "succes": true,
+   "nb_elements": 31,
+   "nb_tentatives": 2,
+   "message_erreur": null
+  },
+  {
+   "phase": "analyse_concurrent",
+   "succes": true,
+   "nb_elements": 1,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "analyse_concurrent",
+   "succes": true,
+   "nb_elements": 1,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "analyse_concurrent",
+   "succes": true,
+   "nb_elements": 1,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "analyse_concurrent",
+   "succes": true,
+   "nb_elements": 1,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "analyse_concurrent",
+   "succes": true,
+   "nb_elements": 1,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "analyse_concurrent",
+   "succes": true,
+   "nb_elements": 1,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "analyse_concurrent",
+   "succes": true,
+   "nb_elements": 1,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "analyse_concurrent",
+   "succes": true,
+   "nb_elements": 1,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "lecture_transversale",
+   "succes": true,
+   "nb_elements": 0,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "differenciation",
+   "succes": true,
+   "nb_elements": 0,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "synthese_executive",
+   "succes": true,
+   "nb_elements": 0,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "post_validation",
+   "succes": true,
+   "nb_elements": 10,
+   "nb_tentatives": 0,
+   "message_erreur": "10 preuve(s) citant un identifiant inexistant retirée(s) : le modèle a référencé des éléments absents du référentiel."
+  },
+  {
+   "phase": "post_validation",
+   "succes": true,
+   "nb_elements": 26,
+   "nb_tentatives": 0,
+   "message_erreur": "26 extrait(s) de preuve absent(s) du texte source, remplacé(s) par le début réel de ce texte."
+  },
+  {
+   "phase": "post_validation",
+   "succes": true,
+   "nb_elements": 4,
+   "nb_tentatives": 0,
+   "message_erreur": "4 constat(s) déclaré(s) « fait » sans preuve valide rétrogradé(s) en « hypothese »."
+  },
+  {
+   "phase": "post_validation",
+   "succes": true,
+   "nb_elements": 5,
+   "nb_tentatives": 0,
+   "message_erreur": "5 constat(s) restant(s) sans aucune preuve valide."
+  }
+ ],
+ "alertes_coherence": [
+  {
+   "type": "rapprochement_incertain",
+   "detail": "1 concurrent(s) résultent d'un rapprochement seulement « probable » par similarité de nom : BOYA. Toute statistique agrégée sur ces entités hérite de cette incertitude."
+  },
+  {
+   "type": "preuve_manquante",
+   "detail": "Certains constats ne sont plus étayés par une preuve vérifiable ; ils restent publiés mais en statut « hypothese »."
+  }
+ ],
+ "confiance_globale": {
+  "niveau": "elevee",
+  "facteurs": [
+   "43 offre(s) au cœur du benchmark",
+   "3 source(s) exploitée(s)",
+   "31 concurrent(s) consolidé(s)"
+  ],
+  "justification": "43 offres au cœur du benchmark réparties sur 3 sources, portées régionales hétérogènes documentées."
+ },
+ "referentiel_stats": {
+  "nb_pages": 5,
+  "exclusions": {},
+  "nb_annonces": 3,
+  "nb_avis_indexes": 47,
+  "nb_offres_coeur": 43,
+  "nb_offres_par_source": {
+   "amazon": 43,
+   "aliexpress": 0
+  },
+  "nb_offres_accessoires": 0
+ },
+ "sources_utilisees": [
+  {
+   "source": "aliexpress",
+   "fichier": "aliexpress.json",
+   "avertissements": [
+    "le collecteur déclare `donnees_disponibles=false` — source écartée"
+   ],
+   "nb_items_charges": 0,
+   "nb_items_exploites": 0,
+   "donnees_disponibles": false
+  },
+  {
+   "source": "amazon",
+   "fichier": "amazon.json",
+   "avertissements": [],
+   "nb_items_charges": 43,
+   "nb_items_exploites": 43,
+   "donnees_disponibles": true
+  },
+  {
+   "source": "meta_ads",
+   "fichier": "meta_ads.json",
+   "avertissements": [],
+   "nb_items_charges": 3,
+   "nb_items_exploites": 3,
+   "donnees_disponibles": true
+  },
+  {
+   "source": "recherche_web",
+   "fichier": "recherche_web.json",
+   "avertissements": [],
+   "nb_items_charges": 5,
+   "nb_items_exploites": 5,
+   "donnees_disponibles": true
+  }
+ ],
+ "synthese_executive": "Le marché observé (Amazon.es) compte 31 concurrents identifiés, principalement des marques marketplace de faible notoriété, avec 43 offres cœur analysées.\nBenchmark de prix en EUR : médiane à 18,37€, segment entrée 5,97–14,99€ (16 offres), cœur 14,99–21,36€ (13 offres), premium 21,36–65,99€ (14 offres) ; dispersion notable (0,498).\nLes concurrents cités (XIXIXIAXIA, Nyxia, YEJATA, Uewpv, UROLMIC, Newmight, voijump, CoolSwan) se situent tous en EUR, de 10,79€ à 29,99€, avec des notes proches (4,1–4,5) et des volumes de ventes cumulés faibles à modérés.\nL'intensité concurrentielle apparaît modérée à contenue côté publicité (2 annonceurs, 1 annonce active, durée médiane de diffusion de 10 jours), mais avec une forte concentration des volumes sur le top 3 (69,6%).\nEnseignements de positionnement : (1) la réduction de bruit automatique et le caractère sans fil/omnidirectionnel dominent les messages perçus comme différenciants ; (2) la compatibilité multi-appareils (USB-C, Lightning, Android) et le format « 2 pack » sont des normes d'offre répandues ; (3) le prix bas n'est quasiment jamais utilisé comme argument publicitaire direct, hormis une remise ponctuelle.\nMise en garde régionale principale : les données Amazon reflètent bien le marché ES étudié, mais la présence publicitaire Meta Ads en ES n'implique ni disponibilité produit ni volume de vente réel — à interpréter avec prudence.",
+ "tableau_comparatif": [
+  {
+   "concurrent": "XIXIXIAXIA",
+   "note_moyenne": 4.3,
+   "force_principale": "Volume d'avis cumulé très élevé sur plusieurs références, signe d'une forte adoption sur Amazon",
+   "presence_sources": [
+    "amazon"
+   ],
+   "argument_principal": null,
+   "faiblesse_principale": "Aucune annonce publicitaire active détectée, ce qui limite la visibilité et la preuve d'investissement marketing soutenu",
+   "volume_ventes_cumule": 600,
+   "fourchette_prix_par_devise": {
+    "EUR": "14.99–18.99"
+   }
+  },
+  {
+   "concurrent": "Nyxia",
+   "note_moyenne": 4.1,
+   "force_principale": "Très bon rapport qualité-prix largement salué par les clients, avec des comparaisons favorables à des produits plus chers.",
+   "presence_sources": [
+    "amazon"
+   ],
+   "argument_principal": null,
+   "faiblesse_principale": "Portefeuille produit très limité : une seule offre référencée, sans annonces publicitaires actives détectées, ce qui limite la visibilité et la diversification du concurrent.",
+   "volume_ventes_cumule": 600,
+   "fourchette_prix_par_devise": {
+    "EUR": "10.99"
+   }
+  },
+  {
+   "concurrent": "YEJATA",
+   "note_moyenne": 4.5,
+   "force_principale": "Note moyenne élevée de 4,5/5 sur un volume conséquent de 640 avis, signal de satisfaction client robuste.",
+   "presence_sources": [
+    "amazon"
+   ],
+   "argument_principal": null,
+   "faiblesse_principale": "Portefeuille produit très limité : une seule offre référencée, aucune annonce publicitaire active détectée, ce qui limite la visibilité et la diversification des sources d'acquisition.",
+   "volume_ventes_cumule": 400,
+   "fourchette_prix_par_devise": {
+    "EUR": "19.99"
+   }
+  },
+  {
+   "concurrent": "Uewpv",
+   "note_moyenne": 4.2,
+   "force_principale": "Note moyenne de 4,2/5 constatée sur les deux offres, avec un volume conséquent de 271 avis chacune",
+   "presence_sources": [
+    "amazon"
+   ],
+   "argument_principal": null,
+   "faiblesse_principale": "Aucune annonce publicitaire active recensée, donc aucune preuve de visibilité acquise ou de discours marketing structuré",
+   "volume_ventes_cumule": 300,
+   "fourchette_prix_par_devise": {
+    "EUR": "10.79–19.99"
+   }
+  },
+  {
+   "concurrent": "UROLMIC",
+   "note_moyenne": 4.3,
+   "force_principale": "Notes moyennes élevées sur les deux offres (4.4 et 4.2), avec un volume d'avis conséquent (269 et 261 avis).",
+   "presence_sources": [
+    "amazon"
+   ],
+   "argument_principal": null,
+   "faiblesse_principale": "Aucune donnée publicitaire disponible : impossible d'évaluer la présence en annonces ou la longévité publicitaire de la marque.",
+   "volume_ventes_cumule": 100,
+   "fourchette_prix_par_devise": {
+    "EUR": "19.99–29.99"
+   }
+  },
+  {
+   "concurrent": "Newmight",
+   "note_moyenne": 4.4,
+   "force_principale": "Note moyenne élevée (4.4/5) sur un volume conséquent de 497 avis, avec best-seller ranking sur Amazon",
+   "presence_sources": [
+    "amazon"
+   ],
+   "argument_principal": null,
+   "faiblesse_principale": "Problèmes de compatibilité rapportés par certains clients, notamment avec iPhone",
+   "volume_ventes_cumule": 100,
+   "fourchette_prix_par_devise": {
+    "EUR": "12.99"
+   }
+  },
+  {
+   "concurrent": "voijump",
+   "note_moyenne": 4.1,
+   "force_principale": "Offre à prix bas (15,99 EUR) pour un pack de 2 microphones, ce qui abaisse le coût unitaire perçu.",
+   "presence_sources": [
+    "amazon"
+   ],
+   "argument_principal": "2 Pack",
+   "faiblesse_principale": "Présence commerciale limitée à une seule offre recensée, sur une seule source (Amazon), sans diversification de canaux.",
+   "volume_ventes_cumule": 100,
+   "fourchette_prix_par_devise": {
+    "EUR": "15.99"
+   }
+  },
+  {
+   "concurrent": "CoolSwan",
+   "note_moyenne": 4.4,
+   "force_principale": "Note moyenne élevée (4.4/5) sur un volume d'avis conséquent (132 avis par offre), signal de satisfaction client cohérent sur les deux annonces.",
+   "presence_sources": [
+    "amazon"
+   ],
+   "argument_principal": "Sonido mucho más profesional para vídeos y directos",
+   "faiblesse_principale": "Duplication de la même fiche produit sous deux ASIN distincts avec titre, prix, note et nombre d'avis identiques, ce qui suggère une stratégie de multiplication d'annonces plutôt qu'une différenciation produit réelle.",
+   "volume_ventes_cumule": 50,
+   "fourchette_prix_par_devise": {
+    "EUR": "14.99"
+   }
+  },
+  {
+   "concurrent": "DJI",
+   "note_moyenne": 4.6,
+   "force_principale": null,
+   "presence_sources": [
+    "amazon"
+   ],
+   "argument_principal": null,
+   "faiblesse_principale": null,
+   "volume_ventes_cumule": 50,
+   "fourchette_prix_par_devise": {
+    "EUR": "27.27"
+   }
+  },
+  {
+   "concurrent": "BOYA",
+   "note_moyenne": 4.13,
+   "force_principale": null,
+   "presence_sources": [
+    "amazon",
+    "meta_ads"
+   ],
+   "argument_principal": null,
+   "faiblesse_principale": null,
+   "volume_ventes_cumule": null,
+   "fourchette_prix_par_devise": {
+    "EUR": "21.80–49.00"
+   }
+  },
+  {
+   "concurrent": "OSA",
+   "note_moyenne": 4.02,
+   "force_principale": null,
+   "presence_sources": [
+    "amazon"
+   ],
+   "argument_principal": null,
+   "faiblesse_principale": null,
+   "volume_ventes_cumule": null,
+   "fourchette_prix_par_devise": {
+    "EUR": "11.99–27.49"
+   }
+  },
+  {
+   "concurrent": "Daffodil",
+   "note_moyenne": 3.8,
+   "force_principale": null,
+   "presence_sources": [
+    "amazon"
+   ],
+   "argument_principal": null,
+   "faiblesse_principale": null,
+   "volume_ventes_cumule": null,
+   "fourchette_prix_par_devise": {
+    "EUR": "16.95–18.95"
+   }
+  },
+  {
+   "concurrent": "KIMAFUN",
+   "note_moyenne": 4.05,
+   "force_principale": null,
+   "presence_sources": [
+    "amazon"
+   ],
+   "argument_principal": null,
+   "faiblesse_principale": null,
+   "volume_ventes_cumule": null,
+   "fourchette_prix_par_devise": {
+    "EUR": "59.99–65.99"
+   }
+  },
+  {
+   "concurrent": "ANCLLO",
+   "note_moyenne": 5.0,
+   "force_principale": null,
+   "presence_sources": [
+    "amazon"
+   ],
+   "argument_principal": null,
+   "faiblesse_principale": null,
+   "volume_ventes_cumule": null,
+   "fourchette_prix_par_devise": {
+    "EUR": "10.99"
+   }
+  },
+  {
+   "concurrent": "ASHATA",
+   "note_moyenne": 4.7,
+   "force_principale": null,
+   "presence_sources": [
+    "amazon"
+   ],
+   "argument_principal": null,
+   "faiblesse_principale": null,
+   "volume_ventes_cumule": null,
+   "fourchette_prix_par_devise": {
+    "EUR": "9.56"
+   }
+  },
+  {
+   "concurrent": "Audio-Technica",
+   "note_moyenne": 3.2,
+   "force_principale": null,
+   "presence_sources": [
+    "amazon"
+   ],
+   "argument_principal": null,
+   "faiblesse_principale": null,
+   "volume_ventes_cumule": null,
+   "fourchette_prix_par_devise": {
+    "EUR": "27.47"
+   }
+  },
+  {
+   "concurrent": "Bontempi",
+   "note_moyenne": null,
+   "force_principale": null,
+   "presence_sources": [
+    "amazon"
+   ],
+   "argument_principal": null,
+   "faiblesse_principale": null,
+   "volume_ventes_cumule": null,
+   "fourchette_prix_par_devise": {
+    "EUR": "21.36"
+   }
+  },
+  {
+   "concurrent": "DYNASONIC",
+   "note_moyenne": 2.8,
+   "force_principale": null,
+   "presence_sources": [
+    "amazon"
+   ],
+   "argument_principal": null,
+   "faiblesse_principale": null,
+   "volume_ventes_cumule": null,
+   "fourchette_prix_par_devise": {
+    "EUR": "20.11"
+   }
+  },
+  {
+   "concurrent": "GEEKRIA",
+   "note_moyenne": 3.8,
+   "force_principale": null,
+   "presence_sources": [
+    "amazon"
+   ],
+   "argument_principal": null,
+   "faiblesse_principale": null,
+   "volume_ventes_cumule": null,
+   "fourchette_prix_par_devise": {
+    "EUR": "18.37"
+   }
+  },
+  {
+   "concurrent": "HONGJIEYUAN",
+   "note_moyenne": 4.2,
+   "force_principale": null,
+   "presence_sources": [
+    "amazon"
+   ],
+   "argument_principal": null,
+   "faiblesse_principale": null,
+   "volume_ventes_cumule": null,
+   "fourchette_prix_par_devise": {
+    "EUR": "13.02"
+   }
+  },
+  {
+   "concurrent": "JOBY",
+   "note_moyenne": 4.2,
+   "force_principale": null,
+   "presence_sources": [
+    "amazon"
+   ],
+   "argument_principal": null,
+   "faiblesse_principale": null,
+   "volume_ventes_cumule": null,
+   "fourchette_prix_par_devise": {
+    "EUR": "14.34"
+   }
+  },
+  {
+   "concurrent": "KKPLZZ",
+   "note_moyenne": null,
+   "force_principale": null,
+   "presence_sources": [
+    "amazon"
+   ],
+   "argument_principal": null,
+   "faiblesse_principale": null,
+   "volume_ventes_cumule": null,
+   "fourchette_prix_par_devise": {
+    "EUR": "43.39"
+   }
+  },
+  {
+   "concurrent": "KZZOUY",
+   "note_moyenne": 4.3,
+   "force_principale": null,
+   "presence_sources": [
+    "amazon"
+   ],
+   "argument_principal": null,
+   "faiblesse_principale": null,
+   "volume_ventes_cumule": null,
+   "fourchette_prix_par_devise": {
+    "EUR": "21.62"
+   }
+  },
+  {
+   "concurrent": "MXTIMWAN",
+   "note_moyenne": 4.1,
+   "force_principale": null,
+   "presence_sources": [
+    "amazon"
+   ],
+   "argument_principal": null,
+   "faiblesse_principale": null,
+   "volume_ventes_cumule": null,
+   "fourchette_prix_par_devise": {
+    "EUR": "10.89"
+   }
+  },
+  {
+   "concurrent": "Moman",
+   "note_moyenne": 3.9,
+   "force_principale": null,
+   "presence_sources": [
+    "amazon"
+   ],
+   "argument_principal": null,
+   "faiblesse_principale": null,
+   "volume_ventes_cumule": null,
+   "fourchette_prix_par_devise": {
+    "EUR": "5.97"
+   }
+  },
+  {
+   "concurrent": "NEEWER",
+   "note_moyenne": 4.8,
+   "force_principale": null,
+   "presence_sources": [
+    "amazon"
+   ],
+   "argument_principal": null,
+   "faiblesse_principale": null,
+   "volume_ventes_cumule": null,
+   "fourchette_prix_par_devise": {
+    "EUR": "29.99"
+   }
+  },
+  {
+   "concurrent": "Reditainer",
+   "note_moyenne": 3.5,
+   "force_principale": null,
+   "presence_sources": [
+    "amazon"
+   ],
+   "argument_principal": null,
+   "faiblesse_principale": null,
+   "volume_ventes_cumule": null,
+   "fourchette_prix_par_devise": {
+    "EUR": "13.49"
+   }
+  },
+  {
+   "concurrent": "VOVIGGOL",
+   "note_moyenne": 4.0,
+   "force_principale": null,
+   "presence_sources": [
+    "amazon"
+   ],
+   "argument_principal": null,
+   "faiblesse_principale": null,
+   "volume_ventes_cumule": null,
+   "fourchette_prix_par_devise": {
+    "EUR": "13.99"
+   }
+  },
+  {
+   "concurrent": "Rode",
+   "note_moyenne": null,
+   "force_principale": null,
+   "presence_sources": [
+    "recherche_web"
+   ],
+   "argument_principal": null,
+   "faiblesse_principale": null,
+   "volume_ventes_cumule": null,
+   "fourchette_prix_par_devise": {}
+  },
+  {
+   "concurrent": "Sonido Fácil",
+   "note_moyenne": null,
+   "force_principale": null,
+   "presence_sources": [
+    "meta_ads"
+   ],
+   "argument_principal": null,
+   "faiblesse_principale": null,
+   "volume_ventes_cumule": null,
+   "fourchette_prix_par_devise": {}
+  },
+  {
+   "concurrent": "Your Dual",
+   "note_moyenne": null,
+   "force_principale": null,
+   "presence_sources": [
+    "recherche_web"
+   ],
+   "argument_principal": null,
+   "faiblesse_principale": null,
+   "volume_ventes_cumule": null,
+   "fourchette_prix_par_devise": {}
+  }
+ ],
+ "validite_regionale": [
+  {
+   "portee": "marketplace_pays",
+   "source": "amazon",
+   "commentaire": "les prix et avis décrivent le marché de amazon.es, soit ES — c'est bien la région d'étude."
+  },
+  {
+   "portee": "diffusion_pays",
+   "source": "meta_ads",
+   "commentaire": "annonces diffusées en ES, quel que soit le pays de l'annonceur : la présence publicitaire n'implique ni disponibilité produit, ni volume de vente."
+  },
+  {
+   "portee": "mixte",
+   "source": "recherche_web",
+   "commentaire": "pages web de portées hétérogènes (régionales et globales) : le champ `portee_regionale` de chaque page fait foi, pas la source."
+  }
+ ],
+ "donnees_suffisantes": true,
+ "position_prix_envisage": null,
+ "intensite_concurrentielle": {
+  "lecture": "Avec seulement 2 annonceurs identifiés et 1 annonce active pour 31 concurrents recensés au global, la pression publicitaire mesurée ici reste très faible au regard du nombre d'acteurs présents sur le marché produit. La durée de diffusion médiane de 10 jours (max 30 jours) et la concentration des volumes sur le top 3 (69,6%) suggèrent une diffusion publicitaire concentrée chez un nombre restreint d'annonceurs, mais ces chiffres ne mesurent que l'activité publicitaire captée sur les plateformes listées (audience_network, facebook, instagram), pas l'ensemble des leviers d'acquisition (SEO, marketplaces, retail media, influence). Ils ne renseignent pas non plus sur les budgets média engagés, ni sur la performance réelle des campagnes (CTR, conversion, ROAS). La confiance qualifiée de « moyenne » par la donnée elle-même invite à ne pas sur-interpréter ces volumes comme représentatifs de l'intensité concurrentielle totale du marché, d'autant que 31 concurrents identifiés côté produit contrastent avec seulement 2 annonceurs actifs en publicité, ce qui peut traduire soit une sous-couverture du corpus publicitaire, soit un marché où la visibilité se joue ailleurs qu'en Ads. Enfin, aucun indicateur ne mesure ici la part de marché réelle, les volumes de ventes, ni la satisfaction client associée à ces annonceurs.",
+  "confiance": "moyenne",
+  "nb_annonceurs": 2,
+  "nb_offres_coeur": 43,
+  "nb_annonces_actives": 1,
+  "plateformes_dominantes": [
+   "audience_network",
+   "facebook",
+   "instagram"
+  ],
+  "duree_diffusion_max_jours": 30,
+  "nb_concurrents_identifies": 31,
+  "duree_diffusion_mediane_jours": 10.0,
+  "concentration_volumes_top3_pct": 69.6
+ }
+}

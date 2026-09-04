@@ -3,11 +3,21 @@
 Séquence : chargement → préparation → rédaction → assemblage → post-validation
 → écriture des fichiers → assemblage du résultat.
 
-Invariant central : **le rapport est toujours produit** dès lors que l'analyse
-de synthèse est exploitable. Une analyse détaillée manquante dégrade une section
-et y ajoute une mention explicite ; l'échec d'une chaîne de rédaction réduit une
-section à ses tableaux et y ajoute un encart. Aucun de ces cas n'empêche
-l'écriture du rapport ni la conformité de la sortie.
+Invariant central, et il diffère selon le gabarit.
+
+**v1** : le rapport est toujours produit dès lors que l'analyse de synthèse est
+exploitable. Une analyse détaillée manquante dégrade une section et y ajoute une
+mention ; l'échec d'une chaîne de rédaction réduit la section à ses tableaux et y
+ajoute un encart. Ce contrat est inchangé.
+
+**v2** : une donnée absente dégrade — le sous-bloc affiche sa phrase standard —
+mais un échec de RÉDACTION ne dégrade plus, il arrête. Le run 8609db9e a livré un
+rapport dont les sept sous-blocs narratifs disaient « lecture narrative
+indisponible », et l'étude a été marquée `completed` : un décideur a reçu un
+document sans une phrase d'analyse, avec l'apparence d'une étude complète. Un
+rapport v2 sans narratif n'est pas un rapport dégradé, c'est un échec — il sort
+en `CODE_REDACTION_IMPOSSIBLE`, sans écrire aucun fichier, et l'orchestrateur
+marque l'étude `partial` en conservant les JSON F3–F6 pour rejouer F7 seul.
 """
 
 from __future__ import annotations
@@ -30,19 +40,29 @@ from config import (
     HYPOTHESES_SYSTEMATIQUES,
     MAX_MOTS_ACTION,
     MAX_MOTS_CELLULE_COURTE,
+    MAX_MOTS_PUCE,
+    CONTRAT_SOUS_BLOCS,
     LIMITES_SYSTEMATIQUES,
     SECTIONS_NARRATIVES,
     SECTION_PLC,
     SECTION_SYNTHESE,
+    RedactionImpossible,
     logger,
     verifier_cle_api,
 )
 from preparation import ListeBlanche, horodatage, preparer
 from preparation_v2 import enrichir
 from redaction import rediger_section
-from redaction_v2 import compresser_cellules, rediger_ecran
+from redaction_v2 import (
+    compresser_cellules,
+    ecarts_au_contrat,
+    rangs_chiffrables,
+    rediger_ecran,
+    sous_blocs_a_rediger,
+)
 from schemas import (
     ConfianceGlobale,
+    ControlesRestitution,
     EntreesChargees,
     FicheProduit,
     Injectables,
@@ -221,7 +241,12 @@ def _comprimer_cellules_longues(
     C'est ce qui remplace la troncature à « … » du gabarit v1 : une cellule
     longue est réécrite plus court, jamais coupée au milieu de son argument. Une
     compression qui introduirait un chiffre absent de l'original est rejetée, et
-    l'original coupé au dernier mot entier prend le relais.
+    l'original INTÉGRAL prend alors le relais — long, mais exact.
+
+    Les puces d'opportunités et de risques y passent depuis ce correctif. Leurs
+    titres étaient coupés à douze mots en amont, ce qui les rendait
+    inintelligibles sans que rien ne le signale ; ils arrivent maintenant entiers,
+    et c'est ici qu'ils sont ramenés à leur budget quand ils le dépassent.
 
     Args:
         injectables: Données injectables, complétées sur place.
@@ -250,6 +275,24 @@ def _comprimer_cellules_longues(
             ligne["force"] = retenus[rang]
             ligne["faiblesse"] = retenus[milieu + rang]
 
+    puces_longues = [
+        (source, rang, puce)
+        for source, puces in (
+            ("puces_opportunites", injectables.puces_opportunites),
+            ("puces_risques", injectables.puces_risques),
+        )
+        for rang, puce in enumerate(puces)
+        if len(puce.split()) > MAX_MOTS_PUCE
+    ]
+    if puces_longues:
+        textes = [puce for _, _, puce in puces_longues]
+        proposes, statut = compresser_cellules(textes, MAX_MOTS_PUCE, langue_analyse)
+        statuts.append(statut)
+        retenus, acceptees = retenir_compression(textes, proposes, MAX_MOTS_PUCE)
+        compressees += acceptees
+        for (source, rang, _), retenu in zip(puces_longues, retenus, strict=True):
+            getattr(injectables, source)[rang] = retenu
+
     longues = [
         action["enonce_brut"]
         for action in injectables.actions_p1
@@ -266,6 +309,58 @@ def _comprimer_cellules_longues(
                 action["enonce"] = retenus[rang]
                 rang += 1
     return statuts, compressees
+
+
+def _comprimer_puces_hors_budget(
+    ecran: str,
+    sortie: SortieEcran | None,
+    injectables: Injectables,
+    langue_analyse: str,
+) -> tuple[SortieEcran | None, StatutAnalyse | None]:
+    """Réécrit plus court les puces qui dépassent le budget de leur sous-bloc.
+
+    La règle du v2 est qu'aucune réduction ne coupe : elle passe par la chaîne de
+    compression, qui reformule. Une compression rejetée par la liste blanche rend
+    la puce d'origine — trop longue, mais exacte — et le contrôle de conformité
+    la refusera ensuite. C'est l'ordre voulu : mieux vaut un écran refusé qu'un
+    écran publié avec une phrase amputée de son argument.
+
+    Args:
+        ecran: Identifiant de l'écran.
+        sortie: Puces produites, ou `None`.
+        injectables: Données injectables.
+        langue_analyse: Code langue de rédaction.
+
+    Returns:
+        Le couple `(sortie_réécrite, statut_ou_None)`. Le statut est `None`
+        lorsqu'aucune puce ne dépassait.
+    """
+    if sortie is None:
+        return sortie, None
+    trop_longues = [
+        (sous_bloc, rang, puce, CONTRAT_SOUS_BLOCS[sous_bloc].max_mots_puce)
+        for sous_bloc, puces in sortie.sous_blocs.items()
+        if sous_bloc in CONTRAT_SOUS_BLOCS
+        for rang, puce in enumerate(puces)
+        if len(puce.split()) > CONTRAT_SOUS_BLOCS[sous_bloc].max_mots_puce
+    ]
+    if not trop_longues:
+        return sortie, None
+
+    # Un seul appel, au budget le plus serré des puces concernées : la chaîne de
+    # compression prend une liste et un plafond unique.
+    budget = min(maximum for _, _, _, maximum in trop_longues)
+    textes = [puce for _, _, puce, _ in trop_longues]
+    logger.info(
+        "écran %s : %d puce(s) au-dessus de leur budget, compression à %d mots",
+        ecran, len(textes), budget,
+    )
+    proposes, statut = compresser_cellules(textes, budget, langue_analyse)
+    retenus, _ = retenir_compression(textes, proposes, budget)
+    for (sous_bloc, rang, _, _), retenu in zip(trop_longues, retenus, strict=True):
+        sortie.sous_blocs[sous_bloc][rang] = retenu
+    statut.phase = f"compression_puces_{ecran}"
+    return sortie, statut
 
 
 def _rediger_ecrans(
@@ -306,8 +401,53 @@ def _rediger_ecrans(
             libelle_marche,
             langue_analyse,
         )
-        narratifs[identifiant] = sortie
         statuts.append(statut)
+        if not statut.succes:
+            # UNE régénération, et elle dit au modèle ce qui manquait — « 2 puces
+            # au lieu de 3 », « puce 1 sans chiffre ». Le v1 renvoyait la même
+            # entrée à l'identique : sur le run 8609db9e, les huit invocations
+            # ont produit huit fois la même erreur au mot près.
+            logger.info(
+                "écran %s hors gabarit, régénération : %s",
+                identifiant,
+                statut.message_erreur,
+            )
+            sortie, reprise = rediger_ecran(
+                identifiant,
+                ecran["titre"],
+                ecran["budget_mots"],
+                injectables,
+                produit,
+                libelle_marche,
+                langue_analyse,
+                erreur_precedente=statut.message_erreur or "",
+            )
+            reprise.phase = f"conformite_{identifiant}"
+            statuts.append(reprise)
+            if not reprise.succes:
+                # Dernier recours avant l'échec, et il ne coupe rien : une puce
+                # qui dépasse de trois mots est RÉÉCRITE plus court. Un écart de
+                # structure — deux puces au lieu de trois, un libellé manquant —
+                # n'a pas de recours et arrête ici ; un écart de longueur en a un,
+                # et arrêter le module pour trois mots serait disproportionné.
+                sortie, statut_compression = _comprimer_puces_hors_budget(
+                    identifiant, sortie, injectables, langue_analyse
+                )
+                if statut_compression is not None:
+                    statuts.append(statut_compression)
+                restants = ecarts_au_contrat(
+                    sortie,
+                    sous_blocs_a_rediger(identifiant, injectables),
+                    rangs_chiffrables(injectables),
+                    structurels_seuls=True,
+                )
+                if restants:
+                    raise RedactionImpossible(
+                        f"écran « {identifiant} » : la sortie reste hors gabarit "
+                        f"après régénération et compression — {' ; '.join(restants)}",
+                        statuts,
+                    )
+        narratifs[identifiant] = sortie
 
     narratifs, compteurs = nettoyer_ecrans(narratifs, liste)
 
@@ -371,6 +511,54 @@ def _rediger_ecrans(
     return narratifs, statuts, compteurs
 
 
+CONTROLES_BLOQUANTS_V2: tuple[tuple[str, str], ...] = (
+    ("gabarit_conforme", "des sous-blocs s'écartent du gabarit"),
+    ("aucun_repli_interdit", "un texte de repli interdit subsiste"),
+    ("aucune_troncature", "un texte porte la signature d'une coupe machine"),
+    ("ligne_sources_complete", "la ligne « Sources analysées » est incomplète"),
+)
+"""Contrôles qui ARRÊTENT le module au lieu de dégrader le rapport.
+
+Les autres contrôles de `controler_v2` restent informatifs : ils décrivent un
+rapport qui part quand même. Ces quatre-là décrivent un rapport qu'il vaut mieux
+ne pas envoyer — leur point commun est qu'un lecteur ne peut pas voir le défaut
+et le corrigera donc jamais de lui-même. Un budget dépassé se voit ; un
+« Pourquoi » à deux puces au lieu de trois, non."""
+
+
+def _refuser_si_non_conforme(
+    controles: ControlesRestitution,
+    statuts: list[StatutAnalyse] | None = None,
+) -> None:
+    """Interrompt la restitution si un contrôle bloquant est en échec.
+
+    Appelée APRÈS l'assemblage et AVANT toute écriture : le rapport existe en
+    mémoire, il est complet, et c'est précisément parce qu'il a l'air complet
+    qu'il ne doit pas atteindre le disque.
+
+    Args:
+        controles: Résultat de la post-validation v2.
+        statuts: Statuts accumulés, joints à l'exception pour le diagnostic.
+
+    Raises:
+        RedactionImpossible: Si au moins un contrôle bloquant est faux.
+    """
+    motifs = [
+        motif for champ, motif in CONTROLES_BLOQUANTS_V2 if not getattr(controles, champ)
+    ]
+    if not motifs:
+        return
+    detail = (
+        f" ({'; '.join(controles.sous_blocs_non_conformes[:5])})"
+        if controles.sous_blocs_non_conformes
+        else ""
+    )
+    raise RedactionImpossible(
+        "rapport refusé par la post-validation : " + ", ".join(motifs) + detail,
+        statuts,
+    )
+
+
 def restituer(
     chemin_recommandations: str,
     chemin_insights: str | None,
@@ -380,6 +568,7 @@ def restituer(
     chemin_resume: str | None,
     langue_analyse: str,
     gabarit: str = GABARIT_PAR_DEFAUT,
+    etat_sources: dict[str, dict] | None = None,
 ) -> ResultatRestitution:
     """Produit le rapport d'étude de marché et son résumé exécutif.
 
@@ -392,6 +581,10 @@ def restituer(
         chemin_resume: Fichier du résumé ; chaîne vide pour ne pas l'écrire.
         langue_analyse: Code langue de rédaction.
         gabarit: `v2` pour le rapport décisionnel, `v1` pour l'ancien rendu.
+        etat_sources: État des collecteurs transmis par l'orchestrateur
+            (`--sources-etat`) : `donnees_disponibles`, `nb_items`, `raison` par
+            source. Il porte la RAISON d'une collecte vide, que les JSON
+            d'analyse ne conservent pas.
 
     Returns:
         Les métadonnées et contrôles de la restitution.
@@ -400,6 +593,8 @@ def restituer(
         ErreurCoherenceProduit: Si les fichiers portent des produits différents.
         ValueError: Si l'analyse de synthèse est absente ou inexploitable.
         RuntimeError: Si la clé API est absente.
+        RedactionImpossible: Si un écran narratif n'a pas pu être rédigé
+            conformément au gabarit v2. Aucun fichier n'est alors écrit.
     """
     entrees, sources, alertes, bruts = charger_entrees(
         chemin_recommandations, chemin_insights, chemin_concurrence, chemin_plc
@@ -420,7 +615,9 @@ def restituer(
         entrees, bruts, degradees, absentes
     )
     if gabarit == GABARIT_V2:
-        statuts_v2, hypotheses_v2 = enrichir(injectables, entrees, degradees, absentes)
+        statuts_v2, hypotheses_v2 = enrichir(
+            injectables, entrees, degradees, absentes, etat_sources
+        )
         statuts.extend(statuts_v2)
         hypotheses_preparation.extend(hypotheses_v2)
         injectables.hypotheses = list(injectables.hypotheses) + hypotheses_v2
@@ -440,10 +637,11 @@ def restituer(
         rapport, sections_produites = assembler_rapport_v2(injectables, ecrans)
         resume = assembler_resume_v2(injectables, ecrans)
         controles, statuts_validation = controler_v2(
-            rapport, resume, injectables, liste, compteurs, sections_produites
+            rapport, resume, injectables, liste, compteurs, sections_produites, ecrans
         )
         controles.nb_cellules_compressees = nb_compressees
         statuts.extend(statuts_validation)
+        _refuser_si_non_conforme(controles, statuts)
         decision = ecrans.get(ECRAN_DECISION)
         narratif_synthese_texte = "\n".join(
             puce

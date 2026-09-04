@@ -4,18 +4,25 @@
 documents, eux, ne sortent que dans leurs fichiers Markdown dédiés.
 
 Codes de sortie : 0 succès, 1 erreur imprévue, 2 entrée inexploitable ou
-incohérence produit.
+incohérence produit, 4 rédaction impossible.
+
+Le 4 est le seul qui laisse le disque intact : aucun `.md` n'est écrit, et le
+`ResultatRestitution` part sur stderr avec ses `statuts_analyse` complets — c'est
+là que se lit la cause. Il vaut pour le gabarit v2 seul ; le v1 dégrade et sort
+en 0, son contrat est inchangé. Voir le README pour la table complète et pour la
+raison du 4 plutôt que du 2.
 """
 
 from __future__ import annotations
 
 import argparse
+import json
 import sys
 from pathlib import Path
+from typing import Any
 
 from langchain_core.callbacks import get_usage_metadata_callback
 
-from agent import restituer
 from config import (
     GABARITS_DISPONIBLES,
     GABARIT_PAR_DEFAUT,
@@ -23,7 +30,10 @@ from config import (
     CHEMIN_RESUME_DEFAUT,
     CODE_ENTREE_INEXPLOITABLE,
     CODE_ERREUR_IMPREVUE,
+    CODE_REDACTION_IMPOSSIBLE,
     CODE_SUCCES,
+    ConfigurationRedactionInvalide,
+    RedactionImpossible,
     configurer_logs,
     resumer_consommation,
 )
@@ -92,12 +102,42 @@ def construire_analyseur() -> argparse.ArgumentParser:
         ),
     )
     analyseur.add_argument(
+        "--sources-etat",
+        default=None,
+        help=(
+            "JSON de l'état des collecteurs, produit par l'orchestrateur : "
+            "{source: {donnees_disponibles, nb_items, raison}}. Il porte la RAISON "
+            "d'une collecte vide, que les sorties d'analyse ne conservent pas — "
+            "sans lui, la ligne « Sources analysées » dit qu'une source n'a rien "
+            "rendu, mais pas pourquoi."
+        ),
+    )
+    analyseur.add_argument(
         "--stdout", action="store_true", help="Émet aussi le JSON sur stdout."
     )
     analyseur.add_argument(
         "--verbose", action="store_true", help="Journalisation détaillée."
     )
     return analyseur
+
+
+def _lire_etat_sources(chemin: str | None) -> dict[str, dict[str, Any]] | None:
+    """Lit le fichier d'état des collecteurs, s'il est fourni.
+
+    Args:
+        chemin: Chemin du JSON, ou `None`.
+
+    Returns:
+        L'état par source, ou `None` si l'argument est absent.
+
+    Raises:
+        OSError: Si le fichier est illisible.
+        json.JSONDecodeError: Si son contenu n'est pas du JSON.
+    """
+    if not chemin:
+        return None
+    contenu = json.loads(Path(chemin).read_text(encoding="utf-8"))
+    return contenu if isinstance(contenu, dict) else None
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -113,6 +153,28 @@ def main(argv: list[str] | None = None) -> int:
     logger = configurer_logs(arguments.verbose)
 
     try:
+        # Import tardif, et volontairement : `redaction_v2` vérifie ses gabarits de
+        # prompt au chargement, et cette vérification peut échouer. Importée en tête
+        # de module, elle sortirait en trace nue avant même que le CLI existe ; ici,
+        # elle est rapportée comme ce qu'elle est — une rédaction impossible.
+        from agent import restituer
+    except ConfigurationRedactionInvalide as erreur:
+        logger.error("configuration de rédaction invalide : %s", erreur)
+        print(
+            f"Configuration de rédaction invalide : {erreur}\n"
+            "Aucun appel au modèle n'a été fait et aucun fichier n'a été écrit : "
+            "c'est un défaut de gabarit, à corriger dans le code.",
+            file=sys.stderr,
+        )
+        return CODE_REDACTION_IMPOSSIBLE
+
+    try:
+        etat_sources = _lire_etat_sources(arguments.sources_etat)
+    except (OSError, json.JSONDecodeError) as erreur:
+        print(f"--sources-etat illisible : {erreur}", file=sys.stderr)
+        return CODE_ENTREE_INEXPLOITABLE
+
+    try:
         with get_usage_metadata_callback() as consommation:
             resultat = restituer(
                 chemin_recommandations=arguments.recommandations,
@@ -123,10 +185,29 @@ def main(argv: list[str] | None = None) -> int:
                 chemin_resume=arguments.resume,
                 langue_analyse=arguments.langue_analyse,
                 gabarit=arguments.gabarit,
+                etat_sources=etat_sources,
             )
         recapitulatif = resumer_consommation(consommation.usage_metadata)
         if recapitulatif:
             print(f"Consommation LLM — {recapitulatif}", file=sys.stderr)
+    except RedactionImpossible as erreur:
+        # Aucun `.md` n'a été écrit : `restituer` lève avant l'écriture. Le
+        # diagnostic part sur stderr — c'est tout ce que l'exploitant aura,
+        # puisqu'il n'y a pas de fichier de sortie à relire. `statuts_analyse`
+        # y va en entier : c'est là que se lit QUELLE chaîne a échoué, après
+        # combien de tentatives et sur quel motif.
+        logger.error("rédaction impossible : %s", erreur)
+        print(f"Rédaction impossible : {erreur}", file=sys.stderr)
+        diagnostic = {
+            "code": "REDACTION_IMPOSSIBLE",
+            "message": str(erreur),
+            "statuts_analyse": [
+                statut.model_dump(by_alias=True)
+                for statut in getattr(erreur, "statuts", [])
+            ],
+        }
+        print(json.dumps(diagnostic, ensure_ascii=False, indent=2), file=sys.stderr)
+        return CODE_REDACTION_IMPOSSIBLE
     except ErreurCoherenceProduit as erreur:
         print(f"Incohérence bloquante : {erreur}", file=sys.stderr)
         return CODE_ENTREE_INEXPLOITABLE

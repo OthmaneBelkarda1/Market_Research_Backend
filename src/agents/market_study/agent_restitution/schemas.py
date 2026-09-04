@@ -634,6 +634,7 @@ class Injectables(BaseModel):
     score_max: int = 0
     ligne_meta: str = ""
     ligne_sources: str = ""
+    autres_indicateurs_demande: str = ""
     encart_partielle_v2: str = ""
     faits_cles_decision: list[str] = Field(default_factory=list)
     risque_principal_decision: str = ""
@@ -809,6 +810,40 @@ class ControlesRestitution(BaseModel):
     )
     libelle_verdict: str = Field(
         default="", description="Libellé métier affiché : Go, No-go ou Go conditionnel."
+    )
+    gabarit_conforme: bool = Field(
+        default=True,
+        description=(
+            "Vrai : chaque sous-bloc narratif respecte son contrat — nombre de "
+            "puces, libellés imposés, chiffre obligatoire, budget par puce."
+        ),
+    )
+    sous_blocs_non_conformes: list[str] = Field(
+        default_factory=list,
+        description="Sous-blocs en écart au gabarit, avec le motif de l'écart.",
+    )
+    aucun_repli_interdit: bool = Field(
+        default=True,
+        description=(
+            "Vrai : le rapport ne contient aucun texte de repli hors PHRASES_STANDARD."
+        ),
+    )
+    aucune_troncature: bool = Field(
+        default=True,
+        description=(
+            "Vrai : aucune puce, cellule ou titre ne s'arrête sur « … », une "
+            "virgule ou un mot-outil — les trois signatures d'une coupe machine."
+        ),
+    )
+    ligne_sources_complete: bool = Field(
+        default=True,
+        description="Vrai : les six sources sont citées, une source vide avec sa raison.",
+    )
+    compteurs_coherents: bool = Field(
+        default=True,
+        description=(
+            "Vrai : le nombre de pages web de l'écran 0 est celui de l'écran méthode."
+        ),
     )
 
 

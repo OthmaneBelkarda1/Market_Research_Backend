@@ -26,7 +26,6 @@ from config import (
     ECRAN_DECISION,
     ECRAN_METHODE,
     ECRAN_RECOMMANDATIONS,
-    ENCART_NARRATIF_INDISPONIBLE,
     ENTREE_CONCURRENCE,
     ENTREE_INSIGHTS,
     ENTREE_PLC,
@@ -113,9 +112,16 @@ def _sous_bloc(
 ) -> str:
     """Rend un sous-bloc : son titre-question, puis son contenu.
 
-    Trois contenus possibles, dans cet ordre de priorité : la phrase standard si
-    la donnée manque, les puces du modèle si elles existent, l'encart de repli
-    sinon. Un sous-bloc n'est jamais rendu vide.
+    DEUX contenus possibles, et pas trois : la phrase standard si la donnée
+    manque, les puces du modèle sinon. Il n'y a plus d'encart de repli.
+
+    Un sous-bloc narratif vide n'est pas un mode dégradé, c'est une panne. La
+    troisième branche écrivait « Lecture narrative indisponible » et laissait
+    partir le rapport ; sur le run 8609db9e, les sept sous-blocs narratifs
+    portaient cet encart, l'étude est passée `completed` et un décideur a reçu un
+    document sans une phrase d'analyse. Le sous-bloc sort désormais avec son
+    titre seul, `validation_v2.controler_gabarit` le relève, et `agent.restituer`
+    lève `RedactionImpossible` avant qu'aucun fichier ne soit écrit.
 
     Args:
         identifiant: Identifiant du sous-bloc.
@@ -133,10 +139,7 @@ def _sous_bloc(
         return _bloc(titre, standard)
 
     puces = list(narratif.sous_blocs.get(identifiant, [])) if narratif else []
-    corps = _puces(puces)
-    if not (corps or avant or apres):
-        corps = ENCART_NARRATIF_INDISPONIBLE
-    return _bloc(titre, avant, corps, apres)
+    return _bloc(titre, avant, _puces(puces), apres)
 
 
 # =========================================================================== #
@@ -327,8 +330,15 @@ def ecran_concurrence(injectables: Injectables, narratif: SortieEcran | None) ->
         "## Le marché et les concurrents",
         injectables.badges.get(ECRAN_CONCURRENCE, ""),
         injectables.mentions_partielles.get(ECRAN_CONCURRENCE, ""),
+        # Les quatre indicateurs du gabarit avant la puce de lecture, les cinq
+        # autres après, repliés : ils restent consultables sans encombrer le
+        # chemin de lecture, qui est ce que le tableau à neuf lignes faisait.
         _sous_bloc(
-            SB_DYNAMIQUE, injectables, narratif, avant=injectables.dynamique_demande
+            SB_DYNAMIQUE,
+            injectables,
+            narratif,
+            avant=injectables.dynamique_demande,
+            apres=injectables.autres_indicateurs_demande,
         ),
         _sous_bloc(SB_QUE_FONT, injectables, narratif),
         exemples if injectables.concurrents_v2 else "",

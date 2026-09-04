@@ -278,10 +278,15 @@ curl http://127.0.0.1:8000/studies/<study_id>/sources/reddit
 
 # 5. Le livrable, une fois l'étude en `completed` ou `partial`
 curl http://127.0.0.1:8000/studies/<study_id>/report
+
+# 6. Rejouer F7 seul, sans rien recollecter -- réparation d'un F7_REDACTION_FAILED,
+#    ou simple reprise du rapport après un changement de gabarit
+curl -X POST http://127.0.0.1:8000/studies/<study_id>/report/regenerate
 ```
 
-**Ce qui n'existe pas encore** : la relance et l'annulation d'une étude, sa suppression, et
-la lecture de `study_analysis` par l'API (les analyses F3–F6 ne sont lisibles qu'en base).
+**Ce qui n'existe pas encore** : la relance complète et l'annulation d'une étude, sa
+suppression, et la lecture de `study_analysis` par l'API (les analyses F3–F6 ne sont
+lisibles qu'en base).
 Voir [Hors périmètre](#hors-périmètre-de-cette-itération).
 
 ## Extraction automatique
@@ -463,7 +468,7 @@ y relisent.
 | Table | Contenu |
 |---|---|
 | `study` | L'étude : produit, région, langue, devise, statut, `progress`, `error`, horodatages |
-| `study_source_data` | Une ligne par collecteur (`google_trends`, `reddit`, `recherche_web`, `aliexpress`, `amazon`, `meta_ads`) : `payload` jsonb, `status` (`succeeded`/`failed`/`skipped_region`), `exit_code` |
+| `study_source_data` | Une ligne par collecteur (`google_trends`, `reddit`, `recherche_web`, `aliexpress`, `amazon`, `meta_ads`) : `payload` jsonb, `status` (`succeeded`/`empty`/`failed`/`skipped_region`), `exit_code` |
 | `study_analysis` | Une ligne par agent d'analyse (`f3_insights`, `f4_concurrence`, `f5_verdict`, `f6_plc`) |
 | `study_report` | Le rapport F7 : `rapport_markdown`, `resume_markdown`, `payload` |
 
@@ -474,6 +479,14 @@ créerait une double maintenance de ces contrats.
 
 `skipped_region` (code de sortie 3 d'un collecteur) est une **situation normale**, pas un
 échec : Amazon n'a pas de site marocain, par exemple.
+
+`empty` sépare deux questions que `succeeded` confondait : *le collecteur a-t-il
+tourné* et *a-t-il rapporté quelque chose*. Un module qui sort en code 0 sans avoir
+rien trouvé a réussi son exécution et échoué sa collecte. L'étude `8609db9e` est la
+raison de cette distinction : AliExpress y a rendu zéro offre, a été enregistré
+`succeeded`, et le rapport a comparé des prix sur un seul de ses deux canaux sans
+jamais le mentionner. Une source `empty` rend désormais l'étude `partial`, et F7
+la nomme avec sa raison dans sa ligne « Sources analysées ».
 
 ## Exécution d'une étude
 
@@ -538,11 +551,28 @@ Un échec ou un timeout de collecteur n'interrompt **jamais** les autres, et F5 
 que F3 et F4 sont terminés *quel que soit leur statut* : la dégradation gracieuse appartient
 aux modules, jamais à l'orchestrateur.
 
-- `completed` : aucun module en échec (`skipped_region` ne compte pas).
-- `partial` : au moins un module en échec, mais F7 a produit un rapport.
-- `failed` : F7 en échec, ou étude inexécutable (devise non mappée, produit disparu, tous
-  les collecteurs en échec). **Un verdict négatif ou indéterminé est un résultat, jamais un
-  échec.**
+- `completed` : aucun module en échec et aucune source vide (`skipped_region` ne compte
+  pas).
+- `partial` : au moins un module en échec ou une source `empty`, mais F7 a produit un
+  rapport — **ou** F7 a refusé d'en produire un alors que les analyses sont intactes
+  (`error.code = F7_REDACTION_FAILED`, voir ci-dessous).
+- `failed` : F7 en échec pour une autre raison, ou étude inexécutable (devise non mappée,
+  produit disparu, tous les collecteurs en échec). **Un verdict négatif ou indéterminé est
+  un résultat, jamais un échec.**
+
+### Quand F7 refuse d'écrire le rapport
+
+F7 sort en code **4** lorsqu'il ne peut pas produire un rapport conforme au gabarit v2 :
+il n'écrit alors aucun fichier. L'étude passe `partial` avec
+`error.code = F7_REDACTION_FAILED`, et les sorties F3 à F6 restent en base.
+
+C'est une panne réparable sans rien recollecter, et c'est pourquoi elle a son propre
+statut : les six collecteurs et les quatre analyses sont la moitié coûteuse d'une étude,
+ils ont réussi, et un rapport mal rédigé ne les remet pas en cause.
+`POST /studies/{id}/report/regenerate` rejoue F7 seul à partir des JSON persistés.
+
+Le code 4 existe parce que le 2 était pris — il vaut « entrée inexploitable » dans les
+onze modules du pipeline. Voir l'amendement A5 du README de `agent_restitution/`.
 
 Chaque sortie est écrite en base **dès sa réception**, et `study.progress` est mis à jour à
 chaque transition : un crash en cours d'étude laisse en place tout ce qui a été collecté.

@@ -22,6 +22,7 @@ from __future__ import annotations
 import re
 
 from config import (
+    CONTRAT_SOUS_BLOCS,
     ECRANS_HORS_CONTROLE_TERMES,
     ECRAN_DECISION,
     ECRAN_METHODE,
@@ -30,9 +31,14 @@ from config import (
     LIBELLES_CINQ_FORCES,
     LIBELLES_VERDICT,
     MARQUEUR_GABARIT_V2,
+    MOTS_OUTILS_FIN_INTERDITS,
     NEGATIONS_TOLEREES,
     PHASE_LISIBLE,
+    PHRASES_STANDARD,
+    REPLI_INTERDIT_V2,
     SEUIL_REGENERATION_PCT,
+    SOURCES_LIGNE_SOURCES,
+    SOUS_BLOCS_REDIGES,
     SUBSTITUTS_VERDICT_INTERDITS,
     TERMES_INTERDITS,
     TERMES_JARGON,
@@ -40,6 +46,8 @@ from config import (
     logger,
 )
 from preparation import ListeBlanche, extraire_nombres
+from preparation_v2 import LIBELLES_SOURCES
+from redaction_v2 import ecarts_au_contrat, rangs_chiffrables
 from validation import _termes_presents
 from schemas import (
     ControlesRestitution,
@@ -54,6 +62,13 @@ PHASE_POST_VALIDATION_V2: str = "post_validation_v2"
 MOTIF_TITRE_DECISION = re.compile(r"^##\s+Décision\s*:\s*(.+)$", re.M)
 MOTIF_LIGNE_VERDICT = re.compile(r"^Verdict calculé\s*:\s*([^·]+)·", re.M)
 MOTIF_CELLULE_TRONQUEE = re.compile(r"…\s*(?:\||$)", re.M)
+
+# Ce qui doit être inspecté pour une troncature : une puce, une cellule de
+# tableau, un titre. Le texte d'une cellule est isolé du tuyautage Markdown, et
+# les lignes de séparation (`| --- |`) sont écartées.
+MOTIF_PUCE = re.compile(r"^\s*[-*]\s+(.*\S)\s*$", re.M)
+MOTIF_TITRE = re.compile(r"^#{2,4}\s+(.*\S)\s*$", re.M)
+MOTIF_SEPARATEUR_TABLEAU = re.compile(r"^[\s|:-]+$")
 """Une ellipse en fin de cellule de tableau ou de ligne : la troncature muette."""
 
 
@@ -181,15 +196,22 @@ def couper_au_budget(
     def total() -> int:
         return sum(len(p.split()) for puces in conserve.values() for p in puces)
 
+    def plancher(cle: str) -> int:
+        """Nombre de puces au-dessous duquel le sous-bloc sort du gabarit."""
+        contrat = CONTRAT_SOUS_BLOCS.get(cle)
+        return contrat.nb_puces_min if contrat else 1
+
     while total() > budget:
         for cle in reversed(ordre):
-            if len(conserve.get(cle, [])) > 1:
+            if len(conserve.get(cle, [])) > plancher(cle):
                 conserve[cle].pop()
                 retirees += 1
                 break
         else:
-            # Chaque sous-bloc est réduit à sa puce unique : on ne descend pas
-            # plus bas, un sous-bloc vide serait pire qu'un léger dépassement.
+            # Chaque sous-bloc est descendu à son plancher de gabarit : on ne va
+            # pas plus bas. Un « Pourquoi » à deux puces n'est plus le gabarit,
+            # et un léger dépassement de budget vaut mieux qu'un écran hors
+            # contrat — que `gabarit_conforme` refuserait de toute façon.
             break
     return SortieEcran(sous_blocs={c: p for c, p in conserve.items() if p}), retirees
 
@@ -204,8 +226,12 @@ def retenir_compression(
     la liste blanche globale : ici, le seul référentiel légitime est le texte que
     le modèle avait sous les yeux.
 
-    Le repli n'est jamais une troncature à « … » : c'est une coupe au dernier mot
-    entier, qui se voit et ne se fait pas passer pour une phrase complète.
+    Le repli n'est PAS une coupe. Une compression rejetée rend le texte INTÉGRAL :
+    le run 8609db9e a livré « … acquise ou », « … kit complet plug and » et des
+    titres d'opportunité amputés à douze mots, tous produits par ce repli quand
+    il coupait encore. Un texte trop long dépasse un budget de forme ; un texte
+    coupé dit autre chose que ce que l'analyse a conclu. Le second est un défaut,
+    le premier une gêne.
 
     Args:
         originaux: Textes d'origine.
@@ -215,8 +241,6 @@ def retenir_compression(
     Returns:
         Le couple `(textes_retenus, nb_compressions_acceptées)`.
     """
-    from preparation_v2 import couper_mots
-
     retenus: list[str] = []
     acceptees = 0
     for rang, original in enumerate(originaux):
@@ -238,8 +262,146 @@ def retenir_compression(
                 "chiffre ajouté" if ajoutes else "budget dépassé",
                 ", ".join(ajoutes[:3]) or f"{len(propose.split())} mots",
             )
-        retenus.append(couper_mots(original, max_mots))
+        retenus.append(original)
     return retenus, acceptees
+
+
+def _textes_inspectables(rapport: str) -> list[tuple[str, str]]:
+    """Découpe le rapport en fragments où une troncature se verrait.
+
+    Puces, titres et cellules de tableau : les trois formes qui portent un texte
+    autonome. Le corps des paragraphes en est absent — le v2 n'en produit pas —
+    et les lignes de séparation de tableau sont écartées.
+
+    Args:
+        rapport: Rapport Markdown complet.
+
+    Returns:
+        Les couples `(nature, texte)` à inspecter.
+    """
+    fragments: list[tuple[str, str]] = [
+        ("puce", texte) for texte in MOTIF_PUCE.findall(rapport)
+    ]
+    fragments += [("titre", texte) for texte in MOTIF_TITRE.findall(rapport)]
+    for ligne in rapport.splitlines():
+        depouillee = ligne.strip()
+        if not depouillee.startswith("|") or MOTIF_SEPARATEUR_TABLEAU.match(depouillee):
+            continue
+        for cellule in depouillee.strip("|").split("|"):
+            if cellule.strip():
+                fragments.append(("cellule", cellule.strip()))
+    return fragments
+
+
+def _est_tronque(texte: str) -> str:
+    """Dit si un texte porte la signature d'une coupe machine.
+
+    Trois signatures, du plus au moins évident : l'ellipse, la virgule finale, et
+    le mot-outil final — « … acquise ou », « … plug and ». Aucune phrase française
+    rédigée ne se termine ainsi ; un texte qui le fait a été coupé.
+
+    Le gras et la ponctuation de fin sont retirés avant l'examen pour que
+    « **Leurs prix** » ne compte pas son astérisque comme dernier caractère.
+
+    Args:
+        texte: Fragment à examiner.
+
+    Returns:
+        Le motif de troncature constaté, ou une chaîne vide.
+    """
+    nettoye = texte.replace("**", "").replace("`", "").strip()
+    if not nettoye:
+        return ""
+    if nettoye.endswith("…") or nettoye.endswith("..."):
+        return "se termine par une ellipse"
+    if nettoye.endswith(","):
+        return "se termine par une virgule"
+    dernier = nettoye.rstrip(".;:!?)\u00a0").split()
+    if dernier and dernier[-1].lower() in MOTS_OUTILS_FIN_INTERDITS:
+        return f"se termine par le mot-outil « {dernier[-1]} »"
+    return ""
+
+
+MOTIF_PAGES_LIGNE_SOURCES = re.compile(r"Web\s*\((\d[\d\s\u202f\u00a0]*)\s*pages?\)")
+MOTIF_PAGES_METHODE = re.compile(
+    r"^\|\s*[Rr]echerche web\s*\|\s*(\d[\d\s\u202f\u00a0]*)\s*\|", re.M
+)
+
+
+def _compteurs_pages_coherents(rapport: str) -> bool:
+    """Vérifie que les pages web sont comptées une seule fois dans le document.
+
+    Le run 8609db9e annonçait « Web (5 pages) » à l'écran 0 et deux documents au
+    tableau de méthode : deux chiffres pour une même collecte, dont le lecteur ne
+    peut arbitrer aucun. Deux compteurs valent zéro compteur.
+
+    Args:
+        rapport: Rapport Markdown complet.
+
+    Returns:
+        `False` seulement si les deux chiffres existent ET diffèrent. Un chiffre
+        absent n'est pas une incohérence : d'autres contrôles s'en chargent.
+    """
+    ligne = MOTIF_PAGES_LIGNE_SOURCES.search(rapport)
+    methode = MOTIF_PAGES_METHODE.search(rapport)
+    if not ligne or not methode:
+        return True
+
+    def entier(texte: str) -> int:
+        return int("".join(c for c in texte if c.isdigit()))
+
+    return entier(ligne.group(1)) == entier(methode.group(1))
+
+
+def controler_gabarit(
+    ecrans: dict[str, SortieEcran | None],
+    injectables: Injectables,
+    *,
+    structurels_seuls: bool = False,
+) -> list[str]:
+    """Confronte les écrans rendus au contrat de chaque sous-bloc.
+
+    C'est le contrôle qui manquait. Jusqu'ici le gabarit n'était tenu que par les
+    consignes envoyées au modèle : rien ne vérifiait qu'un « Pourquoi » sortait
+    bien avec trois puces chiffrées, ni que les cinq puces des concurrents
+    portaient leurs libellés. Le run 8609db9e n'en portait aucune, et tous les
+    contrôles étaient au vert.
+
+    Un sous-bloc qui affiche sa phrase standard est hors contrat : il n'a pas été
+    rédigé, il n'a rien à respecter.
+
+    Args:
+        ecrans: Sorties narratives par écran.
+        injectables: Données injectables, pour les sous-blocs standards.
+        structurels_seuls: Ne relever que les écarts sans recours. C'est ce que
+            regarde le verdict bloquant ; le compte rendu, lui, publie tous les
+            écarts, dépassements de mots compris.
+
+    Returns:
+        Les écarts constatés, vide si le gabarit est tenu.
+    """
+    ecarts: list[str] = []
+    for ecran, sous_blocs in SOUS_BLOCS_REDIGES.items():
+        sortie = ecrans.get(ecran)
+        attendus = [
+            sous_bloc
+            for sous_bloc in sous_blocs
+            if sous_bloc not in injectables.sous_blocs_standards
+        ]
+        if not attendus:
+            continue
+        if sortie is None:
+            ecarts.append(f"écran « {ecran} » : aucun narratif produit")
+            continue
+        ecarts.extend(
+            ecarts_au_contrat(
+                sortie,
+                attendus,
+                rangs_chiffrables(injectables),
+                structurels_seuls=structurels_seuls,
+            )
+        )
+    return ecarts
 
 
 def controler_v2(
@@ -249,8 +411,16 @@ def controler_v2(
     liste: ListeBlanche,
     compteurs: dict[str, dict[str, int]],
     sections: list[SectionProduite],
+    ecrans: dict[str, SortieEcran | None] | None = None,
 ) -> tuple[ControlesRestitution, list[StatutAnalyse]]:
     """Contrôle le rapport décisionnel assemblé et publie le compte rendu.
+
+    Quatre des contrôles sont BLOQUANTS : `gabarit_conforme`,
+    `aucun_repli_interdit`, `aucune_troncature` et `ligne_sources_complete`. Ils
+    ne dégradent pas le rapport, ils l'empêchent — `agent.restituer` lève
+    `RedactionImpossible` et le module sort sans écrire un fichier. C'est la
+    leçon du run 8609db9e : un rapport livré est un rapport lu, et un rapport lu
+    qui ne dit rien coûte plus cher qu'une étude visiblement échouée.
 
     Args:
         rapport: Rapport Markdown complet.
@@ -259,6 +429,9 @@ def controler_v2(
         liste: Liste blanche numérique.
         compteurs: Compteurs de retrait accumulés au nettoyage.
         sections: Écrans produits, avec leur décompte de mots.
+        ecrans: Sorties narratives par écran, pour le contrôle de gabarit.
+            `None` saute ce contrôle — réservé aux appels qui n'ont pas les
+            écrans sous la main.
 
     Returns:
         Le couple `(controles, statuts)`.
@@ -442,6 +615,77 @@ def controler_v2(
         echec(
             "le titre de décision apparaît plusieurs fois : le résumé exécutif ne "
             "doit exister qu'à un seul endroit du document."
+        )
+
+    # --- 12. Conformité au gabarit, sous-bloc par sous-bloc (BLOQUANT) ------ #
+    if ecrans is not None:
+        # `sous_blocs_non_conformes` publie TOUT — c'est le compte rendu, et un
+        # dépassement de mots doit s'y voir. `gabarit_conforme`, lui, ne retient
+        # que les écarts sans recours : c'est le drapeau que `agent.restituer`
+        # transforme en refus, et refuser un rapport entier parce qu'une puce
+        # fait 34 mots au lieu de 30 rendrait le module inutilisable. Le
+        # dépassement reste compté par `budgets_respectes`, qui n'a jamais
+        # bloqué. Voir l'amendement A7.
+        controles.sous_blocs_non_conformes = controler_gabarit(ecrans, injectables)
+        bloquants = controler_gabarit(ecrans, injectables, structurels_seuls=True)
+        controles.gabarit_conforme = not bloquants
+        if controles.sous_blocs_non_conformes:
+            echec(
+                f"{len(controles.sous_blocs_non_conformes)} sous-bloc(s) "
+                f"s'écartent du gabarit "
+                f"({len(bloquants)} sans recours) : "
+                f"{' ; '.join(controles.sous_blocs_non_conformes[:6])}.",
+                len(controles.sous_blocs_non_conformes),
+            )
+
+    # --- 13. Aucun repli hors phrases standard (BLOQUANT) ------------------- #
+    replis = [motif for motif in REPLI_INTERDIT_V2 if motif in rapport or motif in resume]
+    controles.aucun_repli_interdit = not replis
+    if replis:
+        echec(
+            f"texte(s) de repli interdits dans le rapport : "
+            f"{', '.join(replis)}. Les seuls replis admis sont les phrases "
+            f"standard d'injectable vide ({len(PHRASES_STANDARD)} formulations), "
+            f"et un échec de rédaction n'en est pas une.",
+            len(replis),
+        )
+
+    # --- 14. Aucune troncature (BLOQUANT) ----------------------------------- #
+    coupes = [
+        f"{nature} « {texte[:60]} » : {motif}"
+        for nature, texte in _textes_inspectables(rapport)
+        if (motif := _est_tronque(texte))
+    ]
+    controles.aucune_troncature = not coupes
+    if coupes:
+        echec(
+            f"{len(coupes)} fragment(s) portent la signature d'une coupe machine : "
+            f"{' ; '.join(coupes[:5])}.",
+            len(coupes),
+        )
+
+    # --- 15. Ligne « Sources analysées » : les six, toujours (BLOQUANT) ----- #
+    if injectables.ligne_sources:
+        absentes_ligne = [
+            source
+            for source in SOURCES_LIGNE_SOURCES
+            if LIBELLES_SOURCES.get(source, source) not in injectables.ligne_sources
+        ]
+        controles.ligne_sources_complete = not absentes_ligne
+        if absentes_ligne:
+            echec(
+                f"{len(absentes_ligne)} source(s) manquent à la ligne « Sources "
+                f"analysées » : {', '.join(absentes_ligne)}. Une source omise est "
+                f"une source que le lecteur ne peut pas savoir vide.",
+                len(absentes_ligne),
+            )
+
+    # --- 16. Un seul compteur de pages web ---------------------------------- #
+    controles.compteurs_coherents = _compteurs_pages_coherents(rapport)
+    if not controles.compteurs_coherents:
+        echec(
+            "le nombre de pages web de la ligne « Sources analysées » diffère de "
+            "celui du tableau de méthode : deux compteurs pour une même collecte."
         )
 
     if not statuts:

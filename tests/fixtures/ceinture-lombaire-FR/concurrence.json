@@ -1,0 +1,4509 @@
+{
+ "marche": {
+  "geo": "FR",
+  "devise": "EUR",
+  "langue": "fr"
+ },
+ "limites": [
+  "[aliexpress] Biais de couverture : l'API Dropshipping n'expose que les produits éligibles au programme dropshipping ET livrables dans la région demandée. L'absence d'un produit dans cette collecte ne constitue en aucun cas un signal d'absence de ce produit sur le marché.",
+  "[aliexpress] Les prix renvoyés par l'API sont des prix de référence : ils excluent les Welcome Deals, coupons panier et promotions de session. Le prix perçu par l'acheteur sur le site peut être inférieur. L'écart avec une source de scraping est un signal d'intensité promotionnelle, pas une erreur.",
+  "[aliexpress] Les prix et les stocks sont un instantané horodaté, valable pour le seul triplet {pays de livraison, devise, langue} demandé. Toute comparaison exige le même triplet et un horodatage proche.",
+  "[aliexpress] Aucune conversion de change n'est effectuée : l'API ne fournit pas de taux. Les montants ne sont comparables qu'au sein d'une même exécution, dans la devise d'étude.",
+  "[aliexpress] Le quota journalier n'est pas confirmé officiellement (console développeur sans limite affichée ; ~5 000 requêtes/jour selon des sources secondaires). Un plafond de débit non documenté a en revanche été constaté sur la méthode de recherche.",
+  "[aliexpress] La sélection des produits soumis au détail (phase B) repose sur une heuristique déterministe — similarité de titre puis tri par volume de commandes et note — qui n'a pas été validée empiriquement.",
+  "[aliexpress] Le champ `discount` de la recherche est incohérent avec les prix cibles (observé à « 0 % » sur un produit affichant −50 %) : il n'est pas exploité, la remise est recalculée à partir des prix cibles.",
+  "[aliexpress] La méthode de recherche est instable par fenêtres de quelques minutes (erreur NGSELECTION_SEARCH_ERROR mesurée sur 8 appels valides sur 11 le 03/08/2026, indépendamment de l'espacement). Le module insiste, mais une requête peut rester en échec : la couverture d'une exécution n'est pas reproductible à l'identique, et un écart de volume entre deux exécutions peut n'être qu'un artefact de disponibilité de la passerelle.",
+  "[aliexpress] Remise(s) supérieure(s) à 60 % — vérifier s'il s'agit d'une promotion exceptionnelle ou d'un prix barré théorique.",
+  "[aliexpress] Incohérence de prix détectée : prix de vente supérieur au prix de base sur une ou plusieurs lignes. Les lignes sont conservées et signalées.",
+  "[amazon] Le corpus provient d'UNE seule marketplace Amazon, celle du pays étudié. Il décrit l'offre présente sur ce site, et non l'ensemble du commerce en ligne du pays : les places de marché concurrentes et le commerce local en sont absents.",
+  "[amazon] Aucun filtre de livraison n'est appliqué : le corpus est le catalogue complet de la marketplace, y compris des produits qui ne seraient pas expédiables vers la région d'étude. C'est un choix assumé — restreindre à l'expédiable amputerait l'étude de marché de l'essentiel de l'offre.",
+  "[amazon] Les prix sont exprimés dans la devise de la marketplace et ne sont NI convertis, NI comparables d'une marketplace à l'autre. Ils sont relevés à l'instant du run : les prix Amazon varient de jour en jour.",
+  "[amazon] Amazon bloque une part variable des requêtes automatisées. Un corpus court ou vide peut être le fait de l'anti-bot et non du catalogue : les runs concernés sont signalés dans `statuts_collecte`.",
+  "[amazon] Le classement d'Amazon est commercial : il mêle publicité, performance vendeur et ancienneté de l'annonce. L'ordre de collecte n'est pas un classement de qualité, et le corpus n'est pas exhaustif.",
+  "[amazon] Les avis collectés sont les « meilleurs avis » retenus par Amazon, quelques-uns par produit et sur une fenêtre récente : ils illustrent des retours d'usage, ils ne constituent en aucun cas un échantillon représentatif ni une base de mesure de satisfaction.",
+  "[amazon] `pertinence` et `correspondance` sont des heuristiques produites par un LLM, sans validation sur un échantillon annoté.",
+  "[amazon] Un compte Apify en fin de quota tronque les runs SANS les faire échouer : ils remontent en statut SUCCEEDED avec un dataset incomplet. Vérifier le quota avant toute interprétation d'un volume de produits.",
+  "[amazon] Le plan de recherches n'a pas atteint le nombre de recherches visé : certaines propositions étaient non conformes ou en doublon et ont été écartées. La couverture du catalogue est d'autant plus partielle.",
+  "[amazon] Aucun avis n'a pu être collecté sur les produits retenus. L'analyse qualitative des retours d'usage est donc impossible sur ce corpus.",
+  "[meta_ads] Le corpus ne décrit QUE la publicité payante diffusée sur les plateformes de Meta (Facebook, Instagram, Messenger, Audience Network). Google, TikTok, les places de marché et le référencement naturel en sont absents : ce n'est pas une photographie de la pression publicitaire totale sur le marché.",
+  "[meta_ads] La bibliothèque publicitaire n'expose durablement que les annonces COMMERCIALES ACTIVES : une annonce arrêtée en sort, sauf dans l'Union européenne où le règlement sur les services numériques impose un archivage, et sauf pour les annonces politiques et de société, archivées sept ans. Une recherche sur les annonces inactives est donc normalement vide hors UE — ce point est tiré de la politique affichée par Meta et n'a pas été vérifié run à run.",
+  "[meta_ads] Aucune donnée de diffusion n'est publiée pour les annonces commerciales : ni portée, ni dépense, ni ciblage, ni performance. `portee_estimee` et `depense` restent nuls hors annonces politiques. Rien dans ce corpus ne dit qu'une annonce a marché.",
+  "[meta_ads] `duree_diffusion_jours` est un indicateur de LONGÉVITÉ, pas de rentabilité. Une annonce diffusée longtemps est un indice qu'un annonceur y trouve son compte, jamais une preuve : un budget mal suivi produit la même trace.",
+  "[meta_ads] Le moteur de recherche de la bibliothèque apparie des mots sur le TEXTE des annonces. Un produit vendu par une créative purement visuelle, ou décrit avec un autre vocabulaire, est invisible à ce corpus.",
+  "[meta_ads] Un même créatif est diffusé sous de nombreux identifiants d'annonce. Le module les rapproche par annonceur et par texte, mais un rapprochement reste approximatif : le décompte d'annonces n'est pas un décompte de campagnes.",
+  "[meta_ads] `pertinence` et `correspondance` sont des heuristiques produites par un LLM, sans validation sur un échantillon annoté.",
+  "[meta_ads] Le corpus est plafonné par recherche et n'est en aucun cas exhaustif : l'ordre servi par la bibliothèque n'est pas documenté et ne constitue pas un classement de notoriété ou de budget.",
+  "[meta_ads] Un compte Apify en fin de quota tronque les runs SANS les faire échouer : ils remontent en statut SUCCEEDED avec un dataset incomplet. Vérifier le quota avant toute interprétation d'un volume d'annonces.",
+  "[meta_ads] Le plan de recherches n'a pas atteint le nombre de recherches visé : certaines propositions étaient non conformes ou en doublon et ont été écartées. La couverture de la bibliothèque est d'autant plus partielle.",
+  "[meta_ads] Au moins une recherche a atteint le plafond d'annonces par run : la bibliothèque en contenait davantage. Le corpus est un ÉCHANTILLON tronqué de cette recherche, dans un ordre non documenté, et aucun volume ne doit en être déduit.",
+  "[meta_ads] Le corpus reste sous le seuil d'annonces après le cycle de repli. Il est insuffisant pour conclure — et notamment pour conclure à une absence de pression publicitaire sur ce marché.",
+  "[recherche_web] La SERP interrogée est géolocalisée aux États-Unis et en anglais : l'actor n'expose aucun paramètre de pays ni de langue de recherche (`serpProxyGroup` ne sert pas à choisir un pays). Le ciblage régional par TLD et par mots-clés géographiques est donc une APPROXIMATION — le classement des résultats reste celui que verrait un utilisateur américain, pas un consommateur du marché étudié.",
+  "[recherche_web] L'opérateur `site:.<tld>` exclut mécaniquement les acteurs locaux hébergés en .com, qui sont nombreux sur la plupart des marchés. Les requêtes à mots-clés géographiques compensent partiellement ce biais, sans aucune garantie d'exhaustivité.",
+  "[recherche_web] Le corpus se limite aux premiers résultats Google de chaque requête : il n'est pas exhaustif et reflète les biais du référencement (optimisation SEO, contenu affilié, pages générées). Chaque page est un SIGNAL À RECOUPER, jamais un fait ; les chiffres qui y figurent (prix, parts de marché, classements) doivent être revalidés sur des sources structurées.",
+  "[recherche_web] `type_source`, `portee_regionale` et `pertinence` sont des heuristiques produites par un LLM, sans validation sur un échantillon annoté.",
+  "[recherche_web] Une redondance avec les corpus des autres collecteurs reste possible malgré l'exclusion de domaines : un même contenu peut être republié sur un domaine non listé.",
+  "[recherche_web] La fraîcheur des contenus n'est pas garantie : ce mode de collecte n'expose aucun filtre de date fiable, et les pages retenues peuvent dater de plusieurs années.",
+  "[recherche_web] Le plan de requêtes n'a pas atteint les quotas visés pour tous les couples axe/ciblage : certaines requêtes proposées étaient non conformes et ont été écartées. La couverture régionale est d'autant plus partielle.",
+  "Les offres AliExpress ne portent aucune qualification de correspondance amont : contrairement à Amazon et Meta Ads, le collecteur AliExpress ne classe pas ses résultats. Elles sont toutes considérées comme relevant du cœur du benchmark, ce qui peut y faire entrer des produits éloignés.",
+  "Les volumes de ventes Amazon sont des mentions par paliers (« 1K+ achetés le mois dernier ») : la valeur retenue est le PLANCHER du palier. Tout cumul de volumes est donc une borne inférieure, et les parts de concentration qui en découlent sont approximatives.",
+  "Le corpus concurrentiel n'est pas exhaustif : il hérite intégralement des biais de collecte amont (requêtes choisies, plafonds d'items, seuils de pertinence, blocages anti-bot). Aucune part de marché ne peut en être déduite.",
+  "Les rapprochements de concurrents reposent sur la seule similarité de nom. Deux entités distinctes portant un nom voisin peuvent être fusionnées à tort, et une même entreprise vendant sous deux marques restera séparée.",
+  "Les portées régionales sont hétérogènes entre sources : un prix Amazon décrit le marché de sa marketplace, une annonce Meta décrit un pays de diffusion, une offre AliExpress un pays de livraison. Ces plans ne sont pas superposables.",
+  "La longévité d'une annonce publicitaire mesure une durée de diffusion, jamais une rentabilité : une campagne peut être diffusée longtemps à perte.",
+  "La classification des correspondances et l'extraction des claims sont produites par des modèles de langage et n'ont pas été validées empiriquement.",
+  "Seuls les 8 premiers concurrents (par volume puis présence multi-sources) ont fait l'objet d'une analyse qualitative ; les 32 suivants ne portent que leurs statistiques."
+ ],
+ "produit": {
+  "nom": "Ceinture lombaire double traction",
+  "categorie": "sante-bien-etre",
+  "description": "Ceinture de maintien lombaire reglable a double sangle de traction, pour soulager les douleurs du bas du dos."
+ },
+ "hypotheses": [
+  "Seuil de pertinence amont retenu : 0.5 (heuristique).",
+  "Prix de référence d'une offre AliExpress : le prix de vente de l'annonce, et non le prix du SKU le moins cher ; les SKU ne servent qu'aux fourchettes.",
+  "Les segments de prix sont définis par terciles des prix constatés dans la source, non par des paliers de marché : ce découpage est arbitraire.",
+  "La concentration publiée est la part de volume des 3 premiers concurrents, calculée sur les seuls volumes disponibles.",
+  "Les codes de devises sont normalisés depuis les symboles émis par les collecteurs (« € » → « EUR ») ; aucun montant n'est converti."
+ ],
+ "concurrents": [
+  {
+   "stats": {
+    "nb_offres": 141,
+    "nb_annonces": 0,
+    "note_moyenne": 4.48,
+    "longevite_max_jours": null,
+    "nb_annonces_actives": 0,
+    "prix_max_par_devise": {
+     "EUR": 50.39
+    },
+    "prix_min_par_devise": {
+     "EUR": 0.75
+    },
+    "nb_pages_mentionnant": 0,
+    "volume_ventes_cumule": 59186,
+    "fourchette_prix_par_devise": {
+     "EUR": "0.75–50.39"
+    }
+   },
+   "analyse": {
+    "forces": [
+     {
+      "point": "Volume de ventes cumulé très élevé (59 186 unités) démontrant une forte pénétration du marché des offres sans marque",
+      "statut": "hypothese",
+      "preuves": []
+     },
+     {
+      "point": "Offre très large avec 141 références permettant de couvrir tous les segments de prix",
+      "statut": "hypothese",
+      "preuves": []
+     },
+     {
+      "point": "Note moyenne solide de 4.48/5 indiquant une satisfaction client globale élevée",
+      "statut": "hypothese",
+      "preuves": []
+     },
+     {
+      "point": "Prix d'entrée extrêmement compétitif à 0.75€ permettant de capter les clients ultra-sensibles au prix",
+      "statut": "hypothese",
+      "preuves": []
+     },
+     {
+      "point": "Plusieurs offres à très fort volume individuel, notamment une ceinture double traction à 1000 ventes",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": "Ceinture de soutien lombaire réglable, Corset orthopédique à Double traction pour le dos, décompression de la colonne vertébrale, soulagement des douleurs dorsales, serrer l'abdomen",
+        "id_reference": "ax-1005006383600815"
+       }
+      ]
+     },
+     {
+      "point": "Offre directement concurrente du produit étudié avec attribut 'Double traction' et excellent volume (1000 ventes) et note (4.7/5)",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": "Ceinture de soutien lombaire réglable, Corset orthopédique à Double traction pour le dos, décompression de la colonne vertébrale, soulagement des douleurs dorsales, serrer l'abdomen",
+        "id_reference": "ax-1005006383600815"
+       }
+      ]
+     },
+     {
+      "point": "Diversification fonctionnelle importante avec des offres couvrant traction cervicale, suspension, yoga, rééducation",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": "Ceinture de traction lombaire portable, ceinture de traction cervicale suspendue, dispositif ergonomique d'étirement du dos et de la colonne vertébrale pour les douleurs lombaires",
+        "id_reference": "ax-1005012801277579"
+       },
+       {
+        "type": "offre",
+        "extrait": "Ceinture de Traction suspendue, dispositif d'étirement lombaire ergonomique, bande de Yoga, Support de taille, disque, ceinture auxiliaire, exercice à barre unique",
+        "id_reference": "ax-1005010337308951"
+       }
+      ]
+     },
+     {
+      "point": "Plusieurs offres premium à fort volume démontrant une capacité à vendre au-delà du segment entrée de gamme",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": "Ceinture de Traction suspendue, dispositif d'étirement lombaire ergonomique, bande de Yoga, Support de taille, disque, ceinture auxiliaire, exercice à barre unique",
+        "id_reference": "ax-1005010337308951"
+       },
+       {
+        "type": "offre",
+        "extrait": "Ceinture de traction lombaire pour l'étirement de la colonne vertébrale – Sangle de suspension lombaire domestique, civière de barre de traction, idéale pour les soins lombaire à la maison",
+        "id_reference": "ax-1005009533038644"
+       }
+      ]
+     }
+    ],
+    "faiblesses": [
+     {
+      "point": "Absence totale de publicité (0 annonce) limitant la visibilité et la capacité à capter de nouveaux clients",
+      "statut": "hypothese",
+      "preuves": []
+     },
+     {
+      "point": "Aucune présence éditoriale ou mention sur des pages web (0 page) réduisant la crédibilité et l'autorité perçue",
+      "statut": "hypothese",
+      "preuves": []
+     },
+     {
+      "point": "Absence totale d'identité de marque rendant impossible la fidélisation et la construction de confiance",
+      "statut": "hypothese",
+      "preuves": []
+     },
+     {
+      "point": "Plusieurs offres avec notes très faibles indiquant des problèmes de qualité sur certains produits",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": "Ceinture de traction suspendue portable, dispositif de décompression lombaire ergonomique pour soulager les douleurs lombaires et l'inconfort cervical",
+        "id_reference": "ax-1005012740560189"
+       },
+       {
+        "type": "offre",
+        "extrait": "Ceinture de traction suspendue portable pour le soutien lombaire et le soulagement des douleurs du bas du dos – Dispositif ergonomique d'étirement de la colonne vertébrale",
+        "id_reference": "ax-1005012653036487"
+       }
+      ]
+     },
+     {
+      "point": "Nombreuses offres sans données de notation ou d'avis limitant la capacité des acheteurs à évaluer la qualité",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": "Ceinture de traction lombaire pour barre horizontale, dispositif de suspension dorsale réglable pour usage domestique, entraînement d'alignement de la colonne vertébrale",
+        "id_reference": "ax-1005012444204832"
+       },
+       {
+        "type": "offre",
+        "extrait": "Ceinture de traction lombaire portable, ceinture de traction cervicale suspendue, dispositif ergonomique d'étirement du dos et de la colonne vertébrale pour les douleurs lombaires",
+        "id_reference": "ax-1005012801277579"
+       },
+       {
+        "type": "offre",
+        "extrait": "Ceinture de Traction lombaire, civière de barre de traction, sangle de Suspension lombaire domestique, dispositif de Traction de colonne vertébrale suspendue pour soins lombaire à domicile",
+        "id_reference": "ax-1005009718784515"
+       }
+      ]
+     },
+     {
+      "point": "Dépendance exclusive à AliExpress comme canal de distribution limitant la portée géographique et la confiance des acheteurs européens",
+      "statut": "hypothese",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": "Ceinture de traction lombaire pour barre horizontale, dispositif de suspension dorsale réglable pour usage domestique, entraînement d'alignement de la colonne vertébrale",
+        "id_reference": "ax-1005012444204832"
+       },
+       {
+        "type": "offre",
+        "extrait": "Ceinture de soutien lombaire réglable, Corset orthopédique à Double traction pour le dos, décompression de la colonne vertébrale, soulagement des douleurs dorsales, serrer l'abdomen",
+        "id_reference": "ax-1005006383600815"
+       }
+      ]
+     },
+     {
+      "point": "Titres de produits tronqués et peu professionnels nuisant à la compréhension de l'offre",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": "Ceinture de traction lombaire pour barre horizontale, dispositif de suspension dorsale réglable pour usage domestique, entraînement d'alignement de la colonne v",
+        "id_reference": "ax-1005012444204832"
+       },
+       {
+        "type": "offre",
+        "extrait": "Nouvelle ceinture de traction lombaire à barre horizontale, ceinture de suspension lombaire pour étirement, soulagement de la protusion discale, ceinture apaisa",
+        "id_reference": "ax-1005012646738506"
+       }
+      ]
+     }
+    ],
+    "niveau_menace": "fort",
+    "proposition_valeur": "Prix ultra-compétitifs (0.75€ à 50.39€) sur une gamme très large (141 références) de ceintures lombaires sans marque, couvrant tous les segments (entrée, cœur, premium) avec une satisfaction client globale élevée (4.48/5) et des volumes de ventes cumulés importants (59 186 unités), notamment sur les offres à double traction directement concurrentes.",
+    "arguments_marketing": [
+     "Prix d'entrée imbattable à partir de 0.75€",
+     "Large choix de 141 modèles différents",
+     "Note moyenne de 4.48/5 démontrant la satisfaction client",
+     "Offres multifonctions : traction lombaire, cervicale, suspension, yoga, rééducation",
+     "Modèles à double traction orthopédique pour décompression de la colonne vertébrale",
+     "Options réglables et ergonomiques",
+     "Usage domestique pratique",
+     "Segments de prix variés pour tous les budgets"
+    ],
+    "justification_menace": "Le niveau de menace est FORT en raison de plusieurs indicateurs quantitatifs convergents : (1) Volume de ventes cumulé massif de 59 186 unités démontrant une adoption marché très importante, (2) 141 offres distinctes créant une saturation de l'offre sans marque, (3) Note moyenne solide de 4.48/5 indiquant une qualité perçue satisfaisante malgré l'absence de marque, (4) Présence d'une offre directement concurrente (double traction à 10.59€) avec 1000 ventes et note 4.7/5, soit un excellent rapport qualité-prix face au produit étudié, (5) Couverture complète des segments de prix (0.75€ à 50.39€) permettant d'intercepter tous les profils d'acheteurs. L'absence de publicité et de présence éditoriale est compensée par les volumes massifs qui suggèrent une forte visibilité organique et un bouche-à-oreille efficace sur AliExpress. La menace est d'autant plus forte que ces offres sans marque érodent structurellement la capacité à justifier un premium prix sur le segment des ceintures lombaires à double traction.",
+    "segment_prix_par_source": {
+     "aliexpress": "entree"
+    }
+   },
+   "concurrent": {
+    "type": "offres_sans_marque",
+    "alias": [],
+    "presence": {
+     "amazon": 0,
+     "meta_ads": 0,
+     "aliexpress": 141,
+     "recherche_web": 0
+    },
+    "ids_pages": [],
+    "ids_offres": [
+     "ax-1005012444204832",
+     "ax-1005012646738506",
+     "ax-1005012801277579",
+     "ax-1005012653036487",
+     "ax-1005010074414777",
+     "ax-1005009718784515",
+     "ax-1005006237135770",
+     "ax-1005009533038644",
+     "ax-1005008932987110",
+     "ax-1005012688772271",
+     "ax-1005012807190882",
+     "ax-1005012482154547",
+     "ax-1005010337308951",
+     "ax-1005012288396698",
+     "ax-1005008586278791",
+     "ax-1005008634397442",
+     "ax-1005012740560189",
+     "ax-1005006053180721",
+     "ax-1005012669970256",
+     "ax-1005006383600815",
+     "ax-1005008352413045",
+     "ax-1005005946631833",
+     "ax-1005012688130530",
+     "ax-1005010377742892",
+     "ax-1005012783750180",
+     "ax-1005008541420720",
+     "ax-1005010597709801",
+     "ax-1005010580995012",
+     "ax-1005009088186384",
+     "ax-1005009833260802",
+     "ax-1005005309469992",
+     "ax-1005012666828206",
+     "ax-1005008705594130",
+     "ax-1005003238502747",
+     "ax-1005007480051448",
+     "ax-1005010719232857",
+     "ax-1005005871704577",
+     "ax-1005009082783243",
+     "ax-1005012620533034",
+     "ax-1005012564054753",
+     "ax-1005006165026179",
+     "ax-1005009795731633",
+     "ax-1005005755572187",
+     "ax-1005010436939648",
+     "ax-1005012679638069",
+     "ax-4001011251840",
+     "ax-1005003068378744",
+     "ax-1005009240310784",
+     "ax-1005010348452378",
+     "ax-1005010423765783",
+     "ax-1005010130500621",
+     "ax-1005008464876454",
+     "ax-1005010178298785",
+     "ax-1005010337367170",
+     "ax-1005008806932277",
+     "ax-1005006842916962",
+     "ax-1005007011544320",
+     "ax-1005009404233348",
+     "ax-1005012732334248",
+     "ax-1005009811093719",
+     "ax-1005011908919192",
+     "ax-1005010079278709",
+     "ax-1005012108724880",
+     "ax-1005009722661889",
+     "ax-1005009223072004",
+     "ax-1005007713368952",
+     "ax-1005010653437335",
+     "ax-1005003387217870",
+     "ax-1005008955953251",
+     "ax-1005011699121311",
+     "ax-1005008061281188",
+     "ax-1005010774369901",
+     "ax-1005010434520972",
+     "ax-1005009636085238",
+     "ax-1005005776327850",
+     "ax-1005006015827638",
+     "ax-1005006037946608",
+     "ax-1005010530512708",
+     "ax-1005010740534255",
+     "ax-1005004147765881",
+     "ax-1005009536827696",
+     "ax-1005008784423024",
+     "ax-1005010700679942",
+     "ax-1005012170306465",
+     "ax-1005012712232075",
+     "ax-1005009148491896",
+     "ax-1005012468876429",
+     "ax-1005012659062861",
+     "ax-1005005187461303",
+     "ax-1005007248155022",
+     "ax-1005009818722786",
+     "ax-1005006867190876",
+     "ax-1005008601116282",
+     "ax-1005010485646764",
+     "ax-1005011569091906",
+     "ax-1005009030920712",
+     "ax-1005008135037816",
+     "ax-1005004182116086",
+     "ax-1005011824813151",
+     "ax-1005010755199507",
+     "ax-1005006347412919",
+     "ax-1005010436248324",
+     "ax-1005011674774701",
+     "ax-1005012740387661",
+     "ax-1005006114923605",
+     "ax-1005009916257120",
+     "ax-1005011672726333",
+     "ax-1005012418633950",
+     "ax-1005007000604558",
+     "ax-1005012718175970",
+     "ax-1005012353800311",
+     "ax-1005012822517699",
+     "ax-1005005961585635",
+     "ax-1005012544509763",
+     "ax-1005010463462706",
+     "ax-1005010496509392",
+     "ax-1005012840036339",
+     "ax-1005010518872034",
+     "ax-1005012654268707",
+     "ax-1005010041162420",
+     "ax-1005009365115236",
+     "ax-4001290435407",
+     "ax-1005006869634549",
+     "ax-1005006697527976",
+     "ax-1005010458338272",
+     "ax-1005010804328558",
+     "ax-1005006023860901",
+     "ax-1005008098602910",
+     "ax-1005011672481949",
+     "ax-1005010361022611",
+     "ax-1005008758791884",
+     "ax-1005010397341125",
+     "ax-1005009917340126",
+     "ax-1005009136619408",
+     "ax-1005008647921590",
+     "ax-1005009182235619",
+     "ax-1005008653657379",
+     "ax-1005012284568187",
+     "ax-1005008639512445",
+     "ax-1005008505320005",
+     "ax-1005010009076817"
+    ],
+    "ids_annonces": [],
+    "nom_canonique": "Offres sans marque",
+    "niveau_certitude_rapprochement": "sur"
+   }
+  },
+  {
+   "stats": {
+    "nb_offres": 2,
+    "nb_annonces": 0,
+    "note_moyenne": 4.15,
+    "longevite_max_jours": null,
+    "nb_annonces_actives": 0,
+    "prix_max_par_devise": {
+     "EUR": 37.99
+    },
+    "prix_min_par_devise": {
+     "EUR": 37.99
+    },
+    "nb_pages_mentionnant": 0,
+    "volume_ventes_cumule": 500,
+    "fourchette_prix_par_devise": {
+     "EUR": "37.99"
+    }
+   },
+   "analyse": {
+    "forces": [
+     {
+      "point": "Positionnement premium accepté par le marché avec volume de ventes significatif (500 unités cumulées)",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": "Posture Corrector – Back Belt/Lumbar and Back Straightener for Relieving Back and Shoulder Pain – Men/Women Adjustable Orthosis with 2 Shoulder Supports, (L)",
+        "id_reference": "amz-B0D8JXMC7C"
+       },
+       {
+        "type": "offre",
+        "extrait": "Posture Corrector – Back Belt/Lumbar and Back Straightener for Relieving Back and Shoulder Pain – Men/Women Adjustable Orthosis with 2 Shoulder Supports, (S)",
+        "id_reference": "amz-B0D8JXCJTS"
+       }
+      ]
+     },
+     {
+      "point": "Notes clients satisfaisantes sur les deux références (4,1 et 4,2/5)",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": "Posture Corrector – Back Belt/Lumbar and Back Straightener for Relieving Back and Shoulder Pain – Men/Women Adjustable Orthosis with 2 Shoulder Supports, (L)",
+        "id_reference": "amz-B0D8JXMC7C"
+       },
+       {
+        "type": "offre",
+        "extrait": "Posture Corrector – Back Belt/Lumbar and Back Straightener for Relieving Back and Shoulder Pain – Men/Women Adjustable Orthosis with 2 Shoulder Supports, (S)",
+        "id_reference": "amz-B0D8JXCJTS"
+       }
+      ]
+     },
+     {
+      "point": "Présence dans le classement best-sellers Amazon (rang 280) sur les deux produits",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": "Posture Corrector – Back Belt/Lumbar and Back Straightener for Relieving Back and Shoulder Pain – Men/Women Adjustable Orthosis with 2 Shoulder Supports, (L)",
+        "id_reference": "amz-B0D8JXMC7C"
+       },
+       {
+        "type": "offre",
+        "extrait": "Posture Corrector – Back Belt/Lumbar and Back Straightener for Relieving Back and Shoulder Pain – Men/Women Adjustable Orthosis with 2 Shoulder Supports, (S)",
+        "id_reference": "amz-B0D8JXCJTS"
+       }
+      ]
+     },
+     {
+      "point": "Différenciation produit par double support d'épaules combiné à la fonction lombaire",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": "Posture Corrector – Back Belt/Lumbar and Back Straightener for Relieving Back and Shoulder Pain – Men/Women Adjustable Orthosis with 2 Shoulder Supports, (L)",
+        "id_reference": "amz-B0D8JXMC7C"
+       },
+       {
+        "type": "offre",
+        "extrait": "Posture Corrector – Back Belt/Lumbar and Back Straightener for Relieving Back and Shoulder Pain – Men/Women Adjustable Orthosis with 2 Shoulder Supports, (S)",
+        "id_reference": "amz-B0D8JXCJTS"
+       }
+      ]
+     },
+     {
+      "point": "Déclinaison en plusieurs tailles (au moins S et L) pour s'adapter à différentes morphologies",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": "Posture Corrector – Back Belt/Lumbar and Back Straightener for Relieving Back and Shoulder Pain – Men/Women Adjustable Orthosis with 2 Shoulder Supports, (L)",
+        "id_reference": "amz-B0D8JXMC7C"
+       },
+       {
+        "type": "offre",
+        "extrait": "Posture Corrector – Back Belt/Lumbar and Back Straightener for Relieving Back and Shoulder Pain – Men/Women Adjustable Orthosis with 2 Shoulder Supports, (S)",
+        "id_reference": "amz-B0D8JXCJTS"
+       }
+      ]
+     }
+    ],
+    "faiblesses": [
+     {
+      "point": "Absence totale de stratégie publicitaire détectée (0 annonce active ou historique)",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0D8JXMC7C"
+       }
+      ]
+     },
+     {
+      "point": "Aucune présence web détectée en dehors de la marketplace Amazon (0 page mentionnant la marque)",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0D8JXMC7C"
+       }
+      ]
+     },
+     {
+      "point": "Catalogue produit limité à 2 références uniquement, réduisant la couverture de marché",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0D8JXMC7C"
+       },
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0D8JXCJTS"
+       }
+      ]
+     },
+     {
+      "point": "Positionnement hybride posture/lombaire potentiellement confus face à notre spécialisation ceinture lombaire double traction",
+      "statut": "hypothese",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": "Posture Corrector – Back Belt/Lumbar and Back Straightener for Relieving Back and Shoulder Pain – Men/Women Adjustable Orthosis with 2 Shoulder Supports, (L)",
+        "id_reference": "amz-B0D8JXMC7C"
+       },
+       {
+        "type": "offre",
+        "extrait": "Posture Corrector – Back Belt/Lumbar and Back Straightener for Relieving Back and Shoulder Pain – Men/Women Adjustable Orthosis with 2 Shoulder Supports, (S)",
+        "id_reference": "amz-B0D8JXCJTS"
+       }
+      ]
+     }
+    ],
+    "niveau_menace": "moyen",
+    "proposition_valeur": "Correcteur de posture combinant ceinture lombaire et redresseur de dos avec double support d'épaules, positionné sur le soulagement des douleurs dorsales et d'épaules, pour hommes et femmes.",
+    "arguments_marketing": [
+     "Soulagement des douleurs dorsales et d'épaules",
+     "Double support d'épaules (2 supports)",
+     "Orthèse ajustable homme/femme",
+     "Correcteur de posture et redresseur de dos"
+    ],
+    "justification_menace": "Volume cumulé de 500 ventes sur 2 offres avec un positionnement premium (37,99 €). Notes moyennes correctes (4,1 et 4,2/5) sur 428 avis cumulés. Présence dans le top 280 des best-sellers sur les deux références. Cependant, absence totale de publicité (0 annonce), pas de présence web détectée et corpus d'avis non fourni, limitant l'analyse qualitative approfondie.",
+    "segment_prix_par_source": {
+     "amazon": "premium"
+    }
+   },
+   "concurrent": {
+    "type": "marque_marketplace",
+    "alias": [],
+    "presence": {
+     "amazon": 2,
+     "meta_ads": 0,
+     "aliexpress": 0,
+     "recherche_web": 0
+    },
+    "ids_pages": [],
+    "ids_offres": [
+     "amz-B0D8JXMC7C",
+     "amz-B0D8JXCJTS"
+    ],
+    "ids_annonces": [],
+    "nom_canonique": "POSTURALIS",
+    "niveau_certitude_rapprochement": "sur"
+   }
+  },
+  {
+   "stats": {
+    "nb_offres": 5,
+    "nb_annonces": 0,
+    "note_moyenne": 4.24,
+    "longevite_max_jours": null,
+    "nb_annonces_actives": 0,
+    "prix_max_par_devise": {
+     "EUR": 26.95
+    },
+    "prix_min_par_devise": {
+     "EUR": 21.99
+    },
+    "nb_pages_mentionnant": 0,
+    "volume_ventes_cumule": 250,
+    "fourchette_prix_par_devise": {
+     "EUR": "21.99–26.95"
+    }
+   },
+   "analyse": {
+    "forces": [
+     {
+      "point": "Capital d'avis massif établissant une forte crédibilité : 10 115 avis cumulés sur 5 offres",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": "Paskyee Sciatica Belt for Back Pain Relief and Sciatica for Men and Women - Sciatica Relief, Lower Back, Si Joint and Pelvic Pain Relief",
+        "id_reference": "amz-B085WS5FH7"
+       },
+       {
+        "type": "offre",
+        "extrait": "Paskyee Lumbar Support Belt with 6 Bones, Lumbar Support for Men and Women - Lower Back for Pain Relief, Adjustable Support for Sciatica, Scoliosis",
+        "id_reference": "amz-B089T2RK6H"
+       },
+       {
+        "type": "offre",
+        "extrait": "Paskyee Lumbar Support Belt with 6 Bones, Lumbar Support Belt for Men and Women - Lower Back for Pain Relief, Adjustable Support for Sciatica, Scoliosis",
+        "id_reference": "amz-B081F32MM9"
+       },
+       {
+        "type": "offre",
+        "extrait": "Paskyee Lumbar Support Belt with 6 Bones, Lumbar Support for Men and Women - Lower Back for Pain Relief, Adjustable Support for Sciatica, Scoliosis",
+        "id_reference": "amz-B09BQLCGJK"
+       },
+       {
+        "type": "offre",
+        "extrait": "Paskyee Lumbar Belt for Men Women Lower Back Pain Relief with 6 Bones and Removable Lumbar Cushion, Lumbar Support Belt for Herniated Disc, Sciatica",
+        "id_reference": "amz-B09TNGSVVJ"
+       }
+      ]
+     },
+     {
+      "point": "Notes moyennes élevées et homogènes (4.2–4.3/5) sur l'ensemble du catalogue",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": "Paskyee Sciatica Belt for Back Pain Relief and Sciatica for Men and Women - Sciatica Relief, Lower Back, Si Joint and Pelvic Pain Relief",
+        "id_reference": "amz-B085WS5FH7"
+       },
+       {
+        "type": "offre",
+        "extrait": "Paskyee Lumbar Support Belt with 6 Bones, Lumbar Support for Men and Women - Lower Back for Pain Relief, Adjustable Support for Sciatica, Scoliosis",
+        "id_reference": "amz-B089T2RK6H"
+       },
+       {
+        "type": "offre",
+        "extrait": "Paskyee Lumbar Belt for Men Women Lower Back Pain Relief with 6 Bones and Removable Lumbar Cushion, Lumbar Support Belt for Herniated Disc, Sciatica",
+        "id_reference": "amz-B09TNGSVVJ"
+       },
+       {
+        "type": "offre",
+        "extrait": "Paskyee Lumbar Support Belt with 6 Bones, Lumbar Support for Men and Women - Lower Back for Pain Relief, Adjustable Support for Sciatica, Scoliosis",
+        "id_reference": "amz-B09BQLCGJK"
+       },
+       {
+        "type": "offre",
+        "extrait": "Paskyee Lumbar Support Belt with 6 Bones, Lumbar Support Belt for Men and Women - Lower Back for Pain Relief, Adjustable Support for Sciatica, Scoliosis",
+        "id_reference": "amz-B081F32MM9"
+       }
+      ]
+     },
+     {
+      "point": "Positionnement Best Seller sur plusieurs produits, attestant d'une visibilité organique forte",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": "Paskyee Sciatica Belt for Back Pain Relief and Sciatica for Men and Women - Sciatica Relief, Lower Back, Si Joint and Pelvic Pain Relief",
+        "id_reference": "amz-B085WS5FH7"
+       },
+       {
+        "type": "offre",
+        "extrait": "Paskyee Lumbar Support Belt with 6 Bones, Lumbar Support for Men and Women - Lower Back for Pain Relief, Adjustable Support for Sciatica, Scoliosis",
+        "id_reference": "amz-B09BQLCGJK"
+       },
+       {
+        "type": "offre",
+        "extrait": "Paskyee Lumbar Support Belt with 6 Bones, Lumbar Support for Men and Women - Lower Back for Pain Relief, Adjustable Support for Sciatica, Scoliosis",
+        "id_reference": "amz-B089T2RK6H"
+       },
+       {
+        "type": "offre",
+        "extrait": "Paskyee Lumbar Support Belt with 6 Bones, Lumbar Support Belt for Men and Women - Lower Back for Pain Relief, Adjustable Support for Sciatica, Scoliosis",
+        "id_reference": "amz-B081F32MM9"
+       }
+      ]
+     },
+     {
+      "point": "Volume de ventes cumulé significatif (250 unités) démontrant une traction commerciale réelle",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": "Paskyee Sciatica Belt for Back Pain Relief and Sciatica for Men and Women - Sciatica Relief, Lower Back, Si Joint and Pelvic Pain Relief",
+        "id_reference": "amz-B085WS5FH7"
+       },
+       {
+        "type": "offre",
+        "extrait": "Paskyee Lumbar Support Belt with 6 Bones, Lumbar Support for Men and Women - Lower Back for Pain Relief, Adjustable Support for Sciatica, Scoliosis",
+        "id_reference": "amz-B09BQLCGJK"
+       },
+       {
+        "type": "offre",
+        "extrait": "Paskyee Lumbar Support Belt with 6 Bones, Lumbar Support for Men and Women - Lower Back for Pain Relief, Adjustable Support for Sciatica, Scoliosis",
+        "id_reference": "amz-B089T2RK6H"
+       },
+       {
+        "type": "offre",
+        "extrait": "Paskyee Lumbar Support Belt with 6 Bones, Lumbar Support Belt for Men and Women - Lower Back for Pain Relief, Adjustable Support for Sciatica, Scoliosis",
+        "id_reference": "amz-B081F32MM9"
+       }
+      ]
+     },
+     {
+      "point": "Couverture tarifaire large (21,99–26,95 €) permettant d'adresser segments cœur et premium simultanément",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": "Paskyee Lumbar Support Belt with 6 Bones, Lumbar Support for Men and Women - Lower Back for Pain Relief, Adjustable Support for Sciatica, Scoliosis",
+        "id_reference": "amz-B09BQLCGJK"
+       },
+       {
+        "type": "offre",
+        "extrait": "Paskyee Sciatica Belt for Back Pain Relief and Sciatica for Men and Women - Sciatica Relief, Lower Back, Si Joint and Pelvic Pain Relief",
+        "id_reference": "amz-B085WS5FH7"
+       }
+      ]
+     },
+     {
+      "point": "Standardisation technique autour de 6 baleines, créant une signature produit reconnaissable",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": "Paskyee Lumbar Belt for Men Women Lower Back Pain Relief with 6 Bones and Removable Lumbar Cushion, Lumbar Support Belt for Herniated Disc, Sciatica",
+        "id_reference": "amz-B09TNGSVVJ"
+       },
+       {
+        "type": "offre",
+        "extrait": "Paskyee Lumbar Support Belt with 6 Bones, Lumbar Support for Men and Women - Lower Back for Pain Relief, Adjustable Support for Sciatica, Scoliosis",
+        "id_reference": "amz-B09BQLCGJK"
+       },
+       {
+        "type": "offre",
+        "extrait": "Paskyee Lumbar Support Belt with 6 Bones, Lumbar Support for Men and Women - Lower Back for Pain Relief, Adjustable Support for Sciatica, Scoliosis",
+        "id_reference": "amz-B089T2RK6H"
+       },
+       {
+        "type": "offre",
+        "extrait": "Paskyee Lumbar Support Belt with 6 Bones, Lumbar Support Belt for Men and Women - Lower Back for Pain Relief, Adjustable Support for Sciatica, Scoliosis",
+        "id_reference": "amz-B081F32MM9"
+       }
+      ]
+     },
+     {
+      "point": "Ciblage pathologique précis (sciatique, hernie discale, scoliose) élargissant l'audience potentielle",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": "Sciatica Belt for Back Pain Relief and Sciatica for Men and Women - Sciatica Relief, Lower Back, Si Joint and Pelvic Pain Relief",
+        "id_reference": "amz-B085WS5FH7"
+       },
+       {
+        "type": "offre",
+        "extrait": "Lumbar Support Belt for Herniated Disc, Sciatica",
+        "id_reference": "amz-B09TNGSVVJ"
+       },
+       {
+        "type": "offre",
+        "extrait": "Adjustable Support for Sciatica, Scoliosis",
+        "id_reference": "amz-B09BQLCGJK"
+       }
+      ]
+     }
+    ],
+    "faiblesses": [
+     {
+      "point": "Absence totale d'investissement publicitaire détectable (0 annonce), limitant la capacité de conquête rapide",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": "Paskyee Sciatica Belt for Back Pain Relief and Sciatica for Men and Women - Sciatica Relief, Lower Back, Si Joint and Pelvic Pain Relief",
+        "id_reference": "amz-B085WS5FH7"
+       }
+      ]
+     },
+     {
+      "point": "Aucune présence éditoriale ou contenu web tiers détecté, suggérant une stratégie mono-canal Amazon",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": "Paskyee Sciatica Belt for Back Pain Relief and Sciatica for Men and Women - Sciatica Relief, Lower Back, Si Joint and Pelvic Pain Relief",
+        "id_reference": "amz-B085WS5FH7"
+       }
+      ]
+     },
+     {
+      "point": "Catalogue peu différencié : 4 produits sur 5 partagent des attributs quasi-identiques (6 baleines, sciatique, scoliose)",
+      "statut": "hypothese",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": "Lumbar Support Belt with 6 Bones, Lumbar Support for Men and Women - Lower Back for Pain Relief, Adjustable Support for Sciatica, Scoliosis",
+        "id_reference": "amz-B09BQLCGJK"
+       },
+       {
+        "type": "offre",
+        "extrait": "Lumbar Support Belt with 6 Bones, Lumbar Support for Men and Women - Lower Back for Pain Relief, Adjustable Support for Sciatica, Scoliosis",
+        "id_reference": "amz-B089T2RK6H"
+       },
+       {
+        "type": "offre",
+        "extrait": "Lumbar Support Belt with 6 Bones, Lumbar Support Belt for Men and Women - Lower Back for Pain Relief, Adjustable Support for Sciatica, Scoliosis",
+        "id_reference": "amz-B081F32MM9"
+       }
+      ]
+     },
+     {
+      "point": "Positionnement premium (26,95 €) sans différenciation technique apparente par rapport aux offres cœur à 21,99 €",
+      "statut": "hypothese",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": "Paskyee Sciatica Belt for Back Pain Relief and Sciatica for Men and Women - Sciatica Relief, Lower Back, Si Joint and Pelvic Pain Relief",
+        "id_reference": "amz-B085WS5FH7"
+       },
+       {
+        "type": "offre",
+        "extrait": "Paskyee Lumbar Support Belt with 6 Bones, Lumbar Support for Men and Women - Lower Back for Pain Relief, Adjustable Support for Sciatica, Scoliosis",
+        "id_reference": "amz-B09BQLCGJK"
+       }
+      ]
+     },
+     {
+      "point": "Absence de mécanisme de double traction mentionné, potentiel désavantage face à des produits plus innovants",
+      "statut": "hypothese",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": "Lumbar Belt for Men Women Lower Back Pain Relief with 6 Bones and Removable Lumbar Cushion",
+        "id_reference": "amz-B09TNGSVVJ"
+       },
+       {
+        "type": "offre",
+        "extrait": "Sciatica Belt for Back Pain Relief and Sciatica for Men and Women",
+        "id_reference": "amz-B085WS5FH7"
+       }
+      ]
+     }
+    ],
+    "niveau_menace": "fort",
+    "proposition_valeur": "Ceintures lombaires à 6 baleines, positionnées sur le soulagement de la sciatique, hernie discale et scoliose, avec options de coussin lombaire amovible pour certains modèles. Approche unisexe et ajustable, ciblant un large public souffrant de douleurs lombaires et pelviennes.",
+    "arguments_marketing": [
+     "Soulagement ciblé de la sciatique, hernie discale et scoliose",
+     "Renfort structurel à 6 baleines pour maintien lombaire",
+     "Conception unisexe et ajustable",
+     "Coussin lombaire amovible (sur modèle B09TNGSVVJ)",
+     "Soulagement des douleurs lombaires, pelviennes et articulaires SI"
+    ],
+    "justification_menace": "Paskyee représente une menace forte : 5 offres actives générant 250 ventes cumulées, avec des notes moyennes élevées (4.24/5) et un capital d'avis massif (10 115 avis cumulés). Trois produits affichent le badge « best_seller_rang_2131 » et un autre « best_seller_rang_2411 », attestant d'un positionnement solide dans les classements Amazon. La fourchette de prix (21,99–26,95 €) couvre les segments cœur et premium, permettant une couverture large du marché. L'absence d'annonces publicitaires suggère une acquisition organique forte, signe de maturité et de notoriété établie.",
+    "segment_prix_par_source": {
+     "amazon": "premium"
+    }
+   },
+   "concurrent": {
+    "type": "marque_marketplace",
+    "alias": [],
+    "presence": {
+     "amazon": 5,
+     "meta_ads": 0,
+     "aliexpress": 0,
+     "recherche_web": 0
+    },
+    "ids_pages": [],
+    "ids_offres": [
+     "amz-B085WS5FH7",
+     "amz-B09TNGSVVJ",
+     "amz-B09BQLCGJK",
+     "amz-B089T2RK6H",
+     "amz-B081F32MM9"
+    ],
+    "ids_annonces": [],
+    "nom_canonique": "Paskyee",
+    "niveau_certitude_rapprochement": "sur"
+   }
+  },
+  {
+   "stats": {
+    "nb_offres": 2,
+    "nb_annonces": 0,
+    "note_moyenne": 4.1,
+    "longevite_max_jours": null,
+    "nb_annonces_actives": 0,
+    "prix_max_par_devise": {
+     "EUR": 22.55
+    },
+    "prix_min_par_devise": {
+     "EUR": 22.55
+    },
+    "nb_pages_mentionnant": 0,
+    "volume_ventes_cumule": 100,
+    "fourchette_prix_par_devise": {
+     "EUR": "22.55"
+    }
+   },
+   "analyse": {
+    "forces": [
+     {
+      "point": "Note client satisfaisante de 4,1/5 sur un volume d'avis significatif (149 avis)",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0DYJWKFDN"
+       }
+      ]
+     },
+     {
+      "point": "Positionnement prix accessible dans le segment cœur à 22,55 EUR",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0DYJWKFDN"
+       },
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0DYK1289Q"
+       }
+      ]
+     },
+     {
+      "point": "Proposition de valeur axée sur l'invisibilité et la respirabilité du produit",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": "Posture Corrector for Men and Women: Back Belt for Straight Back Support – Straighten Hold Invisible Lumbar Support – Breathable and Adjustable Back Neck and Sh",
+        "id_reference": "amz-B0DYJWKFDN"
+       }
+      ]
+     },
+     {
+      "point": "Déclinaison en plusieurs tailles (M et L) pour s'adapter à différentes morphologies",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0DYJWKFDN"
+       },
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0DYK1289Q"
+       }
+      ]
+     }
+    ],
+    "faiblesses": [
+     {
+      "point": "Catalogue très limité avec seulement 2 références produits",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0DYJWKFDN"
+       },
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0DYK1289Q"
+       }
+      ]
+     },
+     {
+      "point": "Volume de ventes cumulé faible à 100 unités, indiquant une traction commerciale limitée",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0DYJWKFDN"
+       },
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0DYK1289Q"
+       }
+      ]
+     },
+     {
+      "point": "Absence totale de stratégie publicitaire détectable (0 annonces actives ou historiques)",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0DYJWKFDN"
+       }
+      ]
+     },
+     {
+      "point": "Aucune visibilité éditoriale ou présence web en dehors de la marketplace",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0DYJWKFDN"
+       }
+      ]
+     },
+     {
+      "point": "Positionnement produit ambigu : correcteur de posture avec soutien lombaire, potentiellement en décalage avec une ceinture lombaire double traction",
+      "statut": "hypothese",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": "Posture Corrector for Men and Women: Back Belt for Straight Back Support – Straighten Hold Invisible Lumbar Support",
+        "id_reference": "amz-B0DYJWKFDN"
+       }
+      ]
+     },
+     {
+      "point": "Classement Best Seller modeste au rang 1893, reflétant une performance commerciale moyenne",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0DYJWKFDN"
+       }
+      ]
+     }
+    ],
+    "niveau_menace": "faible",
+    "proposition_valeur": "Correcteur de posture invisible, respirant et ajustable pour hommes et femmes, offrant un soutien lombaire et dorsal pour redresser la posture.",
+    "arguments_marketing": [
+     "Correcteur de posture invisible pour une discrétion maximale sous les vêtements",
+     "Respirant et ajustable pour un confort prolongé",
+     "Soutien lombaire et dorsal pour redresser la posture",
+     "Convient aux hommes et aux femmes",
+     "Prix accessible dans le segment cœur de marché"
+    ],
+    "justification_menace": "WEIO présente un profil de menace faible : seulement 2 offres référencées, un volume de ventes cumulé limité à 100 unités, aucune activité publicitaire détectée (0 annonces), et aucune présence éditoriale ou web (0 pages mentionnant la marque). Le positionnement prix à 22,55 EUR est dans le segment cœur mais sans différenciation tarifaire. La note moyenne de 4,1/5 sur 149 avis est correcte mais non exceptionnelle. L'absence totale de visibilité publicitaire et de contenu web suggère une présence marketplace récente ou passive, sans stratégie d'acquisition active. Le concurrent ne dispose pas des leviers de croissance observables (multi-sourcing, campagnes, contenus) pour constituer une menace significative à court terme.",
+    "segment_prix_par_source": {
+     "amazon": "coeur"
+    }
+   },
+   "concurrent": {
+    "type": "marque_marketplace",
+    "alias": [],
+    "presence": {
+     "amazon": 2,
+     "meta_ads": 0,
+     "aliexpress": 0,
+     "recherche_web": 0
+    },
+    "ids_pages": [],
+    "ids_offres": [
+     "amz-B0DYJWKFDN",
+     "amz-B0DYK1289Q"
+    ],
+    "ids_annonces": [],
+    "nom_canonique": "WEIO",
+    "niveau_certitude_rapprochement": "sur"
+   }
+  },
+  {
+   "stats": {
+    "nb_offres": 4,
+    "nb_annonces": 0,
+    "note_moyenne": 4.47,
+    "longevite_max_jours": null,
+    "nb_annonces_actives": 0,
+    "prix_max_par_devise": {
+     "EUR": 30.99
+    },
+    "prix_min_par_devise": {
+     "EUR": 29.99
+    },
+    "nb_pages_mentionnant": 0,
+    "volume_ventes_cumule": 50,
+    "fourchette_prix_par_devise": {
+     "EUR": "29.99–30.99"
+    }
+   },
+   "analyse": {
+    "forces": [
+     {
+      "point": "Note moyenne élevée de 4,47/5 sur l'ensemble du catalogue, témoignant d'une satisfaction client constante",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0DB5N233H"
+       },
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0F9XWPKXN"
+       },
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0DFY6WP2Y"
+       },
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0DB5Q21HF"
+       }
+      ]
+     },
+     {
+      "point": "Volume d'avis important (1 130 avis sur l'offre principale) attestant d'une adoption significative",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0DFY6WP2Y"
+       }
+      ]
+     },
+     {
+      "point": "Positionnement Best Seller sur Amazon avec un rang de 3 051 pour l'offre phare",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": "Rakiie Lumbar Belt for Lumbar Pain Relief, 8X Powerful Lumbar Support with 3D Pad, Back Support Belt for Men and Women (M)",
+        "id_reference": "amz-B0DFY6WP2Y"
+       }
+      ]
+     },
+     {
+      "point": "Gamme cohérente avec déclinaisons par taille (M, XL) et couleur (Purple) facilitant la personnalisation",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": "Rakiie Back Support Belt for Women, 9 Position Support System with Upgraded 3D Silicone Pad, Ergonomic Lumbar Support Adjustable for Pain Relief(Purple, M)",
+        "id_reference": "amz-B0F9XWPKXN"
+       },
+       {
+        "type": "offre",
+        "extrait": "Rakiie Lumbar Belt for Lumbar Pain Women Men Ergonomic Back Support Belt with Lumbar Cushion, Adjustable Straps and Soft Breathable Mesh Fabric (XL)",
+        "id_reference": "amz-B0DB5N233H"
+       }
+      ]
+     },
+     {
+      "point": "Arguments techniques différenciants : système de support 8X ou 9 positions et coussin 3D en silicone",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": "8X Powerful Lumbar Support with 3D Pad",
+        "id_reference": "amz-B0DFY6WP2Y"
+       },
+       {
+        "type": "offre",
+        "extrait": "9 Position Support System with Upgraded 3D Silicone Pad",
+        "id_reference": "amz-B0F9XWPKXN"
+       }
+      ]
+     }
+    ],
+    "faiblesses": [
+     {
+      "point": "Absence totale de publicité payante (0 annonce active ou historique), limitant la capacité d'acquisition",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0DB5N233H"
+       }
+      ]
+     },
+     {
+      "point": "Aucune présence détectée sur le web hors marketplace (0 page mentionnant la marque), réduisant la notoriété organique",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0DB5N233H"
+       }
+      ]
+     },
+     {
+      "point": "Volume de ventes mesuré très faible (50 unités sur une seule offre), suggérant une vélocité commerciale limitée",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0DFY6WP2Y"
+       }
+      ]
+     },
+     {
+      "point": "Positionnement prix homogène (29,99–30,99 EUR) sans offre d'entrée de gamme, potentiellement excluant les acheteurs sensibles au prix",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0DB5N233H"
+       },
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0DFY6WP2Y"
+       }
+      ]
+     },
+     {
+      "point": "Rangs Best Seller moyens à faibles (10 181, 21 036) pour 3 des 4 offres, indiquant une visibilité inégale dans le catalogue",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": "Rakiie Lumbar Belt for Lumbar Pain Women Men Ergonomic Back Support Belt with Lumbar Cushion, Adjustable Straps and Soft Breathable Mesh Fabric (XL)",
+        "id_reference": "amz-B0DB5N233H"
+       },
+       {
+        "type": "offre",
+        "extrait": "Rakiie Back Support Belt for Women, 9 Position Support System with Upgraded 3D Silicone Pad, Ergonomic Lumbar Support Adjustable for Pain Relief(Purple, M)",
+        "id_reference": "amz-B0F9XWPKXN"
+       }
+      ]
+     }
+    ],
+    "niveau_menace": "moyen",
+    "proposition_valeur": "Ceintures lombaires ergonomiques à support renforcé (8X ou 9 positions), équipées de coussins 3D en silicone, de sangles ajustables et de tissus mesh respirants, positionnées comme solutions de soulagement de la douleur lombaire pour hommes et femmes.",
+    "arguments_marketing": [
+     "Soulagement de la douleur lombaire (Pain Relief)",
+     "Support lombaire puissant 8X ou système 9 positions",
+     "Coussin 3D en silicone amélioré (Upgraded 3D Silicone Pad)",
+     "Conception ergonomique",
+     "Sangles ajustables",
+     "Tissu mesh respirant et doux",
+     "Adapté aux hommes et aux femmes"
+    ],
+    "justification_menace": "Rakiie présente un niveau de menace moyen. La marque dispose de 4 offres actives dans le segment premium (29,99–30,99 EUR), avec une note moyenne solide de 4,47/5 et un volume cumulé d'avis de 3 071 (527+482+1130+932). Le volume de ventes constaté reste faible (50 unités sur une seule offre), mais les badges Best Seller (rangs 3051, 10181, 21036) attestent d'une présence établie sur Amazon. L'absence totale d'annonces publicitaires et de mentions web limite toutefois sa visibilité hors marketplace. Le concurrent se positionne sur le même segment de prix que notre produit, avec des attributs techniques comparables (support lombaire renforcé, coussin 3D, respirabilité), ce qui en fait un concurrent direct mais sans stratégie d'acquisition agressive visible.",
+    "segment_prix_par_source": {
+     "amazon": "premium"
+    }
+   },
+   "concurrent": {
+    "type": "marque_marketplace",
+    "alias": [],
+    "presence": {
+     "amazon": 4,
+     "meta_ads": 0,
+     "aliexpress": 0,
+     "recherche_web": 0
+    },
+    "ids_pages": [],
+    "ids_offres": [
+     "amz-B0DB5N233H",
+     "amz-B0F9XWPKXN",
+     "amz-B0DFY6WP2Y",
+     "amz-B0DB5Q21HF"
+    ],
+    "ids_annonces": [],
+    "nom_canonique": "Rakiie",
+    "niveau_certitude_rapprochement": "sur"
+   }
+  },
+  {
+   "stats": {
+    "nb_offres": 1,
+    "nb_annonces": 0,
+    "note_moyenne": 4.1,
+    "longevite_max_jours": null,
+    "nb_annonces_actives": 0,
+    "prix_max_par_devise": {
+     "EUR": 13.99
+    },
+    "prix_min_par_devise": {
+     "EUR": 13.99
+    },
+    "nb_pages_mentionnant": 0,
+    "volume_ventes_cumule": 50,
+    "fourchette_prix_par_devise": {
+     "EUR": "13.99"
+    }
+   },
+   "analyse": {
+    "forces": [
+     {
+      "point": "Prix d'entrée très agressif à 13,99 EUR, nettement inférieur aux standards du marché des ceintures lombaires",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": "ACWOO Lumbar Support Belt with 6 Bones, for Men and Women, Lumbar Belt with Double Adjustment for Lumbar Support and Pain Relief",
+        "id_reference": "amz-B0CYBPLGKV"
+       }
+      ]
+     },
+     {
+      "point": "Note client satisfaisante de 4,1/5 sur un volume significatif de 433 avis, témoignant d'une acceptation produit correcte",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": "ACWOO Lumbar Support Belt with 6 Bones, for Men and Women, Lumbar Belt with Double Adjustment for Lumbar Support and Pain Relief",
+        "id_reference": "amz-B0CYBPLGKV"
+       }
+      ]
+     },
+     {
+      "point": "Présence de 6 baleines de renfort et système de double ajustement, caractéristiques techniques alignées avec les attentes du segment",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": "ACWOO Lumbar Support Belt with 6 Bones, for Men and Women, Lumbar Belt with Double Adjustment for Lumbar Support and Pain Relief",
+        "id_reference": "amz-B0CYBPLGKV"
+       }
+      ]
+     }
+    ],
+    "faiblesses": [
+     {
+      "point": "Présence marketplace extrêmement limitée avec une seule offre référencée, sans diversification des canaux de vente",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": "ACWOO Lumbar Support Belt with 6 Bones, for Men and Women, Lumbar Belt with Double Adjustment for Lumbar Support and Pain Relief",
+        "id_reference": "amz-B0CYBPLGKV"
+       }
+      ]
+     },
+     {
+      "point": "Volume de ventes très faible (50 unités cumulées), indiquant une traction commerciale limitée",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": "ACWOO Lumbar Support Belt with 6 Bones, for Men and Women, Lumbar Belt with Double Adjustment for Lumbar Support and Pain Relief",
+        "id_reference": "amz-B0CYBPLGKV"
+       }
+      ]
+     },
+     {
+      "point": "Absence totale d'investissement publicitaire détecté (0 annonce active ou historique), limitant la visibilité et l'acquisition",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": "ACWOO Lumbar Support Belt with 6 Bones, for Men and Women, Lumbar Belt with Double Adjustment for Lumbar Support and Pain Relief",
+        "id_reference": "amz-B0CYBPLGKV"
+       }
+      ]
+     },
+     {
+      "point": "Aucune présence éditoriale, SEO ou mentions web détectées (0 page), réduisant la crédibilité et la découvrabilité organique",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": "ACWOO Lumbar Support Belt with 6 Bones, for Men and Women, Lumbar Belt with Double Adjustment for Lumbar Support and Pain Relief",
+        "id_reference": "amz-B0CYBPLGKV"
+       }
+      ]
+     },
+     {
+      "point": "Positionnement prix entrée de gamme susceptible de dégrader la perception qualité et de limiter les marges",
+      "statut": "hypothese",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": "ACWOO Lumbar Support Belt with 6 Bones, for Men and Women, Lumbar Belt with Double Adjustment for Lumbar Support and Pain Relief",
+        "id_reference": "amz-B0CYBPLGKV"
+       }
+      ]
+     }
+    ],
+    "niveau_menace": "faible",
+    "proposition_valeur": "Ceinture lombaire économique à double ajustement et 6 baleines de renfort, ciblant les acheteurs sensibles au prix recherchant un soutien lombaire basique.",
+    "arguments_marketing": [
+     "Prix imbattable à 13,99 EUR",
+     "Double ajustement pour un maintien personnalisé",
+     "6 baleines de renfort pour soutien lombaire",
+     "Soulagement de la douleur lombaire",
+     "Convient hommes et femmes"
+    ],
+    "justification_menace": "ACWOO présente un profil de concurrent marginal : une seule offre marketplace (Amazon), un volume de ventes limité (50 unités), aucune activité publicitaire détectée (0 annonce), aucune présence éditoriale ou web (0 page). Malgré une note correcte (4.1/5 sur 433 avis), l'absence de diversification des canaux, le positionnement prix très bas (13,99 EUR, segment entrée) et le faible volume cumulé indiquent une capacité de nuisance réduite face à une ceinture lombaire double traction positionnée sur un segment supérieur ou avec une stratégie omnicanale.",
+    "segment_prix_par_source": {
+     "amazon": "entree"
+    }
+   },
+   "concurrent": {
+    "type": "marque_marketplace",
+    "alias": [],
+    "presence": {
+     "amazon": 1,
+     "meta_ads": 0,
+     "aliexpress": 0,
+     "recherche_web": 0
+    },
+    "ids_pages": [],
+    "ids_offres": [
+     "amz-B0CYBPLGKV"
+    ],
+    "ids_annonces": [],
+    "nom_canonique": "ACWOO",
+    "niveau_certitude_rapprochement": "sur"
+   }
+  },
+  {
+   "stats": {
+    "nb_offres": 1,
+    "nb_annonces": 0,
+    "note_moyenne": 4.0,
+    "longevite_max_jours": null,
+    "nb_annonces_actives": 0,
+    "prix_max_par_devise": {
+     "EUR": 7.99
+    },
+    "prix_min_par_devise": {
+     "EUR": 7.99
+    },
+    "nb_pages_mentionnant": 0,
+    "volume_ventes_cumule": 50,
+    "fourchette_prix_par_devise": {
+     "EUR": "7.99"
+    }
+   },
+   "analyse": {
+    "forces": [
+     {
+      "point": "Prix ultra-compétitif à 7,99 EUR, le plus bas du segment entrée",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": "Beugo Lumbar Support Belt, Lumbar Belt with Adjustment for Men and Women, for Work, Sport (XL)",
+        "id_reference": "amz-B0G641BLSM"
+       }
+      ]
+     },
+     {
+      "point": "Note client correcte de 4,0/5 sur 55 avis",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": "Beugo Lumbar Support Belt, Lumbar Belt with Adjustment for Men and Women, for Work, Sport (XL)",
+        "id_reference": "amz-B0G641BLSM"
+       }
+      ]
+     },
+     {
+      "point": "Positionnement polyvalent travail et sport avec ajustabilité",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": "Beugo Lumbar Support Belt, Lumbar Belt with Adjustment for Men and Women, for Work, Sport (XL)",
+        "id_reference": "amz-B0G641BLSM"
+       }
+      ]
+     }
+    ],
+    "faiblesses": [
+     {
+      "point": "Volume de ventes très faible (50 unités cumulées)",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": "Beugo Lumbar Support Belt, Lumbar Belt with Adjustment for Men and Women, for Work, Sport (XL)",
+        "id_reference": "amz-B0G641BLSM"
+       }
+      ]
+     },
+     {
+      "point": "Absence totale d'investissement publicitaire (0 annonce détectée)",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": "Beugo Lumbar Support Belt, Lumbar Belt with Adjustment for Men and Women, for Work, Sport (XL)",
+        "id_reference": "amz-B0G641BLSM"
+       }
+      ]
+     },
+     {
+      "point": "Catalogue mono-offre limitant la couverture de gamme",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": "Beugo Lumbar Support Belt, Lumbar Belt with Adjustment for Men and Women, for Work, Sport (XL)",
+        "id_reference": "amz-B0G641BLSM"
+       }
+      ]
+     },
+     {
+      "point": "Rang best-seller modeste (#2788) témoignant d'une faible visibilité organique",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": "Beugo Lumbar Support Belt, Lumbar Belt with Adjustment for Men and Women, for Work, Sport (XL)",
+        "id_reference": "amz-B0G641BLSM"
+       }
+      ]
+     },
+     {
+      "point": "Aucune présence éditoriale ou mention web détectée",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": "Beugo Lumbar Support Belt, Lumbar Belt with Adjustment for Men and Women, for Work, Sport (XL)",
+        "id_reference": "amz-B0G641BLSM"
+       }
+      ]
+     }
+    ],
+    "niveau_menace": "faible",
+    "proposition_valeur": "Ceinture lombaire ajustable à prix d'entrée, positionnée pour un usage polyvalent travail et sport.",
+    "arguments_marketing": [
+     "Prix cassé à 7,99 EUR",
+     "Ajustable",
+     "Polyvalence travail et sport"
+    ],
+    "justification_menace": "Beugo présente un profil de menace faible : une seule offre marketplace (amz-B0G641BLSM), volume de ventes limité à 50 unités, aucune activité publicitaire (0 annonce), aucune présence éditoriale (0 page web). Le positionnement prix ultra-agressif (7,99 EUR, segment entrée) et le rang best-seller modeste (#2788) indiquent une visibilité et une traction commerciale réduites face à notre ceinture lombaire double traction.",
+    "segment_prix_par_source": {
+     "amazon": "entree"
+    }
+   },
+   "concurrent": {
+    "type": "marque_marketplace",
+    "alias": [],
+    "presence": {
+     "amazon": 1,
+     "meta_ads": 0,
+     "aliexpress": 0,
+     "recherche_web": 0
+    },
+    "ids_pages": [],
+    "ids_offres": [
+     "amz-B0G641BLSM"
+    ],
+    "ids_annonces": [],
+    "nom_canonique": "Beugo",
+    "niveau_certitude_rapprochement": "sur"
+   }
+  },
+  {
+   "stats": {
+    "nb_offres": 1,
+    "nb_annonces": 0,
+    "note_moyenne": 3.8,
+    "longevite_max_jours": null,
+    "nb_annonces_actives": 0,
+    "prix_max_par_devise": {
+     "EUR": 9.99
+    },
+    "prix_min_par_devise": {
+     "EUR": 9.99
+    },
+    "nb_pages_mentionnant": 0,
+    "volume_ventes_cumule": 50,
+    "fourchette_prix_par_devise": {
+     "EUR": "9.99"
+    }
+   },
+   "analyse": {
+    "forces": [
+     {
+      "point": "Prix d'entrée très agressif à 9.99 EUR, barrière d'achat minimale",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0GL238Y6X"
+       }
+      ]
+     },
+     {
+      "point": "Volume d'avis significatif (124 avis) pour une offre unique, indiquant une traction commerciale passée",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0GL238Y6X"
+       }
+      ]
+     },
+     {
+      "point": "Positionnement mixte (femmes et hommes) élargissant la cible potentielle",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": "Adjustable Back Posture Corrector for Women and Men",
+        "id_reference": "amz-B0GL238Y6X"
+       }
+      ]
+     }
+    ],
+    "faiblesses": [
+     {
+      "point": "Note moyenne faible (3.8/5) signalant une satisfaction client limitée",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0GL238Y6X"
+       }
+      ]
+     },
+     {
+      "point": "Volume de ventes très limité (50 unités) indiquant une faible traction commerciale actuelle",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0GL238Y6X"
+       }
+      ]
+     },
+     {
+      "point": "Absence totale d'investissement publicitaire (0 annonces actives ou historiques)",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0GL238Y6X"
+       }
+      ]
+     },
+     {
+      "point": "Positionnement produit différent : correcteur de posture haut/moyen du dos versus ceinture lombaire double traction, adressant des besoins distincts",
+      "statut": "hypothese",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": "Upper and Medium Back Support, Back Straightener for Neck Shoulder Clavicle Pain Relief",
+        "id_reference": "amz-B0GL238Y6X"
+       }
+      ]
+     },
+     {
+      "point": "Aucune visibilité organique web (0 pages mentionnant la marque), limitant la notoriété et la découvrabilité hors marketplace",
+      "statut": "fait",
+      "preuves": [
+       {
+        "type": "offre",
+        "extrait": null,
+        "id_reference": "amz-B0GL238Y6X"
+       }
+      ]
+     }
+    ],
+    "niveau_menace": "faible",
+    "proposition_valeur": "Correcteur de posture respirant à prix d'entrée, ciblant le support dorsal moyen et haut pour soulager les douleurs de nuque, épaules et clavicule.",
+    "arguments_marketing": [
+     "Ajustable",
+     "Respirant",
+     "Support dorsal moyen et haut",
+     "Soulagement douleurs nuque/épaules/clavicule",
+     "Unisexe"
+    ],
+    "justification_menace": "Lukvcoe présente un niveau de menace faible : une seule offre marketplace (amz-B0GL238Y6X), volume de ventes limité (50 unités), note moyenne modeste (3.8/5), aucune présence publicitaire (0 annonces), aucune mention web. Le positionnement prix très bas (9.99 EUR, segment entrée) cible un segment différent de notre ceinture lombaire double traction. L'absence totale d'activité promotionnelle et le faible volume suggèrent une présence opportuniste sans stratégie de développement visible.",
+    "segment_prix_par_source": {
+     "amazon": "entree"
+    }
+   },
+   "concurrent": {
+    "type": "marque_marketplace",
+    "alias": [],
+    "presence": {
+     "amazon": 1,
+     "meta_ads": 0,
+     "aliexpress": 0,
+     "recherche_web": 0
+    },
+    "ids_pages": [],
+    "ids_offres": [
+     "amz-B0GL238Y6X"
+    ],
+    "ids_annonces": [],
+    "nom_canonique": "Lukvcoe",
+    "niveau_certitude_rapprochement": "sur"
+   }
+  },
+  {
+   "stats": {
+    "nb_offres": 1,
+    "nb_annonces": 0,
+    "note_moyenne": 2.6,
+    "longevite_max_jours": null,
+    "nb_annonces_actives": 0,
+    "prix_max_par_devise": {
+     "EUR": 10.99
+    },
+    "prix_min_par_devise": {
+     "EUR": 10.99
+    },
+    "nb_pages_mentionnant": 0,
+    "volume_ventes_cumule": 50,
+    "fourchette_prix_par_devise": {
+     "EUR": "10.99"
+    }
+   },
+   "analyse": null,
+   "concurrent": {
+    "type": "marque_marketplace",
+    "alias": [],
+    "presence": {
+     "amazon": 1,
+     "meta_ads": 0,
+     "aliexpress": 0,
+     "recherche_web": 0
+    },
+    "ids_pages": [],
+    "ids_offres": [
+     "amz-B0D7VHCXQK"
+    ],
+    "ids_annonces": [],
+    "nom_canonique": "VPB",
+    "niveau_certitude_rapprochement": "sur"
+   }
+  },
+  {
+   "stats": {
+    "nb_offres": 1,
+    "nb_annonces": 0,
+    "note_moyenne": 4.6,
+    "longevite_max_jours": null,
+    "nb_annonces_actives": 0,
+    "prix_max_par_devise": {
+     "EUR": 12.99
+    },
+    "prix_min_par_devise": {
+     "EUR": 12.99
+    },
+    "nb_pages_mentionnant": 0,
+    "volume_ventes_cumule": null,
+    "fourchette_prix_par_devise": {
+     "EUR": "12.99"
+    }
+   },
+   "analyse": null,
+   "concurrent": {
+    "type": "marque_marketplace",
+    "alias": [],
+    "presence": {
+     "amazon": 1,
+     "meta_ads": 0,
+     "aliexpress": 0,
+     "recherche_web": 0
+    },
+    "ids_pages": [],
+    "ids_offres": [
+     "amz-B0FVLZJVQ6"
+    ],
+    "ids_annonces": [],
+    "nom_canonique": "23GUANYI",
+    "niveau_certitude_rapprochement": "sur"
+   }
+  },
+  {
+   "stats": {
+    "nb_offres": 1,
+    "nb_annonces": 0,
+    "note_moyenne": 3.5,
+    "longevite_max_jours": null,
+    "nb_annonces_actives": 0,
+    "prix_max_par_devise": {
+     "EUR": 15.99
+    },
+    "prix_min_par_devise": {
+     "EUR": 15.99
+    },
+    "nb_pages_mentionnant": 0,
+    "volume_ventes_cumule": null,
+    "fourchette_prix_par_devise": {
+     "EUR": "15.99"
+    }
+   },
+   "analyse": null,
+   "concurrent": {
+    "type": "marque_marketplace",
+    "alias": [],
+    "presence": {
+     "amazon": 1,
+     "meta_ads": 0,
+     "aliexpress": 0,
+     "recherche_web": 0
+    },
+    "ids_pages": [],
+    "ids_offres": [
+     "amz-B0FMJP5CYY"
+    ],
+    "ids_annonces": [],
+    "nom_canonique": "ANAMPION",
+    "niveau_certitude_rapprochement": "sur"
+   }
+  },
+  {
+   "stats": {
+    "nb_offres": 1,
+    "nb_annonces": 0,
+    "note_moyenne": 4.1,
+    "longevite_max_jours": null,
+    "nb_annonces_actives": 0,
+    "prix_max_par_devise": {
+     "EUR": 9.99
+    },
+    "prix_min_par_devise": {
+     "EUR": 9.99
+    },
+    "nb_pages_mentionnant": 0,
+    "volume_ventes_cumule": null,
+    "fourchette_prix_par_devise": {
+     "EUR": "9.99"
+    }
+   },
+   "analyse": null,
+   "concurrent": {
+    "type": "marque_marketplace",
+    "alias": [],
+    "presence": {
+     "amazon": 1,
+     "meta_ads": 0,
+     "aliexpress": 0,
+     "recherche_web": 0
+    },
+    "ids_pages": [],
+    "ids_offres": [
+     "amz-B0DFGZBLQW"
+    ],
+    "ids_annonces": [],
+    "nom_canonique": "AOGOE",
+    "niveau_certitude_rapprochement": "sur"
+   }
+  },
+  {
+   "stats": {
+    "nb_offres": 1,
+    "nb_annonces": 0,
+    "note_moyenne": 4.0,
+    "longevite_max_jours": null,
+    "nb_annonces_actives": 0,
+    "prix_max_par_devise": {
+     "EUR": 6.79
+    },
+    "prix_min_par_devise": {
+     "EUR": 6.79
+    },
+    "nb_pages_mentionnant": 0,
+    "volume_ventes_cumule": null,
+    "fourchette_prix_par_devise": {
+     "EUR": "6.79"
+    }
+   },
+   "analyse": null,
+   "concurrent": {
+    "type": "marque_marketplace",
+    "alias": [],
+    "presence": {
+     "amazon": 1,
+     "meta_ads": 0,
+     "aliexpress": 0,
+     "recherche_web": 0
+    },
+    "ids_pages": [],
+    "ids_offres": [
+     "amz-B0GRTZN48Y"
+    ],
+    "ids_annonces": [],
+    "nom_canonique": "AYBUY",
+    "niveau_certitude_rapprochement": "sur"
+   }
+  },
+  {
+   "stats": {
+    "nb_offres": 1,
+    "nb_annonces": 0,
+    "note_moyenne": 4.2,
+    "longevite_max_jours": null,
+    "nb_annonces_actives": 0,
+    "prix_max_par_devise": {
+     "EUR": 24.0
+    },
+    "prix_min_par_devise": {
+     "EUR": 24.0
+    },
+    "nb_pages_mentionnant": 0,
+    "volume_ventes_cumule": null,
+    "fourchette_prix_par_devise": {
+     "EUR": "24.00"
+    }
+   },
+   "analyse": null,
+   "concurrent": {
+    "type": "marque_marketplace",
+    "alias": [],
+    "presence": {
+     "amazon": 1,
+     "meta_ads": 0,
+     "aliexpress": 0,
+     "recherche_web": 0
+    },
+    "ids_pages": [],
+    "ids_offres": [
+     "amz-B01BSIV4G6"
+    ],
+    "ids_annonces": [],
+    "nom_canonique": "BODYPERFECT",
+    "niveau_certitude_rapprochement": "sur"
+   }
+  },
+  {
+   "stats": {
+    "nb_offres": 1,
+    "nb_annonces": 0,
+    "note_moyenne": 4.1,
+    "longevite_max_jours": null,
+    "nb_annonces_actives": 0,
+    "prix_max_par_devise": {
+     "EUR": 29.99
+    },
+    "prix_min_par_devise": {
+     "EUR": 29.99
+    },
+    "nb_pages_mentionnant": 0,
+    "volume_ventes_cumule": null,
+    "fourchette_prix_par_devise": {
+     "EUR": "29.99"
+    }
+   },
+   "analyse": null,
+   "concurrent": {
+    "type": "marque_marketplace",
+    "alias": [],
+    "presence": {
+     "amazon": 1,
+     "meta_ads": 0,
+     "aliexpress": 0,
+     "recherche_web": 0
+    },
+    "ids_pages": [],
+    "ids_offres": [
+     "amz-B0BR8GXMYN"
+    ],
+    "ids_annonces": [],
+    "nom_canonique": "BraceUP",
+    "niveau_certitude_rapprochement": "sur"
+   }
+  },
+  {
+   "stats": {
+    "nb_offres": 1,
+    "nb_annonces": 0,
+    "note_moyenne": 4.4,
+    "longevite_max_jours": null,
+    "nb_annonces_actives": 0,
+    "prix_max_par_devise": {
+     "EUR": 25.99
+    },
+    "prix_min_par_devise": {
+     "EUR": 25.99
+    },
+    "nb_pages_mentionnant": 0,
+    "volume_ventes_cumule": null,
+    "fourchette_prix_par_devise": {
+     "EUR": "25.99"
+    }
+   },
+   "analyse": null,
+   "concurrent": {
+    "type": "marque_marketplace",
+    "alias": [],
+    "presence": {
+     "amazon": 1,
+     "meta_ads": 0,
+     "aliexpress": 0,
+     "recherche_web": 0
+    },
+    "ids_pages": [],
+    "ids_offres": [
+     "amz-B00YSS53EI"
+    ],
+    "ids_annonces": [],
+    "nom_canonique": "Clever Yellow",
+    "niveau_certitude_rapprochement": "sur"
+   }
+  },
+  {
+   "stats": {
+    "nb_offres": 1,
+    "nb_annonces": 0,
+    "note_moyenne": 4.2,
+    "longevite_max_jours": null,
+    "nb_annonces_actives": 0,
+    "prix_max_par_devise": {
+     "EUR": 14.99
+    },
+    "prix_min_par_devise": {
+     "EUR": 14.99
+    },
+    "nb_pages_mentionnant": 0,
+    "volume_ventes_cumule": null,
+    "fourchette_prix_par_devise": {
+     "EUR": "14.99"
+    }
+   },
+   "analyse": null,
+   "concurrent": {
+    "type": "marque_marketplace",
+    "alias": [],
+    "presence": {
+     "amazon": 1,
+     "meta_ads": 0,
+     "aliexpress": 0,
+     "recherche_web": 0
+    },
+    "ids_pages": [],
+    "ids_offres": [
+     "amz-B0C7C74RDW"
+    ],
+    "ids_annonces": [],
+    "nom_canonique": "FEVAN",
+    "niveau_certitude_rapprochement": "sur"
+   }
+  },
+  {
+   "stats": {
+    "nb_offres": 1,
+    "nb_annonces": 0,
+    "note_moyenne": 4.1,
+    "longevite_max_jours": null,
+    "nb_annonces_actives": 0,
+    "prix_max_par_devise": {
+     "EUR": 21.99
+    },
+    "prix_min_par_devise": {
+     "EUR": 21.99
+    },
+    "nb_pages_mentionnant": 0,
+    "volume_ventes_cumule": null,
+    "fourchette_prix_par_devise": {
+     "EUR": "21.99"
+    }
+   },
+   "analyse": null,
+   "concurrent": {
+    "type": "marque_marketplace",
+    "alias": [],
+    "presence": {
+     "amazon": 1,
+     "meta_ads": 0,
+     "aliexpress": 0,
+     "recherche_web": 0
+    },
+    "ids_pages": [],
+    "ids_offres": [
+     "amz-B01N0TFQOV"
+    ],
+    "ids_annonces": [],
+    "nom_canonique": "GJELEMENTS",
+    "niveau_certitude_rapprochement": "sur"
+   }
+  },
+  {
+   "stats": {
+    "nb_offres": 1,
+    "nb_annonces": 0,
+    "note_moyenne": 3.6,
+    "longevite_max_jours": null,
+    "nb_annonces_actives": 0,
+    "prix_max_par_devise": {
+     "EUR": 19.99
+    },
+    "prix_min_par_devise": {
+     "EUR": 19.99
+    },
+    "nb_pages_mentionnant": 0,
+    "volume_ventes_cumule": null,
+    "fourchette_prix_par_devise": {
+     "EUR": "19.99"
+    }
+   },
+   "analyse": null,
+   "concurrent": {
+    "type": "marque_marketplace",
+    "alias": [],
+    "presence": {
+     "amazon": 1,
+     "meta_ads": 0,
+     "aliexpress": 0,
+     "recherche_web": 0
+    },
+    "ids_pages": [],
+    "ids_offres": [
+     "amz-B09QGZLR37"
+    ],
+    "ids_annonces": [],
+    "nom_canonique": "Generico",
+    "niveau_certitude_rapprochement": "sur"
+   }
+  },
+  {
+   "stats": {
+    "nb_offres": 1,
+    "nb_annonces": 0,
+    "note_moyenne": 5.0,
+    "longevite_max_jours": null,
+    "nb_annonces_actives": 0,
+    "prix_max_par_devise": {
+     "EUR": 14.99
+    },
+    "prix_min_par_devise": {
+     "EUR": 14.99
+    },
+    "nb_pages_mentionnant": 0,
+    "volume_ventes_cumule": null,
+    "fourchette_prix_par_devise": {
+     "EUR": "14.99"
+    }
+   },
+   "analyse": null,
+   "concurrent": {
+    "type": "marque_marketplace",
+    "alias": [],
+    "presence": {
+     "amazon": 1,
+     "meta_ads": 0,
+     "aliexpress": 0,
+     "recherche_web": 0
+    },
+    "ids_pages": [],
+    "ids_offres": [
+     "amz-B0GV3XFZ4Y"
+    ],
+    "ids_annonces": [],
+    "nom_canonique": "Hoadyush",
+    "niveau_certitude_rapprochement": "sur"
+   }
+  },
+  {
+   "stats": {
+    "nb_offres": 1,
+    "nb_annonces": 0,
+    "note_moyenne": 4.0,
+    "longevite_max_jours": null,
+    "nb_annonces_actives": 0,
+    "prix_max_par_devise": {
+     "EUR": 9.99
+    },
+    "prix_min_par_devise": {
+     "EUR": 9.99
+    },
+    "nb_pages_mentionnant": 0,
+    "volume_ventes_cumule": null,
+    "fourchette_prix_par_devise": {
+     "EUR": "9.99"
+    }
+   },
+   "analyse": null,
+   "concurrent": {
+    "type": "marque_marketplace",
+    "alias": [],
+    "presence": {
+     "amazon": 1,
+     "meta_ads": 0,
+     "aliexpress": 0,
+     "recherche_web": 0
+    },
+    "ids_pages": [],
+    "ids_offres": [
+     "amz-B09KGTSLT7"
+    ],
+    "ids_annonces": [],
+    "nom_canonique": "IBLUELOVER",
+    "niveau_certitude_rapprochement": "sur"
+   }
+  },
+  {
+   "stats": {
+    "nb_offres": 1,
+    "nb_annonces": 0,
+    "note_moyenne": null,
+    "longevite_max_jours": null,
+    "nb_annonces_actives": 0,
+    "prix_max_par_devise": {
+     "EUR": 10.79
+    },
+    "prix_min_par_devise": {
+     "EUR": 10.79
+    },
+    "nb_pages_mentionnant": 0,
+    "volume_ventes_cumule": null,
+    "fourchette_prix_par_devise": {
+     "EUR": "10.79"
+    }
+   },
+   "analyse": null,
+   "concurrent": {
+    "type": "marque_marketplace",
+    "alias": [],
+    "presence": {
+     "amazon": 1,
+     "meta_ads": 0,
+     "aliexpress": 0,
+     "recherche_web": 0
+    },
+    "ids_pages": [],
+    "ids_offres": [
+     "amz-B0GWJ1DPPP"
+    ],
+    "ids_annonces": [],
+    "nom_canonique": "Kaelaxroy",
+    "niveau_certitude_rapprochement": "sur"
+   }
+  },
+  {
+   "stats": {
+    "nb_offres": 1,
+    "nb_annonces": 0,
+    "note_moyenne": 4.4,
+    "longevite_max_jours": null,
+    "nb_annonces_actives": 0,
+    "prix_max_par_devise": {
+     "EUR": 24.95
+    },
+    "prix_min_par_devise": {
+     "EUR": 24.95
+    },
+    "nb_pages_mentionnant": 0,
+    "volume_ventes_cumule": null,
+    "fourchette_prix_par_devise": {
+     "EUR": "24.95"
+    }
+   },
+   "analyse": null,
+   "concurrent": {
+    "type": "marque_marketplace",
+    "alias": [],
+    "presence": {
+     "amazon": 1,
+     "meta_ads": 0,
+     "aliexpress": 0,
+     "recherche_web": 0
+    },
+    "ids_pages": [],
+    "ids_offres": [
+     "amz-B01GW2EMP8"
+    ],
+    "ids_annonces": [],
+    "nom_canonique": "MEDiBrace",
+    "niveau_certitude_rapprochement": "sur"
+   }
+  },
+  {
+   "stats": {
+    "nb_offres": 1,
+    "nb_annonces": 0,
+    "note_moyenne": 4.2,
+    "longevite_max_jours": null,
+    "nb_annonces_actives": 0,
+    "prix_max_par_devise": {
+     "EUR": 26.99
+    },
+    "prix_min_par_devise": {
+     "EUR": 26.99
+    },
+    "nb_pages_mentionnant": 0,
+    "volume_ventes_cumule": null,
+    "fourchette_prix_par_devise": {
+     "EUR": "26.99"
+    }
+   },
+   "analyse": null,
+   "concurrent": {
+    "type": "marque_marketplace",
+    "alias": [],
+    "presence": {
+     "amazon": 1,
+     "meta_ads": 0,
+     "aliexpress": 0,
+     "recherche_web": 0
+    },
+    "ids_pages": [],
+    "ids_offres": [
+     "amz-B0D8LCN3Y3"
+    ],
+    "ids_annonces": [],
+    "nom_canonique": "MIHO SPORT",
+    "niveau_certitude_rapprochement": "sur"
+   }
+  },
+  {
+   "stats": {
+    "nb_offres": 1,
+    "nb_annonces": 0,
+    "note_moyenne": 3.9,
+    "longevite_max_jours": null,
+    "nb_annonces_actives": 0,
+    "prix_max_par_devise": {
+     "EUR": 34.99
+    },
+    "prix_min_par_devise": {
+     "EUR": 34.99
+    },
+    "nb_pages_mentionnant": 0,
+    "volume_ventes_cumule": null,
+    "fourchette_prix_par_devise": {
+     "EUR": "34.99"
+    }
+   },
+   "analyse": null,
+   "concurrent": {
+    "type": "marque_marketplace",
+    "alias": [],
+    "presence": {
+     "amazon": 1,
+     "meta_ads": 0,
+     "aliexpress": 0,
+     "recherche_web": 0
+    },
+    "ids_pages": [],
+    "ids_offres": [
+     "amz-B0D146DFH8"
+    ],
+    "ids_annonces": [],
+    "nom_canonique": "MRLI",
+    "niveau_certitude_rapprochement": "sur"
+   }
+  },
+  {
+   "stats": {
+    "nb_offres": 1,
+    "nb_annonces": 0,
+    "note_moyenne": 4.2,
+    "longevite_max_jours": null,
+    "nb_annonces_actives": 0,
+    "prix_max_par_devise": {
+     "EUR": 14.99
+    },
+    "prix_min_par_devise": {
+     "EUR": 14.99
+    },
+    "nb_pages_mentionnant": 0,
+    "volume_ventes_cumule": null,
+    "fourchette_prix_par_devise": {
+     "EUR": "14.99"
+    }
+   },
+   "analyse": null,
+   "concurrent": {
+    "type": "marque_marketplace",
+    "alias": [],
+    "presence": {
+     "amazon": 1,
+     "meta_ads": 0,
+     "aliexpress": 0,
+     "recherche_web": 0
+    },
+    "ids_pages": [],
+    "ids_offres": [
+     "amz-B0D9VPTR6F"
+    ],
+    "ids_annonces": [],
+    "nom_canonique": "NAROSEBE",
+    "niveau_certitude_rapprochement": "sur"
+   }
+  },
+  {
+   "stats": {
+    "nb_offres": 1,
+    "nb_annonces": 0,
+    "note_moyenne": 4.3,
+    "longevite_max_jours": null,
+    "nb_annonces_actives": 0,
+    "prix_max_par_devise": {
+     "EUR": 16.99
+    },
+    "prix_min_par_devise": {
+     "EUR": 16.99
+    },
+    "nb_pages_mentionnant": 0,
+    "volume_ventes_cumule": null,
+    "fourchette_prix_par_devise": {
+     "EUR": "16.99"
+    }
+   },
+   "analyse": null,
+   "concurrent": {
+    "type": "marque_marketplace",
+    "alias": [],
+    "presence": {
+     "amazon": 1,
+     "meta_ads": 0,
+     "aliexpress": 0,
+     "recherche_web": 0
+    },
+    "ids_pages": [],
+    "ids_offres": [
+     "amz-B0C4FDS2DY"
+    ],
+    "ids_annonces": [],
+    "nom_canonique": "NativoDex",
+    "niveau_certitude_rapprochement": "sur"
+   }
+  },
+  {
+   "stats": {
+    "nb_offres": 1,
+    "nb_annonces": 0,
+    "note_moyenne": 4.4,
+    "longevite_max_jours": null,
+    "nb_annonces_actives": 0,
+    "prix_max_par_devise": {
+     "EUR": 20.99
+    },
+    "prix_min_par_devise": {
+     "EUR": 20.99
+    },
+    "nb_pages_mentionnant": 0,
+    "volume_ventes_cumule": null,
+    "fourchette_prix_par_devise": {
+     "EUR": "20.99"
+    }
+   },
+   "analyse": null,
+   "concurrent": {
+    "type": "marque_marketplace",
+    "alias": [],
+    "presence": {
+     "amazon": 1,
+     "meta_ads": 0,
+     "aliexpress": 0,
+     "recherche_web": 0
+    },
+    "ids_pages": [],
+    "ids_offres": [
+     "amz-B0BCXDH2MJ"
+    ],
+    "ids_annonces": [],
+    "nom_canonique": "Prodirect.fr",
+    "niveau_certitude_rapprochement": "sur"
+   }
+  },
+  {
+   "stats": {
+    "nb_offres": 1,
+    "nb_annonces": 0,
+    "note_moyenne": 3.8,
+    "longevite_max_jours": null,
+    "nb_annonces_actives": 0,
+    "prix_max_par_devise": {
+     "EUR": 7.99
+    },
+    "prix_min_par_devise": {
+     "EUR": 7.99
+    },
+    "nb_pages_mentionnant": 0,
+    "volume_ventes_cumule": null,
+    "fourchette_prix_par_devise": {
+     "EUR": "7.99"
+    }
+   },
+   "analyse": null,
+   "concurrent": {
+    "type": "marque_marketplace",
+    "alias": [],
+    "presence": {
+     "amazon": 1,
+     "meta_ads": 0,
+     "aliexpress": 0,
+     "recherche_web": 0
+    },
+    "ids_pages": [],
+    "ids_offres": [
+     "amz-B0DJKRCM56"
+    ],
+    "ids_annonces": [],
+    "nom_canonique": "Risipu",
+    "niveau_certitude_rapprochement": "sur"
+   }
+  },
+  {
+   "stats": {
+    "nb_offres": 1,
+    "nb_annonces": 0,
+    "note_moyenne": 4.4,
+    "longevite_max_jours": null,
+    "nb_annonces_actives": 0,
+    "prix_max_par_devise": {
+     "EUR": 18.99
+    },
+    "prix_min_par_devise": {
+     "EUR": 18.99
+    },
+    "nb_pages_mentionnant": 0,
+    "volume_ventes_cumule": null,
+    "fourchette_prix_par_devise": {
+     "EUR": "18.99"
+    }
+   },
+   "analyse": null,
+   "concurrent": {
+    "type": "marque_marketplace",
+    "alias": [],
+    "presence": {
+     "amazon": 1,
+     "meta_ads": 0,
+     "aliexpress": 0,
+     "recherche_web": 0
+    },
+    "ids_pages": [],
+    "ids_offres": [
+     "amz-B07XX32JVB"
+    ],
+    "ids_annonces": [],
+    "nom_canonique": "TRILINK",
+    "niveau_certitude_rapprochement": "sur"
+   }
+  },
+  {
+   "stats": {
+    "nb_offres": 1,
+    "nb_annonces": 0,
+    "note_moyenne": 4.4,
+    "longevite_max_jours": null,
+    "nb_annonces_actives": 0,
+    "prix_max_par_devise": {
+     "EUR": 17.99
+    },
+    "prix_min_par_devise": {
+     "EUR": 17.99
+    },
+    "nb_pages_mentionnant": 0,
+    "volume_ventes_cumule": null,
+    "fourchette_prix_par_devise": {
+     "EUR": "17.99"
+    }
+   },
+   "analyse": null,
+   "concurrent": {
+    "type": "marque_marketplace",
+    "alias": [],
+    "presence": {
+     "amazon": 1,
+     "meta_ads": 0,
+     "aliexpress": 0,
+     "recherche_web": 0
+    },
+    "ids_pages": [],
+    "ids_offres": [
+     "amz-B07ZJKT6VZ"
+    ],
+    "ids_annonces": [],
+    "nom_canonique": "The Restored",
+    "niveau_certitude_rapprochement": "sur"
+   }
+  },
+  {
+   "stats": {
+    "nb_offres": 1,
+    "nb_annonces": 0,
+    "note_moyenne": 3.4,
+    "longevite_max_jours": null,
+    "nb_annonces_actives": 0,
+    "prix_max_par_devise": {
+     "EUR": 25.5
+    },
+    "prix_min_par_devise": {
+     "EUR": 25.5
+    },
+    "nb_pages_mentionnant": 0,
+    "volume_ventes_cumule": null,
+    "fourchette_prix_par_devise": {
+     "EUR": "25.50"
+    }
+   },
+   "analyse": null,
+   "concurrent": {
+    "type": "marque_marketplace",
+    "alias": [],
+    "presence": {
+     "amazon": 1,
+     "meta_ads": 0,
+     "aliexpress": 0,
+     "recherche_web": 0
+    },
+    "ids_pages": [],
+    "ids_offres": [
+     "amz-B07F3GD2M8"
+    ],
+    "ids_annonces": [],
+    "nom_canonique": "aHeal",
+    "niveau_certitude_rapprochement": "sur"
+   }
+  },
+  {
+   "stats": {
+    "nb_offres": 1,
+    "nb_annonces": 0,
+    "note_moyenne": 4.4,
+    "longevite_max_jours": null,
+    "nb_annonces_actives": 0,
+    "prix_max_par_devise": {
+     "EUR": 29.99
+    },
+    "prix_min_par_devise": {
+     "EUR": 29.99
+    },
+    "nb_pages_mentionnant": 0,
+    "volume_ventes_cumule": null,
+    "fourchette_prix_par_devise": {
+     "EUR": "29.99"
+    }
+   },
+   "analyse": null,
+   "concurrent": {
+    "type": "marque_marketplace",
+    "alias": [],
+    "presence": {
+     "amazon": 1,
+     "meta_ads": 0,
+     "aliexpress": 0,
+     "recherche_web": 0
+    },
+    "ids_pages": [],
+    "ids_offres": [
+     "amz-B0GWHMT17Z"
+    ],
+    "ids_annonces": [],
+    "nom_canonique": "jinpinz",
+    "niveau_certitude_rapprochement": "sur"
+   }
+  },
+  {
+   "stats": {
+    "nb_offres": 1,
+    "nb_annonces": 0,
+    "note_moyenne": 3.7,
+    "longevite_max_jours": null,
+    "nb_annonces_actives": 0,
+    "prix_max_par_devise": {
+     "EUR": 19.9
+    },
+    "prix_min_par_devise": {
+     "EUR": 19.9
+    },
+    "nb_pages_mentionnant": 0,
+    "volume_ventes_cumule": null,
+    "fourchette_prix_par_devise": {
+     "EUR": "19.90"
+    }
+   },
+   "analyse": null,
+   "concurrent": {
+    "type": "marque_marketplace",
+    "alias": [],
+    "presence": {
+     "amazon": 1,
+     "meta_ads": 0,
+     "aliexpress": 0,
+     "recherche_web": 0
+    },
+    "ids_pages": [],
+    "ids_offres": [
+     "amz-B0943XC7R9"
+    ],
+    "ids_annonces": [],
+    "nom_canonique": "kmt",
+    "niveau_certitude_rapprochement": "sur"
+   }
+  },
+  {
+   "stats": {
+    "nb_offres": 1,
+    "nb_annonces": 0,
+    "note_moyenne": 4.0,
+    "longevite_max_jours": null,
+    "nb_annonces_actives": 0,
+    "prix_max_par_devise": {
+     "EUR": 26.99
+    },
+    "prix_min_par_devise": {
+     "EUR": 26.99
+    },
+    "nb_pages_mentionnant": 0,
+    "volume_ventes_cumule": null,
+    "fourchette_prix_par_devise": {
+     "EUR": "26.99"
+    }
+   },
+   "analyse": null,
+   "concurrent": {
+    "type": "marque_marketplace",
+    "alias": [],
+    "presence": {
+     "amazon": 1,
+     "meta_ads": 0,
+     "aliexpress": 0,
+     "recherche_web": 0
+    },
+    "ids_pages": [],
+    "ids_offres": [
+     "amz-B0DNJLQMYZ"
+    ],
+    "ids_annonces": [],
+    "nom_canonique": "zshequ",
+    "niveau_certitude_rapprochement": "sur"
+   }
+  },
+  {
+   "stats": {
+    "nb_offres": 0,
+    "nb_annonces": 0,
+    "note_moyenne": null,
+    "longevite_max_jours": null,
+    "nb_annonces_actives": 0,
+    "prix_max_par_devise": {},
+    "prix_min_par_devise": {},
+    "nb_pages_mentionnant": 1,
+    "volume_ventes_cumule": null,
+    "fourchette_prix_par_devise": {}
+   },
+   "analyse": null,
+   "concurrent": {
+    "type": "marque_etablie",
+    "alias": [],
+    "presence": {
+     "amazon": 0,
+     "meta_ads": 0,
+     "aliexpress": 0,
+     "recherche_web": 1
+    },
+    "ids_pages": [
+     "web-1"
+    ],
+    "ids_offres": [],
+    "ids_annonces": [],
+    "nom_canonique": "FREETOO",
+    "niveau_certitude_rapprochement": "sur"
+   }
+  },
+  {
+   "stats": {
+    "nb_offres": 0,
+    "nb_annonces": 0,
+    "note_moyenne": null,
+    "longevite_max_jours": null,
+    "nb_annonces_actives": 0,
+    "prix_max_par_devise": {},
+    "prix_min_par_devise": {},
+    "nb_pages_mentionnant": 1,
+    "volume_ventes_cumule": null,
+    "fourchette_prix_par_devise": {}
+   },
+   "analyse": null,
+   "concurrent": {
+    "type": "marque_etablie",
+    "alias": [],
+    "presence": {
+     "amazon": 0,
+     "meta_ads": 0,
+     "aliexpress": 0,
+     "recherche_web": 1
+    },
+    "ids_pages": [
+     "web-8"
+    ],
+    "ids_offres": [],
+    "ids_annonces": [],
+    "nom_canonique": "Gibaud",
+    "niveau_certitude_rapprochement": "sur"
+   }
+  },
+  {
+   "stats": {
+    "nb_offres": 0,
+    "nb_annonces": 1,
+    "note_moyenne": null,
+    "longevite_max_jours": 290,
+    "nb_annonces_actives": 1,
+    "prix_max_par_devise": {},
+    "prix_min_par_devise": {},
+    "nb_pages_mentionnant": 0,
+    "volume_ventes_cumule": null,
+    "fourchette_prix_par_devise": {}
+   },
+   "analyse": null,
+   "concurrent": {
+    "type": "annonceur_seul",
+    "alias": [],
+    "presence": {
+     "amazon": 0,
+     "meta_ads": 1,
+     "aliexpress": 0,
+     "recherche_web": 0
+    },
+    "ids_pages": [],
+    "ids_offres": [],
+    "ids_annonces": [
+     "ads-1166667985396035"
+    ],
+    "nom_canonique": "Juliedeal us",
+    "niveau_certitude_rapprochement": "sur"
+   }
+  },
+  {
+   "stats": {
+    "nb_offres": 0,
+    "nb_annonces": 0,
+    "note_moyenne": null,
+    "longevite_max_jours": null,
+    "nb_annonces_actives": 0,
+    "prix_max_par_devise": {},
+    "prix_min_par_devise": {},
+    "nb_pages_mentionnant": 1,
+    "volume_ventes_cumule": null,
+    "fourchette_prix_par_devise": {}
+   },
+   "analyse": null,
+   "concurrent": {
+    "type": "marque_etablie",
+    "alias": [],
+    "presence": {
+     "amazon": 0,
+     "meta_ads": 0,
+     "aliexpress": 0,
+     "recherche_web": 1
+    },
+    "ids_pages": [
+     "web-7"
+    ],
+    "ids_offres": [],
+    "ids_annonces": [],
+    "nom_canonique": "Thuasne",
+    "niveau_certitude_rapprochement": "sur"
+   }
+  },
+  {
+   "stats": {
+    "nb_offres": 0,
+    "nb_annonces": 1,
+    "note_moyenne": null,
+    "longevite_max_jours": 67,
+    "nb_annonces_actives": 1,
+    "prix_max_par_devise": {},
+    "prix_min_par_devise": {},
+    "nb_pages_mentionnant": 0,
+    "volume_ventes_cumule": null,
+    "fourchette_prix_par_devise": {}
+   },
+   "analyse": null,
+   "concurrent": {
+    "type": "annonceur_seul",
+    "alias": [],
+    "presence": {
+     "amazon": 0,
+     "meta_ads": 1,
+     "aliexpress": 0,
+     "recherche_web": 0
+    },
+    "ids_pages": [],
+    "ids_offres": [],
+    "ids_annonces": [
+     "ads-2048639945862933"
+    ],
+    "nom_canonique": "Yahory shop",
+    "niveau_certitude_rapprochement": "sur"
+   }
+  }
+ ],
+ "benchmark_prix": [
+  {
+   "devise": "EUR",
+   "source": "aliexpress",
+   "prix_max": 50.39,
+   "prix_min": 0.75,
+   "segments": [
+    {
+     "nom": "entree",
+     "nb_offres": 46,
+     "borne_basse": 0.75,
+     "borne_haute": 7.49
+    },
+    {
+     "nom": "coeur",
+     "nb_offres": 50,
+     "borne_basse": 7.49,
+     "borne_haute": 15.39
+    },
+    {
+     "nom": "premium",
+     "nb_offres": 45,
+     "borne_basse": 15.39,
+     "borne_haute": 50.39
+    }
+   ],
+   "dispersion": 1.133,
+   "commentaire": "",
+   "prix_mediane": 11.39,
+   "nb_offres_avec_prix": 141
+  },
+  {
+   "devise": "EUR",
+   "source": "amazon",
+   "prix_max": 37.99,
+   "prix_min": 6.79,
+   "segments": [
+    {
+     "nom": "entree",
+     "nb_offres": 15,
+     "borne_basse": 6.79,
+     "borne_haute": 16.99
+    },
+    {
+     "nom": "coeur",
+     "nb_offres": 14,
+     "borne_basse": 16.99,
+     "borne_haute": 25.5
+    },
+    {
+     "nom": "premium",
+     "nb_offres": 14,
+     "borne_basse": 25.5,
+     "borne_haute": 37.99
+    }
+   ],
+   "dispersion": 0.545,
+   "commentaire": "",
+   "prix_mediane": 21.99,
+   "nb_offres_avec_prix": 43
+  }
+ ],
+ "horodatage_utc": "2026-08-06T19:13:27Z",
+ "positionnement": {
+  "axes_observes": [
+   "Praticité et confort d'usage quotidien",
+   "Innovation technologique (acupression magnétique, gonflable)",
+   "Ajustabilité et universalité (réglable, unisexe)",
+   "Respirabilité et matériaux (maille, nylon)",
+   "Correction posturale et décompression vertébrale",
+   "Ciblage pathologique (sciatique, hernie discale)",
+   "Usage domestique et portabilité"
+  ],
+  "normes_marche": [
+   {
+    "point": "Livraison rapide (24h-48h) et retours gratuits sous 30 jours comme standard de service",
+    "statut": "fait",
+    "preuves": [
+     {
+      "type": "annonce",
+      "extrait": "🔥Offres à durée limitée\n🌟 Indispensable pour les soins aux personnes âgées ! 🌟\nDites adieu aux douleurs lombaires ! 💥\nNotre ceinture de soutien lombaire procure un soulagement INSTANTANÉ et un confort TOUTE LA JOURNÉE 😌✨\n✅ Stabilisation innovante de la colonne vertébrale\n✅ Soutien enveloppant à 360°",
+      "id_reference": "ads-1166667985396035"
+     },
+     {
+      "type": "page",
+      "extrait": "Livraison France 48h - Forfait 6,90€ offert dès 120€ d'achat",
+      "id_reference": "web-8"
+     }
+    ]
+   },
+   {
+    "point": "Seuil psychologique de prix cœur de marché entre 7,49 € et 25,50 € selon la plateforme : 50 offres AliExpress (7,49-15,39 €) et 14 offres Amazon (16,99-25,50 €)",
+    "statut": "hypothese",
+    "preuves": []
+   },
+   {
+    "point": "Dispersion tarifaire plus forte sur AliExpress (1,133) que sur Amazon (0,545), reflétant une hétérogénéité d'offres et de positionnements qualité",
+    "statut": "hypothese",
+    "preuves": []
+   },
+   {
+    "point": "Présence de marques spécialisées orthopédiques (Thuasne, Gibaud) dans les circuits de distribution dédiés santé",
+    "statut": "fait",
+    "preuves": [
+     {
+      "type": "page",
+      "extrait": "Ceinture lombaire Thuasne LombaStart",
+      "id_reference": "web-7"
+     },
+     {
+      "type": "page",
+      "extrait": "Ceinture Lombaire Thuasne et Gibaud avec Prise en Charge",
+      "id_reference": "web-8"
+     }
+    ]
+   }
+  ],
+  "messages_dominants": [
+   {
+    "point": "Soulagement immédiat et confort prolongé des douleurs lombaires comme promesse centrale",
+    "statut": "fait",
+    "preuves": [
+     {
+      "type": "annonce",
+      "extrait": "🔥Offres à durée limitée\n🌟 Indispensable pour les soins aux personnes âgées ! 🌟\nDites adieu aux douleurs lombaires ! 💥\nNotre ceinture de soutien lombaire procure un soulagement INSTANTANÉ et un confort TOUTE LA JOURNÉE 😌✨\n✅ Stabilisation innovante de la colonne vertébrale\n✅ Soutien enveloppant à 360°",
+      "id_reference": "ads-1166667985396035"
+     },
+     {
+      "type": "annonce",
+      "extrait": "🧲🌀 Vous souffrez de maux de dos et vous ne pouvez pas vous allonger à plat ? Ce coussin lombaire magnétique soulage la pression dès que vous vous allongez, offre un massage par acupression et est facile à transporter 💆‍♀️✨\n\n✅ Support incurvé + points de pression magnétiques : étire scientifiquement",
+      "id_reference": "ads-2048639945862933"
+     }
+    ]
+   },
+   {
+    "point": "Ajustabilité comme argument de réassurance dominant : 45 offres mentionnent explicitement réglable/ajustable",
+    "statut": "hypothese",
+    "preuves": []
+   },
+   {
+    "point": "Correction posturale et décompression vertébrale comme bénéfices secondaires récurrents",
+    "statut": "hypothese",
+    "preuves": []
+   },
+   {
+    "point": "Universalité du produit (unisexe, hommes et femmes) affichée par 22 offres",
+    "statut": "hypothese",
+    "preuves": []
+   }
+  ],
+  "angles_peu_exploites": [
+   {
+    "point": "Aucune mention de certification médicale, d'essais cliniques ou de validation par des professionnels de santé n'est observée dans le corpus (2 annonces, 3 pages web)",
+    "statut": "fait",
+    "preuves": [
+     {
+      "type": "annonce",
+      "extrait": null,
+      "id_reference": "ads-1166667985396035"
+     },
+     {
+      "type": "annonce",
+      "extrait": null,
+      "id_reference": "ads-2048639945862933"
+     },
+     {
+      "type": "page",
+      "extrait": null,
+      "id_reference": "web-1"
+     }
+    ]
+   },
+   {
+    "point": "Absence de communication sur la durabilité, l'éco-conception ou le recyclage des matériaux, non constatée dans les 2 annonces et 3 pages analysées",
+    "statut": "fait",
+    "preuves": [
+     {
+      "type": "annonce",
+      "extrait": null,
+      "id_reference": "ads-1166667985396035"
+     },
+     {
+      "type": "annonce",
+      "extrait": null,
+      "id_reference": "ads-2048639945862933"
+     },
+     {
+      "type": "page",
+      "extrait": null,
+      "id_reference": "web-7"
+     }
+    ]
+   },
+   {
+    "point": "Programmes d'accompagnement (exercices, vidéos tutoriels, suivi personnalisé) non mentionnés dans le corpus de 2 annonces et 3 pages",
+    "statut": "fait",
+    "preuves": [
+     {
+      "type": "annonce",
+      "extrait": null,
+      "id_reference": "ads-1166667985396035"
+     },
+     {
+      "type": "annonce",
+      "extrait": null,
+      "id_reference": "ads-2048639945862933"
+     },
+     {
+      "type": "page",
+      "extrait": null,
+      "id_reference": "web-8"
+     }
+    ]
+   },
+   {
+    "point": "Offres d'abonnement ou de renouvellement automatique non observées dans les 184 offres cœur de marché analysées",
+    "statut": "hypothese",
+    "preuves": []
+   },
+   {
+    "point": "Communication sur l'usage préventif (sport, travail physique, voyage) peu développée : seul l'usage domestique est mentionné (8 occurrences), non observé dans les 2 annonces",
+    "statut": "fait",
+    "preuves": [
+     {
+      "type": "annonce",
+      "extrait": null,
+      "id_reference": "ads-1166667985396035"
+     },
+     {
+      "type": "annonce",
+      "extrait": null,
+      "id_reference": "ads-2048639945862933"
+     }
+    ]
+   }
+  ],
+  "facteurs_cles_succes": [
+   {
+    "point": "Respirabilité du matériau : 32 offres mentionnent respirant/respirante/maille respirante, critère déterminant pour le confort prolongé",
+    "statut": "hypothese",
+    "preuves": []
+   },
+   {
+    "point": "Innovation technologique différenciante : acupression magnétique, gonflable (9 offres), double traction (6 offres)",
+    "statut": "fait",
+    "preuves": [
+     {
+      "type": "annonce",
+      "extrait": "🧲🌀 Vous souffrez de maux de dos et vous ne pouvez pas vous allonger à plat ? Ce coussin lombaire magnétique soulage la pression dès que vous vous allongez, offre un massage par acupression et est facile à transporter 💆‍♀️✨\n\n✅ Support incurvé + points de pression magnétiques : étire scientifiquement",
+      "id_reference": "ads-2048639945862933"
+     }
+    ]
+   },
+   {
+    "point": "Ciblage pathologique précis (sciatique 6 offres, hernie discale 3 offres) pour capter une demande qualifiée",
+    "statut": "hypothese",
+    "preuves": []
+   },
+   {
+    "point": "Ergonomie et renforcement structurel (6 baleines, barre horizontale) comme gages de qualité perçue",
+    "statut": "hypothese",
+    "preuves": []
+   },
+   {
+    "point": "Durée de diffusion publicitaire longue (médiane 178,5 jours, max 290 jours) suggérant une stratégie de présence continue plutôt que de campagnes ponctuelles",
+    "statut": "hypothese",
+    "preuves": []
+   }
+  ]
+ },
+ "differenciation": {
+  "attributs_partages": [
+   {
+    "point": "Caractère réglable : 37 offres concurrentes mentionnent explicitement cet attribut (« Réglable » 20 offres, « réglable » 17 offres)",
+    "statut": "fait",
+    "preuves": [
+     {
+      "type": "offre",
+      "extrait": "Réglable",
+      "id_reference": "ax-1005012444204832"
+     },
+     {
+      "type": "offre",
+      "extrait": "réglable",
+      "id_reference": "ax-1005010348452378"
+     }
+    ]
+   },
+   {
+    "point": "Fonction de double traction : 6 offres concurrentes revendiquent explicitement cet attribut distinctif",
+    "statut": "fait",
+    "preuves": [
+     {
+      "type": "offre",
+      "extrait": "Double traction",
+      "id_reference": "ax-1005006383600815"
+     },
+     {
+      "type": "offre",
+      "extrait": "Double traction",
+      "id_reference": "ax-1005012688130530"
+     },
+     {
+      "type": "offre",
+      "extrait": "Double traction",
+      "id_reference": "ax-1005008541420720"
+     }
+    ]
+   },
+   {
+    "point": "Soutien lombaire : 11 offres concurrentes mentionnent cette fonction (« Soutien lombaire » 8 offres, « soutien lombaire » 3 offres)",
+    "statut": "fait",
+    "preuves": [
+     {
+      "type": "offre",
+      "extrait": "Soutien lombaire",
+      "id_reference": "ax-1005009082783243"
+     },
+     {
+      "type": "offre",
+      "extrait": "soutien lombaire",
+      "id_reference": "ax-1005010804328558"
+     }
+    ]
+   },
+   {
+    "point": "Fonction de décompression de la colonne vertébrale : 10 offres concurrentes revendiquent cet effet thérapeutique (« Décompression colonne vertébrale » 7 offres, « décompression » 3 offres)",
+    "statut": "fait",
+    "preuves": [
+     {
+      "type": "offre",
+      "extrait": "Ceinture de traction lombaire réglable, civière de disque de suspension domestique, ceinture de suspension de décompression de la colonne vertébrale pour soulager la névralgie des maux de dos",
+      "id_reference": "ax-1005008586278791"
+     },
+     {
+      "type": "offre",
+      "extrait": "décompression",
+      "id_reference": "ax-1005012544509763"
+     }
+    ]
+   },
+   {
+    "point": "Fonction de traction lombaire : 8 offres concurrentes mentionnent cette caractéristique (« Traction lombaire » 5 offres, « traction lombaire » 3 offres)",
+    "statut": "fait",
+    "preuves": [
+     {
+      "type": "offre",
+      "extrait": "Traction lombaire",
+      "id_reference": "ax-1005005946631833"
+     },
+     {
+      "type": "offre",
+      "extrait": "traction lombaire",
+      "id_reference": "ax-1005012544509763"
+     }
+    ]
+   }
+  ],
+  "desavantages_apparents": [
+   {
+    "point": "Absence de mention de matériaux respirants ou de maille aérée dans la description fournie, alors que 24 offres concurrentes valorisent le confort thermique",
+    "statut": "hypothese",
+    "preuves": [
+     {
+      "type": "offre",
+      "extrait": "Respirant",
+      "id_reference": "ax-1005010700679942"
+     },
+     {
+      "type": "offre",
+      "extrait": "Maille respirante",
+      "id_reference": "ax-1005005776327850"
+     },
+     {
+      "type": "offre",
+      "extrait": "MEDiBrace Lumbar Back Support Belt Lightweight Breathable Back Pain Support for Sciatica Pain Relief for Men and Women",
+      "id_reference": "amz-B01GW2EMP8"
+     }
+    ]
+   },
+   {
+    "point": "Absence de mention de fonction de correction posturale, alors que 15 offres concurrentes élargissent le bénéfice au-delà du seul soulagement lombaire",
+    "statut": "hypothese",
+    "preuves": [
+     {
+      "type": "offre",
+      "extrait": "Sangles correctrices invisibles pour hommes, attelle de soutien Anti-bossu, réglable, améliorant la Posture, bandes droites pour le dos",
+      "id_reference": "ax-1005009636085238"
+     },
+     {
+      "type": "offre",
+      "extrait": "Posture Corrector – Back Belt/Lumbar and Back Straightener for Relieving Back and Shoulder Pain – Men/Women Adjustable Orthosis with 2 Shoulder Supports, (L)",
+      "id_reference": "amz-B0D8JXMC7C"
+     }
+    ]
+   },
+   {
+    "point": "Absence de mention d'indications thérapeutiques précises (sciatique, hernie discale), alors que 9 offres concurrentes ciblent des pathologies identifiées",
+    "statut": "hypothese",
+    "preuves": [
+     {
+      "type": "offre",
+      "extrait": "Sciatique",
+      "id_reference": "ax-1005008784423024"
+     },
+     {
+      "type": "offre",
+      "extrait": "Paskyee Lumbar Support Belt with 6 Bones, Lumbar Support for Men and Women - Lower Back for Pain Relief, Adjustable Support for Sciatica, Scoliosis",
+      "id_reference": "amz-B09BQLCGJK"
+     },
+     {
+      "type": "offre",
+      "extrait": "Hernie discale",
+      "id_reference": "ax-1005008705594130"
+     }
+    ]
+   },
+   {
+    "point": "Absence de mention de baleines de renfort structurel, alors que 5 offres Amazon valorisent « 6 baleines » comme gage de maintien renforcé",
+    "statut": "hypothese",
+    "preuves": [
+     {
+      "type": "offre",
+      "extrait": "Paskyee Lumbar Belt for Men Women Lower Back Pain Relief with 6 Bones and Removable Lumbar Cushion, Lumbar Support Belt for Herniated Disc, Sciatica",
+      "id_reference": "amz-B09TNGSVVJ"
+     },
+     {
+      "type": "offre",
+      "extrait": "Paskyee Lumbar Support Belt with 6 Bones, Lumbar Support Belt for Men and Women - Lower Back for Pain Relief, Adjustable Support for Sciatica, Scoliosis",
+      "id_reference": "amz-B081F32MM9"
+     }
+    ]
+   },
+   {
+    "point": "Absence de mention de caractère unisexe ou « hommes et femmes », alors que 22 offres concurrentes élargissent explicitement la cible (« Unisexe » 10, « unisexe » 6, « hommes et femmes » 6)",
+    "statut": "hypothese",
+    "preuves": [
+     {
+      "type": "offre",
+      "extrait": "Orthèse dorsale réglable, ceinture de soutien lombaire à Double traction, antidérapante, pour hommes et femmes, coussin lombaire, coussin d'assistance sportive",
+      "id_reference": "ax-1005008541420720"
+     },
+     {
+      "type": "offre",
+      "extrait": "hommes et femmes",
+      "id_reference": "ax-1005011824813151"
+     }
+    ]
+   },
+   {
+    "point": "Absence de mention de propriété antidérapante, alors que 4 offres concurrentes valorisent la stabilité du maintien",
+    "statut": "hypothese",
+    "preuves": [
+     {
+      "type": "offre",
+      "extrait": "Antidérapante",
+      "id_reference": "ax-1005010074414777"
+     },
+     {
+      "type": "offre",
+      "extrait": "Antidérapante",
+      "id_reference": "ax-1005010719232857"
+     }
+    ]
+   },
+   {
+    "point": "Absence de mention de caractère ergonomique, alors que 7 offres concurrentes valorisent l'adaptation anatomique",
+    "statut": "hypothese",
+    "preuves": [
+     {
+      "type": "offre",
+      "extrait": "Ergonomique",
+      "id_reference": "ax-1005012801277579"
+     },
+     {
+      "type": "offre",
+      "extrait": "Ergonomique",
+      "id_reference": "ax-1005012807190882"
+     }
+    ]
+   },
+   {
+    "point": "Absence de mention de contexte d'usage (domestique, portable, sport, travail), alors que 11 offres concurrentes précisent les situations d'utilisation",
+    "statut": "hypothese",
+    "preuves": [
+     {
+      "type": "offre",
+      "extrait": "Ceinture de Traction lombaire, civière de rééducation lombaire Portable à domicile, ceinture d'étirement lombaire, ceinture d'exercice d'éclatement antidérapante",
+      "id_reference": "ax-1005010074414777"
+     },
+     {
+      "type": "offre",
+      "extrait": "Portable",
+      "id_reference": "ax-1005012801277579"
+     }
+    ]
+   },
+   {
+    "point": "Absence de mention de certification médicale ou de validation professionnelle, alors que cette lacune est généralisée sur le marché (constaté dans 2 annonces et 3 pages web analysées)",
+    "statut": "fait",
+    "preuves": [
+     {
+      "type": "annonce",
+      "extrait": null,
+      "id_reference": "ads-1166667985396035"
+     },
+     {
+      "type": "page",
+      "extrait": null,
+      "id_reference": "web-1"
+     }
+    ]
+   },
+   {
+    "point": "Absence de communication sur la durabilité ou l'éco-conception, lacune partagée par l'ensemble du marché observé (2 annonces, 3 pages)",
+    "statut": "fait",
+    "preuves": [
+     {
+      "type": "annonce",
+      "extrait": null,
+      "id_reference": "ads-1166667985396035"
+     },
+     {
+      "type": "page",
+      "extrait": null,
+      "id_reference": "web-7"
+     }
+    ]
+   },
+   {
+    "point": "Absence de programme d'accompagnement (exercices, vidéos, suivi), lacune généralisée sur le marché (2 annonces, 3 pages analysées)",
+    "statut": "fait",
+    "preuves": [
+     {
+      "type": "annonce",
+      "extrait": null,
+      "id_reference": "ads-1166667985396035"
+     },
+     {
+      "type": "page",
+      "extrait": null,
+      "id_reference": "web-8"
+     }
+    ]
+   }
+  ],
+  "attributs_distinctifs_potentiels": [
+   {
+    "point": "Absence de mention de respirabilité dans la description fournie, alors que 24 offres concurrentes valorisent cet attribut (« Respirant » 10, « respirante » 8, « Maille respirante » 8, « Respirante » 6)",
+    "statut": "hypothese",
+    "preuves": [
+     {
+      "type": "offre",
+      "extrait": "Respirant",
+      "id_reference": "ax-1005010700679942"
+     },
+     {
+      "type": "offre",
+      "extrait": "respirante",
+      "id_reference": "ax-1005012732334248"
+     },
+     {
+      "type": "offre",
+      "extrait": "Maille respirante",
+      "id_reference": "ax-1005005776327850"
+     }
+    ]
+   },
+   {
+    "point": "Absence de mention du caractère unisexe dans la description fournie, alors que 16 offres concurrentes le revendiquent (« Unisexe » 10, « unisexe » 6)",
+    "statut": "hypothese",
+    "preuves": [
+     {
+      "type": "offre",
+      "extrait": "Orthèse dorsale réglable, ceinture de soutien lombaire à Double traction, antidérapante, pour hommes et femmes, coussin lombaire, coussin d'assistance sportive",
+      "id_reference": "ax-1005008541420720"
+     },
+     {
+      "type": "offre",
+      "extrait": "unisexe",
+      "id_reference": "ax-1005006697527976"
+     }
+    ]
+   },
+   {
+    "point": "Absence de mention de fonction de correction posturale, alors que 15 offres concurrentes valorisent cet attribut (« Correcteur posture » 12, « correcteur posture » 3)",
+    "statut": "hypothese",
+    "preuves": [
+     {
+      "type": "offre",
+      "extrait": "Sangles correctrices invisibles pour hommes, attelle de soutien Anti-bossu, réglable, améliorant la Posture, bandes droites pour le dos",
+      "id_reference": "ax-1005009636085238"
+     },
+     {
+      "type": "offre",
+      "extrait": "Ceinture correctrice de Posture pour adultes, sangle de Correction du dos respirante pour femmes et hommes, Support du dos, outil de Correction de Position assise, nouvelle collection",
+      "id_reference": "ax-1005008955953251"
+     }
+    ]
+   },
+   {
+    "point": "Absence de mention de baleines de renfort, alors que 5 offres concurrentes Amazon revendiquent « 6 baleines » comme élément structurel",
+    "statut": "hypothese",
+    "preuves": [
+     {
+      "type": "offre",
+      "extrait": "Paskyee Lumbar Belt for Men Women Lower Back Pain Relief with 6 Bones and Removable Lumbar Cushion, Lumbar Support Belt for Herniated Disc, Sciatica",
+      "id_reference": "amz-B09TNGSVVJ"
+     },
+     {
+      "type": "offre",
+      "extrait": "Paskyee Lumbar Support Belt with 6 Bones, Lumbar Support for Men and Women - Lower Back for Pain Relief, Adjustable Support for Sciatica, Scoliosis",
+      "id_reference": "amz-B09BQLCGJK"
+     }
+    ]
+   },
+   {
+    "point": "Absence de mention d'indication thérapeutique spécifique (sciatique, hernie discale), alors que 9 offres concurrentes ciblent ces pathologies (« Sciatique » 6, « Hernie discale » 3)",
+    "statut": "hypothese",
+    "preuves": [
+     {
+      "type": "offre",
+      "extrait": "Sciatique",
+      "id_reference": "ax-1005008784423024"
+     },
+     {
+      "type": "offre",
+      "extrait": "Hernie discale",
+      "id_reference": "ax-1005008705594130"
+     }
+    ]
+   },
+   {
+    "point": "Absence de mention de caractère ergonomique, alors que 7 offres concurrentes valorisent cet attribut",
+    "statut": "hypothese",
+    "preuves": [
+     {
+      "type": "offre",
+      "extrait": "Ergonomique",
+      "id_reference": "ax-1005012801277579"
+     },
+     {
+      "type": "offre",
+      "extrait": "Ergonomique",
+      "id_reference": "ax-1005012653036487"
+     }
+    ]
+   },
+   {
+    "point": "Absence de mention de propriété antidérapante, alors que 4 offres concurrentes revendiquent cet attribut de maintien",
+    "statut": "hypothese",
+    "preuves": [
+     {
+      "type": "offre",
+      "extrait": "Antidérapante",
+      "id_reference": "ax-1005010074414777"
+     },
+     {
+      "type": "offre",
+      "extrait": "Antidérapante",
+      "id_reference": "ax-1005008541420720"
+     }
+    ]
+   },
+   {
+    "point": "Absence de mention de portabilité ou d'usage domestique, alors que 8 offres concurrentes valorisent l'usage à domicile (« Domestique » 5, « Usage domestique » 3) et 3 la portabilité",
+    "statut": "hypothese",
+    "preuves": [
+     {
+      "type": "offre",
+      "extrait": "Ceinture de Traction lombaire, civière de rééducation lombaire Portable à domicile, ceinture d'étirement lombaire, ceinture d'exercice d'éclatement antidérapante",
+      "id_reference": "ax-1005010074414777"
+     },
+     {
+      "type": "offre",
+      "extrait": "Portable",
+      "id_reference": "ax-1005012801277579"
+     }
+    ]
+   }
+  ]
+ },
+ "statuts_analyse": [
+  {
+   "phase": "extraction_attributs",
+   "succes": true,
+   "nb_elements": 12,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "extraction_attributs",
+   "succes": true,
+   "nb_elements": 12,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "extraction_attributs",
+   "succes": true,
+   "nb_elements": 12,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "extraction_attributs",
+   "succes": true,
+   "nb_elements": 12,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "extraction_attributs",
+   "succes": true,
+   "nb_elements": 12,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "extraction_attributs",
+   "succes": true,
+   "nb_elements": 12,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "extraction_attributs",
+   "succes": true,
+   "nb_elements": 12,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "extraction_attributs",
+   "succes": true,
+   "nb_elements": 12,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "extraction_attributs",
+   "succes": true,
+   "nb_elements": 12,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "extraction_attributs",
+   "succes": true,
+   "nb_elements": 12,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "extraction_attributs",
+   "succes": true,
+   "nb_elements": 12,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "extraction_attributs",
+   "succes": true,
+   "nb_elements": 12,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "extraction_attributs",
+   "succes": true,
+   "nb_elements": 12,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "extraction_attributs",
+   "succes": true,
+   "nb_elements": 12,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "extraction_attributs",
+   "succes": true,
+   "nb_elements": 12,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "extraction_attributs",
+   "succes": true,
+   "nb_elements": 4,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "extraction_claims",
+   "succes": true,
+   "nb_elements": 2,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "consolidation_concurrents",
+   "succes": true,
+   "nb_elements": 40,
+   "nb_tentatives": 1,
+   "message_erreur": "identifiant de page « web-8 » déjà rattaché à un autre concurrent : retiré de « Thuasne »; 81 offre(s) non rattachée(s) par le modèle regroupée(s) sous « Offres sans marque »"
+  },
+  {
+   "phase": "analyse_concurrent",
+   "succes": true,
+   "nb_elements": 1,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "analyse_concurrent",
+   "succes": true,
+   "nb_elements": 1,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "analyse_concurrent",
+   "succes": true,
+   "nb_elements": 1,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "analyse_concurrent",
+   "succes": true,
+   "nb_elements": 1,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "analyse_concurrent",
+   "succes": true,
+   "nb_elements": 1,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "analyse_concurrent",
+   "succes": true,
+   "nb_elements": 1,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "analyse_concurrent",
+   "succes": true,
+   "nb_elements": 1,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "analyse_concurrent",
+   "succes": true,
+   "nb_elements": 1,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "lecture_transversale",
+   "succes": true,
+   "nb_elements": 0,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "differenciation",
+   "succes": true,
+   "nb_elements": 0,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "synthese_executive",
+   "succes": true,
+   "nb_elements": 0,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "post_validation",
+   "succes": true,
+   "nb_elements": 22,
+   "nb_tentatives": 0,
+   "message_erreur": "22 preuve(s) citant un identifiant inexistant retirée(s) : le modèle a référencé des éléments absents du référentiel."
+  },
+  {
+   "phase": "post_validation",
+   "succes": true,
+   "nb_elements": 91,
+   "nb_tentatives": 0,
+   "message_erreur": "91 extrait(s) de preuve absent(s) du texte source, remplacé(s) par le début réel de ce texte."
+  },
+  {
+   "phase": "post_validation",
+   "succes": true,
+   "nb_elements": 16,
+   "nb_tentatives": 0,
+   "message_erreur": "16 constat(s) déclaré(s) « fait » sans preuve valide rétrogradé(s) en « hypothese »."
+  },
+  {
+   "phase": "post_validation",
+   "succes": true,
+   "nb_elements": 1,
+   "nb_tentatives": 0,
+   "message_erreur": "1 constat(s) restant(s) sans aucune preuve valide."
+  }
+ ],
+ "alertes_coherence": [
+  {
+   "type": "preuve_manquante",
+   "detail": "Certains constats ne sont plus étayés par une preuve vérifiable ; ils restent publiés mais en statut « hypothese »."
+  }
+ ],
+ "confiance_globale": {
+  "niveau": "elevee",
+  "facteurs": [
+   "184 offre(s) au cœur du benchmark",
+   "4 source(s) exploitée(s)",
+   "40 concurrent(s) consolidé(s)"
+  ],
+  "justification": "184 offres au cœur du benchmark réparties sur 4 sources, portées régionales hétérogènes documentées."
+ },
+ "referentiel_stats": {
+  "nb_pages": 3,
+  "exclusions": {
+   "axe_non_servi": 6
+  },
+  "nb_annonces": 2,
+  "nb_avis_indexes": 0,
+  "nb_offres_coeur": 184,
+  "nb_offres_par_source": {
+   "amazon": 43,
+   "aliexpress": 141
+  },
+  "nb_offres_accessoires": 0
+ },
+ "sources_utilisees": [
+  {
+   "source": "aliexpress",
+   "fichier": "aliexpress.json",
+   "avertissements": [],
+   "nb_items_charges": 141,
+   "nb_items_exploites": 141,
+   "donnees_disponibles": true
+  },
+  {
+   "source": "amazon",
+   "fichier": "amazon.json",
+   "avertissements": [],
+   "nb_items_charges": 43,
+   "nb_items_exploites": 43,
+   "donnees_disponibles": true
+  },
+  {
+   "source": "meta_ads",
+   "fichier": "meta_ads.json",
+   "avertissements": [],
+   "nb_items_charges": 2,
+   "nb_items_exploites": 2,
+   "donnees_disponibles": true
+  },
+  {
+   "source": "recherche_web",
+   "fichier": "recherche_web.json",
+   "avertissements": [],
+   "nb_items_charges": 9,
+   "nb_items_exploites": 3,
+   "donnees_disponibles": true
+  }
+ ],
+ "synthese_executive": "Le marché de la ceinture lombaire double traction se structure autour de 40 concurrents identifiés, avec 184 offres cœur de marché et une concentration extrême des volumes (99,4 % sur le top 3). Les offres sans marque dominent avec 141 références sur AliExpress et 59 186 ventes cumulées.\n\nEn EUR, AliExpress affiche une médiane à 11,39 € (fourchette 0,75–50,39 €, dispersion 1,133) avec un segment cœur de 7,49–15,39 € (50 offres). Amazon présente une médiane à 21,99 € (fourchette 6,79–37,99 €, dispersion 0,545) et un segment cœur de 16,99–25,50 € (14 offres).\n\nL'intensité concurrentielle est forte : 2 annonceurs actifs, durée médiane de diffusion de 178,5 jours (max 290 jours), plateformes dominantes Facebook, Instagram et Audience Network.\n\nLe positionnement repose sur le soulagement immédiat des douleurs lombaires, l'ajustabilité (45 offres), la respirabilité (32 offres) et l'universalité (22 offres unisexe). Les innovations technologiques (acupression magnétique, gonflable, double traction) et le ciblage pathologique (sciatique, hernie discale) constituent des facteurs clés de succès. Les angles peu exploités incluent la certification médicale, l'éco-conception, les programmes d'accompagnement et l'usage préventif.\n\nMise en garde : les prix AliExpress reflètent une livraison en France ; les données Meta Ads indiquent une présence publicitaire sans garantie de disponibilité produit ni de volume de vente effectif.",
+ "tableau_comparatif": [
+  {
+   "concurrent": "Offres sans marque",
+   "note_moyenne": 4.48,
+   "force_principale": "Volume de ventes cumulé très élevé (59 186 unités) démontrant une forte pénétration du marché des offres sans marque",
+   "presence_sources": [
+    "aliexpress"
+   ],
+   "argument_principal": "Prix d'entrée imbattable à partir de 0.75€",
+   "faiblesse_principale": "Absence totale de publicité (0 annonce) limitant la visibilité et la capacité à capter de nouveaux clients",
+   "volume_ventes_cumule": 59186,
+   "fourchette_prix_par_devise": {
+    "EUR": "0.75–50.39"
+   }
+  },
+  {
+   "concurrent": "POSTURALIS",
+   "note_moyenne": 4.15,
+   "force_principale": "Positionnement premium accepté par le marché avec volume de ventes significatif (500 unités cumulées)",
+   "presence_sources": [
+    "amazon"
+   ],
+   "argument_principal": "Soulagement des douleurs dorsales et d'épaules",
+   "faiblesse_principale": "Absence totale de stratégie publicitaire détectée (0 annonce active ou historique)",
+   "volume_ventes_cumule": 500,
+   "fourchette_prix_par_devise": {
+    "EUR": "37.99"
+   }
+  },
+  {
+   "concurrent": "Paskyee",
+   "note_moyenne": 4.24,
+   "force_principale": "Capital d'avis massif établissant une forte crédibilité : 10 115 avis cumulés sur 5 offres",
+   "presence_sources": [
+    "amazon"
+   ],
+   "argument_principal": "Soulagement ciblé de la sciatique, hernie discale et scoliose",
+   "faiblesse_principale": "Absence totale d'investissement publicitaire détectable (0 annonce), limitant la capacité de conquête rapide",
+   "volume_ventes_cumule": 250,
+   "fourchette_prix_par_devise": {
+    "EUR": "21.99–26.95"
+   }
+  },
+  {
+   "concurrent": "WEIO",
+   "note_moyenne": 4.1,
+   "force_principale": "Note client satisfaisante de 4,1/5 sur un volume d'avis significatif (149 avis)",
+   "presence_sources": [
+    "amazon"
+   ],
+   "argument_principal": "Correcteur de posture invisible pour une discrétion maximale sous les vêtements",
+   "faiblesse_principale": "Catalogue très limité avec seulement 2 références produits",
+   "volume_ventes_cumule": 100,
+   "fourchette_prix_par_devise": {
+    "EUR": "22.55"
+   }
+  },
+  {
+   "concurrent": "Rakiie",
+   "note_moyenne": 4.47,
+   "force_principale": "Note moyenne élevée de 4,47/5 sur l'ensemble du catalogue, témoignant d'une satisfaction client constante",
+   "presence_sources": [
+    "amazon"
+   ],
+   "argument_principal": "Soulagement de la douleur lombaire (Pain Relief)",
+   "faiblesse_principale": "Absence totale de publicité payante (0 annonce active ou historique), limitant la capacité d'acquisition",
+   "volume_ventes_cumule": 50,
+   "fourchette_prix_par_devise": {
+    "EUR": "29.99–30.99"
+   }
+  },
+  {
+   "concurrent": "ACWOO",
+   "note_moyenne": 4.1,
+   "force_principale": "Prix d'entrée très agressif à 13,99 EUR, nettement inférieur aux standards du marché des ceintures lombaires",
+   "presence_sources": [
+    "amazon"
+   ],
+   "argument_principal": "Prix imbattable à 13,99 EUR",
+   "faiblesse_principale": "Présence marketplace extrêmement limitée avec une seule offre référencée, sans diversification des canaux de vente",
+   "volume_ventes_cumule": 50,
+   "fourchette_prix_par_devise": {
+    "EUR": "13.99"
+   }
+  },
+  {
+   "concurrent": "Beugo",
+   "note_moyenne": 4.0,
+   "force_principale": "Prix ultra-compétitif à 7,99 EUR, le plus bas du segment entrée",
+   "presence_sources": [
+    "amazon"
+   ],
+   "argument_principal": "Prix cassé à 7,99 EUR",
+   "faiblesse_principale": "Volume de ventes très faible (50 unités cumulées)",
+   "volume_ventes_cumule": 50,
+   "fourchette_prix_par_devise": {
+    "EUR": "7.99"
+   }
+  },
+  {
+   "concurrent": "Lukvcoe",
+   "note_moyenne": 3.8,
+   "force_principale": "Prix d'entrée très agressif à 9.99 EUR, barrière d'achat minimale",
+   "presence_sources": [
+    "amazon"
+   ],
+   "argument_principal": "Ajustable",
+   "faiblesse_principale": "Note moyenne faible (3.8/5) signalant une satisfaction client limitée",
+   "volume_ventes_cumule": 50,
+   "fourchette_prix_par_devise": {
+    "EUR": "9.99"
+   }
+  },
+  {
+   "concurrent": "VPB",
+   "note_moyenne": 2.6,
+   "force_principale": null,
+   "presence_sources": [
+    "amazon"
+   ],
+   "argument_principal": null,
+   "faiblesse_principale": null,
+   "volume_ventes_cumule": 50,
+   "fourchette_prix_par_devise": {
+    "EUR": "10.99"
+   }
+  },
+  {
+   "concurrent": "23GUANYI",
+   "note_moyenne": 4.6,
+   "force_principale": null,
+   "presence_sources": [
+    "amazon"
+   ],
+   "argument_principal": null,
+   "faiblesse_principale": null,
+   "volume_ventes_cumule": null,
+   "fourchette_prix_par_devise": {
+    "EUR": "12.99"
+   }
+  },
+  {
+   "concurrent": "ANAMPION",
+   "note_moyenne": 3.5,
+   "force_principale": null,
+   "presence_sources": [
+    "amazon"
+   ],
+   "argument_principal": null,
+   "faiblesse_principale": null,
+   "volume_ventes_cumule": null,
+   "fourchette_prix_par_devise": {
+    "EUR": "15.99"
+   }
+  },
+  {
+   "concurrent": "AOGOE",
+   "note_moyenne": 4.1,
+   "force_principale": null,
+   "presence_sources": [
+    "amazon"
+   ],
+   "argument_principal": null,
+   "faiblesse_principale": null,
+   "volume_ventes_cumule": null,
+   "fourchette_prix_par_devise": {
+    "EUR": "9.99"
+   }
+  },
+  {
+   "concurrent": "AYBUY",
+   "note_moyenne": 4.0,
+   "force_principale": null,
+   "presence_sources": [
+    "amazon"
+   ],
+   "argument_principal": null,
+   "faiblesse_principale": null,
+   "volume_ventes_cumule": null,
+   "fourchette_prix_par_devise": {
+    "EUR": "6.79"
+   }
+  },
+  {
+   "concurrent": "BODYPERFECT",
+   "note_moyenne": 4.2,
+   "force_principale": null,
+   "presence_sources": [
+    "amazon"
+   ],
+   "argument_principal": null,
+   "faiblesse_principale": null,
+   "volume_ventes_cumule": null,
+   "fourchette_prix_par_devise": {
+    "EUR": "24.00"
+   }
+  },
+  {
+   "concurrent": "BraceUP",
+   "note_moyenne": 4.1,
+   "force_principale": null,
+   "presence_sources": [
+    "amazon"
+   ],
+   "argument_principal": null,
+   "faiblesse_principale": null,
+   "volume_ventes_cumule": null,
+   "fourchette_prix_par_devise": {
+    "EUR": "29.99"
+   }
+  },
+  {
+   "concurrent": "Clever Yellow",
+   "note_moyenne": 4.4,
+   "force_principale": null,
+   "presence_sources": [
+    "amazon"
+   ],
+   "argument_principal": null,
+   "faiblesse_principale": null,
+   "volume_ventes_cumule": null,
+   "fourchette_prix_par_devise": {
+    "EUR": "25.99"
+   }
+  },
+  {
+   "concurrent": "FEVAN",
+   "note_moyenne": 4.2,
+   "force_principale": null,
+   "presence_sources": [
+    "amazon"
+   ],
+   "argument_principal": null,
+   "faiblesse_principale": null,
+   "volume_ventes_cumule": null,
+   "fourchette_prix_par_devise": {
+    "EUR": "14.99"
+   }
+  },
+  {
+   "concurrent": "GJELEMENTS",
+   "note_moyenne": 4.1,
+   "force_principale": null,
+   "presence_sources": [
+    "amazon"
+   ],
+   "argument_principal": null,
+   "faiblesse_principale": null,
+   "volume_ventes_cumule": null,
+   "fourchette_prix_par_devise": {
+    "EUR": "21.99"
+   }
+  },
+  {
+   "concurrent": "Generico",
+   "note_moyenne": 3.6,
+   "force_principale": null,
+   "presence_sources": [
+    "amazon"
+   ],
+   "argument_principal": null,
+   "faiblesse_principale": null,
+   "volume_ventes_cumule": null,
+   "fourchette_prix_par_devise": {
+    "EUR": "19.99"
+   }
+  },
+  {
+   "concurrent": "Hoadyush",
+   "note_moyenne": 5.0,
+   "force_principale": null,
+   "presence_sources": [
+    "amazon"
+   ],
+   "argument_principal": null,
+   "faiblesse_principale": null,
+   "volume_ventes_cumule": null,
+   "fourchette_prix_par_devise": {
+    "EUR": "14.99"
+   }
+  },
+  {
+   "concurrent": "IBLUELOVER",
+   "note_moyenne": 4.0,
+   "force_principale": null,
+   "presence_sources": [
+    "amazon"
+   ],
+   "argument_principal": null,
+   "faiblesse_principale": null,
+   "volume_ventes_cumule": null,
+   "fourchette_prix_par_devise": {
+    "EUR": "9.99"
+   }
+  },
+  {
+   "concurrent": "Kaelaxroy",
+   "note_moyenne": null,
+   "force_principale": null,
+   "presence_sources": [
+    "amazon"
+   ],
+   "argument_principal": null,
+   "faiblesse_principale": null,
+   "volume_ventes_cumule": null,
+   "fourchette_prix_par_devise": {
+    "EUR": "10.79"
+   }
+  },
+  {
+   "concurrent": "MEDiBrace",
+   "note_moyenne": 4.4,
+   "force_principale": null,
+   "presence_sources": [
+    "amazon"
+   ],
+   "argument_principal": null,
+   "faiblesse_principale": null,
+   "volume_ventes_cumule": null,
+   "fourchette_prix_par_devise": {
+    "EUR": "24.95"
+   }
+  },
+  {
+   "concurrent": "MIHO SPORT",
+   "note_moyenne": 4.2,
+   "force_principale": null,
+   "presence_sources": [
+    "amazon"
+   ],
+   "argument_principal": null,
+   "faiblesse_principale": null,
+   "volume_ventes_cumule": null,
+   "fourchette_prix_par_devise": {
+    "EUR": "26.99"
+   }
+  },
+  {
+   "concurrent": "MRLI",
+   "note_moyenne": 3.9,
+   "force_principale": null,
+   "presence_sources": [
+    "amazon"
+   ],
+   "argument_principal": null,
+   "faiblesse_principale": null,
+   "volume_ventes_cumule": null,
+   "fourchette_prix_par_devise": {
+    "EUR": "34.99"
+   }
+  },
+  {
+   "concurrent": "NAROSEBE",
+   "note_moyenne": 4.2,
+   "force_principale": null,
+   "presence_sources": [
+    "amazon"
+   ],
+   "argument_principal": null,
+   "faiblesse_principale": null,
+   "volume_ventes_cumule": null,
+   "fourchette_prix_par_devise": {
+    "EUR": "14.99"
+   }
+  },
+  {
+   "concurrent": "NativoDex",
+   "note_moyenne": 4.3,
+   "force_principale": null,
+   "presence_sources": [
+    "amazon"
+   ],
+   "argument_principal": null,
+   "faiblesse_principale": null,
+   "volume_ventes_cumule": null,
+   "fourchette_prix_par_devise": {
+    "EUR": "16.99"
+   }
+  },
+  {
+   "concurrent": "Prodirect.fr",
+   "note_moyenne": 4.4,
+   "force_principale": null,
+   "presence_sources": [
+    "amazon"
+   ],
+   "argument_principal": null,
+   "faiblesse_principale": null,
+   "volume_ventes_cumule": null,
+   "fourchette_prix_par_devise": {
+    "EUR": "20.99"
+   }
+  },
+  {
+   "concurrent": "Risipu",
+   "note_moyenne": 3.8,
+   "force_principale": null,
+   "presence_sources": [
+    "amazon"
+   ],
+   "argument_principal": null,
+   "faiblesse_principale": null,
+   "volume_ventes_cumule": null,
+   "fourchette_prix_par_devise": {
+    "EUR": "7.99"
+   }
+  },
+  {
+   "concurrent": "TRILINK",
+   "note_moyenne": 4.4,
+   "force_principale": null,
+   "presence_sources": [
+    "amazon"
+   ],
+   "argument_principal": null,
+   "faiblesse_principale": null,
+   "volume_ventes_cumule": null,
+   "fourchette_prix_par_devise": {
+    "EUR": "18.99"
+   }
+  },
+  {
+   "concurrent": "The Restored",
+   "note_moyenne": 4.4,
+   "force_principale": null,
+   "presence_sources": [
+    "amazon"
+   ],
+   "argument_principal": null,
+   "faiblesse_principale": null,
+   "volume_ventes_cumule": null,
+   "fourchette_prix_par_devise": {
+    "EUR": "17.99"
+   }
+  },
+  {
+   "concurrent": "aHeal",
+   "note_moyenne": 3.4,
+   "force_principale": null,
+   "presence_sources": [
+    "amazon"
+   ],
+   "argument_principal": null,
+   "faiblesse_principale": null,
+   "volume_ventes_cumule": null,
+   "fourchette_prix_par_devise": {
+    "EUR": "25.50"
+   }
+  },
+  {
+   "concurrent": "jinpinz",
+   "note_moyenne": 4.4,
+   "force_principale": null,
+   "presence_sources": [
+    "amazon"
+   ],
+   "argument_principal": null,
+   "faiblesse_principale": null,
+   "volume_ventes_cumule": null,
+   "fourchette_prix_par_devise": {
+    "EUR": "29.99"
+   }
+  },
+  {
+   "concurrent": "kmt",
+   "note_moyenne": 3.7,
+   "force_principale": null,
+   "presence_sources": [
+    "amazon"
+   ],
+   "argument_principal": null,
+   "faiblesse_principale": null,
+   "volume_ventes_cumule": null,
+   "fourchette_prix_par_devise": {
+    "EUR": "19.90"
+   }
+  },
+  {
+   "concurrent": "zshequ",
+   "note_moyenne": 4.0,
+   "force_principale": null,
+   "presence_sources": [
+    "amazon"
+   ],
+   "argument_principal": null,
+   "faiblesse_principale": null,
+   "volume_ventes_cumule": null,
+   "fourchette_prix_par_devise": {
+    "EUR": "26.99"
+   }
+  },
+  {
+   "concurrent": "FREETOO",
+   "note_moyenne": null,
+   "force_principale": null,
+   "presence_sources": [
+    "recherche_web"
+   ],
+   "argument_principal": null,
+   "faiblesse_principale": null,
+   "volume_ventes_cumule": null,
+   "fourchette_prix_par_devise": {}
+  },
+  {
+   "concurrent": "Gibaud",
+   "note_moyenne": null,
+   "force_principale": null,
+   "presence_sources": [
+    "recherche_web"
+   ],
+   "argument_principal": null,
+   "faiblesse_principale": null,
+   "volume_ventes_cumule": null,
+   "fourchette_prix_par_devise": {}
+  },
+  {
+   "concurrent": "Juliedeal us",
+   "note_moyenne": null,
+   "force_principale": null,
+   "presence_sources": [
+    "meta_ads"
+   ],
+   "argument_principal": null,
+   "faiblesse_principale": null,
+   "volume_ventes_cumule": null,
+   "fourchette_prix_par_devise": {}
+  },
+  {
+   "concurrent": "Thuasne",
+   "note_moyenne": null,
+   "force_principale": null,
+   "presence_sources": [
+    "recherche_web"
+   ],
+   "argument_principal": null,
+   "faiblesse_principale": null,
+   "volume_ventes_cumule": null,
+   "fourchette_prix_par_devise": {}
+  },
+  {
+   "concurrent": "Yahory shop",
+   "note_moyenne": null,
+   "force_principale": null,
+   "presence_sources": [
+    "meta_ads"
+   ],
+   "argument_principal": null,
+   "faiblesse_principale": null,
+   "volume_ventes_cumule": null,
+   "fourchette_prix_par_devise": {}
+  }
+ ],
+ "validite_regionale": [
+  {
+   "portee": "region_etude",
+   "source": "aliexpress",
+   "commentaire": "prix AliExpress pour une livraison en FR."
+  },
+  {
+   "portee": "marketplace_pays",
+   "source": "amazon",
+   "commentaire": "les prix et avis décrivent le marché de amazon.fr, soit FR — c'est bien la région d'étude."
+  },
+  {
+   "portee": "diffusion_pays",
+   "source": "meta_ads",
+   "commentaire": "annonces diffusées en FR, quel que soit le pays de l'annonceur : la présence publicitaire n'implique ni disponibilité produit, ni volume de vente."
+  },
+  {
+   "portee": "mixte",
+   "source": "recherche_web",
+   "commentaire": "pages web de portées hétérogènes (régionales et globales) : le champ `portee_regionale` de chaque page fait foi, pas la source."
+  }
+ ],
+ "donnees_suffisantes": true,
+ "position_prix_envisage": null,
+ "intensite_concurrentielle": {
+  "lecture": "Le marché de la ceinture lombaire double traction présente 40 concurrents identifiés et 184 offres dans le segment cœur (source : indicateurs d'intensité). La pression publicitaire reste faible avec seulement 2 annonceurs actifs diffusant 2 annonces (id_annonce: ads-1166667985396035, ads-2048639945862933), mais sur une durée médiane de 178,5 jours et jusqu'à 290 jours maximum, témoignant d'une stratégie d'investissement longue. La concentration est extrême : 99,4 % des volumes publicitaires sont captés par le top 3 des annonceurs. Les plateformes dominantes sont Audience Network, Facebook et Instagram. Ces indicateurs mesurent l'activité publicitaire et le nombre d'offres cataloguées ; ils NE mesurent pas les volumes de ventes réels, la notoriété organique des marques, ni la part de marché en valeur des acteurs présents.",
+  "confiance": "moyenne",
+  "nb_annonceurs": 2,
+  "nb_offres_coeur": 184,
+  "nb_annonces_actives": 2,
+  "plateformes_dominantes": [
+   "audience_network",
+   "facebook",
+   "instagram"
+  ],
+  "duree_diffusion_max_jours": 290,
+  "nb_concurrents_identifies": 40,
+  "duree_diffusion_mediane_jours": 178.5,
+  "concentration_volumes_top3_pct": 99.4
+ }
+}

@@ -1,0 +1,1950 @@
+{
+ "marche": {
+  "geo": "FR",
+  "devise": null,
+  "langue": "fr"
+ },
+ "limites": [
+  "[insights] [reddit] Reddit n'est pas représentatif de la population d'un marché : la base d'utilisateurs est documentée comme jeune, majoritairement masculine, technophile et anglophone. Le corpus ne constitue en aucun cas un échantillon de consommateurs.",
+  "[insights] [reddit] Reddit n'offre aucun filtre géographique natif : la « régionalisation » repose uniquement sur le choix des subreddits et sur la langue des requêtes. C'est une approximation, à interpréter comme telle.",
+  "[insights] [reddit] La couverture varie fortement selon le pays : pour les marchés non anglophones, le volume de discussions peut être très faible. L'absence de discussions ne constitue pas un signal d'absence de marché.",
+  "[insights] [reddit] Le score de pertinence est une heuristique LLM non validée empiriquement et le seuil de rétention est arbitraire.",
+  "[insights] [reddit] La recherche Reddit est non exhaustive : toute liste de résultats est plafonnée à environ 1 000 posts côté Reddit, le mode rapide de l'actor (actif d'office sur les recherches par mots-clés) peut manquer des posts, et le tri par pertinence est opaque.",
+  "[insights] [reddit] Les contenus collectés se limitent à la fenêtre de recherche configurée (`searchTime=year`) : les opinions exprimées ont pu évoluer depuis.",
+  "[insights] [reddit] Les posts annonçant zéro commentaire sont écartés de la phase B : les interroger coûterait un item facturé pour un rendement nul.",
+  "[insights] [amazon] Le corpus provient d'UNE seule marketplace Amazon, celle du pays étudié. Il décrit l'offre présente sur ce site, et non l'ensemble du commerce en ligne du pays : les places de marché concurrentes et le commerce local en sont absents.",
+  "[insights] [amazon] Aucun filtre de livraison n'est appliqué : le corpus est le catalogue complet de la marketplace, y compris des produits qui ne seraient pas expédiables vers la région d'étude. C'est un choix assumé — restreindre à l'expédiable amputerait l'étude de marché de l'essentiel de l'offre.",
+  "[insights] [amazon] Les prix sont exprimés dans la devise de la marketplace et ne sont NI convertis, NI comparables d'une marketplace à l'autre. Ils sont relevés à l'instant du run : les prix Amazon varient de jour en jour.",
+  "[insights] [amazon] Amazon bloque une part variable des requêtes automatisées. Un corpus court ou vide peut être le fait de l'anti-bot et non du catalogue : les runs concernés sont signalés dans `statuts_collecte`.",
+  "[insights] [amazon] Le classement d'Amazon est commercial : il mêle publicité, performance vendeur et ancienneté de l'annonce. L'ordre de collecte n'est pas un classement de qualité, et le corpus n'est pas exhaustif.",
+  "[insights] [amazon] Les avis collectés sont les « meilleurs avis » retenus par Amazon, quelques-uns par produit et sur une fenêtre récente : ils illustrent des retours d'usage, ils ne constituent en aucun cas un échantillon représentatif ni une base de mesure de satisfaction.",
+  "[insights] [amazon] `pertinence` et `correspondance` sont des heuristiques produites par un LLM, sans validation sur un échantillon annoté.",
+  "[insights] [amazon] Un compte Apify en fin de quota tronque les runs SANS les faire échouer : ils remontent en statut SUCCEEDED avec un dataset incomplet. Vérifier le quota avant toute interprétation d'un volume de produits.",
+  "[insights] [amazon] Le plan de recherches n'a pas atteint le nombre de recherches visé : certaines propositions étaient non conformes ou en doublon et ont été écartées. La couverture du catalogue est d'autant plus partielle.",
+  "[insights] [amazon] Aucun avis n'a pu être collecté sur les produits retenus. L'analyse qualitative des retours d'usage est donc impossible sur ce corpus.",
+  "[insights] [recherche_web] La SERP interrogée est géolocalisée aux États-Unis et en anglais : l'actor n'expose aucun paramètre de pays ni de langue de recherche (`serpProxyGroup` ne sert pas à choisir un pays). Le ciblage régional par TLD et par mots-clés géographiques est donc une APPROXIMATION — le classement des résultats reste celui que verrait un utilisateur américain, pas un consommateur du marché étudié.",
+  "[insights] [recherche_web] L'opérateur `site:.<tld>` exclut mécaniquement les acteurs locaux hébergés en .com, qui sont nombreux sur la plupart des marchés. Les requêtes à mots-clés géographiques compensent partiellement ce biais, sans aucune garantie d'exhaustivité.",
+  "[insights] [recherche_web] Le corpus se limite aux premiers résultats Google de chaque requête : il n'est pas exhaustif et reflète les biais du référencement (optimisation SEO, contenu affilié, pages générées). Chaque page est un SIGNAL À RECOUPER, jamais un fait ; les chiffres qui y figurent (prix, parts de marché, classements) doivent être revalidés sur des sources structurées.",
+  "[insights] [recherche_web] `type_source`, `portee_regionale` et `pertinence` sont des heuristiques produites par un LLM, sans validation sur un échantillon annoté.",
+  "[insights] [recherche_web] Une redondance avec les corpus des autres collecteurs reste possible malgré l'exclusion de domaines : un même contenu peut être republié sur un domaine non listé.",
+  "[insights] [recherche_web] La fraîcheur des contenus n'est pas garantie : ce mode de collecte n'expose aucun filtre de date fiable, et les pages retenues peuvent dater de plusieurs années.",
+  "[insights] [recherche_web] Le plan de requêtes n'a pas atteint les quotas visés pour tous les couples axe/ciblage : certaines requêtes proposées étaient non conformes et ont été écartées. La couverture régionale est d'autant plus partielle.",
+  "[insights] 3 unité(s) écartée(s) comme doublons de texte : les republications et citations gonflaient artificiellement les fréquences.",
+  "[insights] Corpus limité à une seule source (reddit) : la lecture reflète le public de cette source et non celui du marché.",
+  "[insights] Le corpus analysé n'est pas exhaustif et reflète les biais de collecte des agents amont (moteurs de recherche, plafonds de collecte, seuils de pertinence). Il ne constitue en aucun cas un échantillon représentatif de la population d'un marché.",
+  "[insights] La classification des sentiments, thèmes et pain points est produite par un modèle de langage et n'a pas été validée empiriquement contre un codage humain.",
+  "[insights] Les populations diffèrent fortement d'une source à l'autre (contributeurs Reddit, acheteurs Amazon, rédacteurs web) : les agrégats inter-sources mélangent des publics qui ne sont pas comparables.",
+  "[insights] Aucune inférence sur la taille du marché ne peut être tirée de ces volumes : un nombre d'unités mesure l'activité de discussion collectée, pas la demande.",
+  "[concurrence] [aliexpress] Biais de couverture : l'API Dropshipping n'expose que les produits éligibles au programme dropshipping ET livrables dans la région demandée. L'absence d'un produit dans cette collecte ne constitue en aucun cas un signal d'absence de ce produit sur le marché.",
+  "[concurrence] [aliexpress] Les prix renvoyés par l'API sont des prix de référence : ils excluent les Welcome Deals, coupons panier et promotions de session. Le prix perçu par l'acheteur sur le site peut être inférieur. L'écart avec une source de scraping est un signal d'intensité promotionnelle, pas une erreur.",
+  "[concurrence] [aliexpress] Les prix et les stocks sont un instantané horodaté, valable pour le seul triplet {pays de livraison, devise, langue} demandé. Toute comparaison exige le même triplet et un horodatage proche.",
+  "[concurrence] [aliexpress] Aucune conversion de change n'est effectuée : l'API ne fournit pas de taux. Les montants ne sont comparables qu'au sein d'une même exécution, dans la devise d'étude.",
+  "[concurrence] [aliexpress] Le quota journalier n'est pas confirmé officiellement (console développeur sans limite affichée ; ~5 000 requêtes/jour selon des sources secondaires). Un plafond de débit non documenté a en revanche été constaté sur la méthode de recherche.",
+  "[concurrence] [aliexpress] La sélection des produits soumis au détail (phase B) repose sur une heuristique déterministe — similarité de titre puis tri par volume de commandes et note — qui n'a pas été validée empiriquement.",
+  "[concurrence] [aliexpress] Le champ `discount` de la recherche est incohérent avec les prix cibles (observé à « 0 % » sur un produit affichant −50 %) : il n'est pas exploité, la remise est recalculée à partir des prix cibles.",
+  "[concurrence] [aliexpress] La méthode de recherche est instable par fenêtres de quelques minutes (erreur NGSELECTION_SEARCH_ERROR mesurée sur 8 appels valides sur 11 le 03/08/2026, indépendamment de l'espacement). Le module insiste, mais une requête peut rester en échec : la couverture d'une exécution n'est pas reproductible à l'identique, et un écart de volume entre deux exécutions peut n'être qu'un artefact de disponibilité de la passerelle.",
+  "[concurrence] [aliexpress] Remise(s) supérieure(s) à 60 % — vérifier s'il s'agit d'une promotion exceptionnelle ou d'un prix barré théorique.",
+  "[concurrence] [aliexpress] Incohérence de prix détectée : prix de vente supérieur au prix de base sur une ou plusieurs lignes. Les lignes sont conservées et signalées.",
+  "[concurrence] [amazon] Le corpus provient d'UNE seule marketplace Amazon, celle du pays étudié. Il décrit l'offre présente sur ce site, et non l'ensemble du commerce en ligne du pays : les places de marché concurrentes et le commerce local en sont absents.",
+  "[concurrence] [amazon] Aucun filtre de livraison n'est appliqué : le corpus est le catalogue complet de la marketplace, y compris des produits qui ne seraient pas expédiables vers la région d'étude. C'est un choix assumé — restreindre à l'expédiable amputerait l'étude de marché de l'essentiel de l'offre.",
+  "[concurrence] [amazon] Les prix sont exprimés dans la devise de la marketplace et ne sont NI convertis, NI comparables d'une marketplace à l'autre. Ils sont relevés à l'instant du run : les prix Amazon varient de jour en jour.",
+  "[concurrence] [amazon] Amazon bloque une part variable des requêtes automatisées. Un corpus court ou vide peut être le fait de l'anti-bot et non du catalogue : les runs concernés sont signalés dans `statuts_collecte`.",
+  "[concurrence] [amazon] Le classement d'Amazon est commercial : il mêle publicité, performance vendeur et ancienneté de l'annonce. L'ordre de collecte n'est pas un classement de qualité, et le corpus n'est pas exhaustif.",
+  "[concurrence] [amazon] Les avis collectés sont les « meilleurs avis » retenus par Amazon, quelques-uns par produit et sur une fenêtre récente : ils illustrent des retours d'usage, ils ne constituent en aucun cas un échantillon représentatif ni une base de mesure de satisfaction.",
+  "[concurrence] [amazon] `pertinence` et `correspondance` sont des heuristiques produites par un LLM, sans validation sur un échantillon annoté.",
+  "[concurrence] [amazon] Un compte Apify en fin de quota tronque les runs SANS les faire échouer : ils remontent en statut SUCCEEDED avec un dataset incomplet. Vérifier le quota avant toute interprétation d'un volume de produits.",
+  "[concurrence] [amazon] Le plan de recherches n'a pas atteint le nombre de recherches visé : certaines propositions étaient non conformes ou en doublon et ont été écartées. La couverture du catalogue est d'autant plus partielle.",
+  "[concurrence] [amazon] Aucun avis n'a pu être collecté sur les produits retenus. L'analyse qualitative des retours d'usage est donc impossible sur ce corpus.",
+  "[concurrence] [meta_ads] Le corpus ne décrit QUE la publicité payante diffusée sur les plateformes de Meta (Facebook, Instagram, Messenger, Audience Network). Google, TikTok, les places de marché et le référencement naturel en sont absents : ce n'est pas une photographie de la pression publicitaire totale sur le marché.",
+  "[concurrence] [meta_ads] La bibliothèque publicitaire n'expose durablement que les annonces COMMERCIALES ACTIVES : une annonce arrêtée en sort, sauf dans l'Union européenne où le règlement sur les services numériques impose un archivage, et sauf pour les annonces politiques et de société, archivées sept ans. Une recherche sur les annonces inactives est donc normalement vide hors UE — ce point est tiré de la politique affichée par Meta et n'a pas été vérifié run à run.",
+  "[concurrence] [meta_ads] Aucune donnée de diffusion n'est publiée pour les annonces commerciales : ni portée, ni dépense, ni ciblage, ni performance. `portee_estimee` et `depense` restent nuls hors annonces politiques. Rien dans ce corpus ne dit qu'une annonce a marché.",
+  "[concurrence] [meta_ads] `duree_diffusion_jours` est un indicateur de LONGÉVITÉ, pas de rentabilité. Une annonce diffusée longtemps est un indice qu'un annonceur y trouve son compte, jamais une preuve : un budget mal suivi produit la même trace.",
+  "[concurrence] [meta_ads] Le moteur de recherche de la bibliothèque apparie des mots sur le TEXTE des annonces. Un produit vendu par une créative purement visuelle, ou décrit avec un autre vocabulaire, est invisible à ce corpus.",
+  "[concurrence] [meta_ads] Un même créatif est diffusé sous de nombreux identifiants d'annonce. Le module les rapproche par annonceur et par texte, mais un rapprochement reste approximatif : le décompte d'annonces n'est pas un décompte de campagnes.",
+  "[concurrence] [meta_ads] `pertinence` et `correspondance` sont des heuristiques produites par un LLM, sans validation sur un échantillon annoté.",
+  "[concurrence] [meta_ads] Le corpus est plafonné par recherche et n'est en aucun cas exhaustif : l'ordre servi par la bibliothèque n'est pas documenté et ne constitue pas un classement de notoriété ou de budget.",
+  "[concurrence] [meta_ads] Un compte Apify en fin de quota tronque les runs SANS les faire échouer : ils remontent en statut SUCCEEDED avec un dataset incomplet. Vérifier le quota avant toute interprétation d'un volume d'annonces.",
+  "[concurrence] [meta_ads] Le plan de recherches n'a pas atteint le nombre de recherches visé : certaines propositions étaient non conformes ou en doublon et ont été écartées. La couverture de la bibliothèque est d'autant plus partielle.",
+  "[concurrence] [meta_ads] Au moins une recherche a atteint le plafond d'annonces par run : la bibliothèque en contenait davantage. Le corpus est un ÉCHANTILLON tronqué de cette recherche, dans un ordre non documenté, et aucun volume ne doit en être déduit.",
+  "[concurrence] [meta_ads] Le corpus reste sous le seuil d'annonces après le cycle de repli. Il est insuffisant pour conclure — et notamment pour conclure à une absence de pression publicitaire sur ce marché.",
+  "[concurrence] [recherche_web] La SERP interrogée est géolocalisée aux États-Unis et en anglais : l'actor n'expose aucun paramètre de pays ni de langue de recherche (`serpProxyGroup` ne sert pas à choisir un pays). Le ciblage régional par TLD et par mots-clés géographiques est donc une APPROXIMATION — le classement des résultats reste celui que verrait un utilisateur américain, pas un consommateur du marché étudié.",
+  "[concurrence] [recherche_web] L'opérateur `site:.<tld>` exclut mécaniquement les acteurs locaux hébergés en .com, qui sont nombreux sur la plupart des marchés. Les requêtes à mots-clés géographiques compensent partiellement ce biais, sans aucune garantie d'exhaustivité.",
+  "[concurrence] [recherche_web] Le corpus se limite aux premiers résultats Google de chaque requête : il n'est pas exhaustif et reflète les biais du référencement (optimisation SEO, contenu affilié, pages générées). Chaque page est un SIGNAL À RECOUPER, jamais un fait ; les chiffres qui y figurent (prix, parts de marché, classements) doivent être revalidés sur des sources structurées.",
+  "[concurrence] [recherche_web] `type_source`, `portee_regionale` et `pertinence` sont des heuristiques produites par un LLM, sans validation sur un échantillon annoté.",
+  "[concurrence] [recherche_web] Une redondance avec les corpus des autres collecteurs reste possible malgré l'exclusion de domaines : un même contenu peut être republié sur un domaine non listé.",
+  "[concurrence] [recherche_web] La fraîcheur des contenus n'est pas garantie : ce mode de collecte n'expose aucun filtre de date fiable, et les pages retenues peuvent dater de plusieurs années.",
+  "[concurrence] [recherche_web] Le plan de requêtes n'a pas atteint les quotas visés pour tous les couples axe/ciblage : certaines requêtes proposées étaient non conformes et ont été écartées. La couverture régionale est d'autant plus partielle.",
+  "[concurrence] Les offres AliExpress ne portent aucune qualification de correspondance amont : contrairement à Amazon et Meta Ads, le collecteur AliExpress ne classe pas ses résultats. Elles sont toutes considérées comme relevant du cœur du benchmark, ce qui peut y faire entrer des produits éloignés.",
+  "[concurrence] Les volumes de ventes Amazon sont des mentions par paliers (« 1K+ achetés le mois dernier ») : la valeur retenue est le PLANCHER du palier. Tout cumul de volumes est donc une borne inférieure, et les parts de concentration qui en découlent sont approximatives.",
+  "[concurrence] Le corpus concurrentiel n'est pas exhaustif : il hérite intégralement des biais de collecte amont (requêtes choisies, plafonds d'items, seuils de pertinence, blocages anti-bot). Aucune part de marché ne peut en être déduite.",
+  "[concurrence] Les rapprochements de concurrents reposent sur la seule similarité de nom. Deux entités distinctes portant un nom voisin peuvent être fusionnées à tort, et une même entreprise vendant sous deux marques restera séparée.",
+  "[concurrence] Les portées régionales sont hétérogènes entre sources : un prix Amazon décrit le marché de sa marketplace, une annonce Meta décrit un pays de diffusion, une offre AliExpress un pays de livraison. Ces plans ne sont pas superposables.",
+  "[concurrence] La longévité d'une annonce publicitaire mesure une durée de diffusion, jamais une rentabilité : une campagne peut être diffusée longtemps à perte.",
+  "[concurrence] La classification des correspondances et l'extraction des claims sont produites par des modèles de langage et n'ont pas été validées empiriquement.",
+  "[concurrence] Seuls les 8 premiers concurrents (par volume puis présence multi-sources) ont fait l'objet d'une analyse qualitative ; les 32 suivants ne portent que leurs statistiques.",
+  "[tendances] L'indice Google Trends est relatif (0-100) : il ne représente ni un volume de recherche, ni une taille de marché.",
+  "[tendances] Les valeurs sont normalisées par requête : deux exécutions distinctes ne sont pas comparables entre elles.",
+  "[tendances] Les données Google Trends sont échantillonnées : les résultats ne sont pas strictement reproductibles d'un appel à l'autre.",
+  "[tendances] Le classement `profil_courbe` est une heuristique, pas une méthode statistiquement validée.",
+  "[tendances] Aucun filtre de catégorie n'est disponible dans le mode `keyword` de l'actor : les homonymes du terme interrogé ne peuvent pas être écartés.",
+  "[tendances] L'absence de données de tendance ne constitue pas un signal négatif sur le potentiel du produit.",
+  "[tendances] L'actor data_xplorer/google-trends-fast-scraper ne renvoie ni requêtes associées ni sujets associés en mode `keyword` : `requetes_emergentes`, `sujets_associes` et `nb_breakout` sont donc toujours vides ou nuls, ce qui ne signifie pas qu'aucune requête émergente n'existe.",
+  "[tendances] L'horizon 5 ans est renvoyé au pas hebdomadaire : la saisonnalité et la pente annuelle sont calculées après agrégation mensuelle des semaines.",
+  "[tendances] L'actor ne prend pas de paramètre de langue : la langue d'interface est déduite du code pays. `ParametresMarche.langue` ne sert qu'à rédiger le mot-clé interrogé.",
+  "[tendances] Le terme interrogé « ceinture lombaire » ne porte pas l'attribut différenciant « double traction » : les indicateurs décrivent la catégorie générique, pas le segment spécifique du produit.",
+  "La règle de verdict appliquée est une HYPOTHÈSE DE TRAVAIL, non un arbitrage validé : ni le cahier des charges ni la spécification fonctionnelle ne définissent le « potentiel commercial ». Ses seuils doivent être recalibrés sur des cas réels avant tout usage décisionnel.",
+  "La qualité de ces recommandations est bornée par celle des analyses amont : un pain point mal caractérisé ou un benchmark biaisé se propage ici sans être détecté.",
+  "Les recommandations reposent sur un corpus non exhaustif, hérité des biais de collecte des agents amont. Aucune part de marché, aucun volume de demande et aucune projection de vente n'en découlent.",
+  "Aucune donnée financière interne (coûts d'achat, marges, frais logistiques, budget publicitaire) n'est disponible : les recommandations de prix sont des POSITIONNEMENTS DE MARCHÉ, jamais des calculs de rentabilité.",
+  "[insights] confiance amont déclarée faible",
+  "[tendances] le contrat du collecteur Tendances ne porte aucun horodatage : la fraîcheur de cette entrée ne peut pas être qualifiée"
+ ],
+ "produit": {
+  "nom": "Ceinture lombaire double traction",
+  "categorie": "sante-bien-etre",
+  "description": "Ceinture de maintien lombaire reglable a double sangle de traction, pour soulager les douleurs du bas du dos."
+ },
+ "risques": [
+  {
+   "type": "marche",
+   "gravite": "moyenne",
+   "libelle": "Marché mature en léger recul avec momentum négatif sur 90 jours",
+   "fondements": [
+    {
+     "ref": "tendances.indicateurs.profil_courbe",
+     "type": "fait",
+     "detail": "Profil de demande classifié comme mature"
+    },
+    {
+     "ref": "tendances.indicateurs.momentum_90j",
+     "type": "fait",
+     "detail": "Momentum négatif de -11,7 % sur 90 jours"
+    },
+    {
+     "ref": "tendances.indicateurs.pente_annuelle_5ans",
+     "type": "fait",
+     "detail": "Pente annuelle de -0,64 point d'indice sur 5 ans"
+    }
+   ],
+   "attenuation": "Concentrer les efforts sur la capture de parts de marché plutôt que sur la croissance du marché total. Exploiter le pic saisonnier de mars (amplitude 16,4 %) pour maximiser les conversions. Surveiller l'évolution du momentum trimestriel pour détecter une éventuelle stabilisation ou reprise."
+  },
+  {
+   "type": "concurrentiel",
+   "gravite": "elevee",
+   "libelle": "Concurrence intense des offres sans marque à bas prix (141 offres, 0,75–50,39 EUR)",
+   "fondements": [
+    {
+     "ref": "concurrence.concurrents[0]",
+     "type": "fait",
+     "detail": "141 offres sans marque, fourchette 0,75–50,39 EUR, menace forte"
+    },
+    {
+     "ref": "concurrence.benchmark_prix[aliexpress][EUR].mediane",
+     "type": "fait",
+     "detail": "Prix médian AliExpress : 11,39 EUR, soit environ la moitié du prix médian Amazon (21,99 EUR)"
+    },
+    {
+     "ref": "concurrence.intensite.concentration_volumes_top3_pct",
+     "type": "fait",
+     "detail": "Concentration extrême des volumes : 99,4 % sur le top 3"
+    }
+   ],
+   "attenuation": "Se positionner dans le segment cœur Amazon (16,99–25,50 EUR) avec une différenciation claire sur des attributs valorisés (ajustabilité, confort, efficacité). Éviter la comparaison directe avec AliExpress en ciblant des canaux de distribution différents. Communiquer sur des gages de qualité perçue pour justifier le prix supérieur. Collecter des données sur la sensibilité prix réelle des consommateurs pour affiner le positionnement."
+  },
+  {
+   "type": "donnees",
+   "gravite": "moyenne",
+   "libelle": "Absence de données sur la sensibilité prix des consommateurs",
+   "fondements": [
+    {
+     "ref": "insights.comportements_achat.sensibilite_prix",
+     "type": "fait",
+     "detail": "Sensibilité au prix indéterminée : le corpus ne contient aucune mention explicite du prix, du rapport qualité-prix ou de considérations budgétaires"
+    }
+   ],
+   "attenuation": "Collecter des données primaires sur la sensibilité prix via des enquêtes consommateurs, des tests de prix (conjoint analysis, Van Westendorp) ou l'analyse des taux de conversion par tranche de prix sur des campagnes test. Observer les performances commerciales d'offres similaires à différents niveaux de prix pour calibrer le positionnement."
+  },
+  {
+   "type": "donnees",
+   "gravite": "moyenne",
+   "libelle": "Incertitude sur la valorisation réelle de la respirabilité par les consommateurs",
+   "fondements": [
+    {
+     "ref": "insights.attentes[3]",
+     "type": "fait",
+     "detail": "La respirabilité est qualifiée d'attente implicite différenciante, mais non explicitement verbalisée dans le corpus d'opinions"
+    },
+    {
+     "ref": "concurrence.positionnement.facteurs_cles_succes[0]",
+     "type": "fait",
+     "detail": "32 offres mentionnent respirant/respirante/maille respirante comme critère déterminant pour le confort prolongé"
+    },
+    {
+     "ref": "concurrence.differenciation.attributs_distinctifs_potentiels[0]",
+     "type": "fait",
+     "detail": "24 offres concurrentes valorisent la respirabilité, suggérant un désavantage apparent pour les offres qui ne la mentionnent pas"
+    }
+   ],
+   "attenuation": "Collecter des données consommateurs sur l'importance réelle de la respirabilité dans la décision d'achat : analyser les avis négatifs mentionnant l'inconfort thermique, observer les taux de retour liés au confort, comparer les performances commerciales d'offres similaires avec/sans cet attribut communiqué. En attendant, intégrer la mention de respirabilité dans la communication si le produit le permet, par précaution."
+  },
+  {
+   "type": "donnees",
+   "gravite": "moyenne",
+   "libelle": "Confiance faible sur les données consommateur (insights)",
+   "fondements": [
+    {
+     "ref": "insights.sentiment",
+     "type": "fait",
+     "detail": "Corpus limité à 10 unités issues d'une seule source (Reddit), confiance moyenne"
+    },
+    {
+     "ref": "insights.besoins[0]",
+     "type": "fait",
+     "detail": "Tous les besoins identifiés portent une confiance faible"
+    }
+   ],
+   "attenuation": "Élargir la collecte de données consommateurs à d'autres sources (avis Amazon, forums spécialisés, enquêtes directes) pour augmenter la taille et la diversité du corpus. Valider les besoins et attentes identifiés par des études qualitatives (entretiens, focus groups) avant d'engager des investissements produit ou communication importants."
+  },
+  {
+   "type": "donnees",
+   "gravite": "elevee",
+   "libelle": "Absence de données sur les volumes absolus, parts de marché et projections de vente",
+   "fondements": [
+    {
+     "ref": "tendances.indicateurs.indice_moyen_12m",
+     "type": "fait",
+     "detail": "Indice relatif de 0 à 100 : aucun volume absolu n'en découle"
+    },
+    {
+     "ref": null,
+     "type": "hypothese",
+     "detail": "Le dossier ne porte aucune donnée de volume absolu, de part de marché ou de projection de chiffre d'affaires"
+    }
+   ],
+   "attenuation": "Collecter des données de marché auprès d'instituts spécialisés (Euromonitor, Statista) ou via des études sectorielles pour quantifier le potentiel de marché. Réaliser des projections de vente basées sur des hypothèses de pénétration et de conversion calibrées sur des benchmarks de produits similaires. Démarrer par un test de marché à échelle réduite pour valider les hypothèses avant un déploiement large."
+  },
+  {
+   "type": "concurrentiel",
+   "gravite": "moyenne",
+   "libelle": "Risque de banalisation du produit sur des attributs partagés (réglable, soutien lombaire, double traction)",
+   "fondements": [
+    {
+     "ref": "concurrence.differenciation.attributs_partages[0]",
+     "type": "fait",
+     "detail": "37 offres concurrentes mentionnent explicitement le caractère réglable"
+    },
+    {
+     "ref": "concurrence.differenciation.attributs_partages[1]",
+     "type": "fait",
+     "detail": "6 offres concurrentes revendiquent explicitement la fonction de double traction"
+    },
+    {
+     "ref": "concurrence.differenciation.attributs_partages[2]",
+     "type": "fait",
+     "detail": "11 offres concurrentes mentionnent la fonction de soutien lombaire"
+    }
+   ],
+   "attenuation": "Construire la différenciation sur des attributs peu exploités dans le corpus observé (certification médicale, programme d'accompagnement, éco-conception, usage préventif) après validation de leur pertinence consommateur. Valoriser l'expérience de marque (service client, garantie, contenu éducatif) plutôt que les seules caractéristiques produit. Communiquer sur des preuves d'efficacité (témoignages, études de cas) pour se démarquer des offres génériques."
+  },
+  {
+   "type": "produit",
+   "gravite": "moyenne",
+   "libelle": "Désavantages apparents par rapport à l'offre concurrentielle sur plusieurs attributs valorisés",
+   "fondements": [
+    {
+     "ref": "concurrence.differenciation.desavantages_apparents[0]",
+     "type": "fait",
+     "detail": "Absence de mention de matériaux respirants ou de maille aérée, alors que 24 offres concurrentes valorisent le confort thermique"
+    },
+    {
+     "ref": "concurrence.differenciation.desavantages_apparents[1]",
+     "type": "fait",
+     "detail": "Absence de mention de fonction de correction posturale, alors que 15 offres concurrentes élargissent le bénéfice au-delà du seul soulagement lombaire"
+    },
+    {
+     "ref": "concurrence.differenciation.desavantages_apparents[3]",
+     "type": "fait",
+     "detail": "Absence de mention de baleines de renfort structurel, alors que 5 offres Amazon valorisent « 6 baleines » comme gage de maintien renforcé"
+    }
+   ],
+   "attenuation": "Vérifier si le produit possède effectivement ces attributs (respirabilité, correction posturale, baleines de renfort) et les intégrer dans la communication si c'est le cas. Si le produit ne les possède pas, évaluer le coût de leur intégration par rapport au gain de compétitivité attendu. Compenser les désavantages apparents par une surperformance sur d'autres attributs valorisés (efficacité du soulagement, simplicité d'utilisation, ajustabilité)."
+  }
+ ],
+ "diagnostic": {
+  "convergences": [
+   {
+    "constat": "Le soulagement de la douleur lombaire est à la fois le besoin dominant des consommateurs et l'attribut fonctionnel partagé par l'offre concurrentielle.",
+    "fondements": [
+     {
+      "ref": "insights.besoins[0]",
+      "type": "fait",
+      "detail": "Le besoin de soulager la douleur lombaire est le besoin fonctionnel dominant dans le corpus consommateur."
+     },
+     {
+      "ref": "concurrence.differenciation.attributs_partages[2]",
+      "type": "fait",
+      "detail": "11 offres concurrentes mentionnent explicitement la fonction de soutien lombaire."
+     },
+     {
+      "ref": "insights.signaux_positifs[0]",
+      "type": "fait",
+      "detail": "Les consommateurs louent l'efficacité immédiate du soulagement, notamment pour scoliose et hernies discales."
+     }
+    ]
+   },
+   {
+    "constat": "La fonction de double traction est présente dans l'offre concurrentielle et correspond au produit étudié, mais le dossier ne permet pas de vérifier si les consommateurs la recherchent explicitement.",
+    "fondements": [
+     {
+      "ref": "concurrence.differenciation.attributs_partages[1]",
+      "type": "fait",
+      "detail": "6 offres concurrentes revendiquent explicitement la fonction de double traction."
+     },
+     {
+      "ref": null,
+      "type": "hypothese",
+      "detail": "Le corpus consommateur ne mentionne pas explicitement la double traction comme critère de choix ou besoin exprimé."
+     }
+    ]
+   },
+   {
+    "constat": "Le caractère réglable est un attribut standard de l'offre et correspond à une attente différenciante des consommateurs.",
+    "fondements": [
+     {
+      "ref": "concurrence.differenciation.attributs_partages[0]",
+      "type": "fait",
+      "detail": "37 offres concurrentes mentionnent explicitement le caractère réglable."
+     },
+     {
+      "ref": "insights.attentes[2]",
+      "type": "fait",
+      "detail": "Les consommateurs attendent une utilisation intuitive et une ajustabilité facile comme critère différenciant."
+     }
+    ]
+   },
+   {
+    "constat": "Le marché présente une demande mature avec un sentiment consommateur très majoritairement positif.",
+    "fondements": [
+     {
+      "ref": "tendances.indicateurs.profil_courbe",
+      "type": "fait",
+      "detail": "La courbe de demande est classifiée comme mature."
+     },
+     {
+      "ref": "insights.sentiment",
+      "type": "fait",
+      "detail": "8 unités positives sur 10, avec seulement 2 négatives concernant les limitations pathologiques plutôt que l'insatisfaction produit."
+     },
+     {
+      "ref": "tendances.indicateurs.momentum_90j",
+      "type": "fait",
+      "detail": "Momentum négatif de -11,7 % sur 90 jours, confirmant une phase de maturité sans croissance."
+     }
+    ]
+   },
+   {
+    "constat": "L'offre concurrentielle est fragmentée avec une forte concentration sur les offres sans marque à bas prix.",
+    "fondements": [
+     {
+      "ref": "concurrence.intensite.nb_concurrents_identifies",
+      "type": "fait",
+      "detail": "40 concurrents identifiés sur le marché."
+     },
+     {
+      "ref": "concurrence.concurrents[0]",
+      "type": "fait",
+      "detail": "141 offres sans marque, fourchette 0,75–50,39 EUR, représentant la menace la plus forte."
+     },
+     {
+      "ref": "concurrence.intensite.concentration_volumes_top3_pct",
+      "type": "fait",
+      "detail": "99,4 % de concentration des volumes sur le top 3."
+     }
+    ]
+   },
+   {
+    "constat": "La pression publicitaire est faible mais la durée de diffusion longue suggère une stratégie de présence continue.",
+    "fondements": [
+     {
+      "ref": "concurrence.intensite.nb_annonceurs",
+      "type": "fait",
+      "detail": "Seulement 2 annonceurs actifs."
+     },
+     {
+      "ref": "concurrence.intensite.duree_diffusion_mediane_jours",
+      "type": "fait",
+      "detail": "Durée médiane de diffusion de 178,5 jours."
+     },
+     {
+      "ref": "concurrence.positionnement.facteurs_cles_succes[4]",
+      "type": "fait",
+      "detail": "La durée longue (max 290 jours) suggère une stratégie de présence continue plutôt que de campagnes ponctuelles."
+     }
+    ]
+   }
+  ],
+  "contradictions": [
+   {
+    "constat": "La respirabilité est un facteur clé de succès dans l'offre concurrentielle et une attente implicite différenciante des consommateurs, mais le dossier ne permet pas de vérifier si son absence est perçue comme un frein à l'achat.",
+    "fondements": [
+     {
+      "ref": "concurrence.positionnement.facteurs_cles_succes[0]",
+      "type": "fait",
+      "detail": "32 offres mentionnent respirant/respirante/maille respirante comme critère déterminant pour le confort prolongé."
+     },
+     {
+      "ref": "insights.attentes[3]",
+      "type": "fait",
+      "detail": "La respirabilité est qualifiée d'attente implicite différenciante pour usage quotidien prolongé, mais non explicitement verbalisée dans le corpus d'opinions."
+     },
+     {
+      "ref": "concurrence.differenciation.attributs_distinctifs_potentiels[0]",
+      "type": "fait",
+      "detail": "24 offres concurrentes valorisent la respirabilité, suggérant un désavantage apparent pour les offres qui ne la mentionnent pas."
+     }
+    ],
+    "lecture_prudente": "Deux lectures possibles : (1) la respirabilité est un critère décisif que les consommateurs recherchent activement, auquel cas son absence dans la communication constitue un handicap concurrentiel ; (2) la respirabilité est un argument marketing standard sans impact réel sur la décision d'achat, les consommateurs privilégiant l'efficacité du soulagement. Pour départager, il faudrait observer : le taux de retour ou d'insatisfaction lié au confort thermique, les mentions explicites de respirabilité dans les avis consommateurs négatifs, et comparer les performances commerciales d'offres similaires avec/sans cet attribut communiqué."
+   },
+   {
+    "constat": "Le ciblage pathologique précis (sciatique, hernie discale) est identifié comme facteur clé de succès dans l'offre, mais les consommateurs expriment des besoins de soulagement génériques sans nécessairement rechercher une spécialisation pathologique.",
+    "fondements": [
+     {
+      "ref": "concurrence.positionnement.facteurs_cles_succes[2]",
+      "type": "fait",
+      "detail": "Le ciblage pathologique précis (sciatique 6 offres, hernie discale 3 offres) est identifié pour capter une demande qualifiée."
+     },
+     {
+      "ref": "insights.pain_points[0]",
+      "type": "fait",
+      "detail": "La douleur lombaire chronique (40 % des unités) est le pain point dominant, sans mention systématique d'un diagnostic pathologique précis."
+     },
+     {
+      "ref": "insights.pain_points[4]",
+      "type": "fait",
+      "detail": "La hernie discale est mentionnée par seulement 10 % des unités comme pain point limitant."
+     }
+    ],
+    "lecture_prudente": "Deux interprétations possibles : (1) le ciblage pathologique précis rassure et convertit mieux une minorité de consommateurs diagnostiqués, mais n'élargit pas le marché ; (2) la communication générique sur le soulagement lombaire capte un public plus large incluant les non-diagnostiqués. Pour trancher, il faudrait observer : le taux de conversion des annonces ciblées vs génériques, la proportion de consommateurs disposant d'un diagnostic médical formel avant achat, et les volumes de recherche pour « ceinture lombaire sciatique » vs « ceinture lombaire »."
+   },
+   {
+    "constat": "L'offre valorise massivement le caractère unisexe (22 offres), mais le corpus consommateur ne mentionne aucune préoccupation de genre ou de morphologie spécifique.",
+    "fondements": [
+     {
+      "ref": "concurrence.differenciation.desavantages_apparents[4]",
+      "type": "fait",
+      "detail": "22 offres concurrentes élargissent explicitement la cible avec les mentions « Unisexe » (10), « unisexe » (6), « hommes et femmes » (6)."
+     },
+     {
+      "ref": null,
+      "type": "hypothese",
+      "detail": "Le corpus consommateur (10 unités Reddit) ne contient aucune mention de genre, de morphologie ou de différenciation homme/femme dans les besoins ou attentes."
+     }
+    ],
+    "lecture_prudente": "Deux lectures possibles : (1) la mention « unisexe » est un argument de réassurance standard qui lève une barrière implicite à l'achat, même si les consommateurs ne la verbalisent pas ; (2) c'est un argument marketing sans impact réel, les consommateurs considérant par défaut qu'une ceinture lombaire convient aux deux sexes. Pour départager, il faudrait observer : les questions pré-achat sur les fiches produits concernant la compatibilité morphologique, les taux de retour liés à un problème d'ajustement selon le genre, et comparer les performances d'offres identiques avec/sans cette mention."
+   }
+  ],
+  "lecture_marche": "Le marché français de la ceinture lombaire à double traction présente une demande mature en léger recul (momentum -11,7 % sur 90 jours, pente annuelle -0,64 point sur 5 ans) avec un pic saisonnier en mars. L'offre est fragmentée (40 concurrents, 184 offres cœur) et dominée par des produits sans marque à bas prix (médiane AliExpress 11,39 EUR vs Amazon 21,99 EUR), avec une concentration extrême des volumes (99,4 % sur le top 3). Le sentiment consommateur est très majoritairement positif (8/10 unités), centré sur l'efficacité du soulagement de douleurs lombaires chroniques ou liées aux postures de travail prolongées. Les consommateurs valorisent l'ajustabilité et la simplicité d'utilisation comme critères différenciants, mais le dossier ne permet pas de quantifier leur sensibilité au prix. L'offre concurrentielle mise sur la respirabilité (32 offres), le ciblage pathologique (sciatique, hernie discale) et les innovations technologiques (acupression magnétique, gonflable), mais la pression publicitaire reste faible (2 annonceurs, 2 annonces) malgré une durée de diffusion longue (médiane 178,5 jours). Le dossier ne porte aucune donnée de volume absolu, de part de marché ou de projection de vente. Plusieurs angles restent peu exploités dans la communication observée : certification médicale, éco-conception, programmes d'accompagnement, usage préventif (sport, voyage).",
+  "fenetre_opportunite": "Pic saisonnier en mars (amplitude 16,4 %), suggérant une fenêtre de préparation commerciale en janvier-février pour capter la demande maximale. La durée médiane de diffusion publicitaire de 178,5 jours indique une stratégie de présence continue plutôt qu'une activation ponctuelle."
+ },
+ "faits_cles": [
+  {
+   "ref": "tendances.indicateurs.momentum_90j",
+   "enonce": "Demande mature en recul : momentum -11,7 % sur 90 jours, pente annuelle -0,64 point sur 5 ans",
+   "valeur": "-0.11685625646328857"
+  },
+  {
+   "ref": "insights.sentiment",
+   "enonce": "Sentiment consommateur très positif : 8 unités positives sur 10, efficacité immédiate du soulagement saluée",
+   "valeur": "8 positifs / 2 négatifs / 0 neutres / 0 mixtes sur 10 unités"
+  },
+  {
+   "ref": "insights.pain_points[0]",
+   "enonce": "Pain point dominant : douleur lombaire chronique (40 % des unités, score 80) et douleur liée aux postures de travail (40 %, score 70)",
+   "valeur": "40.0 % des unités, intensité 2.0, score 80.0"
+  },
+  {
+   "ref": "concurrence.intensite.concentration_volumes_top3_pct",
+   "enonce": "Concurrence fragmentée : 40 concurrents, 184 offres cœur, concentration extrême des volumes (99,4 % sur le top 3)",
+   "valeur": "99.4"
+  },
+  {
+   "ref": "concurrence.benchmark_prix[amazon][EUR].mediane",
+   "enonce": "Benchmark prix : médiane Amazon 21,99 € (segment cœur 16,99–25,50 €), médiane AliExpress 11,39 € (segment cœur 7,49–15,39 €)",
+   "valeur": "21.99"
+  },
+  {
+   "ref": "concurrence.intensite.duree_diffusion_mediane_jours",
+   "enonce": "Pression publicitaire faible (2 annonceurs, 2 annonces) mais durée de diffusion longue (médiane 178,5 jours)",
+   "valeur": "178.5"
+  },
+  {
+   "ref": "concurrence.differenciation.desavantages_apparents[0]",
+   "enonce": "Désavantages apparents : absence de mention de respirabilité (24 offres concurrentes la valorisent), caractère unisexe (22 offres), ciblage pathologique (9 offres)",
+   "valeur": "hypothese"
+  },
+  {
+   "ref": "insights.comportements_achat.sensibilite_prix",
+   "enonce": "Sensibilité prix indéterminée : aucune mention dans le corpus consommateur (10 unités Reddit, confiance faible)",
+   "valeur": "indeterminee"
+  }
+ ],
+ "hypotheses": [
+  "Seuils de la règle de verdict : positif si score ≥ 6, négatif si score ≤ 3, minimum de 4 critères évalués (heuristiques non validées).",
+  "Bornes du dossier de synthèse : 8 pain points, 6 besoins, 6 angles. Au-delà, les éléments les moins prioritaires n'atteignent pas les chaînes d'analyse.",
+  "Une entrée horodatée de plus de 30 jours est signalée comme potentiellement périmée ; les entrées sans horodatage ne peuvent pas être qualifiées."
+ ],
+ "opportunites": [
+  {
+   "libelle": "Capter la demande de consommateurs souffrant de douleurs lombaires chroniques ou liées aux postures de travail prolongées",
+   "fondements": [
+    {
+     "ref": "insights.pain_points[0]",
+     "type": "fait",
+     "detail": "40 % des unités souffrent de douleur lombaire chronique, intensité 2.0, score 80.0"
+    },
+    {
+     "ref": "insights.pain_points[1]",
+     "type": "fait",
+     "detail": "40 % des unités souffrent de douleurs liées aux postures de travail prolongé"
+    },
+    {
+     "ref": "insights.sentiment",
+     "type": "fait",
+     "detail": "Sentiment très majoritairement positif : 8 unités positives sur 10"
+    },
+    {
+     "ref": "insights.signaux_positifs[0]",
+     "type": "fait",
+     "detail": "Les consommateurs louent l'efficacité immédiate du soulagement, notamment pour scoliose et hernies discales"
+    },
+    {
+     "ref": "tendances.indicateurs.profil_courbe",
+     "type": "fait",
+     "detail": "Profil de demande mature"
+    },
+    {
+     "ref": "tendances.indicateurs.indice_moyen_12m",
+     "type": "fait",
+     "detail": "Indice moyen sur 12 mois de 72,36"
+    }
+   ],
+   "description": "Le corpus consommateur révèle que 40 % des unités souffrent de douleur lombaire chronique et 40 % de douleurs liées aux postures de travail (bureau, télétravail, conduite). Le sentiment est très majoritairement positif (8/10 unités) et les consommateurs louent l'efficacité immédiate du soulagement. Le marché est mature avec un indice moyen de 72,4 sur 12 mois, indiquant une demande installée.",
+   "conditions_de_capture": [
+    "Communiquer explicitement sur l'efficacité du soulagement de la douleur lombaire chronique et liée aux postures de travail",
+    "Valoriser la simplicité d'utilisation et l'ajustabilité, attentes différenciantes identifiées dans le corpus consommateur",
+    "Cibler les travailleurs sédentaires (bureau, télétravail, conduite) dans la communication",
+    "Activer la communication en janvier-février pour capter le pic saisonnier de mars (amplitude 16,4 %)"
+   ]
+  },
+  {
+   "libelle": "Se différencier par la communication sur des angles peu exploités dans le corpus concurrentiel observé",
+   "fondements": [
+    {
+     "ref": "concurrence.positionnement.angles_peu_exploites[0]",
+     "type": "fait",
+     "detail": "Aucune mention de certification médicale, essais cliniques ou validation par professionnels de santé dans le corpus (2 annonces, 3 pages web)"
+    },
+    {
+     "ref": "concurrence.positionnement.angles_peu_exploites[1]",
+     "type": "fait",
+     "detail": "Absence de communication sur durabilité, éco-conception ou recyclage dans les 2 annonces et 3 pages analysées"
+    },
+    {
+     "ref": "concurrence.positionnement.angles_peu_exploites[2]",
+     "type": "fait",
+     "detail": "Programmes d'accompagnement (exercices, vidéos, suivi personnalisé) non mentionnés dans le corpus"
+    },
+    {
+     "ref": "concurrence.positionnement.angles_peu_exploites[4]",
+     "type": "fait",
+     "detail": "Communication sur usage préventif (sport, travail physique, voyage) peu développée : seul usage domestique mentionné (8 occurrences)"
+    }
+   ],
+   "description": "Le corpus concurrentiel (2 annonces, 3 pages web) ne mentionne aucune certification médicale, essai clinique, validation par des professionnels de santé, éco-conception, programme d'accompagnement (exercices, vidéos, suivi personnalisé) ou offre d'abonnement. L'usage préventif (sport, voyage) est peu développé : seul l'usage domestique est mentionné (8 occurrences). Ces absences constatées dans le corpus ne préjugent pas d'une absence de marché, mais ouvrent des pistes de différenciation.",
+   "conditions_de_capture": [
+    "Collecter des données sur la demande réelle pour ces angles (certification médicale, éco-conception, accompagnement, usage préventif) avant d'investir dans leur développement",
+    "Tester la réceptivité consommateur à ces arguments via des campagnes A/B sur des échantillons représentatifs",
+    "Vérifier que ces angles correspondent à des besoins exprimés ou latents, et non à des projections marketing sans ancrage consommateur",
+    "Évaluer le coût de développement de ces angles (certification, programme d'accompagnement) par rapport au gain de différenciation attendu"
+   ]
+  },
+  {
+   "libelle": "Positionner l'offre dans le segment cœur Amazon (16,99–25,50 EUR) pour éviter la guerre des prix du segment entrée",
+   "fondements": [
+    {
+     "ref": "concurrence.benchmark_prix[amazon][EUR].segment.coeur",
+     "type": "fait",
+     "detail": "Segment cœur Amazon : 16,99–25,50 EUR"
+    },
+    {
+     "ref": "concurrence.benchmark_prix[amazon][EUR].mediane",
+     "type": "fait",
+     "detail": "Prix médian Amazon : 21,99 EUR sur 43 offres, dispersion 0,545"
+    },
+    {
+     "ref": "concurrence.benchmark_prix[aliexpress][EUR].mediane",
+     "type": "fait",
+     "detail": "Prix médian AliExpress : 11,39 EUR sur 141 offres, dispersion 1,133"
+    },
+    {
+     "ref": "concurrence.concurrents[0]",
+     "type": "fait",
+     "detail": "141 offres sans marque, fourchette 0,75–50,39 EUR, menace forte"
+    }
+   ],
+   "description": "Le marché est dominé par 141 offres sans marque à bas prix sur AliExpress (médiane 11,39 EUR, étendue 0,75–50,39 EUR) représentant une menace forte. Le segment cœur Amazon (16,99–25,50 EUR, médiane 21,99 EUR) offre un positionnement intermédiaire entre l'entrée low-cost et le premium, avec une dispersion plus faible (0,545 vs 1,133 sur AliExpress), suggérant une attente de qualité plus homogène.",
+   "conditions_de_capture": [
+    "Justifier le positionnement prix par des attributs différenciants valorisés par les consommateurs (ajustabilité, confort, efficacité)",
+    "Éviter la comparaison directe avec les offres AliExpress en ciblant des canaux de distribution différents (Amazon, pharmacies, sites spécialisés)",
+    "Communiquer sur des gages de qualité perçue (matériaux, ergonomie, durabilité) pour légitimer le prix supérieur au segment entrée",
+    "Collecter des données sur la sensibilité prix réelle des consommateurs, actuellement indéterminée dans le dossier"
+   ]
+  },
+  {
+   "libelle": "Exploiter le pic saisonnier de mars pour maximiser la visibilité et les conversions",
+   "fondements": [
+    {
+     "ref": "tendances.indicateurs.saisonnalite.mois_pic",
+     "type": "fait",
+     "detail": "Mois de pic saisonnier : 3 (mars)"
+    },
+    {
+     "ref": "tendances.indicateurs.saisonnalite.amplitude",
+     "type": "fait",
+     "detail": "Amplitude saisonnière : 0,164 soit 16,4 %"
+    },
+    {
+     "ref": "concurrence.intensite.duree_diffusion_mediane_jours",
+     "type": "fait",
+     "detail": "Durée médiane de diffusion publicitaire : 178,5 jours"
+    }
+   ],
+   "description": "Le dossier révèle un pic saisonnier en mars (mois 3) avec une amplitude de 16,4 %, suggérant une fenêtre de demande maximale. La durée médiane de diffusion publicitaire de 178,5 jours indique que les acteurs en place privilégient une présence continue plutôt que des activations ponctuelles.",
+   "conditions_de_capture": [
+    "Préparer les stocks et la logistique en janvier-février pour absorber la demande de mars",
+    "Activer les campagnes publicitaires en janvier-février pour construire la notoriété avant le pic",
+    "Analyser les causes du pic de mars (reprise d'activité physique post-hiver, résolutions de début d'année, facteurs climatiques) pour affiner le ciblage",
+    "Maintenir une présence publicitaire continue sur l'année pour capter la demande hors pic, à l'image de la stratégie observée (médiane 178,5 jours)"
+   ]
+  }
+ ],
+ "horodatage_utc": "2026-08-06T19:20:02Z",
+ "statuts_analyse": [
+  {
+   "phase": "diagnostic_croise",
+   "succes": true,
+   "nb_elements": 9,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "notation_grille",
+   "succes": true,
+   "nb_elements": 5,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "conditions_reexamen",
+   "succes": true,
+   "nb_elements": 6,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "recommandations",
+   "succes": true,
+   "nb_elements": 7,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "opportunites_risques",
+   "succes": true,
+   "nb_elements": 12,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "faits_cles_synthese",
+   "succes": true,
+   "nb_elements": 8,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "post_validation",
+   "succes": true,
+   "nb_elements": 8,
+   "nb_tentatives": 0,
+   "message_erreur": "8 valeur(s) de fait clé réécrite(s) depuis le dossier de synthèse."
+  },
+  {
+   "phase": "post_validation",
+   "succes": true,
+   "nb_elements": 2,
+   "nb_tentatives": 0,
+   "message_erreur": "2 valeur(s) hors vocabulaire contrôlé ramenée(s) à une valeur admise (domaine, priorité, horizon, effort, type ou gravité de risque)."
+  }
+ ],
+ "dossier_synthese": {
+  "demande": {
+   "indicateurs": [
+    {
+     "ref": "tendances.indicateurs.profil_courbe",
+     "detail": "Classification produite par le collecteur, non validée empiriquement.",
+     "valeur": "maturite",
+     "libelle": "Profil de la courbe de demande"
+    },
+    {
+     "ref": "tendances.indicateurs.indice_moyen_12m",
+     "detail": "Indice relatif de 0 à 100 : aucun volume absolu n'en découle.",
+     "valeur": "72.36538461538461",
+     "libelle": "Indice moyen sur 12 mois"
+    },
+    {
+     "ref": "tendances.indicateurs.momentum_90j",
+     "detail": "Variation relative ; 0.19 signifie +19 %.",
+     "valeur": "-0.11685625646328857",
+     "libelle": "Momentum sur 90 jours"
+    },
+    {
+     "ref": "tendances.indicateurs.pente_annuelle_5ans",
+     "detail": "Points d'indice par an.",
+     "valeur": "-0.6449124756876824",
+     "libelle": "Pente annuelle sur 5 ans"
+    },
+    {
+     "ref": "tendances.indicateurs.volatilite",
+     "detail": "Coefficient de variation de la série 5 ans.",
+     "valeur": "0.12705648895530364",
+     "libelle": "Volatilité"
+    },
+    {
+     "ref": "tendances.indicateurs.nb_breakout",
+     "detail": "",
+     "valeur": "0",
+     "libelle": "Nombre de requêtes en explosion"
+    },
+    {
+     "ref": "tendances.indicateurs.signal_effet_de_mode",
+     "detail": "",
+     "valeur": "False",
+     "libelle": "Signal d'effet de mode"
+    },
+    {
+     "ref": "tendances.indicateurs.saisonnalite.mois_pic",
+     "detail": "",
+     "valeur": "3",
+     "libelle": "Mois de pic saisonnier"
+    },
+    {
+     "ref": "tendances.indicateurs.saisonnalite.amplitude",
+     "detail": "(max − min) / moyenne des indices mensuels.",
+     "valeur": "0.16412049122647715",
+     "libelle": "Amplitude saisonnière"
+    },
+    {
+     "ref": "tendances.indicateurs.concentration_geo",
+     "detail": "",
+     "valeur": "Limousin (0.06583278472679395)",
+     "libelle": "Zone la plus concentrée"
+    }
+   ],
+   "terme_pivot": "ceinture lombaire",
+   "effet_de_mode": false,
+   "fallback_applique": false,
+   "motif_effet_de_mode": "",
+   "requetes_emergentes": []
+  },
+  "concurrence": {
+   "menaces": [
+    {
+     "ref": "concurrence.concurrents[0]",
+     "detail": "141 offre(s), fourchettes {'EUR': '0.75–50.39'}",
+     "valeur": "menace fort",
+     "libelle": "Offres sans marque"
+    },
+    {
+     "ref": "concurrence.concurrents[1]",
+     "detail": "2 offre(s), fourchettes {'EUR': '37.99'}",
+     "valeur": "menace moyen",
+     "libelle": "POSTURALIS"
+    },
+    {
+     "ref": "concurrence.concurrents[2]",
+     "detail": "5 offre(s), fourchettes {'EUR': '21.99–26.95'}",
+     "valeur": "menace fort",
+     "libelle": "Paskyee"
+    },
+    {
+     "ref": "concurrence.concurrents[3]",
+     "detail": "2 offre(s), fourchettes {'EUR': '22.55'}",
+     "valeur": "menace faible",
+     "libelle": "WEIO"
+    },
+    {
+     "ref": "concurrence.concurrents[4]",
+     "detail": "4 offre(s), fourchettes {'EUR': '29.99–30.99'}",
+     "valeur": "menace moyen",
+     "libelle": "Rakiie"
+    },
+    {
+     "ref": "concurrence.concurrents[5]",
+     "detail": "1 offre(s), fourchettes {'EUR': '13.99'}",
+     "valeur": "menace faible",
+     "libelle": "ACWOO"
+    },
+    {
+     "ref": "concurrence.concurrents[6]",
+     "detail": "1 offre(s), fourchettes {'EUR': '7.99'}",
+     "valeur": "menace faible",
+     "libelle": "Beugo"
+    },
+    {
+     "ref": "concurrence.concurrents[7]",
+     "detail": "1 offre(s), fourchettes {'EUR': '9.99'}",
+     "valeur": "menace faible",
+     "libelle": "Lukvcoe"
+    }
+   ],
+   "benchmark": [
+    {
+     "ref": "concurrence.benchmark_prix[aliexpress][EUR].mediane",
+     "detail": "sur 141 offres, étendue 0.75–50.39, dispersion 1.133",
+     "valeur": "11.39",
+     "libelle": "Prix médian aliexpress en EUR"
+    },
+    {
+     "ref": "concurrence.benchmark_prix[aliexpress][EUR].etendue",
+     "detail": "",
+     "valeur": "0.75–50.39",
+     "libelle": "Étendue de prix aliexpress en EUR"
+    },
+    {
+     "ref": "concurrence.benchmark_prix[aliexpress][EUR].segment.entree",
+     "detail": "",
+     "valeur": "0.75–7.49",
+     "libelle": "Segment entree aliexpress en EUR"
+    },
+    {
+     "ref": "concurrence.benchmark_prix[aliexpress][EUR].segment.coeur",
+     "detail": "",
+     "valeur": "7.49–15.39",
+     "libelle": "Segment coeur aliexpress en EUR"
+    },
+    {
+     "ref": "concurrence.benchmark_prix[aliexpress][EUR].segment.premium",
+     "detail": "",
+     "valeur": "15.39–50.39",
+     "libelle": "Segment premium aliexpress en EUR"
+    },
+    {
+     "ref": "concurrence.benchmark_prix[amazon][EUR].mediane",
+     "detail": "sur 43 offres, étendue 6.79–37.99, dispersion 0.545",
+     "valeur": "21.99",
+     "libelle": "Prix médian amazon en EUR"
+    },
+    {
+     "ref": "concurrence.benchmark_prix[amazon][EUR].etendue",
+     "detail": "",
+     "valeur": "6.79–37.99",
+     "libelle": "Étendue de prix amazon en EUR"
+    },
+    {
+     "ref": "concurrence.benchmark_prix[amazon][EUR].segment.entree",
+     "detail": "",
+     "valeur": "6.79–16.99",
+     "libelle": "Segment entree amazon en EUR"
+    },
+    {
+     "ref": "concurrence.benchmark_prix[amazon][EUR].segment.coeur",
+     "detail": "",
+     "valeur": "16.99–25.5",
+     "libelle": "Segment coeur amazon en EUR"
+    },
+    {
+     "ref": "concurrence.benchmark_prix[amazon][EUR].segment.premium",
+     "detail": "",
+     "valeur": "25.5–37.99",
+     "libelle": "Segment premium amazon en EUR"
+    }
+   ],
+   "intensite": [
+    {
+     "ref": "concurrence.intensite.nb_concurrents_identifies",
+     "detail": "",
+     "valeur": "40",
+     "libelle": "Concurrents identifiés"
+    },
+    {
+     "ref": "concurrence.intensite.nb_offres_coeur",
+     "detail": "",
+     "valeur": "184",
+     "libelle": "Offres au cœur du benchmark"
+    },
+    {
+     "ref": "concurrence.intensite.nb_annonceurs",
+     "detail": "",
+     "valeur": "2",
+     "libelle": "Annonceurs actifs"
+    },
+    {
+     "ref": "concurrence.intensite.nb_annonces_actives",
+     "detail": "",
+     "valeur": "2",
+     "libelle": "Annonces actives"
+    },
+    {
+     "ref": "concurrence.intensite.duree_diffusion_mediane_jours",
+     "detail": "",
+     "valeur": "178.5",
+     "libelle": "Longévité publicitaire médiane (jours)"
+    },
+    {
+     "ref": "concurrence.intensite.concentration_volumes_top3_pct",
+     "detail": "",
+     "valeur": "99.4",
+     "libelle": "Concentration des volumes du top 3 (%)"
+    },
+    {
+     "ref": "concurrence.intensite.lecture",
+     "detail": "",
+     "valeur": "Le marché de la ceinture lombaire double traction présente 40 concurrents identifiés et 184 offres dans le segment cœur (source : indicateurs d'intensité). La pression publicitaire reste faible avec seulement 2 annonceurs actifs diffusant 2 annonces (id_annonce: ads-1166667985396035, ads-2048639945862933), mais sur une durée médiane de 178,5 jours et jusqu'à 290 jours maximum, témoignant d'une str",
+     "libelle": "Lecture de l'intensité par F4"
+    }
+   ],
+   "confiance_f4": "elevee",
+   "position_prix": null,
+   "differenciation": [
+    {
+     "ref": "concurrence.differenciation.attributs_distinctifs_potentiels[0]",
+     "detail": "",
+     "valeur": "hypothese",
+     "libelle": "Attribut distinctif potentiel : Absence de mention de respirabilité dans la description fournie, alors que 24 offres concurrentes valorisent cet attribut (« Respirant » 10, « respirante » 8, « Maille respirante » 8, « Respirante » 6)"
+    },
+    {
+     "ref": "concurrence.differenciation.attributs_distinctifs_potentiels[1]",
+     "detail": "",
+     "valeur": "hypothese",
+     "libelle": "Attribut distinctif potentiel : Absence de mention du caractère unisexe dans la description fournie, alors que 16 offres concurrentes le revendiquent (« Unisexe » 10, « unisexe » 6)"
+    },
+    {
+     "ref": "concurrence.differenciation.attributs_distinctifs_potentiels[2]",
+     "detail": "",
+     "valeur": "hypothese",
+     "libelle": "Attribut distinctif potentiel : Absence de mention de fonction de correction posturale, alors que 15 offres concurrentes valorisent cet attribut (« Correcteur posture » 12, « correcteur posture » 3)"
+    },
+    {
+     "ref": "concurrence.differenciation.attributs_distinctifs_potentiels[3]",
+     "detail": "",
+     "valeur": "hypothese",
+     "libelle": "Attribut distinctif potentiel : Absence de mention de baleines de renfort, alors que 5 offres concurrentes Amazon revendiquent « 6 baleines » comme élément structurel"
+    },
+    {
+     "ref": "concurrence.differenciation.attributs_distinctifs_potentiels[4]",
+     "detail": "",
+     "valeur": "hypothese",
+     "libelle": "Attribut distinctif potentiel : Absence de mention d'indication thérapeutique spécifique (sciatique, hernie discale), alors que 9 offres concurrentes ciblent ces pathologies (« Sciatique » 6, « Hernie discale » 3)"
+    },
+    {
+     "ref": "concurrence.differenciation.attributs_distinctifs_potentiels[5]",
+     "detail": "",
+     "valeur": "hypothese",
+     "libelle": "Attribut distinctif potentiel : Absence de mention de caractère ergonomique, alors que 7 offres concurrentes valorisent cet attribut"
+    },
+    {
+     "ref": "concurrence.differenciation.attributs_partages[0]",
+     "detail": "",
+     "valeur": "fait",
+     "libelle": "Attribut partagé : Caractère réglable : 37 offres concurrentes mentionnent explicitement cet attribut (« Réglable » 20 offres, « réglable » 17 offres)"
+    },
+    {
+     "ref": "concurrence.differenciation.attributs_partages[1]",
+     "detail": "",
+     "valeur": "fait",
+     "libelle": "Attribut partagé : Fonction de double traction : 6 offres concurrentes revendiquent explicitement cet attribut distinctif"
+    },
+    {
+     "ref": "concurrence.differenciation.attributs_partages[2]",
+     "detail": "",
+     "valeur": "fait",
+     "libelle": "Attribut partagé : Soutien lombaire : 11 offres concurrentes mentionnent cette fonction (« Soutien lombaire » 8 offres, « soutien lombaire » 3 offres)"
+    },
+    {
+     "ref": "concurrence.differenciation.attributs_partages[3]",
+     "detail": "",
+     "valeur": "fait",
+     "libelle": "Attribut partagé : Fonction de décompression de la colonne vertébrale : 10 offres concurrentes revendiquent cet effet thérapeutique (« Décompression colonne vertébrale » 7 offres, « décompression » 3 offres)"
+    },
+    {
+     "ref": "concurrence.differenciation.attributs_partages[4]",
+     "detail": "",
+     "valeur": "fait",
+     "libelle": "Attribut partagé : Fonction de traction lombaire : 8 offres concurrentes mentionnent cette caractéristique (« Traction lombaire » 5 offres, « traction lombaire » 3 offres)"
+    },
+    {
+     "ref": "concurrence.differenciation.desavantages_apparents[0]",
+     "detail": "",
+     "valeur": "hypothese",
+     "libelle": "Désavantage apparent : Absence de mention de matériaux respirants ou de maille aérée dans la description fournie, alors que 24 offres concurrentes valorisent le confort thermique"
+    },
+    {
+     "ref": "concurrence.differenciation.desavantages_apparents[1]",
+     "detail": "",
+     "valeur": "hypothese",
+     "libelle": "Désavantage apparent : Absence de mention de fonction de correction posturale, alors que 15 offres concurrentes élargissent le bénéfice au-delà du seul soulagement lombaire"
+    },
+    {
+     "ref": "concurrence.differenciation.desavantages_apparents[2]",
+     "detail": "",
+     "valeur": "hypothese",
+     "libelle": "Désavantage apparent : Absence de mention d'indications thérapeutiques précises (sciatique, hernie discale), alors que 9 offres concurrentes ciblent des pathologies identifiées"
+    },
+    {
+     "ref": "concurrence.differenciation.desavantages_apparents[3]",
+     "detail": "",
+     "valeur": "hypothese",
+     "libelle": "Désavantage apparent : Absence de mention de baleines de renfort structurel, alors que 5 offres Amazon valorisent « 6 baleines » comme gage de maintien renforcé"
+    },
+    {
+     "ref": "concurrence.differenciation.desavantages_apparents[4]",
+     "detail": "",
+     "valeur": "hypothese",
+     "libelle": "Désavantage apparent : Absence de mention de caractère unisexe ou « hommes et femmes », alors que 22 offres concurrentes élargissent explicitement la cible (« Unisexe » 10, « unisexe » 6, « hommes et femmes » 6)"
+    },
+    {
+     "ref": "concurrence.differenciation.desavantages_apparents[5]",
+     "detail": "",
+     "valeur": "hypothese",
+     "libelle": "Désavantage apparent : Absence de mention de propriété antidérapante, alors que 4 offres concurrentes valorisent la stabilité du maintien"
+    }
+   ],
+   "bornes_benchmark": {
+    "EUR": {
+     "max": 50.39,
+     "min": 0.75
+    }
+   },
+   "devises_benchmark": [
+    "EUR"
+   ],
+   "validite_regionale": [
+    "aliexpress (region_etude) : prix AliExpress pour une livraison en FR.",
+    "amazon (marketplace_pays) : les prix et avis décrivent le marché de amazon.fr, soit FR — c'est bien la région d'étude.",
+    "meta_ads (diffusion_pays) : annonces diffusées en FR, quel que soit le pays de l'annonceur : la présence publicitaire n'implique ni disponibilité produit, ni volume de vente.",
+    "recherche_web (mixte) : pages web de portées hétérogènes (régionales et globales) : le champ `portee_regionale` de chaque page fait foi, pas la source."
+   ],
+   "angles_peu_exploites": [
+    {
+     "ref": "concurrence.positionnement.angles_peu_exploites[0]",
+     "detail": "Absence constatée dans le corpus F4, jamais une absence de marché.",
+     "valeur": "fait",
+     "libelle": "Aucune mention de certification médicale, d'essais cliniques ou de validation par des professionnels de santé n'est observée dans le corpus (2 annonces, 3 pages web)"
+    },
+    {
+     "ref": "concurrence.positionnement.angles_peu_exploites[1]",
+     "detail": "Absence constatée dans le corpus F4, jamais une absence de marché.",
+     "valeur": "fait",
+     "libelle": "Absence de communication sur la durabilité, l'éco-conception ou le recyclage des matériaux, non constatée dans les 2 annonces et 3 pages analysées"
+    },
+    {
+     "ref": "concurrence.positionnement.angles_peu_exploites[2]",
+     "detail": "Absence constatée dans le corpus F4, jamais une absence de marché.",
+     "valeur": "fait",
+     "libelle": "Programmes d'accompagnement (exercices, vidéos tutoriels, suivi personnalisé) non mentionnés dans le corpus de 2 annonces et 3 pages"
+    },
+    {
+     "ref": "concurrence.positionnement.angles_peu_exploites[3]",
+     "detail": "Absence constatée dans le corpus F4, jamais une absence de marché.",
+     "valeur": "hypothese",
+     "libelle": "Offres d'abonnement ou de renouvellement automatique non observées dans les 184 offres cœur de marché analysées"
+    },
+    {
+     "ref": "concurrence.positionnement.angles_peu_exploites[4]",
+     "detail": "Absence constatée dans le corpus F4, jamais une absence de marché.",
+     "valeur": "fait",
+     "libelle": "Communication sur l'usage préventif (sport, travail physique, voyage) peu développée : seul l'usage domestique est mentionné (8 occurrences), non observé dans les 2 annonces"
+    }
+   ],
+   "facteurs_cles_succes": [
+    {
+     "ref": "concurrence.positionnement.facteurs_cles_succes[0]",
+     "detail": "",
+     "valeur": "hypothese",
+     "libelle": "Respirabilité du matériau : 32 offres mentionnent respirant/respirante/maille respirante, critère déterminant pour le confort prolongé"
+    },
+    {
+     "ref": "concurrence.positionnement.facteurs_cles_succes[1]",
+     "detail": "",
+     "valeur": "fait",
+     "libelle": "Innovation technologique différenciante : acupression magnétique, gonflable (9 offres), double traction (6 offres)"
+    },
+    {
+     "ref": "concurrence.positionnement.facteurs_cles_succes[2]",
+     "detail": "",
+     "valeur": "hypothese",
+     "libelle": "Ciblage pathologique précis (sciatique 6 offres, hernie discale 3 offres) pour capter une demande qualifiée"
+    },
+    {
+     "ref": "concurrence.positionnement.facteurs_cles_succes[3]",
+     "detail": "",
+     "valeur": "hypothese",
+     "libelle": "Ergonomie et renforcement structurel (6 baleines, barre horizontale) comme gages de qualité perçue"
+    },
+    {
+     "ref": "concurrence.positionnement.facteurs_cles_succes[4]",
+     "detail": "",
+     "valeur": "hypothese",
+     "libelle": "Durée de diffusion publicitaire longue (médiane 178,5 jours, max 290 jours) suggérant une stratégie de présence continue plutôt que de campagnes ponctuelles"
+    }
+   ]
+  },
+  "consommateur": {
+   "besoins": [
+    {
+     "ref": "insights.besoins[0]",
+     "detail": "Le besoin dominant dans le corpus est le soulagement de la douleur lombaire, qu'elle soit chronique ou liée à des postures de travail prolongées. Les consommateurs recherchent une solution efficace pour réduire les tensions musculaires et les douleurs du bas du dos, notamment dans des contextes de travail sédentaire (6-7 heures quotidiennes devant ordinateur), de pathologies identifiées (scoliose, hernies discales) ou de douleurs chroniques persistantes sur plusieurs années. (confiance faible)",
+     "valeur": "fonctionnel",
+     "libelle": "Soulager la douleur lombaire"
+    },
+    {
+     "ref": "insights.besoins[1]",
+     "detail": "Les consommateurs expriment le besoin d'un maintien actif de la zone lombaire pour corriger ou stabiliser la posture, notamment en position assise prolongée (télétravail, bureau, conduite). Ce besoin vise à prévenir l'aggravation des douleurs et à assurer un alignement optimal de la colonne vertébrale durant les activités quotidiennes. (confiance faible)",
+     "valeur": "fonctionnel",
+     "libelle": "Maintenir la posture et stabiliser la zone lombaire"
+    },
+    {
+     "ref": "insights.besoins[2]",
+     "detail": "Le corpus révèle un besoin d'accompagnement lors d'efforts physiques, qu'il s'agisse de reprise progressive d'activité (marche quotidienne, entraînement en salle) ou de pratique intensive (musculation avec charges). Les consommateurs cherchent à sécuriser leurs mouvements et à limiter les risques de récidive ou d'aggravation des douleurs dorsales. (confiance faible)",
+     "valeur": "fonctionnel",
+     "libelle": "Accompagner la reprise ou la poursuite d'activité physique"
+    },
+    {
+     "ref": "insights.besoins[3]",
+     "detail": "Au-delà du soulagement immédiat, les consommateurs expriment le besoin de retrouver une vie normale : amélioration du sommeil, réduction de l'anxiété liée à la condition, capacité à maintenir leurs activités professionnelles et personnelles sans limitation majeure. Ce besoin émotionnel traduit la quête d'autonomie et de bien-être global. (confiance faible)",
+     "valeur": "emotionnel",
+     "libelle": "Retrouver une qualité de vie et réduire l'impact sur le quotidien"
+    },
+    {
+     "ref": "insights.besoins[4]",
+     "detail": "Le corpus montre une recherche de solutions immédiates et faciles à mettre en œuvre, sans nécessiter de parcours médical complexe. Les consommateurs valorisent la simplicité d'utilisation et l'efficacité rapide, notamment lorsque l'accès à la kinésithérapie est limité ou insuffisant. (confiance faible)",
+     "valeur": "service",
+     "libelle": "Accéder à des solutions pratiques et rapides"
+    }
+   ],
+   "attentes": [
+    {
+     "ref": "insights.attentes[0]",
+     "detail": "Les consommateurs considèrent l'efficacité du soulagement comme une attente fondamentale : la ceinture doit apporter un soulagement mesurable et rapide de la douleur lombaire. Cette attente est standard, car elle constitue la raison d'être du produit.",
+     "valeur": "standard",
+     "libelle": "Efficacité du soulagement"
+    },
+    {
+     "ref": "insights.attentes[1]",
+     "detail": "Le confort durant un usage prolongé (plusieurs heures par jour, notamment en télétravail ou au bureau) est attendu comme standard. Les consommateurs doivent pouvoir porter la ceinture sans gêne, irritation ou inconfort, même en position assise.",
+     "valeur": "standard",
+     "libelle": "Confort de port prolongé"
+    },
+    {
+     "ref": "insights.attentes[2]",
+     "detail": "Les consommateurs attendent une mise en place simple et une capacité d'ajustement facile (sangles latérales, système de double traction). Cette attente est différenciante : une ceinture facile à régler et à positionner correctement sera préférée à une solution complexe nécessitant un apprentissage.",
+     "valeur": "differenciant",
+     "libelle": "Utilisation intuitive et ajustabilité"
+    },
+    {
+     "ref": "insights.attentes[3]",
+     "detail": "Bien que non explicitement verbalisée dans le corpus d'opinions, la respirabilité est une attente implicite différenciante pour un usage quotidien prolongé, notamment en contexte de travail ou d'activité physique. Le corpus ne permet pas de quantifier cette attente, mais les éléments positifs relevés sur le web soulignent l'importance des matériaux respirants.",
+     "valeur": "differenciant",
+     "libelle": "Respirabilité et gestion de la transpiration"
+    }
+   ],
+   "sentiment": {
+    "ref": "insights.sentiment",
+    "detail": "Le sentiment global est très majoritairement positif (8 unités sur 10), avec seulement 2 unités négatives et aucune neutre ou mixte. Les unités négatives concernent principalement les limitations liées aux pathologies lombaires (hernie discale, stagnation physique) plutôt qu'une insatisfaction envers les solutions de maintien lombaire elles-mêmes. La répartition par portée montre une cohérence entre portée globale (100 % positif, 2 unités) et régionale (75 % positif, 6 unités sur 8), sans divergence notable. Le corpus reflète une perception favorable des ceintures lombaires comme solution de soulagement, bien que la base soit limitée (10 unités) et issue d'une seule source (Reddit).",
+    "valeur": "8 positifs / 2 négatifs / 0 neutres / 0 mixtes sur 10 unités",
+    "libelle": "Répartition des sentiments"
+   },
+   "pain_points": [
+    {
+     "ref": "insights.pain_points[0]",
+     "detail": "La douleur lombaire chronique est le pain point le plus fréquent dans le corpus (40 % des unités). Elle se manifeste sur des périodes prolongées (jusqu'à 10 ans mentionnés), avec des intensités variables et des récidives malgré les tentatives de traitement (exercices de renforcement, étirements). Les consommateurs décrivent une douleur persistante qui revient même après des périodes d'amélioration, notamment lorsqu'ils augmentent l'intensité de leurs activités physiques. (portée mixte, confiance moyenne)",
+     "valeur": "40.0 % des unités, intensité 2.0, score 80.0",
+     "libelle": "Douleur lombaire chronique"
+    },
+    {
+     "ref": "insights.pain_points[1]",
+     "detail": "Les douleurs lombaires liées aux postures de travail (40 % des unités) concernent principalement les situations de travail prolongé en position assise (bureau, télétravail, conduite). Les consommateurs rapportent des douleurs récurrentes malgré des chaises ergonomiques et une attention portée à la posture, suggérant que l'équipement seul ne suffit pas à prévenir le problème. (portée regionale, confiance moyenne)",
+     "valeur": "40.0 % des unités, intensité 1.75, score 70.0",
+     "libelle": "Douleur lombaire liée aux postures de travail"
+    },
+    {
+     "ref": "insights.pain_points[2]",
+     "detail": "L'absence ou l'insuffisance de rééducation kinésithérapique est mentionnée comme un pain point par 20 % des unités. Le corpus suggère un manque d'accès ou de suivi régulier en kinésithérapie, poussant les consommateurs à rechercher des solutions alternatives ou complémentaires pour gérer leur douleur. (portée regionale, confiance faible)",
+     "valeur": "20.0 % des unités, intensité 1.5, score 30.0",
+     "libelle": "Absence de rééducation kinésithérapique"
+    },
+    {
+     "ref": "insights.pain_points[3]",
+     "detail": "Certains consommateurs souffrent de douleurs chroniques touchant plusieurs zones (épaules, dos, lombaires) simultanément, liées à un travail prolongé sur ordinateur (6-7 heures quotidiennes). Cette condition multi-sites rend la gestion de la douleur plus complexe et impacte significativement la qualité de vie quotidienne. (portée globale, confiance faible)",
+     "valeur": "10.0 % des unités, intensité 3.0, score 30.0",
+     "libelle": "Douleur chronique multi-sites"
+    },
+    {
+     "ref": "insights.pain_points[4]",
+     "detail": "La hernie discale est identifiée comme un pain point limitant la pratique d'activités physiques intenses (musculation, entraînement en salle). Les consommateurs concernés doivent adapter leurs exercices et leurs charges, ce qui freine leur progression et leur pratique sportive. (portée regionale, confiance faible)",
+     "valeur": "10.0 % des unités, intensité 3.0, score 30.0",
+     "libelle": "Hernie discale limitante"
+    },
+    {
+     "ref": "insights.pain_points[5]",
+     "detail": "La douleur lombaire chronique entraîne une limitation des activités quotidiennes et professionnelles, rendant la vie « misérable » selon les termes employés. Ce pain point traduit l'impact global de la condition sur l'autonomie et le bien-être des consommateurs. (portée globale, confiance faible)",
+     "valeur": "10.0 % des unités, intensité 3.0, score 30.0",
+     "libelle": "Limitation des activités quotidiennes"
+    },
+    {
+     "ref": "insights.pain_points[6]",
+     "detail": "Le stress et l'anxiété liés à la douleur lombaire chronique sont mentionnés par 20 % des unités. Le corpus évoque notamment le lien entre tension psychologique (relation toxique) et aggravation des douleurs dorsales, suggérant une dimension psychosomatique de la condition. (portée mixte, confiance faible)",
+     "valeur": "20.0 % des unités, intensité 1.5, score 30.0",
+     "libelle": "Stress et anxiété liés à la condition"
+    },
+    {
+     "ref": "insights.pain_points[7]",
+     "detail": "Certains consommateurs expriment une préoccupation implicite quant à la dépendance aux orthèses externes (ceintures, semelles orthopédiques). Le corpus ne permet pas de déterminer si cette dépendance est perçue comme problématique ou acceptable dans la gestion à long terme de la douleur. (portée globale, confiance faible)",
+     "valeur": "10.0 % des unités, intensité 2.0, score 20.0",
+     "libelle": "Dépendance aux orthèses externes"
+    }
+   ],
+   "confiance_f3": "faible",
+   "sensibilite_prix": {
+    "ref": "insights.comportements_achat.sensibilite_prix",
+    "detail": "Le corpus ne contient aucune mention explicite du prix, du rapport qualité-prix ou de considérations budgétaires. Il n'est pas possible de déterminer la sensibilité au prix des consommateurs à partir des données disponibles.",
+    "valeur": "indeterminee",
+    "libelle": "Sensibilité au prix"
+   },
+   "signaux_positifs": [
+    {
+     "ref": "insights.signaux_positifs[0]",
+     "detail": "Les consommateurs louent explicitement l'efficacité immédiate de la ceinture lombaire pour soulager la douleur, notamment dans des cas de scoliose et hernies discales partielles. L'expression « immediate relief » et « so effective » témoigne d'une satisfaction forte quant à la rapidité d'action du produit.",
+     "valeur": "fonctionnel",
+     "libelle": "Efficacité immédiate du soulagement"
+    },
+    {
+     "ref": "insights.signaux_positifs[1]",
+     "detail": "L'augmentation de l'activité physique quotidienne (tapis de marche, 10 000 pas) est saluée pour son impact positif sur le mal de dos et le sommeil. Bien que ce signal ne concerne pas directement la ceinture lombaire, il indique que les consommateurs valorisent les solutions qui améliorent globalement leur bien-être.",
+     "valeur": "emotionnel",
+     "libelle": "Amélioration du sommeil et de la qualité de vie"
+    },
+    {
+     "ref": "insights.signaux_positifs[2]",
+     "detail": "Les consommateurs apprécient les solutions pratiques et rapides à mettre en œuvre, notamment pour un usage quotidien en télétravail ou au bureau. La simplicité d'utilisation est un critère de choix explicitement mentionné.",
+     "valeur": "service",
+     "libelle": "Praticité et simplicité d'utilisation"
+    },
+    {
+     "ref": "insights.signaux_positifs[3]",
+     "detail": "Les étirements réguliers (quadriceps, ischio-jambiers) sont loués comme une solution complémentaire efficace pour prévenir la récidive des douleurs lombaires chroniques. Ce signal positif concerne une pratique d'auto-soin plutôt que le produit lui-même.",
+     "valeur": "service",
+     "libelle": "Efficacité des étirements réguliers"
+    }
+   ],
+   "divergences_sources": []
+  },
+  "qualite_donnees": {
+   "entrees": [
+    {
+     "entree": "insights",
+     "presente": true,
+     "age_jours": 0,
+     "horodatage": "2026-08-06T19:09:04Z",
+     "avertissements": [
+      "confiance amont déclarée faible"
+     ],
+     "confiance_heritee": "faible",
+     "donnees_suffisantes": true,
+     "fraicheur_qualifiable": true
+    },
+    {
+     "entree": "concurrence",
+     "presente": true,
+     "age_jours": 0,
+     "horodatage": "2026-08-06T19:13:27Z",
+     "avertissements": [],
+     "confiance_heritee": "elevee",
+     "donnees_suffisantes": true,
+     "fraicheur_qualifiable": true
+    },
+    {
+     "entree": "tendances",
+     "presente": true,
+     "age_jours": null,
+     "horodatage": null,
+     "avertissements": [
+      "le contrat du collecteur Tendances ne porte aucun horodatage : la fraîcheur de cette entrée ne peut pas être qualifiée"
+     ],
+     "confiance_heritee": null,
+     "donnees_suffisantes": true,
+     "fraicheur_qualifiable": false
+    }
+   ],
+   "nb_entrees_degradees": 1,
+   "nb_entrees_presentes": 3
+  }
+ },
+ "alertes_coherence": [],
+ "confiance_globale": {
+  "niveau": "moyenne",
+  "facteurs": [
+   "3 entrée(s) sur 3 présente(s)",
+   "5 critère(s) évalué(s) sur 5",
+   "[insights] confiance amont déclarée faible",
+   "[tendances] le contrat du collecteur Tendances ne porte aucun horodatage : la fraîcheur de cette entrée ne peut pas être qualifiée"
+  ],
+  "justification": "1 entrée(s) dégradée(s) (données insuffisantes ou confiance amont faible) : la qualité de ces recommandations est bornée par celle des analyses amont."
+ },
+ "sources_utilisees": [
+  {
+   "source": "insights",
+   "fichier": "insights.json",
+   "avertissements": [],
+   "nb_items_charges": 20,
+   "nb_items_exploites": 20,
+   "donnees_disponibles": true
+  },
+  {
+   "source": "concurrence",
+   "fichier": "concurrence.json",
+   "avertissements": [],
+   "nb_items_charges": 42,
+   "nb_items_exploites": 42,
+   "donnees_disponibles": true
+  },
+  {
+   "source": "tendances",
+   "fichier": "tendances.json",
+   "avertissements": [],
+   "nb_items_charges": 1,
+   "nb_items_exploites": 1,
+   "donnees_disponibles": true
+  }
+ ],
+ "verdict_potentiel": {
+  "grille": [
+   {
+    "score": 0,
+    "critere": "demande",
+    "fondements": [
+     {
+      "ref": "tendances.indicateurs.profil_courbe",
+      "type": "fait",
+      "detail": "Profil classé « maturite »"
+     },
+     {
+      "ref": "tendances.indicateurs.momentum_90j",
+      "type": "fait",
+      "detail": "Momentum à -0,117 soit -11,7 % sur 90 jours"
+     },
+     {
+      "ref": "tendances.indicateurs.pente_annuelle_5ans",
+      "type": "fait",
+      "detail": "Pente annuelle de -0,64 points d'indice sur 5 ans"
+     },
+     {
+      "ref": "tendances.indicateurs.signal_effet_de_mode",
+      "type": "fait",
+      "detail": "Aucun signal d'effet de mode détecté (False)"
+     },
+     {
+      "ref": "tendances.indicateurs.nb_breakout",
+      "type": "fait",
+      "detail": "0 requête en explosion"
+     }
+    ],
+    "justification": "La demande pour les ceintures lombaires présente des signaux défavorables nets : profil de maturité, momentum négatif sur 90 jours (-11,7 %), pente annuelle négative sur 5 ans (-0,64 points d'indice/an), et absence de requêtes émergentes. Aucun signal d'effet de mode n'est détecté, mais la tendance est clairement baissière. La saisonnalité reste modérée (amplitude 16,4 %, pic en mars). L'indice moyen sur 12 mois (72,4) indique une demande établie mais en déclin structurel.",
+    "non_evaluable": false,
+    "plafonnement_applique": null
+   },
+   {
+    "score": 1,
+    "critere": "intensite",
+    "fondements": [
+     {
+      "ref": "concurrence.intensite.nb_concurrents_identifies",
+      "type": "fait",
+      "detail": "40 concurrents identifiés"
+     },
+     {
+      "ref": "concurrence.intensite.nb_offres_coeur",
+      "type": "fait",
+      "detail": "184 offres au cœur du benchmark"
+     },
+     {
+      "ref": "concurrence.intensite.concentration_volumes_top3_pct",
+      "type": "fait",
+      "detail": "Concentration à 99,4 % pour le top 3"
+     },
+     {
+      "ref": "concurrence.intensite.nb_annonceurs",
+      "type": "fait",
+      "detail": "Seulement 2 annonceurs actifs"
+     },
+     {
+      "ref": "concurrence.intensite.duree_diffusion_mediane_jours",
+      "type": "fait",
+      "detail": "Durée médiane de diffusion publicitaire de 178,5 jours"
+     }
+    ],
+    "justification": "L'intensité concurrentielle est contrastée. D'un côté, 40 concurrents identifiés et 184 offres cœur témoignent d'un marché encombré. La concentration des volumes est extrême (99,4 % pour le top 3), signalant une domination forte. De l'autre, la pression publicitaire reste très faible (2 annonceurs, 2 annonces actives) mais avec une longévité médiane élevée (178,5 jours), suggérant une stratégie de présence continue plutôt qu'une guerre d'enchères. Un entrant peut trouver sa place en dehors des canaux publicitaires saturés, mais devra composer avec une offre pléthorique.",
+    "non_evaluable": false,
+    "plafonnement_applique": null
+   },
+   {
+    "score": 1,
+    "critere": "differenciation",
+    "fondements": [
+     {
+      "ref": "concurrence.differenciation.attributs_partages[1]",
+      "type": "fait",
+      "detail": "Double traction : 6 offres concurrentes partagent cet attribut"
+     },
+     {
+      "ref": "concurrence.positionnement.angles_peu_exploites[0]",
+      "type": "fait",
+      "detail": "Aucune mention de certification médicale dans le corpus"
+     },
+     {
+      "ref": "concurrence.positionnement.angles_peu_exploites[4]",
+      "type": "fait",
+      "detail": "Communication sur l'usage préventif peu développée"
+     },
+     {
+      "ref": "concurrence.differenciation.desavantages_apparents[0]",
+      "type": "fait",
+      "detail": "Absence de mention de respirabilité alors que 24 offres concurrentes la valorisent"
+     },
+     {
+      "ref": "concurrence.differenciation.desavantages_apparents[2]",
+      "type": "fait",
+      "detail": "Absence d'indications thérapeutiques précises (sciatique, hernie) alors que 9 offres concurrentes les ciblent"
+     }
+    ],
+    "justification": "La différenciation est mitigée. Le produit partage des attributs standards du marché (réglable, double traction, soutien lombaire, décompression), ce qui le positionne dans la norme. Cependant, plusieurs angles différenciants restent peu exploités par la concurrence : certification médicale, éco-conception, programmes d'accompagnement, usage préventif. La description fournie ne mentionne pas d'attributs valorisés par les concurrents (respirabilité, unisexe, correction posturale, baleines de renfort, ciblage pathologique), ce qui constitue un désavantage apparent. La crédibilité de la différenciation dépendra de l'activation de ces angles inexploités et de l'ajout d'attributs manquants.",
+    "non_evaluable": false,
+    "plafonnement_applique": null
+   },
+   {
+    "score": 2,
+    "critere": "adequation",
+    "fondements": [
+     {
+      "ref": "insights.pain_points[0]",
+      "type": "fait",
+      "detail": "Douleur lombaire chronique : 40 % des unités, score 80"
+     },
+     {
+      "ref": "insights.pain_points[1]",
+      "type": "fait",
+      "detail": "Douleur liée aux postures de travail : 40 % des unités, score 70"
+     },
+     {
+      "ref": "insights.besoins[0]",
+      "type": "fait",
+      "detail": "Besoin dominant : soulager la douleur lombaire"
+     },
+     {
+      "ref": "insights.besoins[1]",
+      "type": "fait",
+      "detail": "Besoin de maintien et stabilisation de la zone lombaire"
+     },
+     {
+      "ref": "insights.sentiment",
+      "type": "fait",
+      "detail": "Sentiment très majoritairement positif : 8/10 unités positives"
+     },
+     {
+      "ref": "insights.signaux_positifs[0]",
+      "type": "fait",
+      "detail": "Efficacité immédiate du soulagement saluée par les consommateurs"
+     }
+    ],
+    "justification": "L'adéquation aux besoins est favorable. Le produit répond directement aux pain points dominants documentés : douleur lombaire chronique (40 % des unités, score 80), douleur liée aux postures de travail (40 %, score 70), et limitation des activités quotidiennes. Les besoins fonctionnels (soulager la douleur, maintenir la posture, accompagner l'activité physique) et émotionnels (retrouver qualité de vie) sont clairement adressés par la fonction de maintien et double traction. Le sentiment consommateur est très positif (8/10 unités), avec des signaux d'efficacité immédiate et d'amélioration du bien-être. La confiance reste faible (corpus limité à 10 unités Reddit), mais la convergence entre pain points, besoins et fonction produit est nette.",
+    "non_evaluable": false,
+    "plafonnement_applique": null
+   },
+   {
+    "score": 2,
+    "critere": "viabilite_prix",
+    "fondements": [
+     {
+      "ref": "concurrence.benchmark_prix[amazon][EUR].mediane",
+      "type": "fait",
+      "detail": "Prix médian Amazon : 21,99 € sur 43 offres"
+     },
+     {
+      "ref": "concurrence.benchmark_prix[aliexpress][EUR].mediane",
+      "type": "fait",
+      "detail": "Prix médian AliExpress : 11,39 € sur 141 offres"
+     },
+     {
+      "ref": "concurrence.benchmark_prix[amazon][EUR].segment.coeur",
+      "type": "fait",
+      "detail": "Segment cœur Amazon : 16,99–25,50 €"
+     },
+     {
+      "ref": "concurrence.benchmark_prix[aliexpress][EUR].segment.coeur",
+      "type": "fait",
+      "detail": "Segment cœur AliExpress : 7,49–15,39 €"
+     },
+     {
+      "ref": "insights.comportements_achat.sensibilite_prix",
+      "type": "fait",
+      "detail": "Sensibilité prix indéterminée (aucune mention dans le corpus)"
+     }
+    ],
+    "justification": "La viabilité prix est favorable. Le benchmark montre une large fourchette de prix sur AliExpress (0,75–50,39 €, médiane 11,39 €) et Amazon (6,79–37,99 €, médiane 21,99 €), offrant une flexibilité de positionnement. Le segment cœur sur Amazon (16,99–25,50 €) et AliExpress (7,49–15,39 €) permet d'envisager un positionnement cohérent selon le canal de distribution. L'absence de données sur la sensibilité prix des consommateurs ne constitue pas un obstacle : les fourchettes observées sont suffisamment larges pour absorber différents niveaux de qualité perçue et de coûts. Un positionnement médian ou légèrement premium reste viable.",
+    "non_evaluable": false,
+    "plafonnement_applique": null
+   }
+  ],
+  "verdict": "indetermine",
+  "confiance": "moyenne",
+  "score_total": 6,
+  "statut_regle": "hypothese_de_travail_a_valider",
+  "declenche_plc": false,
+  "regle_appliquee": "Règle appliquée par le code (HYPOTHÈSE DE TRAVAIL, non validée) : si moins de 4 critères sont évalués, le verdict est « indetermine » d'office. Sinon, verdict « positif » si score_total ≥ 6 ET aucun critère noté 0 ET au plus 1 critère non évaluable. Verdict « negatif » si score_total ≤ 3 OU si les critères « demande » et « differenciation » sont tous deux notés 0. Sinon « indetermine ». Barème par critère : 0 = signal défavorable net ; 1 = signal mitigé ou contrasté ; 2 = signal favorable net. Plafond « effet de mode » : le critère « demande » est ramené à 1 au maximum lorsque la source Tendances signale un effet de mode.",
+  "conditions_reexamen": [
+   "Relancer une collecte d'insights consommateurs sur un corpus d'au moins 50 unités (actuellement 10 unités Reddit) pour confirmer la stabilité du sentiment positif (8/10) et documenter la sensibilité prix, aujourd'hui indéterminée.",
+   "Mesurer le momentum sur 90 jours pendant trois trimestres consécutifs : si le momentum repasse au-dessus de -5 % sur deux trimestres successifs, la tendance baissière (-11,7 % actuellement) pourrait s'inverser et justifier une réévaluation du critère « demande ».",
+   "Collecter les prix pratiqués sur au moins 30 offres concurrentes sur les marketplaces européennes (hors AliExpress) pour compléter le benchmark Amazon (43 offres, médiane 21,99 €) et valider la viabilité d'un positionnement premium au-dessus de 25,50 €.",
+   "Auditer la présence ou l'absence de trois attributs valorisés par la concurrence dans la fiche produit finale : respirabilité (24 offres concurrentes), caractère unisexe (18 offres), et indications thérapeutiques précises (9 offres). Si au moins deux sont ajoutés, réévaluer le critère « différenciation ».",
+   "Suivre le nombre d'annonceurs actifs en publicité payante sur 6 mois : si ce nombre passe de 2 à 5 ou plus, ou si la durée médiane de diffusion descend sous 90 jours (actuellement 178,5 jours), l'intensité concurrentielle publicitaire aura significativement augmenté.",
+   "Vérifier l'évolution du nombre de requêtes en explosion (actuellement 0) et du signal d'effet de mode (actuellement False) chaque trimestre : l'apparition d'un breakout ou d'un signal de mode changerait radicalement le profil de demande."
+  ],
+  "nb_criteres_evalues": 5
+ },
+ "synthese_executive": "**Verdict : indéterminé (confiance moyenne).** Le marché français de la ceinture lombaire à double traction présente une demande mature en recul (momentum -11,7 % sur 90 jours, pente annuelle -0,64 point sur 5 ans) mais un sentiment consommateur très positif (8/10 unités). La concurrence est fragmentée (40 concurrents, 184 offres cœur) avec une concentration extrême des volumes (99,4 % sur le top 3) et une pression publicitaire faible (2 annonceurs, durée médiane 178,5 jours).\n\n**Justifications sourcées :** (1) Le pain point dominant — douleur lombaire chronique (40 % des unités, score 80) et douleur liée aux postures de travail (40 %, score 70) — converge avec la fonction produit (soutien lombaire, double traction). (2) Le benchmark prix offre une flexibilité de positionnement : médiane Amazon 21,99 € (segment cœur 16,99–25,50 €), médiane AliExpress 11,39 € (segment cœur 7,49–15,39 €). (3) Plusieurs désavantages apparents fragilisent la compétitivité : absence de mention de respirabilité (24 offres concurrentes la valorisent), caractère unisexe (22 offres), ciblage pathologique (9 offres).\n\n**Recommandations majeures :** (1) Documenter et communiquer explicitement la respirabilité du matériau dans la fiche produit, en précisant le bénéfice pour un usage prolongé (6-7 heures quotidiennes en télétravail). (2) Concentrer la communication initiale sur les marketplaces établies (Amazon FR) en optimisant les fiches produit pour les requêtes liées aux postures de travail, plutôt que sur la publicité payante. (3) Planifier une activation commerciale renforcée en janvier-février pour capter le pic saisonnier de mars (amplitude 16,4 %).\n\n**Risque principal :** Concurrence intense des offres sans marque à bas prix (141 offres, 0,75–50,39 €) avec une concentration extrême des volumes (99,4 % sur le top 3), rendant difficile la capture de parts de marché sans différenciation claire et sans données sur la sensibilité prix réelle des consommateurs.\n\n**Données à compléter :** Relancer une collecte d'insights sur un corpus d'au moins 50 unités pour documenter la sensibilité prix (actuellement indéterminée) et confirmer la stabilité du sentiment positif. Collecter le momentum sur 90 jours pendant trois trimestres supplémentaires pour confirmer ou infirmer la tendance baissière. Auditer la présence de trois attributs valorisés (respirabilité, unisexe, ciblage pathologique) dans la fiche produit finale et réévaluer le critère « différenciation » si au moins deux sont ajoutés.",
+ "donnees_a_completer": [
+  "Agent Tendances : collecter le momentum sur 90 jours pendant trois trimestres consécutifs supplémentaires pour confirmer ou infirmer la tendance baissière actuelle (-11,7 %). Si le momentum repasse au-dessus de -5 % sur deux trimestres successifs, le critère « demande » pourrait basculer de 0 à 1, faisant passer le verdict de « indéterminé » à « positif ».",
+  "Agent Insights : relancer une collecte sur un corpus d'au moins 50 unités (actuellement 10 unités Reddit) pour documenter la sensibilité prix (actuellement indéterminée) et confirmer la stabilité du sentiment positif (8/10). Une sensibilité prix documentée permettrait d'affiner la recommandation de positionnement prix et de valider la viabilité d'un segment premium.",
+  "Agent Concurrence : collecter les prix pratiqués sur au moins 30 offres concurrentes sur les marketplaces européennes hors AliExpress (actuellement 43 offres Amazon) pour compléter le benchmark et valider la viabilité d'un positionnement au-dessus de 25,50 € (borne haute du segment cœur Amazon).",
+  "Agent Insights : documenter explicitement la perception de trois attributs valorisés par la concurrence mais absents du corpus consommateur : respirabilité (24 offres concurrentes la mentionnent), caractère unisexe (22 offres), et ciblage pathologique précis (9 offres). Vérifier si leur absence dans la communication constitue un frein à l'achat ou un argument marketing sans impact réel.",
+  "Agent Concurrence : suivre le nombre d'annonceurs actifs en publicité payante sur 6 mois (actuellement 2) et la durée médiane de diffusion (actuellement 178,5 jours). Une augmentation à 5 annonceurs ou plus, ou une baisse de la durée sous 90 jours, signalerait une intensification de la pression publicitaire et ferait basculer le critère « intensité » de 1 à 0.",
+  "Agent Tendances : surveiller chaque trimestre le nombre de requêtes en explosion (actuellement 0) et le signal d'effet de mode (actuellement False). L'apparition d'un breakout ou d'un signal de mode changerait radicalement le profil de demande et justifierait une réévaluation immédiate du verdict."
+ ],
+ "donnees_suffisantes": true,
+ "hypotheses_globales": [
+  "Le verdict « indéterminé » découle d'une règle de notation non validée empiriquement : score total 6/10, avec un critère « demande » noté 0 (signal défavorable net) et quatre autres critères notés 1 ou 2. Cette règle reste une hypothèse de travail.",
+  "La classification « maturité » de la courbe de demande est produite par le collecteur Tendances sans validation empirique externe. Le momentum négatif (-11,7 %) et la pente annuelle négative (-0,64) sont des faits mesurés, mais leur interprétation comme signal défavorable net repose sur un seuil arbitraire.",
+  "L'intensité concurrentielle est qualifiée de « contrastée » (score 1) en supposant qu'une faible pression publicitaire (2 annonceurs) compense partiellement une offre pléthorique (184 offres cœur). Cette compensation n'est pas validée par des données de performance commerciale.",
+  "La différenciation est notée 1 (mitigée) en supposant que l'absence d'attributs valorisés par la concurrence (respirabilité, unisexe, ciblage pathologique) constitue un désavantage apparent. Cette hypothèse n'est pas confirmée par des données consommateurs sur l'impact réel de ces attributs sur la décision d'achat.",
+  "L'adéquation aux besoins est notée 2 (favorable) en supposant que le sentiment positif (8/10 unités) et la convergence entre pain points et fonction produit garantissent une réception favorable. La confiance faible du corpus (10 unités Reddit) limite la généralisation de cette hypothèse.",
+  "La viabilité prix est notée 2 (favorable) en supposant que la largeur des fourchettes observées (Amazon 6,79–37,99 €, AliExpress 0,75–50,39 €) permet un positionnement flexible. L'absence de données sur la sensibilité prix réelle des consommateurs fragilise cette hypothèse.",
+  "Les angles peu exploités identifiés (certification médicale, éco-conception, programmes d'accompagnement, usage préventif) sont qualifiés d'opportunités de différenciation sans validation de leur pertinence consommateur ni de leur impact sur la conversion.",
+  "Le pic saisonnier en mars (amplitude 16,4 %) est interprété comme une fenêtre d'opportunité commerciale, mais le dossier ne porte aucune donnée de volume absolu permettant de quantifier le potentiel de cette fenêtre."
+ ],
+ "recommandation_prix": {
+  "strategie": "Ancrage sur le segment cœur Amazon pour bénéficier de la référence de prix établie (médiane 21,99 € sur 43 offres) tout en restant compétitif face aux marques identifiées (Paskyee 21,99–26,95 €, WEIO 22,55 €, Rakiie 29,99–30,99 €). La fourchette 17–24 € permet une flexibilité selon le canal de distribution (marketplace vs site propre) et la stratégie promotionnelle, sans descendre dans la zone de prix cassés qui nuirait à la crédibilité du soulagement immédiat promis.",
+  "conditions": [
+   "Ces fourchettes sont des positionnements de marché, jamais des calculs de rentabilité : aucune donnée de coût, de marge ou de structure de prix de revient n'est disponible dans le dossier.",
+   "La sensibilité prix des consommateurs est indéterminée (aucune mention dans le corpus) : la fourchette proposée repose uniquement sur l'observation des prix concurrents, pas sur une validation de l'acceptabilité par le marché.",
+   "Le benchmark Amazon porte sur 43 offres en EUR ; un élargissement de la collecte sur d'autres marketplaces européennes pourrait révéler des écarts de prix significatifs et justifier un ajustement de la fourchette.",
+   "La fourchette proposée suppose un positionnement sur Amazon ou équivalent ; un positionnement sur AliExpress nécessiterait un ancrage différent (segment cœur 7,49–15,39 €)."
+  ],
+  "fondements": [
+   {
+    "ref": "concurrence.benchmark_prix[amazon][EUR].mediane",
+    "type": "fait",
+    "detail": "Prix médian Amazon : 21,99 € sur 43 offres"
+   },
+   {
+    "ref": "concurrence.benchmark_prix[amazon][EUR].segment.coeur",
+    "type": "fait",
+    "detail": "Segment cœur Amazon : 16,99–25,50 €"
+   },
+   {
+    "ref": "concurrence.benchmark_prix[aliexpress][EUR].mediane",
+    "type": "fait",
+    "detail": "Prix médian AliExpress : 11,39 € sur 141 offres"
+   },
+   {
+    "ref": "concurrence.concurrents[2]",
+    "type": "fait",
+    "detail": "Paskyee : 5 offres, fourchette 21,99–26,95 €"
+   },
+   {
+    "ref": "concurrence.concurrents[3]",
+    "type": "fait",
+    "detail": "WEIO : 2 offres, fourchette 22,55 €"
+   },
+   {
+    "ref": "insights.comportements_achat.sensibilite_prix",
+    "type": "fait",
+    "detail": "Sensibilité prix indéterminée (aucune mention dans le corpus)"
+   }
+  ],
+  "fourchettes": [
+   {
+    "max": 24.0,
+    "min": 17.0,
+    "devise": "EUR",
+    "logique_ancrage": "Positionnement au cœur du marché Amazon (segment cœur 16,99–25,50 €), légèrement sous la médiane (21,99 €) pour maximiser l'accessibilité tout en restant au-dessus du segment entrée de gamme. Cette fourchette évite la zone de prix AliExpress (médiane 11,39 €) dominée par les offres sans marque (141 offres, menace forte) et se positionne dans la zone de crédibilité perçue pour un produit de maintien lombaire efficace."
+   }
+  ]
+ },
+ "recommandations_produit": [
+  {
+   "enonce": "Documenter et communiquer explicitement la respirabilité du matériau (maille aérée, tissu respirant) dans la fiche produit et les visuels, en précisant le bénéfice pour un usage prolongé (6-7 heures quotidiennes en télétravail ou bureau).",
+   "domaine": "produit",
+   "horizon": "court_terme",
+   "id_reco": "reco-produit-1",
+   "priorite": "P1",
+   "fondements": [
+    {
+     "ref": "concurrence.positionnement.facteurs_cles_succes[0]",
+     "type": "fait",
+     "detail": "32 offres mentionnent respirant/respirante/maille respirante comme critère déterminant pour le confort prolongé"
+    },
+    {
+     "ref": "insights.attentes[3]",
+     "type": "fait",
+     "detail": "La respirabilité est qualifiée d'attente implicite différenciante pour usage quotidien prolongé"
+    },
+    {
+     "ref": "concurrence.differenciation.desavantages_apparents[0]",
+     "type": "fait",
+     "detail": "24 offres concurrentes valorisent la respirabilité, suggérant un désavantage apparent pour les offres qui ne la mentionnent pas"
+    },
+    {
+     "ref": "insights.pain_points[1]",
+     "type": "fait",
+     "detail": "Douleur liée aux postures de travail prolongées : 40 % des unités, score 70"
+    }
+   ],
+   "effort_estime": "faible",
+   "justification": "La respirabilité est un facteur clé de succès documenté dans l'offre concurrentielle (32 offres la mentionnent) et une attente implicite différenciante des consommateurs pour un usage quotidien prolongé. Son absence dans la communication constitue un désavantage apparent face à 24 offres concurrentes qui la valorisent. Le pain point de douleur liée aux postures de travail (40 % des unités, score 70) implique un port prolongé en position assise, contexte où le confort thermique devient déterminant.",
+   "impact_attendu": "Réduction du désavantage perçu face aux concurrents valorisant la respirabilité, amélioration du taux de conversion sur les fiches produit, diminution potentielle des retours liés à l'inconfort thermique.",
+   "risques_associes": [
+    "Si le matériau actuel n'est pas respirant, la communication serait trompeuse et générerait des retours clients.",
+    "Le corpus consommateur ne documente pas explicitement la respirabilité comme critère de choix verbalisé : l'impact réel sur la conversion reste à valider."
+   ],
+   "indicateurs_suivi": [
+    "Taux de mention de la respirabilité dans les avis clients post-achat",
+    "Taux de retour ou d'insatisfaction lié au confort thermique",
+    "Évolution du taux de conversion après ajout de la mention « respirant » dans la fiche produit"
+   ]
+  },
+  {
+   "enonce": "Ajouter dans la fiche produit la mention explicite du caractère unisexe et de l'ajustabilité pour différentes morphologies (tour de taille, hauteur), avec un guide des tailles illustré.",
+   "domaine": "produit",
+   "horizon": "court_terme",
+   "id_reco": "reco-produit-2",
+   "priorite": "P2",
+   "fondements": [
+    {
+     "ref": "concurrence.differenciation.desavantages_apparents[4]",
+     "type": "fait",
+     "detail": "22 offres concurrentes élargissent explicitement la cible (« Unisexe » 10, « unisexe » 6, « hommes et femmes » 6)"
+    },
+    {
+     "ref": "concurrence.differenciation.attributs_partages[0]",
+     "type": "fait",
+     "detail": "37 offres concurrentes mentionnent explicitement le caractère réglable"
+    },
+    {
+     "ref": "insights.attentes[2]",
+     "type": "fait",
+     "detail": "Les consommateurs attendent une utilisation intuitive et une ajustabilité facile comme critère différenciant"
+    }
+   ],
+   "effort_estime": "faible",
+   "justification": "22 offres concurrentes élargissent explicitement la cible avec les mentions « Unisexe » ou « hommes et femmes », suggérant que cet argument lève une barrière implicite à l'achat. Le caractère réglable est un attribut standard (37 offres le mentionnent) et une attente différenciante des consommateurs (utilisation intuitive et ajustabilité). L'absence de cette mention constitue un désavantage apparent face à la concurrence.",
+   "impact_attendu": "Réduction des freins à l'achat liés à l'incertitude morphologique, élargissement de la cible perçue, diminution des questions pré-achat sur la compatibilité.",
+   "risques_associes": [
+    "Le corpus consommateur ne mentionne aucune préoccupation de genre ou de morphologie : l'impact réel de cette mention sur la conversion reste hypothétique.",
+    "Un guide des tailles mal calibré pourrait générer des retours pour problème d'ajustement."
+   ],
+   "indicateurs_suivi": [
+    "Nombre de questions pré-achat concernant la compatibilité morphologique ou le genre",
+    "Taux de retour lié à un problème d'ajustement ou de taille",
+    "Évolution du taux de conversion après ajout de la mention « unisexe » et du guide des tailles"
+   ]
+  },
+  {
+   "enonce": "Enrichir la fiche produit avec des indications thérapeutiques précises (soulagement de la sciatique, accompagnement en cas de hernie discale, douleur chronique) en précisant que le produit ne se substitue pas à un avis médical.",
+   "domaine": "produit",
+   "horizon": "moyen_terme",
+   "id_reco": "reco-produit-3",
+   "priorite": "P2",
+   "fondements": [
+    {
+     "ref": "concurrence.positionnement.facteurs_cles_succes[2]",
+     "type": "fait",
+     "detail": "Ciblage pathologique précis (sciatique 6 offres, hernie discale 3 offres) pour capter une demande qualifiée"
+    },
+    {
+     "ref": "concurrence.differenciation.desavantages_apparents[2]",
+     "type": "fait",
+     "detail": "9 offres concurrentes ciblent des pathologies identifiées (sciatique, hernie discale)"
+    },
+    {
+     "ref": "insights.pain_points[4]",
+     "type": "fait",
+     "detail": "Hernie discale limitante : 10 % des unités, intensité 3.0, score 30.0"
+    },
+    {
+     "ref": "insights.pain_points[0]",
+     "type": "fait",
+     "detail": "Douleur lombaire chronique : 40 % des unités, intensité 2.0, score 80.0"
+    }
+   ],
+   "effort_estime": "moyen",
+   "justification": "Le ciblage pathologique précis est identifié comme facteur clé de succès (9 offres concurrentes ciblent sciatique ou hernie discale) et correspond aux pain points documentés : hernie discale limitante (10 % des unités, score 30) et douleur chronique (40 % des unités, score 80). L'absence de cette mention constitue un désavantage apparent face à la concurrence. Cependant, le corpus consommateur ne documente pas explicitement la recherche d'une spécialisation pathologique, d'où une priorité P2.",
+   "impact_attendu": "Amélioration de la pertinence perçue pour les consommateurs diagnostiqués, augmentation du taux de conversion sur les requêtes pathologiques spécifiques (« ceinture lombaire sciatique », « ceinture hernie discale »).",
+   "risques_associes": [
+    "Risque réglementaire : toute allégation thérapeutique doit être conforme à la réglementation des dispositifs médicaux et ne pas constituer une promesse de guérison.",
+    "Le corpus consommateur ne documente pas explicitement la recherche d'une spécialisation pathologique : l'impact réel sur la conversion reste à valider.",
+    "Un ciblage trop étroit pourrait exclure les consommateurs non diagnostiqués (douleur générique) qui représentent la majorité du corpus (40 % de douleur chronique sans diagnostic précis)."
+   ],
+   "indicateurs_suivi": [
+    "Part du trafic organique issu de requêtes pathologiques spécifiques (« sciatique », « hernie discale »)",
+    "Taux de conversion des visiteurs issus de ces requêtes vs requêtes génériques",
+    "Taux de mention de pathologies spécifiques dans les avis clients post-achat"
+   ]
+  }
+ ],
+ "recommandations_marketing": [
+  {
+   "enonce": "Concentrer la communication initiale sur les marketplaces établies (Amazon FR) plutôt que sur la publicité payante, en optimisant les fiches produit pour les requêtes liées aux postures de travail (« ceinture lombaire bureau », « mal de dos télétravail », « soulagement lombaire position assise »).",
+   "domaine": "marketing",
+   "horizon": "court_terme",
+   "id_reco": "reco-marketing-1",
+   "priorite": "P1",
+   "fondements": [
+    {
+     "ref": "concurrence.intensite.nb_annonceurs",
+     "type": "fait",
+     "detail": "Seulement 2 annonceurs actifs"
+    },
+    {
+     "ref": "concurrence.intensite.duree_diffusion_mediane_jours",
+     "type": "fait",
+     "detail": "Durée médiane de diffusion publicitaire de 178,5 jours"
+    },
+    {
+     "ref": "concurrence.concurrents[0]",
+     "type": "fait",
+     "detail": "141 offres sans marque sur AliExpress, fourchette 0,75–50,39 EUR, menace forte"
+    },
+    {
+     "ref": "concurrence.benchmark_prix[amazon][EUR].mediane",
+     "type": "fait",
+     "detail": "Prix médian Amazon : 21,99 € sur 43 offres"
+    },
+    {
+     "ref": "tendances.indicateurs.indice_moyen_12m",
+     "type": "fait",
+     "detail": "Indice moyen sur 12 mois : 72,4"
+    }
+   ],
+   "effort_estime": "faible",
+   "justification": "La pression publicitaire est très faible (2 annonceurs actifs, 2 annonces) avec une durée de diffusion longue (médiane 178,5 jours), suggérant une stratégie de présence continue plutôt qu'une guerre d'enchères. Le marché est dominé par les offres sans marque sur AliExpress (141 offres, menace forte) et les marques établies sur Amazon (43 offres, médiane 21,99 €). Une stratégie de présence organique sur Amazon permet de capter la demande établie (indice moyen 72,4 sur 12 mois) sans engager de dépenses publicitaires significatives dans un contexte de verdict indéterminé.",
+   "impact_attendu": "Captation de la demande organique établie sur Amazon sans engagement publicitaire significatif, test de la conversion et de la réception produit avant d'envisager une montée en puissance marketing.",
+   "risques_associes": [
+    "La concentration sur Amazon expose à la concurrence directe de 43 offres déjà présentes, dont des marques établies (Paskyee, WEIO, Rakiie).",
+    "L'absence de publicité payante limite la visibilité initiale et rallonge le délai avant d'atteindre une masse critique d'avis clients.",
+    "Le verdict indéterminé ne permet pas de valider la viabilité d'une montée en puissance marketing ultérieure."
+   ],
+   "indicateurs_suivi": [
+    "Classement organique sur les requêtes cibles (« ceinture lombaire bureau », « mal de dos télétravail ») dans les 3 premiers mois",
+    "Taux de conversion des visiteurs organiques vs concurrents directs (Paskyee, WEIO)",
+    "Nombre d'avis clients collectés par mois et note moyenne"
+   ]
+  },
+  {
+   "enonce": "Construire les messages marketing autour de trois pain points documentés : douleur lombaire chronique (40 % des unités, score 80), douleur liée aux postures de travail prolongées (40 %, score 70), et limitation des activités quotidiennes (10 %, score 30). Éviter les angles saturés : soutien lombaire générique (11 offres), décompression de la colonne vertébrale (10 offres), traction lombaire (8 offres).",
+   "domaine": "marketing",
+   "horizon": "court_terme",
+   "id_reco": "reco-marketing-2",
+   "priorite": "P1",
+   "fondements": [
+    {
+     "ref": "insights.pain_points[0]",
+     "type": "fait",
+     "detail": "Douleur lombaire chronique : 40 % des unités, intensité 2.0, score 80.0"
+    },
+    {
+     "ref": "insights.pain_points[1]",
+     "type": "fait",
+     "detail": "Douleur liée aux postures de travail : 40 % des unités, intensité 1.75, score 70.0"
+    },
+    {
+     "ref": "insights.pain_points[5]",
+     "type": "fait",
+     "detail": "Limitation des activités quotidiennes : 10 % des unités, intensité 3.0, score 30.0"
+    },
+    {
+     "ref": "concurrence.differenciation.attributs_partages[2]",
+     "type": "fait",
+     "detail": "Soutien lombaire : 11 offres concurrentes mentionnent cette fonction"
+    },
+    {
+     "ref": "concurrence.differenciation.attributs_partages[3]",
+     "type": "fait",
+     "detail": "Décompression colonne vertébrale : 10 offres concurrentes revendiquent cet effet"
+    },
+    {
+     "ref": "concurrence.differenciation.attributs_partages[4]",
+     "type": "fait",
+     "detail": "Traction lombaire : 8 offres concurrentes mentionnent cette caractéristique"
+    }
+   ],
+   "effort_estime": "faible",
+   "justification": "Les pain points documentés dans le corpus consommateur correspondent aux besoins fonctionnels et émotionnels exprimés (soulager la douleur, maintenir la posture, retrouver qualité de vie). Le sentiment est très positif (8/10 unités) avec des signaux d'efficacité immédiate. Les angles saturés dans l'offre concurrentielle (soutien lombaire, décompression, traction) ne permettent pas de différenciation et risquent de noyer le message dans la masse des 184 offres cœur de marché.",
+   "impact_attendu": "Différenciation du message marketing par ancrage sur les pain points documentés plutôt que sur les attributs techniques saturés, amélioration de la résonance émotionnelle avec la cible (actifs sédentaires souffrant de douleurs chroniques).",
+   "risques_associes": [
+    "Le corpus consommateur est limité (10 unités Reddit, confiance faible) : les pain points documentés pourraient ne pas être représentatifs de l'ensemble du marché.",
+    "L'évitement des angles saturés pourrait réduire la visibilité sur les requêtes techniques (« traction lombaire », « décompression »), même si ces requêtes sont moins qualifiées."
+   ],
+   "indicateurs_suivi": [
+    "Taux de clic sur les annonces ou fiches produit mentionnant les pain points vs les attributs techniques",
+    "Taux de conversion des visiteurs issus de requêtes liées aux pain points (« douleur lombaire chronique », « mal de dos bureau »)",
+    "Part des avis clients mentionnant explicitement les pain points ciblés dans leur témoignage"
+   ]
+  },
+  {
+   "enonce": "Planifier une activation commerciale renforcée en janvier-février pour capter le pic saisonnier de mars (amplitude 16,4 %), en concentrant les efforts sur la visibilité organique (optimisation SEO, contenu éducatif) et la collecte d'avis clients.",
+   "domaine": "marketing",
+   "horizon": "moyen_terme",
+   "id_reco": "reco-marketing-3",
+   "priorite": "P2",
+   "fondements": [
+    {
+     "ref": "tendances.indicateurs.saisonnalite.mois_pic",
+     "type": "fait",
+     "detail": "Mois de pic saisonnier : 3 (mars)"
+    },
+    {
+     "ref": "tendances.indicateurs.saisonnalite.amplitude",
+     "type": "fait",
+     "detail": "Amplitude saisonnière : 0,164 soit 16,4 %"
+    },
+    {
+     "ref": "concurrence.intensite.duree_diffusion_mediane_jours",
+     "type": "fait",
+     "detail": "Durée médiane de diffusion publicitaire de 178,5 jours"
+    },
+    {
+     "ref": "concurrence.positionnement.facteurs_cles_succes[4]",
+     "type": "fait",
+     "detail": "La durée longue suggère une stratégie de présence continue plutôt que de campagnes ponctuelles"
+    }
+   ],
+   "effort_estime": "moyen",
+   "justification": "Le dossier documente un pic saisonnier en mars avec une amplitude de 16,4 %, suggérant une fenêtre de préparation commerciale en janvier-février. La stratégie de présence continue observée chez les concurrents (durée médiane de diffusion 178,5 jours) indique qu'une activation ponctuelle ne suffit pas, mais qu'une préparation en amont du pic permet de maximiser la captation de la demande. Dans un contexte de verdict indéterminé, cette activation doit rester « sans regret » et ne pas engager de dépenses publicitaires significatives.",
+   "impact_attendu": "Maximisation de la visibilité organique durant le pic de demande de mars, amélioration du classement sur les requêtes cibles, augmentation du volume d'avis clients collectés pour renforcer la crédibilité.",
+   "risques_associes": [
+    "L'amplitude saisonnière de 16,4 % reste modérée : l'impact d'une activation renforcée pourrait être limité si la demande de fond (indice moyen 72,4) ne suit pas.",
+    "Le momentum négatif (-11,7 % sur 90 jours) pourrait atténuer le pic saisonnier de mars 2027 par rapport aux années précédentes.",
+    "Une activation en janvier-février nécessite une préparation dès novembre-décembre (stock, contenu, optimisation SEO), ce qui rallonge le délai de mise en œuvre."
+   ],
+   "indicateurs_suivi": [
+    "Évolution du classement organique sur les requêtes cibles entre janvier et mars",
+    "Volume de trafic organique et taux de conversion durant le pic de mars vs mois précédents",
+    "Nombre d'avis clients collectés entre janvier et mars"
+   ]
+  },
+  {
+   "enonce": "Tester un angle de communication peu exploité par la concurrence : l'accompagnement par du contenu éducatif (exercices de renforcement lombaire, étirements, postures ergonomiques) pour positionner le produit comme une solution complémentaire à une démarche d'auto-soin, sans engagement publicitaire significatif.",
+   "domaine": "marketing",
+   "horizon": "moyen_terme",
+   "id_reco": "reco-marketing-4",
+   "priorite": "P3",
+   "fondements": [
+    {
+     "ref": "concurrence.positionnement.angles_peu_exploites[2]",
+     "type": "fait",
+     "detail": "Programmes d'accompagnement (exercices, vidéos tutoriels, suivi personnalisé) non mentionnés dans le corpus de 2 annonces et 3 pages"
+    },
+    {
+     "ref": "insights.signaux_positifs[3]",
+     "type": "fait",
+     "detail": "Les étirements réguliers (quadriceps, ischio-jambiers) sont loués comme solution complémentaire efficace"
+    },
+    {
+     "ref": "insights.pain_points[2]",
+     "type": "fait",
+     "detail": "Absence de rééducation kinésithérapique : 20 % des unités, intensité 1.5, score 30.0"
+    },
+    {
+     "ref": "insights.besoins[4]",
+     "type": "fait",
+     "detail": "Besoin d'accès à des solutions pratiques et rapides"
+    }
+   ],
+   "effort_estime": "moyen",
+   "justification": "Les programmes d'accompagnement (exercices, vidéos tutoriels, suivi personnalisé) sont identifiés comme un angle peu exploité dans le corpus concurrentiel (2 annonces, 3 pages web analysées). Le corpus consommateur documente l'efficacité des étirements réguliers comme solution complémentaire (signal positif) et l'absence de rééducation kinésithérapique comme pain point (20 % des unités, score 30). Un positionnement sur l'accompagnement éducatif permet de différencier le produit sans modifier ses attributs physiques et de répondre au besoin de « solutions pratiques et rapides » (besoin de service documenté).",
+   "impact_attendu": "Différenciation par la valeur ajoutée (contenu éducatif) plutôt que par les attributs produit, amélioration de la perception de la marque comme partenaire de santé plutôt que simple fournisseur de dispositif, potentiel de fidélisation par l'accompagnement.",
+   "risques_associes": [
+    "La production de contenu éducatif de qualité (exercices validés, vidéos professionnelles) nécessite un investissement en temps et en compétences (kinésithérapeute, vidéaste).",
+    "Le corpus consommateur ne documente pas explicitement la recherche d'un accompagnement éducatif : l'impact réel sur la conversion reste hypothétique.",
+    "Un positionnement sur l'accompagnement pourrait diluer le message principal (soulagement immédiat) et rallonger le parcours d'achat."
+   ],
+   "indicateurs_suivi": [
+    "Taux d'engagement sur le contenu éducatif (vues, durée de visionnage, partages)",
+    "Taux de conversion des visiteurs ayant consulté le contenu éducatif vs visiteurs directs sur la fiche produit",
+    "Part des avis clients mentionnant l'accompagnement éducatif comme critère de choix ou de satisfaction"
+   ]
+  }
+ ],
+ "recommandation_positionnement": {
+  "enonce": "Positionner la ceinture lombaire double traction sur le segment des actifs sédentaires souffrant de douleurs lombaires chroniques ou liées aux postures de travail prolongées, avec une promesse de soulagement immédiat et de maintien actif durant les activités quotidiennes (télétravail, bureau, conduite).",
+  "domaine": "positionnement",
+  "horizon": "court_terme",
+  "id_reco": "reco-positionnement-1",
+  "priorite": "P1",
+  "fondements": [
+   {
+    "ref": "insights.pain_points[0]",
+    "type": "fait",
+    "detail": "Douleur lombaire chronique : 40 % des unités, intensité 2.0, score 80.0"
+   },
+   {
+    "ref": "insights.pain_points[1]",
+    "type": "fait",
+    "detail": "Douleur liée aux postures de travail : 40 % des unités, intensité 1.75, score 70.0"
+   },
+   {
+    "ref": "insights.besoins[0]",
+    "type": "fait",
+    "detail": "Besoin dominant : soulager la douleur lombaire"
+   },
+   {
+    "ref": "insights.besoins[1]",
+    "type": "fait",
+    "detail": "Besoin de maintien et stabilisation de la zone lombaire"
+   },
+   {
+    "ref": "insights.sentiment",
+    "type": "fait",
+    "detail": "Sentiment très majoritairement positif : 8/10 unités positives"
+   },
+   {
+    "ref": "insights.signaux_positifs[0]",
+    "type": "fait",
+    "detail": "Efficacité immédiate du soulagement saluée par les consommateurs"
+   }
+  ],
+  "effort_estime": "faible",
+  "justification": "Le corpus consommateur documente deux pain points dominants : douleur lombaire chronique (40 % des unités, score 80) et douleur liée aux postures de travail (40 %, score 70). Le besoin fonctionnel de soulagement et de maintien postural est clairement exprimé, avec un sentiment très positif (8/10 unités) et des signaux d'efficacité immédiate. Le marché est mature mais stable (indice moyen 72,4 sur 12 mois), avec une demande établie. Le positionnement sur ce segment cible permet de répondre directement aux besoins documentés sans engager de dépenses significatives en repositionnement produit.",
+  "impact_attendu": "Clarification du segment cible et de la promesse produit, facilitant la cohérence de la communication marketing et l'alignement des messages sur les pain points documentés. Réduction du risque de dispersion sur des segments non documentés (sport intensif, usage préventif).",
+  "risques_associes": [
+   "Le corpus consommateur est limité (10 unités Reddit, confiance faible) : le segment cible pourrait être plus large ou différent si la collecte était étendue.",
+   "Le positionnement sur les actifs sédentaires exclut potentiellement le segment sportif (accompagnement d'activité physique), documenté comme besoin secondaire mais non quantifié."
+  ],
+  "indicateurs_suivi": [
+   "Taux de conversion des visiteurs issus de requêtes liées aux postures de travail (« ceinture lombaire bureau », « mal de dos télétravail »)",
+   "Part des avis clients mentionnant explicitement le soulagement en contexte de travail sédentaire",
+   "Taux de rebond sur les pages produit selon la source de trafic (requêtes travail vs sport)"
+  ]
+ }
+}

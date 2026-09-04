@@ -32,6 +32,7 @@ from src.studies.exceptions import (
     StudyNotFound,
     StudyProductNotFound,
     StudyReportNotFound,
+    StudyReportNotReplayable,
     StudySourceNotFound,
 )
 from src.studies.models import Study, StudyReport, StudySourceData
@@ -305,6 +306,38 @@ async def set_study_status(
     await db.commit()
     await db.refresh(study)
     logger.info("Study id=%s moved to status=%s", study.id, study.status)
+    return study
+
+
+async def replay_report(db: AsyncSession, study_id: uuid.UUID) -> Study:
+    """Hand a study's report back to F7, without re-collecting or re-analysing.
+
+    The study must exist and carry its F3 to F5 payloads. Everything else — a failed
+    write-up, a report already on file — is replayable: a report that came out wrong is
+    exactly what this endpoint is for, and the previous one is replaced only once the
+    new one succeeds.
+
+    Args:
+        db: Database session.
+        study_id: Study whose report is to be rebuilt.
+
+    Returns:
+        The study, back in status ``reporting``.
+
+    Raises:
+        StudyNotFound: No study with this identifier.
+        StudyReportNotReplayable: An analysis required by F7 is missing.
+    """
+    from src.studies import runner
+
+    study = await get_study(db, study_id)
+    manquantes = await runner.analyses_manquantes(db, study_id)
+    if manquantes:
+        raise StudyReportNotReplayable(manquantes)
+
+    await set_study_status(db, study, StudyStatus.REPORTING)
+    await runner.launch_report_rebuild(study_id)
+    logger.info("Study id=%s: report replay scheduled", study_id)
     return study
 
 

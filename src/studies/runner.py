@@ -33,7 +33,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from sqlalchemy import bindparam, func, update
+from sqlalchemy import bindparam, func, select, update
 from sqlalchemy.dialects.postgresql import JSONB, insert
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -45,6 +45,7 @@ from src.studies.constants import (
     ANALYSES,
     COLLECTORS,
     DEVISE_RESOLVER_SCRIPT,
+    EXIT_REDACTION_IMPOSSIBLE,
     EXIT_REGION_NOT_COVERED,
     EXIT_SUCCESS,
     EXIT_UNUSABLE_INPUT,
@@ -54,6 +55,7 @@ from src.studies.constants import (
     REPORT_SPEC,
     REPORT_SUMMARY_FILE,
     REQUIRED_PIPELINE_CREDENTIALS,
+    SOURCES_STATE_FILE,
     AnalysisSpec,
     CollectorSpec,
     RunErrorCode,
@@ -541,7 +543,7 @@ async def _execute(db: AsyncSession, study_id: uuid.UUID) -> None:
 
     await service.set_study_status(db, study, StudyStatus.REPORTING)
     phase_started = time.monotonic()
-    report_ok, report_duration = await _report(db, study_id, workdir)
+    report_ok, report_duration, report_error = await _report(db, study_id, workdir)
     durations["reporting"] = time.monotonic() - phase_started
     durations["total"] = time.monotonic() - study_started
     await _record_phase_durations(db, study_id, durations)
@@ -550,6 +552,26 @@ async def _execute(db: AsyncSession, study_id: uuid.UUID) -> None:
 
     failures = [s for s in collected.values() if s == StudySourceStatus.FAILED]
     failures += [s for s in analysed.values() if s == StudyAnalysisStatus.FAILED]
+
+    if not report_ok and report_error == RunErrorCode.F7_REDACTION_FAILED:
+        # `partial`, et non `failed` : les JSON F3 à F6 sont en base et intacts, seule
+        # la mise en récit a échoué. L'étude est réparable par un rejeu de F7 seul --
+        # `POST /studies/{id}/report/regenerate` -- sans repayer une collecte.
+        await service.set_study_status(
+            db,
+            study,
+            StudyStatus.PARTIAL,
+            error={
+                "code": RunErrorCode.F7_REDACTION_FAILED,
+                "message": (
+                    "The write-up did not meet the v2 template: the analyses are "
+                    "intact and the report can be replayed on its own."
+                ),
+            },
+            finished_at=datetime.now(UTC),
+        )
+        logger.warning("Study %s: report refused by F7, analyses kept", study_id)
+        return
 
     if not report_ok:
         await _fail_study(
@@ -562,6 +584,10 @@ async def _execute(db: AsyncSession, study_id: uuid.UUID) -> None:
 
     # `skipped_region` never counts as a failure: a country without an Amazon site is a
     # normal outcome of the market, not a defect of the study.
+    # Une source `empty` rend l'étude partielle : elle a tourné sans rien rapporter, et
+    # le rapport porte alors son encart « Étude partielle ». Le statut de l'étude et le
+    # texte du rapport disent ainsi la même chose.
+    failures += [s for s in collected.values() if s == StudySourceStatus.EMPTY]
     final = StudyStatus.PARTIAL if failures else StudyStatus.COMPLETED
     await service.set_study_status(db, study, final, finished_at=datetime.now(UTC))
     logger.info("Study %s finished with status %s", study_id, final)
@@ -583,6 +609,8 @@ async def _collect(
     gate = asyncio.Semaphore(studies_settings.COLLECT_PARALLEL)
     statuses: dict[str, str] = {}
     durations: dict[str, float] = {}
+    volumes: dict[str, int] = {}
+    raisons: dict[str, str] = {}
 
     async def run_one(spec: CollectorSpec) -> None:
         args = list(base_args)
@@ -619,9 +647,12 @@ async def _collect(
                 # truncated file behind for the agents to read as if it were complete.
                 run.stdout_path.replace(workdir / spec.output_file)
 
-            status = _collector_status(run)
+            status = _collector_status(spec, run)
             statuses[spec.source] = status
+            volumes[spec.source] = _nb_items(spec.source, run.payload)
             durations[spec.source] = run.duration_seconds
+            if status == StudySourceStatus.FAILED and run.timed_out:
+                raisons[spec.source] = "delai_depasse"
             async with SessionFactory() as db:
                 await _persist_source(db, study_id, spec, run, status)
 
@@ -629,13 +660,101 @@ async def _collect(
     # every failure into a ModuleRun. An exception here would be a defect of the runner
     # itself, and must surface as one rather than be counted as a failed collector.
     await asyncio.gather(*(run_one(spec) for spec in COLLECTORS))
+    _ecrire_etat_sources(workdir, statuses, volumes, raisons)
     return statuses, durations
 
 
-def _collector_status(run: ModuleRun) -> str:
+RAISONS_SOURCE_VIDE: dict[str, str] = {
+    StudySourceStatus.SKIPPED_REGION: "region_non_couverte",
+    StudySourceStatus.FAILED: "echec_collecteur",
+    StudySourceStatus.EMPTY: "aucun_resultat",
+}
+
+
+def _ecrire_etat_sources(
+    workdir: Path,
+    statuses: dict[str, str],
+    volumes: dict[str, int],
+    raisons: dict[str, str],
+) -> None:
+    """Write what each collector actually brought back, for F7 to read.
+
+    F7 renders a « Sources analysées » line naming all six sources, an empty one with
+    its reason. That reason exists only here: by the time F3 to F6 have run, a source
+    that returned nothing is indistinguishable from a source that was never asked.
+
+    Args:
+        workdir: The study's working directory.
+        statuses: Status per collector.
+        volumes: Items harvested per collector.
+        raisons: Free-form reason per collector, where one was captured.
+    """
+    etat = {
+        source: {
+            "donnees_disponibles": statuses.get(source) == StudySourceStatus.SUCCEEDED,
+            "nb_items": volumes.get(source, 0),
+            "raison": raisons.get(source)
+            or RAISONS_SOURCE_VIDE.get(statuses.get(source, "")),
+        }
+        for source in (spec.source for spec in COLLECTORS)
+    }
+    (workdir / SOURCES_STATE_FILE).write_text(
+        json.dumps(etat, ensure_ascii=False, indent=1), encoding="utf-8"
+    )
+
+
+# Ce que chaque collecteur rapporte vraiment : la liste de son payload qui porte la
+# récolte, par opposition à ses limites, ses hypothèses et ses statuts internes --
+# tous présents et non vides même quand la collecte n'a rien donné.
+CLE_RECOLTE: dict[str, str] = {
+    "aliexpress": "produits",
+    "amazon": "produits",
+    "reddit": "commentaires",
+    "recherche_web": "pages",
+    "meta_ads": "annonces",
+    "google_trends": "sujets_associes",
+}
+
+
+def _nb_items(source: str, payload: dict[str, Any] | None) -> int:
+    """Compte ce qu'un collecteur a rapporté.
+
+    Args:
+        source: Identifiant du collecteur.
+        payload: Sortie JSON du module, ou ``None``.
+
+    Returns:
+        Le nombre d'éléments récoltés, zéro compris.
+    """
+    if not payload:
+        return 0
+    valeur = payload.get(CLE_RECOLTE.get(source, ""))
+    return len(valeur) if isinstance(valeur, list) else 0
+
+
+def _collector_status(spec: CollectorSpec, run: ModuleRun) -> str:
+    """Classify one collector run: did it work, and did it bring anything back?
+
+    ``succeeded`` now requires both. A collector that exits 0 with an empty harvest is
+    ``empty``, which is neither a success nor a failure: nothing broke, and there is
+    nothing to analyse either. Study 8609db9e is the reason -- AliExpress came back with
+    zero offers, was filed as ``succeeded``, and the report never mentioned that half of
+    its price comparison had no data behind it.
+
+    Args:
+        spec: The collector's specification.
+        run: What the module did.
+
+    Returns:
+        The status to persist.
+    """
     if run.skipped_region:
         return StudySourceStatus.SKIPPED_REGION
-    return StudySourceStatus.SUCCEEDED if run.succeeded else StudySourceStatus.FAILED
+    if not run.succeeded:
+        return StudySourceStatus.FAILED
+    if not _nb_items(spec.source, run.payload):
+        return StudySourceStatus.EMPTY
+    return StudySourceStatus.SUCCEEDED
 
 
 async def _analyse(
@@ -714,14 +833,36 @@ def _input_args(spec: AnalysisSpec, workdir: Path) -> list[str] | None:
     return args
 
 
-async def _report(db: AsyncSession, study_id: uuid.UUID, workdir: Path) -> tuple[bool, float]:
-    """F7: the report and the executive summary. Its failure fails the study."""
+async def _report(
+    db: AsyncSession, study_id: uuid.UUID, workdir: Path
+) -> tuple[bool, float, str | None]:
+    """F7: the report and the executive summary.
+
+    Two ways to fail, and they are not the same incident.
+
+    Exit 4 -- ``REDACTION_IMPOSSIBLE`` -- means the analyses are intact and only the
+    write-up did not meet the v2 template. That is worth replaying on its own, without
+    paying six collectors again, which is what ``POST /studies/{id}/report/regenerate``
+    does. Any other failure is an unknown, and the study fails outright.
+
+    Neither writes a report. Study 8609db9e is why: F7 returned 0 with an empty
+    narrative, the study was filed ``completed``, and a decision-maker opened a document
+    that contained no analysis. A missing report is visible; an empty one is not.
+
+    Args:
+        db: Database session.
+        study_id: Study identifier.
+        workdir: The study's working directory.
+
+    Returns:
+        The triple ``(succès, durée, code_erreur_ou_None)``.
+    """
     args = _input_args(REPORT_SPEC, workdir)
     if args is None:
         await _update_progress(
             db, study_id, "f7_rapport", {"status": "failed", "error": "missing verdict"}
         )
-        return False, 0.0
+        return False, 0.0, RunErrorCode.REPORT_FAILED
 
     args += [
         "--rapport",
@@ -732,6 +873,10 @@ async def _report(db: AsyncSession, study_id: uuid.UUID, workdir: Path) -> tuple
         REPORT_SPEC.output_file,
         "--stdout",
     ]
+    # L'état des collecteurs, s'il a été écrit : il porte la raison d'une collecte
+    # vide, que ni F3 ni F4 ne conservent.
+    if (workdir / SOURCES_STATE_FILE).exists():
+        args += ["--sources-etat", SOURCES_STATE_FILE]
     await _update_progress(db, study_id, "f7_rapport", {"status": "running"})
     logger.info("[f7_rapport] study %s: started", study_id)
     run = await _run_module(
@@ -743,13 +888,23 @@ async def _report(db: AsyncSession, study_id: uuid.UUID, workdir: Path) -> tuple
 
     rapport = workdir / REPORT_MARKDOWN_FILE
     if not run.succeeded or not rapport.exists():
+        code = (
+            RunErrorCode.F7_REDACTION_FAILED
+            if run.exit_code == EXIT_REDACTION_IMPOSSIBLE
+            else RunErrorCode.REPORT_FAILED
+        )
         await _update_progress(
             db,
             study_id,
             "f7_rapport",
-            {"status": "failed", "exit_code": run.exit_code, "error": run.error},
+            {
+                "status": "failed",
+                "exit_code": run.exit_code,
+                "error": run.error,
+                "code": code,
+            },
         )
-        return False, run.duration_seconds
+        return False, run.duration_seconds, code
 
     resume = workdir / REPORT_SUMMARY_FILE
     db.add(
@@ -767,7 +922,183 @@ async def _report(db: AsyncSession, study_id: uuid.UUID, workdir: Path) -> tuple
         "f7_rapport",
         {"status": "succeeded", "duration_seconds": round(run.duration_seconds, 1)},
     )
-    return True, run.duration_seconds
+    return True, run.duration_seconds, None
+
+
+# ---------------------------------------------------------------------------
+# Replaying the report alone
+# ---------------------------------------------------------------------------
+ENTREES_REJEU_REQUISES: tuple[StudyAgent, ...] = (
+    StudyAgent.F3_INSIGHTS,
+    StudyAgent.F4_CONCURRENCE,
+    StudyAgent.F5_VERDICT,
+)
+"""Analyses that must be on file before the report can be replayed.
+
+F6 is deliberately absent: it only runs when the verdict is positive, and a study
+that concluded No-go has no life-cycle payload by design, not by accident."""
+
+
+async def rebuild_report(study_id: uuid.UUID) -> None:
+    """Re-run F7 alone, from the analysis payloads already in the database.
+
+    Nothing is collected and nothing is analysed: the six collectors and the four
+    analysis agents are the expensive half of a study, they succeeded, and their output
+    is on file. Only the write-up is replayed.
+
+    The working directory is REBUILT from the database rather than reused. A study's
+    directory is kept by default, but it can have been purged, and rebuilding is both
+    cheap and the only way to be sure F7 reads exactly what was persisted -- not a file
+    left behind by a partial run.
+
+    Args:
+        study_id: Study whose report is to be rebuilt.
+    """
+    async with _study_semaphore(), SessionFactory() as db:
+        try:
+            await _rebuild_report(db, study_id)
+        except asyncio.CancelledError:
+            raise
+        except Exception:
+            logger.exception("Study %s: report replay stopped on an error", study_id)
+            await _fail_study(
+                db,
+                study_id,
+                RunErrorCode.UNEXPECTED_ERROR,
+                "The report replay stopped on an unexpected server error.",
+            )
+
+
+async def _rebuild_report(db: AsyncSession, study_id: uuid.UUID) -> None:
+    """Do the replay: restore the inputs, run F7, store the result.
+
+    Args:
+        db: Database session.
+        study_id: Study whose report is to be rebuilt.
+    """
+    study = await db.get(Study, study_id)
+    if study is None:
+        logger.error("Study %s vanished before its report could be replayed", study_id)
+        return
+
+    workdir = (studies_settings.WORKDIR / str(study_id)).resolve()
+    workdir.mkdir(parents=True, exist_ok=True)
+    await _restaurer_entrees(db, study_id, workdir)
+
+    await service.set_study_status(db, study, StudyStatus.REPORTING)
+    started = time.monotonic()
+    report_ok, _duration, code = await _report(db, study_id, workdir)
+    logger.info(
+        "Study %s: report replay %s in %.1f s",
+        study_id,
+        "succeeded" if report_ok else f"failed ({code})",
+        time.monotonic() - started,
+    )
+
+    if not report_ok:
+        await service.set_study_status(
+            db,
+            study,
+            StudyStatus.PARTIAL,
+            error={
+                "code": code or RunErrorCode.REPORT_FAILED,
+                "message": (
+                    "The report still could not be produced: the analyses remain on "
+                    "file and the replay can be attempted again."
+                ),
+            },
+            finished_at=datetime.now(UTC),
+        )
+        return
+
+    # Le statut retrouve sa règle d'origine : partiel si une source a échoué ou n'a rien
+    # rapporté, complet sinon. Il est recalculé sur la base, et non hérité de l'échec
+    # précédent, qui ne disait plus rien de l'étude une fois le rapport écrit.
+    sources = await db.scalars(
+        select(StudySourceData.status).where(StudySourceData.study_id == study_id)
+    )
+    degradees = [
+        statut
+        for statut in sources
+        if statut in (StudySourceStatus.FAILED, StudySourceStatus.EMPTY)
+    ]
+    final = StudyStatus.PARTIAL if degradees else StudyStatus.COMPLETED
+    await service.set_study_status(db, study, final, finished_at=datetime.now(UTC))
+    logger.info("Study %s: report replayed, status %s", study_id, final)
+
+
+async def _restaurer_entrees(
+    db: AsyncSession, study_id: uuid.UUID, workdir: Path
+) -> None:
+    """Write the persisted analysis payloads and source state back to the workdir.
+
+    Args:
+        db: Database session.
+        study_id: Study identifier.
+        workdir: Directory F7 will read.
+    """
+    fichiers = {spec.agent: spec.output_file for spec in ANALYSES}
+    analyses = await db.scalars(
+        select(StudyAnalysis).where(StudyAnalysis.study_id == study_id)
+    )
+    for analyse in analyses:
+        fichier = fichiers.get(analyse.agent)
+        if fichier and analyse.payload:
+            (workdir / fichier).write_text(
+                json.dumps(analyse.payload, ensure_ascii=False, indent=1),
+                encoding="utf-8",
+            )
+
+    lignes = await db.scalars(
+        select(StudySourceData).where(StudySourceData.study_id == study_id)
+    )
+    etat = {
+        ligne.source: {
+            "donnees_disponibles": ligne.status == StudySourceStatus.SUCCEEDED,
+            "nb_items": _nb_items(ligne.source, ligne.payload),
+            "raison": RAISONS_SOURCE_VIDE.get(ligne.status),
+        }
+        for ligne in lignes
+    }
+    if etat:
+        (workdir / SOURCES_STATE_FILE).write_text(
+            json.dumps(etat, ensure_ascii=False, indent=1), encoding="utf-8"
+        )
+
+
+async def analyses_manquantes(db: AsyncSession, study_id: uuid.UUID) -> list[str]:
+    """Report which of the analyses required for a replay are not on file.
+
+    Args:
+        db: Database session.
+        study_id: Study identifier.
+
+    Returns:
+        The missing agents, empty when the report can be replayed.
+    """
+    presentes = {
+        agent
+        for agent, payload in (
+            await db.execute(
+                select(StudyAnalysis.agent, StudyAnalysis.payload).where(
+                    StudyAnalysis.study_id == study_id
+                )
+            )
+        ).all()
+        if payload
+    }
+    return [agent for agent in ENTREES_REJEU_REQUISES if agent not in presentes]
+
+
+async def launch_report_rebuild(study_id: uuid.UUID) -> None:
+    """Schedule a report replay in the background.
+
+    Args:
+        study_id: Study whose report is to be rebuilt.
+    """
+    task = asyncio.create_task(rebuild_report(study_id), name=f"report-{study_id}")
+    _running.add(task)
+    task.add_done_callback(_running.discard)
 
 
 # ---------------------------------------------------------------------------

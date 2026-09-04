@@ -36,7 +36,7 @@ python main.py \
     [--concurrence ../agent_analyse_concurrentielle/output.json] \
     [--plc ../agent_plc/output.json] \
     [--rapport rapport_etude.md] [--resume resume_executif.md] \
-    [--gabarit v2|v1] \
+    [--gabarit v2|v1] [--sources-etat sources_etat.json] \
     [--langue-analyse fr] [--sortie output.json] [--stdout] [--verbose]
 ```
 
@@ -47,12 +47,23 @@ python main.py \
 | `--resume` | `resume_executif.md` | Chaîne vide = fichier non produit |
 | `--sortie` | `output.json` | Métadonnées `ResultatRestitution` ; chaîne vide = aucun fichier |
 | `--gabarit` | `v2` | `v2` : rapport décisionnel en cinq écrans. `v1` : ancien rendu en neuf sections, conservé le temps de la transition |
+| `--sources-etat` | — | JSON `{source: {donnees_disponibles, nb_items, raison}}` écrit par l'orchestrateur. Il porte la **raison** d'une collecte vide, que les sorties d'analyse ne conservent pas |
 
 | Code de sortie | Signification |
 |---|---|
 | `0` | Succès |
 | `1` | Erreur imprévue |
 | `2` | Sortie F5 absente ou inexploitable, ou produits divergents |
+| `4` | **Rédaction impossible** (gabarit v2) : aucun fichier n'est écrit |
+
+Le `4` est le seul code qui laisse le disque intact. Il couvre trois situations, et
+toutes trois signifient qu'il n'y a pas de rapport à livrer : un gabarit de prompt
+qui diverge de son dictionnaire d'invocation (détecté **au chargement**, avant tout
+appel au modèle), une chaîne de rédaction qui n'aboutit pas, et un rapport assemblé
+qu'un contrôle bloquant refuse. Le diagnostic part sur `stderr` en JSON, avec les
+`statuts_analyse` complets : sans fichier de sortie à relire, c'est la seule trace.
+
+**Pourquoi 4 et non 2** — voir l'amendement A5 au §14.
 
 **`stdout` reste du JSON pur** : ce sont les métadonnées et les contrôles. Les
 documents ne sortent que dans leurs fichiers Markdown dédiés.
@@ -220,8 +231,19 @@ compteurs: 2 nombres hors liste blanche, 1 terme interdit, 47 % du narratif
 ```
 
 Une **seule régénération** est tentée par section lorsque plus de 30 % du
-narratif a été retiré ; au-delà, la section est réduite à ses tableaux avec un
-encart « lecture narrative indisponible ».
+narratif a été retiré.
+
+Au-delà, le comportement dépend du gabarit, et c'est la différence de fond entre
+les deux. En **v1**, la section est réduite à ses tableaux avec un encart
+« lecture narrative indisponible » : un mode dégradé assumé, et ce contrat ne
+change pas. En **v2**, cet encart n'existe plus — le module sort en code `4` sans
+écrire de rapport.
+
+Ce n'est pas une préférence de forme. Le run *8609db9e* a rendu un rapport dont
+les sept sous-blocs narratifs portaient cet encart, en code de sortie `0` : l'étude
+a été marquée `completed`, le frontend l'a affichée comme les autres, et un
+décideur a reçu un document sans une phrase d'analyse. Un rapport manquant se voit ;
+un rapport vide qui a l'air complet, non.
 
 ---
 
@@ -326,8 +348,18 @@ l'unité de corpus figure en commentaire HTML.
 | F3 absente | Section 5 construite depuis l'écho `dossier_synthese.consommateur`, marquée `degradee`, **avec mention explicite** ; pas d'extraits |
 | F4 absente | Section 6 construite depuis l'écho `dossier_synthese.concurrence`, marquée `degradee`, **avec mention explicite** |
 | F6 absente ou phase non déterminée | Section 3 remplacée par un **encart standard**, motif recopié |
-| Chaîne de rédaction en échec après reprise | Section réduite à ses tableaux + encart « lecture narrative indisponible » + statut |
-| F5 inexploitable | **Seul cas d'arrêt** : code 2 |
+| Chaîne de rédaction en échec après reprise (**v1**) | Section réduite à ses tableaux + encart « lecture narrative indisponible » + statut |
+| Chaîne de rédaction en échec après reprise (**v2**) | **Arrêt** : code 4, aucun fichier écrit, `statuts_analyse` sur `stderr` |
+| Sous-bloc hors contrat après régénération et compression (**v2**) | **Arrêt** : code 4 |
+| Contrôle bloquant en échec sur le rapport assemblé (**v2**) | **Arrêt** : code 4 |
+| Source collectée à vide, signalée par `--sources-etat` | Source **nommée avec sa raison** dans la ligne « Sources analysées » + encart « Étude partielle » |
+| F5 inexploitable | Code 2 |
+
+Une **donnée** manquante dégrade : le sous-bloc affiche sa phrase standard, et le
+cas est tracé. Un échec de **rédaction** ne dégrade pas, il arrête. La distinction
+est celle-ci : une absence de donnée est un résultat d'étude, que le lecteur doit
+voir ; une panne de rédaction est un défaut du module, que le lecteur ne peut ni
+détecter ni corriger.
 
 Une entrée manquante ne produit **jamais** une section silencieusement vide
 (exigence F7.3). La mention est vérifiée par la post-validation et publiée dans
@@ -420,3 +452,74 @@ le jour où les analyses amont les publieront.
 F7 rétablit l'unité des volumes quand une ligne du comparatif ne porte qu'un
 canal ; quand elle en porte plusieurs, l'unité est déclarée **indéterminée**
 plutôt que devinée.
+
+---
+
+## 14. Contrats de sous-blocs et amendements au gabarit v2
+
+### 14.1 — Le gabarit est vérifié par le code
+
+Jusqu'au run *8609db9e*, le gabarit v2 n'était tenu que par les consignes envoyées
+au modèle et par les budgets de mots. Rien ne vérifiait qu'un « Pourquoi » sortait
+avec ses trois puces chiffrées, ni que les cinq puces des concurrents portaient
+leurs libellés. `CONTRAT_SOUS_BLOCS` (dans `config.py`) le rend vérifiable :
+
+| Sous-bloc | Puces | Mots/puce | Autre |
+|---|---|---|---|
+| `pourquoi` | 3 | 30 | un chiffre par puce, **quand le fait clé en porte un** (A6) |
+| `risque_principal` | 1 | 30 | — |
+| `pourquoi_achat` | 2–4 | 30 | — |
+| `apprecient` | 2–4 | 30 | — |
+| `derange` | 1–5 | 30 | une phrase par point de friction, appariée par rang |
+| `aimeraient` | 2–4 | 30 | — |
+| `dynamique_demande` | 1 | 30 | puce de lecture des quatre indicateurs |
+| `que_font_concurrents` | 5 | 35 | libellés imposés, dans l'ordre |
+| `prix_pratiques` | 1 | 30 | puce de lecture du tableau des prix |
+| `prix` | 2–3 | 30 | — |
+| `entree_marche` | 3–5 | 30 | — |
+
+Les clés de cette table sont exactement celles de `SOUS_BLOCS_REDIGES` : la
+cohérence des deux est vérifiée **au chargement** de `redaction_v2`, pas laissée à
+la relecture. Un sous-bloc qui affiche sa phrase standard, faute de donnée, sort du
+contrat — il n'est pas rédigé, il n'a rien à respecter.
+
+### 14.2 — Les quatre contrôles bloquants
+
+`gabarit_conforme`, `aucun_repli_interdit`, `aucune_troncature` et
+`ligne_sources_complete` n'ajoutent pas une mention au rapport : ils l'empêchent de
+partir. Leur point commun est qu'un lecteur ne peut pas voir le défaut qu'ils
+détectent, et ne le corrigera donc jamais de lui-même. Un budget dépassé se voit ;
+un « Pourquoi » à deux puces au lieu de trois, non.
+
+Les autres contrôles restent informatifs : ils décrivent un rapport qui part.
+
+### 14.3 — Amendements
+
+| # | Amendement | Raison |
+|---|---|---|
+| **A1** | L'intensité des points de friction s'affiche `x/3`, pas `x/5` | F3 produit une échelle 1–3 (§13). Le code l'affichait déjà correctement ; c'est le gabarit de référence qui portait l'erreur |
+| **A2** | Un échec de rédaction n'a plus de repli : code `4`, aucun fichier écrit | Un rapport dégradé silencieux coûte plus cher qu'une étude visiblement échouée — c'est l'incident *8609db9e* |
+| **A3** | Les six sources sont **toujours** citées, une source vide avec sa raison | AliExpress a rapporté zéro offre et n'était pas citée : rien ne le disait au lecteur |
+| **A4** | Les indicateurs de demande hors des quatre du gabarit vont en `<details>` ; « non calculable » est une valeur affichée | Le tableau à neuf lignes noyait les quatre qui portent la décision, et le momentum 90 j — absent en amont — s'y lisait comme un oubli |
+| **A5** | `REDACTION_IMPOSSIBLE` = code **4**, et non 2 | Le 2 est pris : les onze modules du pipeline l'emploient pour « entrée inexploitable », et l'orchestrateur y voit un défaut de câblage. Réutiliser 2 rendrait indiscernables un gabarit de prompt cassé et un JSON F5 manquant |
+| **A6** | Le chiffre est exigé **puce par puce**, selon ce que porte le fait clé source | Un fait clé amont est parfois qualitatif — « signal d'effet de mode confirmé », dont la valeur est un booléen. Exiger un chiffre là où la source n'en porte aucun revient à en demander l'invention, que la liste blanche retirerait ensuite |
+| **A7** | Un dépassement de mots est signalé et compressé, il ne **bloque pas** | Le modèle dépasse de quelques mots à chaque exécution en français. Refuser un rapport entier parce qu'une puce fait 34 mots au lieu de 30 rendrait F7 inutilisable ; le dépassement reste compté par `budgets_respectes`, qui n'a jamais bloqué |
+
+### 14.4 — Aucune coupe mécanique
+
+Le v2 avait remplacé la troncature à « … » par sa suppression pure et simple. Le
+remède était pire : le signe de la coupe disparaissait, la coupe restait. Le run
+*8609db9e* a livré « … la crédibilité acquise ou », « … un kit complet plug and »,
+« … mentionnent explicitement en » — des textes coupés que plus rien ne signalait.
+
+Trois règles depuis :
+
+1. **Un titre n'est jamais coupé.** Titres d'opportunité et de risque, énoncés
+   d'action : la première *phrase* les borne, jamais un n-ième mot.
+2. **Toute réduction passe par `compresser_cellules`**, qui réécrit plus court. Une
+   compression rejetée par la liste blanche rend le texte **intégral** — long, mais
+   exact.
+3. **Une coupe résiduelle recule** jusqu'à un point d'arrêt : dernière ponctuation
+   forte, sinon dernier mot qui ne soit pas un mot-outil. Le contrôle
+   `aucune_troncature` cherche les trois signatures d'une coupe machine — ellipse,
+   virgule finale, mot-outil final — et il est bloquant.

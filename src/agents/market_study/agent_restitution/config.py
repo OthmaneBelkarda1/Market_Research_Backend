@@ -21,7 +21,7 @@ from __future__ import annotations
 import logging
 import os
 import sys
-from typing import Any
+from typing import Any, NamedTuple
 
 from dotenv import load_dotenv
 
@@ -1293,3 +1293,265 @@ REGLES_FORMULATION_V2: str = (
 
 TERME_FRICTION_SINGULIER: str = "point de friction"
 TERME_FRICTION_PLURIEL: str = "points de friction"
+
+
+# --------------------------------------------------------------------------- #
+# Contrat de conformité au gabarit v2
+# --------------------------------------------------------------------------- #
+# Ce qui suit rend le gabarit VÉRIFIABLE PAR LE CODE. Jusqu'ici il n'était tenu
+# que par les consignes envoyées au modèle et par les budgets de mots : un écran
+# pouvait sortir avec deux puces au lieu de trois, ou sans le chiffre qui fait
+# tout l'intérêt de la puce, sans qu'aucun contrôle ne s'en aperçoive. Le run
+# 8609db9e est allé plus loin — les quatre chaînes de rédaction ont échoué, le
+# rapport est parti sans une seule phrase, et l'étude a été marquée `completed`.
+#
+# Le principe qui suit de cet incident : un rapport v2 sans narratif n'est pas un
+# rapport dégradé, c'est un échec. Il ne doit jamais atteindre le lecteur.
+
+CODE_REDACTION_IMPOSSIBLE: int = 4
+"""Code de sortie d'un échec de rédaction — aucun fichier Markdown n'est écrit.
+
+POURQUOI 4 ET NON 2. Le correctif demandait le code 2. Il était pris : les onze
+modules du pipeline l'emploient pour « entrée inexploitable »
+(`EXIT_UNUSABLE_INPUT` côté orchestrateur), qui y voit le signe d'un défaut de
+câblage et le journalise comme tel. Réutiliser 2 aurait rendu indiscernables un
+gabarit de prompt cassé et un JSON F5 manquant — deux incidents dont ni la cause
+ni la réparation ne se ressemblent. 4 était libre. Voir l'amendement A5."""
+
+
+class ConfigurationRedactionInvalide(RuntimeError):
+    """Un gabarit de prompt et son dictionnaire d'invocation divergent.
+
+    Levée au CHARGEMENT du module, avant tout appel au modèle. C'est la classe
+    d'erreur qui a produit l'incident 8609db9e : `{max_mots}` figurait dans les
+    règles de formulation injectées dans le prompt système, et personne ne le
+    passait. L'erreur n'apparaissait qu'à la première invocation, une fois
+    l'étude lancée et les six collecteurs déjà payés."""
+
+
+class RedactionImpossible(RuntimeError):
+    """Un écran narratif n'a pas pu être rédigé conformément au gabarit.
+
+    Terminale : aucun repli ne la rattrape. Le module sort en
+    `CODE_REDACTION_IMPOSSIBLE` sans écrire de rapport.
+
+    Elle emporte les `statuts_analyse` accumulés jusqu'à l'échec. C'est la seule
+    trace qu'aura l'exploitant : il n'y a pas de fichier de sortie à relire, et
+    le message seul dit QUE la rédaction a échoué sans dire ce qui a été tenté.
+    Les statuts, eux, portent la chaîne fautive, son nombre de tentatives et le
+    motif exact du rejet.
+    """
+
+    def __init__(self, message: str, statuts: list[Any] | None = None) -> None:
+        """Construit l'exception avec son diagnostic.
+
+        Args:
+            message: Cause, en une phrase.
+            statuts: `StatutAnalyse` accumulés jusqu'à l'échec.
+        """
+        super().__init__(message)
+        self.statuts = list(statuts or [])
+
+
+PHRASES_STANDARD: dict[str, str] = {
+    "non_documente": PHRASE_NON_DOCUMENTE,
+    "clientele_non_caracterisee": PHRASE_CLIENTELE_NON_CARACTERISEE,
+    "tendances_absentes": PHRASE_TENDANCES_ABSENTES,
+    "plc_non_evaluee": PHRASE_PLC_NON_EVALUEE,
+    "conditions_non_determinables": PHRASE_GO_CONDITIONNEL_SANS_CONDITION,
+    "aucune_bascule": PHRASE_AUCUNE_BASCULE,
+}
+"""Les SEULS textes de repli qu'un rapport v2 a le droit de contenir.
+
+Ils répondent tous à la même situation : un injectable est vide, le code le dit
+et le trace. Un échec de RÉDACTION n'entre pas dans cette liste — ce n'est pas
+une absence de donnée, c'est une panne du module, et elle se signale par un code
+de sortie, pas par un encart que le lecteur prendra pour une nuance de méthode.
+
+`validation_v2.aucun_repli_interdit` vérifie qu'aucun autre texte de repli ne
+survit dans le document."""
+
+REPLI_INTERDIT_V2: tuple[str, ...] = ("Lecture narrative indisponible",)
+"""Formulations bannies du v2, cherchées littéralement dans le rapport rendu.
+
+`ENCART_NARRATIF_INDISPONIBLE` reste défini et reste employé par le **v1**, dont
+le contrat est inchangé : là-bas, une section réduite à ses tableaux est un mode
+dégradé assumé et documenté. Le v2 ne l'admet pas."""
+
+LIBELLES_QUE_FONT: tuple[str, ...] = (
+    "Leurs forces",
+    "Leurs faiblesses",
+    "Leur marketing",
+    "Leurs prix",
+    "Leur clientèle",
+)
+"""Les cinq puces de « Que font les concurrents ? », dans l'ordre imposé.
+
+Le gabarit les fixe pour que le lecteur retrouve la même grille d'un rapport à
+l'autre. Le contrôle les cherche en gras et dans cet ordre."""
+
+
+class ContratSousBloc(NamedTuple):
+    """Ce qu'un sous-bloc narratif doit produire pour être conforme."""
+
+    ecran: str
+    nb_puces_min: int
+    nb_puces_max: int
+    max_mots_puce: int
+    chiffre_obligatoire: bool = False
+    libelles_fixes: tuple[str, ...] | None = None
+
+
+CONTRAT_SOUS_BLOCS: dict[str, ContratSousBloc] = {
+    SB_POURQUOI: ContratSousBloc(
+        ECRAN_DECISION,
+        NB_FAITS_CLES_DECISION,
+        NB_FAITS_CLES_DECISION,
+        MAX_MOTS_PUCE,
+        chiffre_obligatoire=True,
+    ),
+    SB_RISQUE_PRINCIPAL: ContratSousBloc(ECRAN_DECISION, 1, 1, MAX_MOTS_PUCE),
+    SB_POURQUOI_ACHAT: ContratSousBloc(ECRAN_CONSOMMATEUR, 2, 4, MAX_MOTS_PUCE),
+    SB_APPRECIENT: ContratSousBloc(ECRAN_CONSOMMATEUR, 2, 4, MAX_MOTS_PUCE),
+    # Une phrase par point de friction retenu : la borne haute est leur nombre,
+    # la borne basse vaut 1 — un corpus peut n'en montrer qu'un seul.
+    SB_DERANGE: ContratSousBloc(
+        ECRAN_CONSOMMATEUR, 1, NB_POINTS_FRICTION, MAX_MOTS_PUCE
+    ),
+    SB_AIMERAIENT: ContratSousBloc(ECRAN_CONSOMMATEUR, 2, 4, MAX_MOTS_PUCE),
+    SB_DYNAMIQUE: ContratSousBloc(ECRAN_CONCURRENCE, 1, 1, MAX_MOTS_PUCE),
+    SB_QUE_FONT: ContratSousBloc(
+        ECRAN_CONCURRENCE,
+        5,
+        5,
+        MAX_MOTS_PUCE_CONCURRENTS,
+        libelles_fixes=LIBELLES_QUE_FONT,
+    ),
+    SB_PRIX_PRATIQUES: ContratSousBloc(ECRAN_CONCURRENCE, 1, 1, MAX_MOTS_PUCE),
+    SB_PRIX: ContratSousBloc(ECRAN_RECOMMANDATIONS, 2, 3, MAX_MOTS_PUCE),
+    SB_ENTREE_MARCHE: ContratSousBloc(ECRAN_RECOMMANDATIONS, 3, 5, MAX_MOTS_PUCE),
+}
+"""Le gabarit v2, sous une forme que le code peut vérifier.
+
+Les clés sont exactement celles de `SOUS_BLOCS_REDIGES` : un sous-bloc confié au
+modèle a un contrat, et réciproquement. La cohérence des deux tables est vérifiée
+au chargement de `redaction_v2`, pas laissée à la relecture.
+
+Un sous-bloc qui affiche sa phrase standard, faute de donnée, sort du contrat :
+il n'est pas rédigé, donc il n'a rien à respecter."""
+
+MOTS_OUTILS_FIN_INTERDITS: frozenset[str] = frozenset(
+    {
+        "le", "la", "les", "l'", "un", "une", "des", "du", "de", "d'", "et",
+        "ou", "à", "au", "aux", "par", "pour", "sous", "sur", "dans", "comme",
+        "plus", "que", "qui", "dont", "en",
+    }
+)
+"""Mots sur lesquels une phrase française ne se termine pas.
+
+Heuristique de détection de troncature, et non règle de style : un texte qui
+s'arrête sur « … acquise ou » ou « … plug and » a été coupé par une machine, pas
+rédigé. Le v2 n'ayant plus le droit de couper (voir `TEXTES_NON_COMPRESSIBLES`),
+un tel mot en fin de cellule est le symptôme d'un défaut, et le contrôle est
+bloquant."""
+
+TEXTES_NON_COMPRESSIBLES: tuple[str, ...] = (
+    "puces_opportunites",
+    "puces_risques",
+    "details_opportunites_risques",
+    "divergences",
+    "puces_personne_ne_fait",
+    "tableau_actions",
+)
+"""Champs injectables qu'aucune coupe mécanique ne doit atteindre.
+
+Ce sont des porteurs de sens indivisible : le titre d'une opportunité coupé à
+douze mots (« … sur la fiche produit, un ») ne dit plus rien, et l'énoncé d'une
+action amputé (« … kit complet plug and ») en dit le contraire. Trop longs, ils
+passent par `compresser_cellules`, qui RÉÉCRIT plus court ; si la compression est
+rejetée par la liste blanche, c'est le texte INTÉGRAL qui est rendu — long vaut
+mieux que faux."""
+
+SOURCES_LIGNE_SOURCES: tuple[str, ...] = (
+    "amazon",
+    "aliexpress",
+    "reddit",
+    "recherche_web",
+    "meta_ads",
+    "google_trends",
+)
+"""Les six sources, toujours citées par la ligne « Sources analysées ».
+
+Omettre une source vide la rend invisible : le lecteur du run 8609db9e ne pouvait
+pas savoir qu'AliExpress n'avait rapporté aucune offre, puisque AliExpress n'y
+figurait tout simplement pas. Une source sans donnée est nommée AVEC sa raison."""
+
+UNITES_SOURCES: dict[str, str] = {
+    "amazon": "offre",
+    "aliexpress": "offre",
+    "reddit": "contribution",
+    "recherche_web": "page",
+    "meta_ads": "annonce",
+    "google_trends": "série",
+}
+"""Ce que compte chaque source, au singulier — le pluriel est calculé."""
+
+RAISONS_SOURCE_VIDE: dict[str, str] = {
+    "oauth": "authentification refusée",
+    "quota": "quota épuisé",
+    "anti_bot": "collecte bloquée",
+    "aucun_resultat": "aucun résultat",
+    "non_collectee": "non collectée",
+}
+"""Raisons transmises par l'orchestrateur (`--sources-etat`), rendues lisibles.
+
+Une raison inconnue est affichée telle quelle plutôt que remplacée : mieux vaut
+un libellé technique dans le rapport qu'une cause effacée."""
+
+MENTION_SOURCE_VIDE: str = "{libelle} (0 {unite} — {raison})"
+"""Comment une source sans donnée se nomme dans la ligne « Sources analysées ».
+
+Le zéro est écrit, pas sous-entendu : « AliExpress (0 offre — non collectée) »
+dit à la fois que la source était au programme et qu'elle n'a rien rendu."""
+
+# --------------------------------------------------------------------------- #
+# Indicateurs de la dynamique de la demande
+# --------------------------------------------------------------------------- #
+# Le gabarit en fixe QUATRE, et le tableau du run 8609db9e en affichait neuf :
+# le lecteur ne voyait plus lesquels comptent, et le momentum — celui qui dit si
+# la demande bouge maintenant — manquait. Les autres ne sont pas jetés, ils
+# passent dans un bloc replié.
+
+INDICATEURS_DEMANDE_GABARIT: tuple[tuple[str, str], ...] = (
+    ("profil", "Profil de courbe"),
+    ("momentum_90j", "Momentum 90 j"),
+    ("pente_5ans", "Pente annuelle sur 5 ans"),
+    ("saisonnalite", "Saisonnalité"),
+)
+"""Les quatre indicateurs du gabarit, dans l'ordre d'affichage.
+
+Un indicateur non calculable affiche « non calculable » comme VALEUR : une ligne
+absente se lit comme un oubli, une valeur explicite se lit comme un constat."""
+
+VALEUR_NON_CALCULABLE: str = "non calculable"
+TITRE_AUTRES_INDICATEURS: str = "Autres indicateurs de tendance"
+
+# --------------------------------------------------------------------------- #
+# Segments de prix du benchmark
+# --------------------------------------------------------------------------- #
+
+COLONNES_BENCHMARK_GABARIT: tuple[tuple[str, str], ...] = (
+    ("canal", "Canal"),
+    ("devise", "Devise"),
+    ("offres", "Offres"),
+    ("entree", "Entrée"),
+    ("coeur", "Cœur"),
+    ("premium", "Premium"),
+    ("mediane", "Médiane"),
+)
+"""Les colonnes du tableau « Prix pratiqués », dans l'ordre du gabarit.
+
+Trois segments plutôt que min/max : un décideur qui cherche où se placer lit une
+structure de marché, pas des extrêmes que la première annonce aberrante déplace."""
+
+VALEUR_NON_CALCULE: str = "non calculé"

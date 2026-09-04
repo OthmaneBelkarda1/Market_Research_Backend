@@ -51,9 +51,18 @@ class StudySource(StrEnum):
 
 class StudySourceStatus(StrEnum):
     """``skipped_region`` is a normal outcome (exit code 3), not a failure: a collector
-    may simply not cover the region (Amazon has no Moroccan site, for instance)."""
+    may simply not cover the region (Amazon has no Moroccan site, for instance).
+
+    ``empty`` is the outcome this codebase used to call ``succeeded``. A collector that
+    exits 0 having found nothing has *run* successfully and *collected* nothing, and the
+    difference matters downstream: on study 8609db9e AliExpress returned zero offers,
+    was recorded as ``succeeded``, and the report went out without ever mentioning that
+    one of its two price channels was missing. Exit code and harvest are two questions,
+    and this enum now answers both.
+    """
 
     SUCCEEDED = "succeeded"
+    EMPTY = "empty"
     FAILED = "failed"
     SKIPPED_REGION = "skipped_region"
 
@@ -214,6 +223,15 @@ REPORT_SUMMARY_FILE = "resume_executif.md"
 # read in full next to the files it produced.
 MODULE_LOG_DIR = "logs"
 
+# État des collecteurs écrit par le runner et lu par F7 (`--sources-etat`) : la
+# RAISON d'une collecte vide ne survit dans aucun JSON d'analyse, et sans elle le
+# rapport peut dire qu'une source n'a rien rendu, pas pourquoi.
+SOURCES_STATE_FILE = "sources_etat.json"
+
+# The exit code F7 uses for "the report could not be written to template" -- distinct
+# from EXIT_UNUSABLE_INPUT below, which the whole pipeline uses for a wiring defect.
+EXIT_REDACTION_IMPOSSIBLE = 4
+
 # Exit codes, shared by every module of the pipeline.
 EXIT_SUCCESS = 0
 EXIT_RUNTIME_ERROR = 1
@@ -266,5 +284,9 @@ class RunErrorCode(StrEnum):
     PRODUCT_NOT_FOUND = "PRODUCT_NOT_FOUND"
     ALL_COLLECTORS_FAILED = "ALL_COLLECTORS_FAILED"
     REPORT_FAILED = "REPORT_FAILED"
+    # F7 exited 4: the report could not be written to the v2 template. The analysis
+    # payloads are intact, so this is the one report failure worth replaying alone --
+    # see `POST /studies/{id}/report/regenerate`.
+    F7_REDACTION_FAILED = "F7_REDACTION_FAILED"
     INTERRUPTED_BY_RESTART = "INTERRUPTED_BY_RESTART"
     UNEXPECTED_ERROR = "UNEXPECTED_ERROR"

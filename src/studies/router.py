@@ -223,3 +223,43 @@ async def get_study_source(
 )
 async def get_study_report(study: ExistingStudy, db: DbSession) -> StudyReport:
     return await service.get_study_report(db, study.id)
+
+
+@router.post(
+    "/{study_id}/report/regenerate",
+    response_model=StudyResponse,
+    status_code=status.HTTP_202_ACCEPTED,
+    summary="Replay the report of a study, without re-collecting anything",
+    description=(
+        "Re-runs F7 alone, from the analysis payloads already stored for this study. "
+        "Nothing is collected and nothing is re-analysed: the six collectors and the "
+        "four analysis agents are the expensive half of a study, and a report that came "
+        "out wrong does not call them into question.\n\n"
+        "This is the repair path for a study left in `partial` with "
+        "`error.code = F7_REDACTION_FAILED` -- the write-up did not meet the template, "
+        "the analyses are intact. It also serves a report that simply needs to be "
+        "produced again after a template change.\n\n"
+        "The response returns immediately in status `reporting`; the replay takes a "
+        "couple of minutes and is followed by polling `GET /studies/{study_id}`. The "
+        "existing report is replaced only if the new one succeeds -- a failed replay "
+        "leaves the study exactly as it was, and can be attempted again."
+    ),
+    responses={
+        status.HTTP_202_ACCEPTED: {
+            "description": "Replay scheduled, study back in status `reporting`"
+        },
+        status.HTTP_404_NOT_FOUND: {
+            "model": ErrorResponse,
+            "description": "No study with this identifier",
+        },
+        status.HTTP_409_CONFLICT: {
+            "model": ErrorResponse,
+            "description": (
+                "An analysis F7 needs (F3, F4 or F5) is missing from this study: there "
+                "is nothing to write up, and only a full re-run would help"
+            ),
+        },
+    },
+)
+async def regenerate_study_report(study: ExistingStudy, db: DbSession) -> Study:
+    return await service.replay_report(db, study.id)

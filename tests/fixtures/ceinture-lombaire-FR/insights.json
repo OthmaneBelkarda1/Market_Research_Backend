@@ -1,0 +1,994 @@
+{
+ "marche": {
+  "geo": "FR",
+  "langue": "fr"
+ },
+ "themes": [
+  {
+   "portee": "mixte",
+   "libelle": "Gestion et soulagement de la douleur lombaire",
+   "sources": [
+    "reddit"
+   ],
+   "frequence_nb": 6,
+   "frequence_pct": 60.0,
+   "exemples_id_unites": [
+    "rd-p-t3_1rso2dr",
+    "rd-p-t3_1u3a6rx",
+    "rd-c-oae08by"
+   ],
+   "sentiment_dominant": "positif"
+  },
+  {
+   "portee": "regionale",
+   "libelle": "Support et ergonomie",
+   "sources": [
+    "reddit"
+   ],
+   "frequence_nb": 4,
+   "frequence_pct": 40.0,
+   "exemples_id_unites": [
+    "rd-c-oadcilm",
+    "rd-c-oadtu1v",
+    "rd-c-oaf3yfi"
+   ],
+   "sentiment_dominant": "positif"
+  },
+  {
+   "portee": "regionale",
+   "libelle": "Mobilité et activité physique",
+   "sources": [
+    "reddit"
+   ],
+   "frequence_nb": 3,
+   "frequence_pct": 30.0,
+   "exemples_id_unites": [
+    "rd-p-t3_1rso2dr",
+    "rd-c-oadtu1v",
+    "rd-c-oae08by"
+   ],
+   "sentiment_dominant": "positif"
+  },
+  {
+   "portee": "regionale",
+   "libelle": "Télétravail",
+   "sources": [
+    "reddit"
+   ],
+   "frequence_nb": 2,
+   "frequence_pct": 20.0,
+   "exemples_id_unites": [
+    "rd-p-t3_1rso2dr",
+    "rd-c-oaf3yfi"
+   ],
+   "sentiment_dominant": "positif"
+  },
+  {
+   "portee": "globale",
+   "libelle": "Adaptation quotidienne",
+   "sources": [
+    "reddit"
+   ],
+   "frequence_nb": 1,
+   "frequence_pct": 10.0,
+   "exemples_id_unites": [
+    "rd-p-t3_1u3a6rx"
+   ],
+   "sentiment_dominant": "positif"
+  },
+  {
+   "portee": "globale",
+   "libelle": "Efficacité",
+   "sources": [
+    "reddit"
+   ],
+   "frequence_nb": 1,
+   "frequence_pct": 10.0,
+   "exemples_id_unites": [
+    "rd-p-t3_1njswaf"
+   ],
+   "sentiment_dominant": "positif"
+  },
+  {
+   "portee": "regionale",
+   "libelle": "Limitation d'entraînement",
+   "sources": [
+    "reddit"
+   ],
+   "frequence_nb": 1,
+   "frequence_pct": 10.0,
+   "exemples_id_unites": [
+    "rd-c-oubw66r"
+   ],
+   "sentiment_dominant": "negatif"
+  },
+  {
+   "portee": "regionale",
+   "libelle": "Pathologies lombaires",
+   "sources": [
+    "reddit"
+   ],
+   "frequence_nb": 1,
+   "frequence_pct": 10.0,
+   "exemples_id_unites": [
+    "rd-c-oubw66r"
+   ],
+   "sentiment_dominant": "negatif"
+  },
+  {
+   "portee": "regionale",
+   "libelle": "Progression stagnante",
+   "sources": [
+    "reddit"
+   ],
+   "frequence_nb": 1,
+   "frequence_pct": 10.0,
+   "exemples_id_unites": [
+    "rd-c-oubnubc"
+   ],
+   "sentiment_dominant": "negatif"
+  },
+  {
+   "portee": "regionale",
+   "libelle": "Prévention des troubles musculo-squelettiques",
+   "sources": [
+    "reddit"
+   ],
+   "frequence_nb": 1,
+   "frequence_pct": 10.0,
+   "exemples_id_unites": [
+    "rd-c-oadcilm"
+   ],
+   "sentiment_dominant": "positif"
+  },
+  {
+   "portee": "globale",
+   "libelle": "Utilisation correcte",
+   "sources": [
+    "reddit"
+   ],
+   "frequence_nb": 1,
+   "frequence_pct": 10.0,
+   "exemples_id_unites": [
+    "rd-p-t3_1njswaf"
+   ],
+   "sentiment_dominant": "positif"
+  }
+ ],
+ "besoins": [
+  {
+   "type": "fonctionnel",
+   "libelle": "Soulager la douleur lombaire",
+   "confiance": "faible",
+   "preuves_id": [
+    "rd-p-t3_1rso2dr",
+    "rd-p-t3_1u3a6rx",
+    "rd-c-oae08by",
+    "rd-p-t3_1njswaf",
+    "rd-c-olk3fnv",
+    "rd-c-oubnubc"
+   ],
+   "description": "Le besoin dominant dans le corpus est le soulagement de la douleur lombaire, qu'elle soit chronique ou liée à des postures de travail prolongées. Les consommateurs recherchent une solution efficace pour réduire les tensions musculaires et les douleurs du bas du dos, notamment dans des contextes de travail sédentaire (6-7 heures quotidiennes devant ordinateur), de pathologies identifiées (scoliose, hernies discales) ou de douleurs chroniques persistantes sur plusieurs années."
+  },
+  {
+   "type": "fonctionnel",
+   "libelle": "Maintenir la posture et stabiliser la zone lombaire",
+   "confiance": "faible",
+   "preuves_id": [
+    "rd-c-oadcilm",
+    "rd-c-oadtu1v",
+    "rd-c-oaf3yfi",
+    "rd-p-t3_1rso2dr"
+   ],
+   "description": "Les consommateurs expriment le besoin d'un maintien actif de la zone lombaire pour corriger ou stabiliser la posture, notamment en position assise prolongée (télétravail, bureau, conduite). Ce besoin vise à prévenir l'aggravation des douleurs et à assurer un alignement optimal de la colonne vertébrale durant les activités quotidiennes."
+  },
+  {
+   "type": "fonctionnel",
+   "libelle": "Accompagner la reprise ou la poursuite d'activité physique",
+   "confiance": "faible",
+   "preuves_id": [
+    "rd-c-oae08by",
+    "rd-c-oubnubc",
+    "rd-c-oubw66r"
+   ],
+   "description": "Le corpus révèle un besoin d'accompagnement lors d'efforts physiques, qu'il s'agisse de reprise progressive d'activité (marche quotidienne, entraînement en salle) ou de pratique intensive (musculation avec charges). Les consommateurs cherchent à sécuriser leurs mouvements et à limiter les risques de récidive ou d'aggravation des douleurs dorsales."
+  },
+  {
+   "type": "emotionnel",
+   "libelle": "Retrouver une qualité de vie et réduire l'impact sur le quotidien",
+   "confiance": "faible",
+   "preuves_id": [
+    "rd-p-t3_1u3a6rx",
+    "rd-c-oae08by",
+    "rd-c-olk3fnv"
+   ],
+   "description": "Au-delà du soulagement immédiat, les consommateurs expriment le besoin de retrouver une vie normale : amélioration du sommeil, réduction de l'anxiété liée à la condition, capacité à maintenir leurs activités professionnelles et personnelles sans limitation majeure. Ce besoin émotionnel traduit la quête d'autonomie et de bien-être global."
+  },
+  {
+   "type": "service",
+   "libelle": "Accéder à des solutions pratiques et rapides",
+   "confiance": "faible",
+   "preuves_id": [
+    "rd-p-t3_1rso2dr",
+    "rd-p-t3_1njswaf",
+    "rd-c-oljnrxf",
+    "rd-c-olq5m0f"
+   ],
+   "description": "Le corpus montre une recherche de solutions immédiates et faciles à mettre en œuvre, sans nécessiter de parcours médical complexe. Les consommateurs valorisent la simplicité d'utilisation et l'efficacité rapide, notamment lorsque l'accès à la kinésithérapie est limité ou insuffisant."
+  }
+ ],
+ "limites": [
+  "[reddit] Reddit n'est pas représentatif de la population d'un marché : la base d'utilisateurs est documentée comme jeune, majoritairement masculine, technophile et anglophone. Le corpus ne constitue en aucun cas un échantillon de consommateurs.",
+  "[reddit] Reddit n'offre aucun filtre géographique natif : la « régionalisation » repose uniquement sur le choix des subreddits et sur la langue des requêtes. C'est une approximation, à interpréter comme telle.",
+  "[reddit] La couverture varie fortement selon le pays : pour les marchés non anglophones, le volume de discussions peut être très faible. L'absence de discussions ne constitue pas un signal d'absence de marché.",
+  "[reddit] Le score de pertinence est une heuristique LLM non validée empiriquement et le seuil de rétention est arbitraire.",
+  "[reddit] La recherche Reddit est non exhaustive : toute liste de résultats est plafonnée à environ 1 000 posts côté Reddit, le mode rapide de l'actor (actif d'office sur les recherches par mots-clés) peut manquer des posts, et le tri par pertinence est opaque.",
+  "[reddit] Les contenus collectés se limitent à la fenêtre de recherche configurée (`searchTime=year`) : les opinions exprimées ont pu évoluer depuis.",
+  "[reddit] Les posts annonçant zéro commentaire sont écartés de la phase B : les interroger coûterait un item facturé pour un rendement nul.",
+  "[amazon] Le corpus provient d'UNE seule marketplace Amazon, celle du pays étudié. Il décrit l'offre présente sur ce site, et non l'ensemble du commerce en ligne du pays : les places de marché concurrentes et le commerce local en sont absents.",
+  "[amazon] Aucun filtre de livraison n'est appliqué : le corpus est le catalogue complet de la marketplace, y compris des produits qui ne seraient pas expédiables vers la région d'étude. C'est un choix assumé — restreindre à l'expédiable amputerait l'étude de marché de l'essentiel de l'offre.",
+  "[amazon] Les prix sont exprimés dans la devise de la marketplace et ne sont NI convertis, NI comparables d'une marketplace à l'autre. Ils sont relevés à l'instant du run : les prix Amazon varient de jour en jour.",
+  "[amazon] Amazon bloque une part variable des requêtes automatisées. Un corpus court ou vide peut être le fait de l'anti-bot et non du catalogue : les runs concernés sont signalés dans `statuts_collecte`.",
+  "[amazon] Le classement d'Amazon est commercial : il mêle publicité, performance vendeur et ancienneté de l'annonce. L'ordre de collecte n'est pas un classement de qualité, et le corpus n'est pas exhaustif.",
+  "[amazon] Les avis collectés sont les « meilleurs avis » retenus par Amazon, quelques-uns par produit et sur une fenêtre récente : ils illustrent des retours d'usage, ils ne constituent en aucun cas un échantillon représentatif ni une base de mesure de satisfaction.",
+  "[amazon] `pertinence` et `correspondance` sont des heuristiques produites par un LLM, sans validation sur un échantillon annoté.",
+  "[amazon] Un compte Apify en fin de quota tronque les runs SANS les faire échouer : ils remontent en statut SUCCEEDED avec un dataset incomplet. Vérifier le quota avant toute interprétation d'un volume de produits.",
+  "[amazon] Le plan de recherches n'a pas atteint le nombre de recherches visé : certaines propositions étaient non conformes ou en doublon et ont été écartées. La couverture du catalogue est d'autant plus partielle.",
+  "[amazon] Aucun avis n'a pu être collecté sur les produits retenus. L'analyse qualitative des retours d'usage est donc impossible sur ce corpus.",
+  "[recherche_web] La SERP interrogée est géolocalisée aux États-Unis et en anglais : l'actor n'expose aucun paramètre de pays ni de langue de recherche (`serpProxyGroup` ne sert pas à choisir un pays). Le ciblage régional par TLD et par mots-clés géographiques est donc une APPROXIMATION — le classement des résultats reste celui que verrait un utilisateur américain, pas un consommateur du marché étudié.",
+  "[recherche_web] L'opérateur `site:.<tld>` exclut mécaniquement les acteurs locaux hébergés en .com, qui sont nombreux sur la plupart des marchés. Les requêtes à mots-clés géographiques compensent partiellement ce biais, sans aucune garantie d'exhaustivité.",
+  "[recherche_web] Le corpus se limite aux premiers résultats Google de chaque requête : il n'est pas exhaustif et reflète les biais du référencement (optimisation SEO, contenu affilié, pages générées). Chaque page est un SIGNAL À RECOUPER, jamais un fait ; les chiffres qui y figurent (prix, parts de marché, classements) doivent être revalidés sur des sources structurées.",
+  "[recherche_web] `type_source`, `portee_regionale` et `pertinence` sont des heuristiques produites par un LLM, sans validation sur un échantillon annoté.",
+  "[recherche_web] Une redondance avec les corpus des autres collecteurs reste possible malgré l'exclusion de domaines : un même contenu peut être republié sur un domaine non listé.",
+  "[recherche_web] La fraîcheur des contenus n'est pas garantie : ce mode de collecte n'expose aucun filtre de date fiable, et les pages retenues peuvent dater de plusieurs années.",
+  "[recherche_web] Le plan de requêtes n'a pas atteint les quotas visés pour tous les couples axe/ciblage : certaines requêtes proposées étaient non conformes et ont été écartées. La couverture régionale est d'autant plus partielle.",
+  "3 unité(s) écartée(s) comme doublons de texte : les republications et citations gonflaient artificiellement les fréquences.",
+  "Corpus limité à une seule source (reddit) : la lecture reflète le public de cette source et non celui du marché.",
+  "Le corpus analysé n'est pas exhaustif et reflète les biais de collecte des agents amont (moteurs de recherche, plafonds de collecte, seuils de pertinence). Il ne constitue en aucun cas un échantillon représentatif de la population d'un marché.",
+  "La classification des sentiments, thèmes et pain points est produite par un modèle de langage et n'a pas été validée empiriquement contre un codage humain.",
+  "Les populations diffèrent fortement d'une source à l'autre (contributeurs Reddit, acheteurs Amazon, rédacteurs web) : les agrégats inter-sources mélangent des publics qui ne sont pas comparables.",
+  "Aucune inférence sur la taille du marché ne peut être tirée de ces volumes : un nombre d'unités mesure l'activité de discussion collectée, pas la demande."
+ ],
+ "produit": {
+  "nom": "Ceinture lombaire double traction",
+  "categorie": "sante-bien-etre",
+  "description": "Ceinture de maintien lombaire reglable a double sangle de traction, pour soulager les douleurs du bas du dos."
+ },
+ "attentes": [
+  {
+   "libelle": "Efficacité du soulagement",
+   "preuves_id": [
+    "rd-p-t3_1njswaf",
+    "rd-p-t3_1u3a6rx"
+   ],
+   "description": "Les consommateurs considèrent l'efficacité du soulagement comme une attente fondamentale : la ceinture doit apporter un soulagement mesurable et rapide de la douleur lombaire. Cette attente est standard, car elle constitue la raison d'être du produit.",
+   "niveau_exigence": "standard"
+  },
+  {
+   "libelle": "Confort de port prolongé",
+   "preuves_id": [
+    "rd-p-t3_1u3a6rx"
+   ],
+   "description": "Le confort durant un usage prolongé (plusieurs heures par jour, notamment en télétravail ou au bureau) est attendu comme standard. Les consommateurs doivent pouvoir porter la ceinture sans gêne, irritation ou inconfort, même en position assise.",
+   "niveau_exigence": "standard"
+  },
+  {
+   "libelle": "Utilisation intuitive et ajustabilité",
+   "preuves_id": [
+    "rd-p-t3_1njswaf",
+    "rd-p-t3_1rso2dr"
+   ],
+   "description": "Les consommateurs attendent une mise en place simple et une capacité d'ajustement facile (sangles latérales, système de double traction). Cette attente est différenciante : une ceinture facile à régler et à positionner correctement sera préférée à une solution complexe nécessitant un apprentissage.",
+   "niveau_exigence": "differenciant"
+  },
+  {
+   "libelle": "Respirabilité et gestion de la transpiration",
+   "preuves_id": [],
+   "description": "Bien que non explicitement verbalisée dans le corpus d'opinions, la respirabilité est une attente implicite différenciante pour un usage quotidien prolongé, notamment en contexte de travail ou d'activité physique. Le corpus ne permet pas de quantifier cette attente, mais les éléments positifs relevés sur le web soulignent l'importance des matériaux respirants.",
+   "niveau_exigence": "differenciant"
+  }
+ ],
+ "sentiment": {
+  "global": {
+   "mixte": 0,
+   "neutre": 0,
+   "base_nb": 10,
+   "negatif": 2,
+   "positif": 8
+  },
+  "par_portee": {
+   "globale": {
+    "mixte": 0,
+    "neutre": 0,
+    "base_nb": 2,
+    "negatif": 0,
+    "positif": 2
+   },
+   "regionale": {
+    "mixte": 0,
+    "neutre": 0,
+    "base_nb": 8,
+    "negatif": 2,
+    "positif": 6
+   }
+  },
+  "par_source": {
+   "reddit": {
+    "mixte": 0,
+    "neutre": 0,
+    "base_nb": 10,
+    "negatif": 2,
+    "positif": 8
+   }
+  },
+  "commentaire": "Le sentiment global est très majoritairement positif (8 unités sur 10), avec seulement 2 unités négatives et aucune neutre ou mixte. Les unités négatives concernent principalement les limitations liées aux pathologies lombaires (hernie discale, stagnation physique) plutôt qu'une insatisfaction envers les solutions de maintien lombaire elles-mêmes. La répartition par portée montre une cohérence entre portée globale (100 % positif, 2 unités) et régionale (75 % positif, 6 unités sur 8), sans divergence notable. Le corpus reflète une perception favorable des ceintures lombaires comme solution de soulagement, bien que la base soit limitée (10 unités) et issue d'une seule source (Reddit)."
+ },
+ "hypotheses": [
+  "Seuil de pertinence amont retenu : 0.5 (heuristique).",
+  "Formule de priorité des pain points : score_priorite = frequence_pct × intensite_moyenne × (1 + 0.25 × (nb_sources − 1)) (heuristique).",
+  "Un insight est qualifié de régional ou global à partir de 70 % d'unités d'une même portée, sinon « mixte ».",
+  "Les commentaires Reddit héritent de la pertinence et de la portée de leur post parent ; un commentaire orphelin est de portée inconnue.",
+  "Le produit et le marché retenus pour la sortie sont ceux du premier fichier valide, dans l'ordre Reddit → Amazon → Recherche web."
+ ],
+ "pain_points": [
+  {
+   "portee": "mixte",
+   "libelle": "Douleur lombaire chronique",
+   "sources": [
+    "reddit"
+   ],
+   "confiance": "moyenne",
+   "verbatims": [
+    {
+     "source": "reddit",
+     "extrait": "j ai eu ca pendant 10ans…\nce qui m a fait passer le mal? j ai rompu avec un ex super toxique…eh oui car ca me tendait\nj ai eu des semelles orthopediques un temps\nje me suis etiré quadris et ischios chaque jour ou presque\ndepuis, ca ne revient plus",
+     "id_unite": "rd-c-olk3fnv"
+    },
+    {
+     "source": "reddit",
+     "extrait": "Hello, \n\nPour le dos c'est surtout le circuit core / lombaires que je pensais être assez efficace. Il y a même eu un moment où les douleurs étaient quasiment inexistantes. Mais plus tard, à force de charger de plus en plus les exercices, les douleurs finissaient par revenir. \n\nPour le poignet, je fa",
+     "id_unite": "rd-c-oubnubc"
+    },
+    {
+     "source": "reddit",
+     "extrait": "GINTRON Back Brace for Lower Back Pain Relief Men Women, Immediate Relief from Sciatica, Herniated Disc, Scoliosis, Breathable Back Support Brace with 3D Lumbar Support Pad for Home & Lifting At Work\n\nThis is the belt that was so effective with my back pain.  I have scoliosis & 2 partial herniated d",
+     "id_unite": "rd-p-t3_1njswaf"
+    }
+   ],
+   "description": "La douleur lombaire chronique est le pain point le plus fréquent dans le corpus (40 % des unités). Elle se manifeste sur des périodes prolongées (jusqu'à 10 ans mentionnés), avec des intensités variables et des récidives malgré les tentatives de traitement (exercices de renforcement, étirements). Les consommateurs décrivent une douleur persistante qui revient même après des périodes d'amélioration, notamment lorsqu'ils augmentent l'intensité de leurs activités physiques.",
+   "frequence_nb": 4,
+   "frequence_pct": 40.0,
+   "score_priorite": 80.0,
+   "intensite_moyenne": 2.0
+  },
+  {
+   "portee": "regionale",
+   "libelle": "Douleur lombaire liée aux postures de travail",
+   "sources": [
+    "reddit"
+   ],
+   "confiance": "moyenne",
+   "verbatims": [
+    {
+     "source": "reddit",
+     "extrait": "C'était l'inverse dans mon cas j'ai fait deux trois boîtes différentes en bureau avant le télétravail, j'avais toujours des douleurs dans le dos alors que les chaises avaient l'air ok et je faisais gaffe à ma posture.\n\nJ'ai jamais eu ces problèmes avec les chaises d'école basiques quand j'étais en a",
+     "id_unite": "rd-c-oaf3yfi"
+    }
+   ],
+   "description": "Les douleurs lombaires liées aux postures de travail (40 % des unités) concernent principalement les situations de travail prolongé en position assise (bureau, télétravail, conduite). Les consommateurs rapportent des douleurs récurrentes malgré des chaises ergonomiques et une attention portée à la posture, suggérant que l'équipement seul ne suffit pas à prévenir le problème.",
+   "frequence_nb": 4,
+   "frequence_pct": 40.0,
+   "score_priorite": 70.0,
+   "intensite_moyenne": 1.75
+  },
+  {
+   "portee": "regionale",
+   "libelle": "Absence de rééducation kinésithérapique",
+   "sources": [
+    "reddit"
+   ],
+   "confiance": "faible",
+   "verbatims": [],
+   "description": "L'absence ou l'insuffisance de rééducation kinésithérapique est mentionnée comme un pain point par 20 % des unités. Le corpus suggère un manque d'accès ou de suivi régulier en kinésithérapie, poussant les consommateurs à rechercher des solutions alternatives ou complémentaires pour gérer leur douleur.",
+   "frequence_nb": 2,
+   "frequence_pct": 20.0,
+   "score_priorite": 30.0,
+   "intensite_moyenne": 1.5
+  },
+  {
+   "portee": "globale",
+   "libelle": "Douleur chronique multi-sites",
+   "sources": [
+    "reddit"
+   ],
+   "confiance": "faible",
+   "verbatims": [
+    {
+     "source": "reddit",
+     "extrait": "How do you manage chronic back pain?\n\nI am in late 30s and chronic back pain patient due to work and making life miserable. I am trying to find how people with similar problem manage their life.\n\nI spend 6-7 hours daily with computer and developed shoulder/back pain in last 12 years. I have pain in",
+     "id_unite": "rd-p-t3_1u3a6rx"
+    }
+   ],
+   "description": "Certains consommateurs souffrent de douleurs chroniques touchant plusieurs zones (épaules, dos, lombaires) simultanément, liées à un travail prolongé sur ordinateur (6-7 heures quotidiennes). Cette condition multi-sites rend la gestion de la douleur plus complexe et impacte significativement la qualité de vie quotidienne.",
+   "frequence_nb": 1,
+   "frequence_pct": 10.0,
+   "score_priorite": 30.0,
+   "intensite_moyenne": 3.0
+  },
+  {
+   "portee": "regionale",
+   "libelle": "Hernie discale limitante",
+   "sources": [
+    "reddit"
+   ],
+   "confiance": "faible",
+   "verbatims": [
+    {
+     "source": "reddit",
+     "extrait": "Je vais essayer de répondre au maximum.\n\nOui je suis en maintenance probablement, voir léger surplus. Le poids stagne plus ou moins mais physiquement j'ai l'impression d'avoir un peu repris du gras. Après mon but pc'est de stabiliser vers les 77-80kg \"propres\" plutôt que de rester vers les 70. \n\nEnt",
+     "id_unite": "rd-c-oubw66r"
+    }
+   ],
+   "description": "La hernie discale est identifiée comme un pain point limitant la pratique d'activités physiques intenses (musculation, entraînement en salle). Les consommateurs concernés doivent adapter leurs exercices et leurs charges, ce qui freine leur progression et leur pratique sportive.",
+   "frequence_nb": 1,
+   "frequence_pct": 10.0,
+   "score_priorite": 30.0,
+   "intensite_moyenne": 3.0
+  },
+  {
+   "portee": "globale",
+   "libelle": "Limitation des activités quotidiennes",
+   "sources": [
+    "reddit"
+   ],
+   "confiance": "faible",
+   "verbatims": [
+    {
+     "source": "reddit",
+     "extrait": "How do you manage chronic back pain?\n\nI am in late 30s and chronic back pain patient due to work and making life miserable. I am trying to find how people with similar problem manage their life.\n\nI spend 6-7 hours daily with computer and developed shoulder/back pain in last 12 years. I have pain in",
+     "id_unite": "rd-p-t3_1u3a6rx"
+    }
+   ],
+   "description": "La douleur lombaire chronique entraîne une limitation des activités quotidiennes et professionnelles, rendant la vie « misérable » selon les termes employés. Ce pain point traduit l'impact global de la condition sur l'autonomie et le bien-être des consommateurs.",
+   "frequence_nb": 1,
+   "frequence_pct": 10.0,
+   "score_priorite": 30.0,
+   "intensite_moyenne": 3.0
+  },
+  {
+   "portee": "mixte",
+   "libelle": "Stress et anxiété liés à la condition",
+   "sources": [
+    "reddit"
+   ],
+   "confiance": "faible",
+   "verbatims": [],
+   "description": "Le stress et l'anxiété liés à la douleur lombaire chronique sont mentionnés par 20 % des unités. Le corpus évoque notamment le lien entre tension psychologique (relation toxique) et aggravation des douleurs dorsales, suggérant une dimension psychosomatique de la condition.",
+   "frequence_nb": 2,
+   "frequence_pct": 20.0,
+   "score_priorite": 30.0,
+   "intensite_moyenne": 1.5
+  },
+  {
+   "portee": "globale",
+   "libelle": "Dépendance aux orthèses externes",
+   "sources": [
+    "reddit"
+   ],
+   "confiance": "faible",
+   "verbatims": [],
+   "description": "Certains consommateurs expriment une préoccupation implicite quant à la dépendance aux orthèses externes (ceintures, semelles orthopédiques). Le corpus ne permet pas de déterminer si cette dépendance est perçue comme problématique ou acceptable dans la gestion à long terme de la douleur.",
+   "frequence_nb": 1,
+   "frequence_pct": 10.0,
+   "score_priorite": 20.0,
+   "intensite_moyenne": 2.0
+  },
+  {
+   "portee": "regionale",
+   "libelle": "Irritation nerveuse radiculaire",
+   "sources": [
+    "reddit"
+   ],
+   "confiance": "faible",
+   "verbatims": [],
+   "description": "L'irritation nerveuse radiculaire (sciatique, compression nerveuse) est mentionnée comme un pain point spécifique, distinct de la douleur musculaire lombaire. Le corpus ne fournit pas suffisamment de détails pour caractériser précisément ce problème.",
+   "frequence_nb": 1,
+   "frequence_pct": 10.0,
+   "score_priorite": 20.0,
+   "intensite_moyenne": 2.0
+  },
+  {
+   "portee": "regionale",
+   "libelle": "Mal de dos chronique",
+   "sources": [
+    "reddit"
+   ],
+   "confiance": "faible",
+   "verbatims": [
+    {
+     "source": "reddit",
+     "extrait": "Tapis de marche qui me permet de faire à minima 10k pas par jour. Ça a changer mon mal de dos et mon sommeil !",
+     "id_unite": "rd-c-oae08by"
+    }
+   ],
+   "description": "Le mal de dos chronique, distinct de la douleur lombaire strictement localisée, est mentionné comme ayant un impact sur le sommeil et la qualité de vie. Un consommateur rapporte une amélioration significative grâce à l'augmentation de l'activité physique quotidienne (10 000 pas par jour).",
+   "frequence_nb": 1,
+   "frequence_pct": 10.0,
+   "score_priorite": 20.0,
+   "intensite_moyenne": 2.0
+  },
+  {
+   "portee": "regionale",
+   "libelle": "Rigidité dorsale chronique",
+   "sources": [
+    "reddit"
+   ],
+   "confiance": "faible",
+   "verbatims": [
+    {
+     "source": "reddit",
+     "extrait": "Je vais essayer de répondre au maximum.\n\nOui je suis en maintenance probablement, voir léger surplus. Le poids stagne plus ou moins mais physiquement j'ai l'impression d'avoir un peu repris du gras. Après mon but pc'est de stabiliser vers les 77-80kg \"propres\" plutôt que de rester vers les 70. \n\nEnt",
+     "id_unite": "rd-c-oubw66r"
+    }
+   ],
+   "description": "La rigidité dorsale chronique est associée à des pathologies identifiées (hernie discale) et limite la mobilité et la progression en musculation. Le corpus suggère que cette rigidité persiste malgré les efforts de renforcement musculaire.",
+   "frequence_nb": 1,
+   "frequence_pct": 10.0,
+   "score_priorite": 20.0,
+   "intensite_moyenne": 2.0
+  },
+  {
+   "portee": "regionale",
+   "libelle": "Stagnation physique prolongée",
+   "sources": [
+    "reddit"
+   ],
+   "confiance": "faible",
+   "verbatims": [
+    {
+     "source": "reddit",
+     "extrait": "Hello, \n\nPour le dos c'est surtout le circuit core / lombaires que je pensais être assez efficace. Il y a même eu un moment où les douleurs étaient quasiment inexistantes. Mais plus tard, à force de charger de plus en plus les exercices, les douleurs finissaient par revenir. \n\nPour le poignet, je fa",
+     "id_unite": "rd-c-oubnubc"
+    }
+   ],
+   "description": "La stagnation physique prolongée concerne les consommateurs qui, malgré des programmes d'exercices ciblés (core, lombaires), voient leurs douleurs revenir dès qu'ils augmentent l'intensité. Ce pain point traduit une frustration face à l'impossibilité de progresser sans récidive.",
+   "frequence_nb": 1,
+   "frequence_pct": 10.0,
+   "score_priorite": 20.0,
+   "intensite_moyenne": 2.0
+  },
+  {
+   "portee": "regionale",
+   "libelle": "Symptômes aggravés en charge",
+   "sources": [
+    "reddit"
+   ],
+   "confiance": "faible",
+   "verbatims": [],
+   "description": "Les symptômes aggravés en charge (port de poids, exercices avec charges) limitent la pratique sportive et la progression en musculation. Le corpus ne fournit pas de détails quantitatifs sur les seuils de charge déclenchant l'aggravation.",
+   "frequence_nb": 1,
+   "frequence_pct": 10.0,
+   "score_priorite": 20.0,
+   "intensite_moyenne": 2.0
+  },
+  {
+   "portee": "globale",
+   "libelle": "Faiblesse et sensibilité post-opératoire",
+   "sources": [
+    "reddit"
+   ],
+   "confiance": "faible",
+   "verbatims": [],
+   "description": "La faiblesse et la sensibilité post-opératoire sont mentionnées comme un pain point spécifique, mais le corpus ne fournit pas suffisamment d'informations pour caractériser ce problème (type d'intervention, durée de récupération).",
+   "frequence_nb": 1,
+   "frequence_pct": 10.0,
+   "score_priorite": 15.0,
+   "intensite_moyenne": 1.5
+  },
+  {
+   "portee": "regionale",
+   "libelle": "Traitement conservateur peu efficace",
+   "sources": [
+    "reddit"
+   ],
+   "confiance": "faible",
+   "verbatims": [],
+   "description": "L'inefficacité des traitements conservateurs (exercices, étirements, repos) est évoquée comme un pain point, poussant les consommateurs à rechercher des solutions complémentaires ou alternatives. Le corpus ne permet pas de déterminer quels traitements ont été tentés ni leur durée.",
+   "frequence_nb": 1,
+   "frequence_pct": 10.0,
+   "score_priorite": 10.0,
+   "intensite_moyenne": 1.0
+  }
+ ],
+ "stats_corpus": {
+  "periode_couverte": {
+   "max": "2026-08-05T22:51:03Z",
+   "min": "2018-03-11T20:16:46Z"
+  },
+  "langues_constatees": [
+   "en (corpus Reddit majoritairement anglophone)",
+   "fr"
+  ],
+  "repartition_portee": {
+   "globale": 55,
+   "regionale": 96
+  },
+  "nb_unites_analysees": 151,
+  "nb_unites_par_source": {
+   "reddit": 151
+  },
+  "taux_echantillonnage": 1.0,
+  "nb_documents_analyses": 9
+ },
+ "horodatage_utc": "2026-08-06T19:09:04Z",
+ "statuts_analyse": [
+  {
+   "phase": "carte_unites",
+   "succes": true,
+   "nb_elements": 15,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "carte_unites",
+   "succes": true,
+   "nb_elements": 15,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "carte_unites",
+   "succes": true,
+   "nb_elements": 15,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "carte_unites",
+   "succes": true,
+   "nb_elements": 15,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "carte_unites",
+   "succes": true,
+   "nb_elements": 15,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "carte_unites",
+   "succes": true,
+   "nb_elements": 15,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "carte_unites",
+   "succes": true,
+   "nb_elements": 15,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "carte_unites",
+   "succes": true,
+   "nb_elements": 15,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "carte_unites",
+   "succes": true,
+   "nb_elements": 15,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "carte_unites",
+   "succes": true,
+   "nb_elements": 15,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "carte_unites",
+   "succes": true,
+   "nb_elements": 1,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "carte_documents",
+   "succes": true,
+   "nb_elements": 4,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "carte_documents",
+   "succes": true,
+   "nb_elements": 4,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "carte_documents",
+   "succes": true,
+   "nb_elements": 1,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "normalisation_libelles",
+   "succes": true,
+   "nb_elements": 11,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "normalisation_libelles",
+   "succes": true,
+   "nb_elements": 15,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "synthese_insights",
+   "succes": true,
+   "nb_elements": 5,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "lecture_critique",
+   "succes": true,
+   "nb_elements": 0,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "post_validation",
+   "succes": true,
+   "nb_elements": 0,
+   "nb_tentatives": 0,
+   "message_erreur": null
+  }
+ ],
+ "signaux_positifs": [
+  {
+   "type": "fonctionnel",
+   "libelle": "Efficacité immédiate du soulagement",
+   "confiance": "faible",
+   "preuves_id": [
+    "rd-p-t3_1njswaf"
+   ],
+   "description": "Les consommateurs louent explicitement l'efficacité immédiate de la ceinture lombaire pour soulager la douleur, notamment dans des cas de scoliose et hernies discales partielles. L'expression « immediate relief » et « so effective » témoigne d'une satisfaction forte quant à la rapidité d'action du produit."
+  },
+  {
+   "type": "emotionnel",
+   "libelle": "Amélioration du sommeil et de la qualité de vie",
+   "confiance": "faible",
+   "preuves_id": [
+    "rd-c-oae08by"
+   ],
+   "description": "L'augmentation de l'activité physique quotidienne (tapis de marche, 10 000 pas) est saluée pour son impact positif sur le mal de dos et le sommeil. Bien que ce signal ne concerne pas directement la ceinture lombaire, il indique que les consommateurs valorisent les solutions qui améliorent globalement leur bien-être."
+  },
+  {
+   "type": "service",
+   "libelle": "Praticité et simplicité d'utilisation",
+   "confiance": "faible",
+   "preuves_id": [
+    "rd-p-t3_1rso2dr"
+   ],
+   "description": "Les consommateurs apprécient les solutions pratiques et rapides à mettre en œuvre, notamment pour un usage quotidien en télétravail ou au bureau. La simplicité d'utilisation est un critère de choix explicitement mentionné."
+  },
+  {
+   "type": "service",
+   "libelle": "Efficacité des étirements réguliers",
+   "confiance": "faible",
+   "preuves_id": [
+    "rd-c-olk3fnv"
+   ],
+   "description": "Les étirements réguliers (quadriceps, ischio-jambiers) sont loués comme une solution complémentaire efficace pour prévenir la récidive des douleurs lombaires chroniques. Ce signal positif concerne une pratique d'auto-soin plutôt que le produit lui-même."
+  }
+ ],
+ "alertes_coherence": [],
+ "confiance_globale": {
+  "niveau": "faible",
+  "facteurs": [
+   "Corpus mono-source : 100 % Reddit, aucune triangulation possible",
+   "Volume faible : 151 unités au total, seulement 10 qualifiées pour l'analyse de sentiment",
+   "Portée majoritairement globale (55 unités) ou approximativement régionale (96 unités), sans garantie de ciblage FR",
+   "Langue majoritairement anglophone, inadaptée au marché FR visé",
+   "Aucune donnée Amazon exploitable (0 produit, 0 avis collecté)",
+   "9 documents web chargés mais non exploités dans l'analyse qualitative",
+   "Période couverte très large (2018–2026) sans contrôle de fraîcheur",
+   "Population Reddit documentée comme jeune, masculine, technophile, non représentative du marché grand public FR",
+   "Biais démographique : surreprésentation des hommes jeunes technophiles, sous-représentation des seniors et des femmes",
+   "Biais linguistique : corpus majoritairement anglophone alors que le marché cible est francophone",
+   "Biais géographique : portée globale dominante, absence de filtrage natif par pays, « régionalisation » par subreddit non validée",
+   "Biais de plateforme : Reddit favorise les discussions de niche et les early adopters, exclut les non-utilisateurs d'internet et les acheteurs silencieux",
+   "Biais de collecte : recherche Reddit plafonnée à ~1 000 posts, mode rapide susceptible de manquer des contenus, tri par pertinence opaque",
+   "Biais temporel : fenêtre de recherche limitée (searchTime=year), opinions potentiellement datées",
+   "Biais de sélection : seuil de pertinence LLM arbitraire, posts sans commentaire écartés, aucune validation empirique du scoring",
+   "Absence totale de signal e-commerce : 0 produit Amazon, 0 avis consommateur, impossibilité de croiser offre et demande",
+   "Absence de voix professionnelle : aucun avis médical, kinésithérapique ou ergonomique dans le corpus",
+   "Biais de sentiment : base de 10 unités qualifiées trop faible pour être robuste, polarité positive potentiellement liée à l'auto-sélection (ceux qui témoignent sont ceux pour qui ça fonctionne)"
+  ],
+  "justification": "Corpus mono-source (Reddit uniquement), volume faible (151 unités, dont seulement 10 qualifiées pour le sentiment), portée majoritairement globale (55/151) et non régionale FR, langue majoritairement anglophone alors que le marché cible est FR, absence totale de données Amazon (0 produit, 0 avis) et exploitation nulle des 9 documents web. La base ne permet aucune généralisation au marché français."
+ },
+ "sources_utilisees": [
+  {
+   "source": "reddit",
+   "fichier": "reddit.json",
+   "avertissements": [],
+   "nb_items_charges": 156,
+   "nb_items_exploites": 151,
+   "donnees_disponibles": true
+  },
+  {
+   "source": "amazon",
+   "fichier": "amazon.json",
+   "avertissements": [],
+   "nb_items_charges": 0,
+   "nb_items_exploites": 0,
+   "donnees_disponibles": true
+  },
+  {
+   "source": "recherche_web",
+   "fichier": "recherche_web.json",
+   "avertissements": [],
+   "nb_items_charges": 9,
+   "nb_items_exploites": 9,
+   "donnees_disponibles": true
+  }
+ ],
+ "synthese_executive": "Le corpus repose sur 151 unités exploitées, issues exclusivement de Reddit (9 documents web chargés mais non exploités dans l'analyse qualitative). La période couverte s'étend de 2018 à 2026, avec une majorité de contenus anglophones et 96 unités à portée régionale contre 55 globales.\n\nLe sentiment dominant est positif (8/10), avec seulement 2 mentions négatives. Cette polarité favorable doit être interprétée avec prudence compte tenu de la faiblesse de la base (10 unités qualifiées).\n\nLes trois pain points prioritaires sont : (1) la douleur lombaire chronique (fréquence 4, score 80), (2) la douleur lombaire liée aux postures de travail (fréquence 4, score 70), (3) l'absence de rééducation kinésithérapique (fréquence 2, score 30).\n\nLes besoins saillants convergent vers le soulagement de la douleur, le maintien postural, l'accompagnement de l'activité physique, la restauration de la qualité de vie et l'accès à des solutions pratiques.\n\nMise en garde principale : ce corpus mono-source Reddit ne permet AUCUNE conclusion sur le marché français de la ceinture lombaire double traction. Il reflète uniquement les discussions d'une population jeune, masculine, technophile et majoritairement anglophone, sans aucune représentativité démographique ni géographique du marché FR.",
+ "comportements_achat": {
+  "freins": [
+   {
+    "libelle": "hernie discale et douleurs dorsales",
+    "preuves_id": [
+     "rd-c-oubw66r"
+    ],
+    "frequence_nb": 1
+   },
+   {
+    "libelle": "limitation due aux blessures dorsales",
+    "preuves_id": [
+     "rd-c-oubnubc"
+    ],
+    "frequence_nb": 1
+   }
+  ],
+  "declencheurs": [
+   {
+    "libelle": "Douleur chronique sur 10 ans",
+    "preuves_id": [
+     "rd-c-olk3fnv"
+    ],
+    "frequence_nb": 1
+   },
+   {
+    "libelle": "Problème de santé (mal de dos)",
+    "preuves_id": [
+     "rd-c-oae08by"
+    ],
+    "frequence_nb": 1
+   },
+   {
+    "libelle": "scoliose et hernies discales",
+    "preuves_id": [
+     "rd-p-t3_1njswaf"
+    ],
+    "frequence_nb": 1
+   },
+   {
+    "libelle": "travail prolongé assis",
+    "preuves_id": [
+     "rd-p-t3_1rso2dr"
+    ],
+    "frequence_nb": 1
+   },
+   {
+    "libelle": "travail prolongé sur ordinateur",
+    "preuves_id": [
+     "rd-p-t3_1u3a6rx"
+    ],
+    "frequence_nb": 1
+   }
+  ],
+  "criteres_choix": [
+   {
+    "libelle": "efficacité du soulagement",
+    "preuves_id": [
+     "rd-p-t3_1njswaf",
+     "rd-p-t3_1u3a6rx"
+    ],
+    "frequence_nb": 2
+   },
+   {
+    "libelle": "efficacité et praticité",
+    "preuves_id": [
+     "rd-p-t3_1rso2dr"
+    ],
+    "frequence_nb": 1
+   },
+   {
+    "libelle": "Étirements réguliers",
+    "preuves_id": [
+     "rd-c-olk3fnv"
+    ],
+    "frequence_nb": 1
+   }
+  ],
+  "occasions_usage": [
+   {
+    "libelle": "télétravail",
+    "preuves_id": [
+     "rd-c-oadtu1v",
+     "rd-c-oaf3yfi"
+    ],
+    "frequence_nb": 2
+   },
+   {
+    "libelle": "Conduite automobile",
+    "preuves_id": [
+     "rd-c-otfczof"
+    ],
+    "frequence_nb": 1
+   },
+   {
+    "libelle": "entraînement en salle",
+    "preuves_id": [
+     "rd-c-oubnubc"
+    ],
+    "frequence_nb": 1
+   },
+   {
+    "libelle": "musculation intensive",
+    "preuves_id": [
+     "rd-c-oubw66r"
+    ],
+    "frequence_nb": 1
+   },
+   {
+    "libelle": "travail de bureau",
+    "preuves_id": [
+     "rd-c-oadcilm"
+    ],
+    "frequence_nb": 1
+   },
+   {
+    "libelle": "travail quotidien et conduite",
+    "preuves_id": [
+     "rd-p-t3_1u3a6rx"
+    ],
+    "frequence_nb": 1
+   },
+   {
+    "libelle": "télétravail quotidien",
+    "preuves_id": [
+     "rd-p-t3_1rso2dr"
+    ],
+    "frequence_nb": 1
+   },
+   {
+    "libelle": "usage quotidien",
+    "preuves_id": [
+     "rd-p-t3_1njswaf"
+    ],
+    "frequence_nb": 1
+   }
+  ],
+  "sensibilite_prix": {
+   "niveau": "indeterminee",
+   "preuves_id": [],
+   "commentaire": "Le corpus ne contient aucune mention explicite du prix, du rapport qualité-prix ou de considérations budgétaires. Il n'est pas possible de déterminer la sensibilité au prix des consommateurs à partir des données disponibles."
+  }
+ },
+ "divergences_sources": [],
+ "donnees_suffisantes": true
+}

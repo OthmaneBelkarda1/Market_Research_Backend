@@ -1,0 +1,1347 @@
+{
+ "marche": {
+  "geo": "ES",
+  "langue": "es"
+ },
+ "themes": [
+  {
+   "portee": "regionale",
+   "libelle": "Qualité sonore",
+   "sources": [
+    "amazon",
+    "reddit"
+   ],
+   "frequence_nb": 44,
+   "frequence_pct": 68.75,
+   "exemples_id_unites": [
+    "rd-c-g3qbfp5",
+    "rd-p-t3_1t2vgut",
+    "rd-p-t3_1thubyj"
+   ],
+   "sentiment_dominant": "positif"
+  },
+  {
+   "portee": "regionale",
+   "libelle": "Facilité d'utilisation",
+   "sources": [
+    "amazon",
+    "reddit"
+   ],
+   "frequence_nb": 14,
+   "frequence_pct": 21.88,
+   "exemples_id_unites": [
+    "rd-p-t3_1t2vgut",
+    "amz-B0GXDQX9GL-0",
+    "amz-B0F7WSFGN6-1"
+   ],
+   "sentiment_dominant": "positif"
+  },
+  {
+   "portee": "regionale",
+   "libelle": "Rapport prix-qualité",
+   "sources": [
+    "amazon",
+    "reddit"
+   ],
+   "frequence_nb": 13,
+   "frequence_pct": 20.31,
+   "exemples_id_unites": [
+    "rd-c-p3adcwe",
+    "rd-c-oij0z5t",
+    "rd-c-p3ci3ng"
+   ],
+   "sentiment_dominant": "positif"
+  },
+  {
+   "portee": "regionale",
+   "libelle": "Compatibilité multi-appareils",
+   "sources": [
+    "amazon",
+    "reddit"
+   ],
+   "frequence_nb": 12,
+   "frequence_pct": 18.75,
+   "exemples_id_unites": [
+    "rd-c-jibwajq",
+    "rd-c-jicboqf",
+    "rd-c-jibx3zj"
+   ],
+   "sentiment_dominant": "positif"
+  },
+  {
+   "portee": "mixte",
+   "libelle": "Microphone sans fil",
+   "sources": [
+    "reddit"
+   ],
+   "frequence_nb": 11,
+   "frequence_pct": 17.19,
+   "exemples_id_unites": [
+    "rd-c-g3qbfp5",
+    "rd-p-t3_1t2vgut",
+    "rd-c-c192319"
+   ],
+   "sentiment_dominant": "positif"
+  },
+  {
+   "portee": "regionale",
+   "libelle": "Réduction de bruit",
+   "sources": [
+    "amazon",
+    "reddit"
+   ],
+   "frequence_nb": 10,
+   "frequence_pct": 15.62,
+   "exemples_id_unites": [
+    "amz-B0GXDQX9GL-7",
+    "rd-p-t3_1vgub2e",
+    "rd-c-oij1ot8"
+   ],
+   "sentiment_dominant": "positif"
+  },
+  {
+   "portee": "mixte",
+   "libelle": "Portabilité",
+   "sources": [
+    "amazon",
+    "reddit"
+   ],
+   "frequence_nb": 9,
+   "frequence_pct": 14.06,
+   "exemples_id_unites": [
+    "amz-B0GXDQX9GL-7",
+    "rd-p-t3_1vgub2e",
+    "rd-c-ng37yma"
+   ],
+   "sentiment_dominant": "positif"
+  },
+  {
+   "portee": "regionale",
+   "libelle": "Accessoires et équipement",
+   "sources": [
+    "amazon",
+    "reddit"
+   ],
+   "frequence_nb": 8,
+   "frequence_pct": 12.5,
+   "exemples_id_unites": [
+    "rd-c-g3qbfp5",
+    "rd-c-g3rfafr",
+    "rd-c-g3rhzo3"
+   ],
+   "sentiment_dominant": "positif"
+  },
+  {
+   "portee": "mixte",
+   "libelle": "Enregistrement et synchronisation",
+   "sources": [
+    "amazon",
+    "reddit"
+   ],
+   "frequence_nb": 8,
+   "frequence_pct": 12.5,
+   "exemples_id_unites": [
+    "amz-B0GXDQX9GL-7",
+    "rd-c-p3cg6wj",
+    "rd-c-p3fjpoq"
+   ],
+   "sentiment_dominant": "positif"
+  },
+  {
+   "portee": "regionale",
+   "libelle": "Autonomie batterie",
+   "sources": [
+    "amazon",
+    "reddit"
+   ],
+   "frequence_nb": 7,
+   "frequence_pct": 10.94,
+   "exemples_id_unites": [
+    "amz-B0GXDQX9GL-7",
+    "rd-c-jicej3p",
+    "rd-c-jicf4jo"
+   ],
+   "sentiment_dominant": "positif"
+  },
+  {
+   "portee": "mixte",
+   "libelle": "Robustesse et durabilité",
+   "sources": [
+    "amazon",
+    "reddit"
+   ],
+   "frequence_nb": 4,
+   "frequence_pct": 6.25,
+   "exemples_id_unites": [
+    "rd-c-p4jpxka",
+    "rd-c-g3rdmok",
+    "amz-B09X629VRD-6"
+   ],
+   "sentiment_dominant": "positif"
+  },
+  {
+   "portee": "globale",
+   "libelle": "qualité",
+   "sources": [
+    "reddit"
+   ],
+   "frequence_nb": 4,
+   "frequence_pct": 6.25,
+   "exemples_id_unites": [
+    "rd-c-p3b0ucw",
+    "rd-c-p3cbfny",
+    "rd-c-p3ci3ng"
+   ],
+   "sentiment_dominant": "negatif"
+  }
+ ],
+ "besoins": [
+  {
+   "type": "fonctionnel",
+   "libelle": "Réduction de bruit",
+   "confiance": "faible",
+   "preuves_id": [
+    "amz-B0GXDQX9GL-0",
+    "amz-B0GXDQX9GL-4",
+    "amz-B0GXDQX9GL-5"
+   ],
+   "description": "Dans le corpus, plusieurs avis Amazon mentionnent explicitement l'attente d'une captation qui isole la voix du bruit ambiant, notamment pour un usage en création de contenu ou en environnement bruyant."
+  },
+  {
+   "type": "fonctionnel",
+   "libelle": "compatibilité multi-appareils",
+   "confiance": "faible",
+   "preuves_id": [
+    "amz-B09X629VRD-2",
+    "amz-B0GXDQX9GL-0",
+    "amz-B0GXDQX9GL-2"
+   ],
+   "description": "Le besoin de pouvoir brancher le micro indifféremment sur smartphone, tablette ou ordinateur ressort à plusieurs reprises, en particulier chez des utilisateurs testant le produit sur différents supports."
+  },
+  {
+   "type": "fonctionnel",
+   "libelle": "enregistrement de qualité",
+   "confiance": "faible",
+   "preuves_id": [
+    "amz-B0F1M43DKY-0",
+    "amz-B0GXDQX9GL-1",
+    "amz-B0GXDQX9GL-4"
+   ],
+   "description": "Certains consommateurs recherchent un niveau de fidélité sonore suffisant pour un usage de création de contenu, sans que le corpus ne précise un seuil de qualité attendu."
+  },
+  {
+   "type": "fonctionnel",
+   "libelle": "Enregistrement dual",
+   "confiance": "faible",
+   "preuves_id": [
+    "amz-B0GXDQX9GL-3",
+    "amz-B0GXDQX9GL-5",
+    "amz-B0GXDQX9GL-6"
+   ],
+   "description": "Le besoin de capter deux sources simultanément (deux intervenants) apparaît dans le corpus, utile pour les interviews ou les contenus à plusieurs voix."
+  },
+  {
+   "type": "fonctionnel",
+   "libelle": "Autonomie prolongée",
+   "confiance": "faible",
+   "preuves_id": [
+    "amz-B0GXDQX9GL-0",
+    "amz-B0GXDQX9GL-3"
+   ],
+   "description": "Un besoin d'autonomie suffisante pour des sessions d'enregistrement longues est exprimé, sans que le corpus ne quantifie la durée attendue."
+  },
+  {
+   "type": "economique",
+   "libelle": "Bon rapport prix-qualité",
+   "confiance": "faible",
+   "preuves_id": [
+    "amz-B0F7WSFGN6-7",
+    "amz-B0GXDQX9GL-8"
+   ],
+   "description": "Certains avis expriment le besoin d'obtenir des prestations jugées correctes pour un prix d'achat très bas, ce qui structure leur évaluation du produit."
+  },
+  {
+   "type": "fonctionnel",
+   "libelle": "Enregistrement vidéo mobile",
+   "confiance": "faible",
+   "preuves_id": [
+    "amz-B0GXDQX9GL-0",
+    "amz-B0GXDQX9GL-6"
+   ],
+   "description": "Le besoin d'associer le micro à un usage vidéo sur smartphone (réseaux sociaux, tournage rapide) est présent dans plusieurs avis Amazon."
+  },
+  {
+   "type": "fonctionnel",
+   "libelle": "compatibilité iPhone",
+   "confiance": "faible",
+   "preuves_id": [
+    "amz-B0F7WSFGN6-8",
+    "rd-c-ojyref8"
+   ],
+   "description": "Un besoin spécifique de compatibilité avec les appareils iPhone est mentionné, avec au moins un cas où cette compatibilité n'a pas été confirmée par l'utilisateur."
+  }
+ ],
+ "limites": [
+  "[reddit] Reddit n'est pas représentatif de la population d'un marché : la base d'utilisateurs est documentée comme jeune, majoritairement masculine, technophile et anglophone. Le corpus ne constitue en aucun cas un échantillon de consommateurs.",
+  "[reddit] Reddit n'offre aucun filtre géographique natif : la « régionalisation » repose uniquement sur le choix des subreddits et sur la langue des requêtes. C'est une approximation, à interpréter comme telle.",
+  "[reddit] La couverture varie fortement selon le pays : pour les marchés non anglophones, le volume de discussions peut être très faible. L'absence de discussions ne constitue pas un signal d'absence de marché.",
+  "[reddit] Le score de pertinence est une heuristique LLM non validée empiriquement et le seuil de rétention est arbitraire.",
+  "[reddit] La recherche Reddit est non exhaustive : toute liste de résultats est plafonnée à environ 1 000 posts côté Reddit, le mode rapide de l'actor (actif d'office sur les recherches par mots-clés) peut manquer des posts, et le tri par pertinence est opaque.",
+  "[reddit] Les contenus collectés se limitent à la fenêtre de recherche configurée (`searchTime=year`) : les opinions exprimées ont pu évoluer depuis.",
+  "[reddit] Les posts annonçant zéro commentaire sont écartés de la phase B : les interroger coûterait un item facturé pour un rendement nul.",
+  "[amazon] Le corpus provient d'UNE seule marketplace Amazon, celle du pays étudié. Il décrit l'offre présente sur ce site, et non l'ensemble du commerce en ligne du pays : les places de marché concurrentes et le commerce local en sont absents.",
+  "[amazon] Aucun filtre de livraison n'est appliqué : le corpus est le catalogue complet de la marketplace, y compris des produits qui ne seraient pas expédiables vers la région d'étude. C'est un choix assumé — restreindre à l'expédiable amputerait l'étude de marché de l'essentiel de l'offre.",
+  "[amazon] Les prix sont exprimés dans la devise de la marketplace et ne sont NI convertis, NI comparables d'une marketplace à l'autre. Ils sont relevés à l'instant du run : les prix Amazon varient de jour en jour.",
+  "[amazon] Amazon bloque une part variable des requêtes automatisées. Un corpus court ou vide peut être le fait de l'anti-bot et non du catalogue : les runs concernés sont signalés dans `statuts_collecte`.",
+  "[amazon] Le classement d'Amazon est commercial : il mêle publicité, performance vendeur et ancienneté de l'annonce. L'ordre de collecte n'est pas un classement de qualité, et le corpus n'est pas exhaustif.",
+  "[amazon] Les avis collectés sont les « meilleurs avis » retenus par Amazon, quelques-uns par produit et sur une fenêtre récente : ils illustrent des retours d'usage, ils ne constituent en aucun cas un échantillon représentatif ni une base de mesure de satisfaction.",
+  "[amazon] `pertinence` et `correspondance` sont des heuristiques produites par un LLM, sans validation sur un échantillon annoté.",
+  "[amazon] Un compte Apify en fin de quota tronque les runs SANS les faire échouer : ils remontent en statut SUCCEEDED avec un dataset incomplet. Vérifier le quota avant toute interprétation d'un volume de produits.",
+  "[recherche_web] La SERP interrogée est géolocalisée aux États-Unis et en anglais : l'actor n'expose aucun paramètre de pays ni de langue de recherche (`serpProxyGroup` ne sert pas à choisir un pays). Le ciblage régional par TLD et par mots-clés géographiques est donc une APPROXIMATION — le classement des résultats reste celui que verrait un utilisateur américain, pas un consommateur du marché étudié.",
+  "[recherche_web] L'opérateur `site:.<tld>` exclut mécaniquement les acteurs locaux hébergés en .com, qui sont nombreux sur la plupart des marchés. Les requêtes à mots-clés géographiques compensent partiellement ce biais, sans aucune garantie d'exhaustivité.",
+  "[recherche_web] Le corpus se limite aux premiers résultats Google de chaque requête : il n'est pas exhaustif et reflète les biais du référencement (optimisation SEO, contenu affilié, pages générées). Chaque page est un SIGNAL À RECOUPER, jamais un fait ; les chiffres qui y figurent (prix, parts de marché, classements) doivent être revalidés sur des sources structurées.",
+  "[recherche_web] `type_source`, `portee_regionale` et `pertinence` sont des heuristiques produites par un LLM, sans validation sur un échantillon annoté.",
+  "[recherche_web] Une redondance avec les corpus des autres collecteurs reste possible malgré l'exclusion de domaines : un même contenu peut être republié sur un domaine non listé.",
+  "[recherche_web] La fraîcheur des contenus n'est pas garantie : ce mode de collecte n'expose aucun filtre de date fiable, et les pages retenues peuvent dater de plusieurs années.",
+  "[recherche_web] Un ou plusieurs axes restent sous le seuil de pages après le cycle de repli (voir `stats.axes_sous_couverts`) : le corpus est insuffisant pour ces axes et ne doit pas être interprété comme un signal d'absence.",
+  "10 unité(s) écartée(s) comme doublons de texte : les republications et citations gonflaient artificiellement les fréquences.",
+  "Le corpus analysé n'est pas exhaustif et reflète les biais de collecte des agents amont (moteurs de recherche, plafonds de collecte, seuils de pertinence). Il ne constitue en aucun cas un échantillon représentatif de la population d'un marché.",
+  "La classification des sentiments, thèmes et pain points est produite par un modèle de langage et n'a pas été validée empiriquement contre un codage humain.",
+  "Les populations diffèrent fortement d'une source à l'autre (contributeurs Reddit, acheteurs Amazon, rédacteurs web) : les agrégats inter-sources mélangent des publics qui ne sont pas comparables.",
+  "Aucune inférence sur la taille du marché ne peut être tirée de ces volumes : un nombre d'unités mesure l'activité de discussion collectée, pas la demande."
+ ],
+ "produit": {
+  "nom": "Wireless Lavalier Microphone Type-C",
+  "categorie": "Lavalier Microphone",
+  "description": "Micro-cravate sans fil HITOZON à connecteur USB Type-C, prévu pour smartphones, ordinateurs et tablettes en plug and play. Il s'agit d'un micro à condensateur omnidirectionnel avec batterie intégrée, vendu en set émetteur(s) + récepteur. Affiché à 0,99 USD au lieu de 8,46 USD, plus 1,99 USD de livraison depuis la Chine. En stock (2 174 pièces), noté 4,7/5 sur 1 585 avis."
+ },
+ "attentes": [
+  {
+   "libelle": "Plug and play",
+   "preuves_id": [
+    "amz-B0GXDQX9GL-0",
+    "amz-B0GXDQX9GL-1",
+    "amz-B0GXDQX9GL-4"
+   ],
+   "description": "L'attente la plus fréquente dans le corpus est un fonctionnement immédiat sans configuration ni installation d'application, conforme à la promesse produit.",
+   "niveau_exigence": "standard"
+  },
+  {
+   "libelle": "Kit complet",
+   "preuves_id": [
+    "amz-B0GXDQX9GL-2",
+    "amz-B0GXDQX9GL-5",
+    "amz-B0GXDQX9GL-8"
+   ],
+   "description": "Plusieurs avis valorisent le fait de recevoir un ensemble prêt à l'emploi (émetteurs, récepteur, accessoires), perçu comme un critère de sélection à l'achat.",
+   "niveau_exigence": "differenciant"
+  },
+  {
+   "libelle": "qualité audio satisfaisante",
+   "preuves_id": [
+    "rd-p-t3_1nprk7i",
+    "rd-p-t3_1t2vgut",
+    "rd-p-t3_1thubyj"
+   ],
+   "description": "Une partie du corpus, notamment côté Reddit, exprime une exigence de qualité sonore jugée correcte au regard du positionnement du produit, sans consensus sur un niveau précis attendu.",
+   "niveau_exigence": "standard"
+  },
+  {
+   "libelle": "facilité d'utilisation",
+   "preuves_id": [
+    "rd-c-ng37yma",
+    "rd-p-t3_1t2vgut"
+   ],
+   "description": "L'attente d'une prise en main simple, sans compétence technique particulière, revient dans plusieurs échanges Reddit.",
+   "niveau_exigence": "standard"
+  },
+  {
+   "libelle": "facilité de connexion",
+   "preuves_id": [
+    "amz-B0F1M43DKY-1",
+    "amz-B0F1M43DKY-3"
+   ],
+   "description": "Une connexion rapide et stable entre émetteur et récepteur est attendue par certains utilisateurs, en lien avec l'usage plug and play.",
+   "niveau_exigence": "standard"
+  },
+  {
+   "libelle": "Absence d'applications",
+   "preuves_id": [
+    "amz-B0GXDQX9GL-4"
+   ],
+   "description": "Certains avis soulignent positivement l'absence de nécessité d'installer une application tierce pour faire fonctionner le micro.",
+   "niveau_exigence": "differenciant"
+  },
+  {
+   "libelle": "Absence d'applications tierces",
+   "preuves_id": [
+    "amz-B0GXDQX9GL-6"
+   ],
+   "description": "Ce point recoupe l'attente précédente et est mentionné séparément dans un autre avis, renforçant l'importance de la simplicité logicielle.",
+   "niveau_exigence": "differenciant"
+  },
+  {
+   "libelle": "Absence de configuration",
+   "preuves_id": [
+    "amz-B0GXDQX9GL-1"
+   ],
+   "description": "L'attente d'un produit fonctionnel sans paramétrage préalable est mentionnée, en cohérence avec l'attente « Plug and play ».",
+   "niveau_exigence": "standard"
+  }
+ ],
+ "sentiment": {
+  "global": {
+   "mixte": 3,
+   "neutre": 3,
+   "base_nb": 64,
+   "negatif": 6,
+   "positif": 52
+  },
+  "par_portee": {
+   "globale": {
+    "mixte": 0,
+    "neutre": 2,
+    "base_nb": 19,
+    "negatif": 4,
+    "positif": 13
+   },
+   "regionale": {
+    "mixte": 3,
+    "neutre": 1,
+    "base_nb": 45,
+    "negatif": 2,
+    "positif": 39
+   }
+  },
+  "par_source": {
+   "amazon": {
+    "mixte": 1,
+    "neutre": 0,
+    "base_nb": 30,
+    "negatif": 1,
+    "positif": 28
+   },
+   "reddit": {
+    "mixte": 2,
+    "neutre": 3,
+    "base_nb": 34,
+    "negatif": 5,
+    "positif": 24
+   }
+  },
+  "commentaire": "Le corpus est globalement très positif (52 unités positives sur 64), avec une nette dominante favorable côté portée régionale. Les signaux négatifs et mixtes, minoritaires, se concentrent surtout sur Reddit et sur des unités à portée globale, souvent issues de comparaisons avec d'autres produits du marché plutôt que d'un jugement isolé sur le produit étudié."
+ },
+ "hypotheses": [
+  "Seuil de pertinence amont retenu : 0.5 (heuristique).",
+  "Formule de priorité des pain points : score_priorite = frequence_pct × intensite_moyenne × (1 + 0.25 × (nb_sources − 1)) (heuristique).",
+  "Un insight est qualifié de régional ou global à partir de 70 % d'unités d'une même portée, sinon « mixte ».",
+  "Les commentaires Reddit héritent de la pertinence et de la portée de leur post parent ; un commentaire orphelin est de portée inconnue.",
+  "Le produit et le marché retenus pour la sortie sont ceux du premier fichier valide, dans l'ordre Reddit → Amazon → Recherche web."
+ ],
+ "pain_points": [
+  {
+   "portee": "regionale",
+   "libelle": "Qualité audio insuffisante",
+   "sources": [
+    "amazon",
+    "reddit"
+   ],
+   "confiance": "moyenne",
+   "verbatims": [
+    {
+     "source": "reddit",
+     "extrait": "All great advice. I’ll add two things, as a filmmaker and actor:\n\n1. Avoid ring lights—they create a very creepy and offputting eyelight. Get a small 2 foot LED crossfade tube from Quasar Science. This soft light always creates a beautiful light with great falloff, and allows you to adjust the tempe",
+     "id_unite": "rd-c-g3qbfp5"
+    },
+    {
+     "source": "reddit",
+     "extrait": "DJI Mic 2 vs DJI Mic 3 vs Rode Wireless Pro for IPhone Use (Video + Audio Recording)\n\nI made a post a while ago about the dji mic 2 vs rode wireless pro on the videography community (won’t let me post this topic on there again) but it has since been archived and I cannot update the thread so wanted",
+     "id_unite": "rd-p-t3_1t2vgut"
+    },
+    {
+     "source": "reddit",
+     "extrait": "Como puedo configurar mi celu para conectar este microfono de usb c a usb c?\n\nMe lo compré para crear contenido, y sonaba con sonido del desierto, pensé q fue una mala compra, pero todo este tiempo termine utilizando sin querer el micrófono del celular porque este no lo detectaba, saben como lo pued",
+     "id_unite": "rd-p-t3_1thubyj"
+    }
+   ],
+   "description": "Ce pain point regroupe des expériences où la qualité sonore captée a déçu, allant d'un bruit de fond décrit comme désertique à des comparaisons défavorables avec d'autres micros sans fil du marché. Le corpus ne permet pas de trancher si ces déceptions viennent d'un défaut produit ou d'une mauvaise configuration côté utilisateur.",
+   "frequence_nb": 8,
+   "frequence_pct": 12.5,
+   "score_priorite": 37.19,
+   "intensite_moyenne": 2.38
+  },
+  {
+   "portee": "mixte",
+   "libelle": "Complexité d'utilisation et configuration",
+   "sources": [
+    "amazon",
+    "reddit"
+   ],
+   "confiance": "moyenne",
+   "verbatims": [
+    {
+     "source": "reddit",
+     "extrait": "DJI Mic 2 vs DJI Mic 3 vs Rode Wireless Pro for IPhone Use (Video + Audio Recording)\n\nI made a post a while ago about the dji mic 2 vs rode wireless pro on the videography community (won’t let me post this topic on there again) but it has since been archived and I cannot update the thread so wanted",
+     "id_unite": "rd-p-t3_1t2vgut"
+    },
+    {
+     "source": "reddit",
+     "extrait": "Hace cuanto los tenes?\n\nYo los compre hace como 1 o 2 años no me acuerdo, y estos últimos meses cuando los uso con el celular me pasa que tarda un montón en conectar. Eso que tengo un Samsung.\n\nTe pasa lo mismo?",
+     "id_unite": "rd-c-jibwajq"
+    },
+    {
+     "source": "reddit",
+     "extrait": "I see, that's a dealbreaker for me, then. I figure I'm back to radio lavalier microphones, then, and I just need to find one with the lightest and least obtrusive transmitter pack.\n\nThanks very much for your help, I was ready to spring for the H4n before.",
+     "id_unite": "rd-c-c196rfl"
+    }
+   ],
+   "description": "Plusieurs utilisateurs rapportent des difficultés de prise en main, notamment des temps de connexion jugés longs avec certains smartphones ou une configuration initiale peu intuitive. Ce point contredit en partie l'attente de fonctionnement plug and play exprimée ailleurs dans le corpus.",
+   "frequence_nb": 8,
+   "frequence_pct": 12.5,
+   "score_priorite": 31.25,
+   "intensite_moyenne": 2.0
+  },
+  {
+   "portee": "regionale",
+   "libelle": "Détection et compatibilité matérielle",
+   "sources": [
+    "amazon",
+    "reddit"
+   ],
+   "confiance": "moyenne",
+   "verbatims": [
+    {
+     "source": "reddit",
+     "extrait": "Como puedo configurar mi celu para conectar este microfono de usb c a usb c?\n\nMe lo compré para crear contenido, y sonaba con sonido del desierto, pensé q fue una mala compra, pero todo este tiempo termine utilizando sin querer el micrófono del celular porque este no lo detectaba, saben como lo pued",
+     "id_unite": "rd-p-t3_1thubyj"
+    },
+    {
+     "source": "amazon",
+     "extrait": "No funciona\n\nNo funciona para iPhone!",
+     "id_unite": "amz-B0F7WSFGN6-8"
+    },
+    {
+     "source": "amazon",
+     "extrait": "Asegurarse de que sea compatible\n\nLo devolví. Aseguraros bien de que sea compatible. En mi caso, finalmente no lo era aunque según la información, si lo era. No sirve para todo.",
+     "id_unite": "amz-B0F7WSFGN6-6"
+    }
+   ],
+   "description": "Des cas de non-reconnaissance du micro par l'appareil hôte sont rapportés, en particulier sur iPhone, où un avis indique explicitement que le produit ne fonctionne pas malgré une compatibilité annoncée.",
+   "frequence_nb": 6,
+   "frequence_pct": 9.38,
+   "score_priorite": 23.45,
+   "intensite_moyenne": 2.0
+  },
+  {
+   "portee": "mixte",
+   "libelle": "Bruit ambiant et environnemental",
+   "sources": [
+    "reddit"
+   ],
+   "confiance": "moyenne",
+   "verbatims": [
+    {
+     "source": "reddit",
+     "extrait": "in an untreated office room, a table mic will also sound terrible because of the acoustics. lavs are the way to go for this because it eliminates not only the background noise but also the build up of low mids that make the audio muddy",
+     "id_unite": "rd-c-ju1kext"
+    },
+    {
+     "source": "reddit",
+     "extrait": "It depends on how loud the city is, it depends on how loud the actors are, it depends on whether you're near an airport, or a firetruck, or ... etc.  At best a lav in this situation will be a gamble.  And remember the noise will be changing constantly, so every time you switch from one actor/mic to",
+     "id_unite": "rd-c-p21pe23"
+    },
+    {
+     "source": "reddit",
+     "extrait": "help explaining to my boss that a table microphone isnt good for interviews\n\nI am trying to get my boss to buy a wireless set lavalier transmitter and receiver so we can conduct inside/outside interviews with people on camera.\n\nHe wants me purchase table microphones where we can just have two people",
+     "id_unite": "rd-p-t3_15d2y4x"
+    }
+   ],
+   "description": "Des échanges Reddit, de portée plus générale sur les micros-cravates que sur ce produit précisément, évoquent la difficulté à gérer un environnement sonore bruyant ou changeant (rue, avion, tournage extérieur), rendant le résultat imprévisible.",
+   "frequence_nb": 7,
+   "frequence_pct": 10.94,
+   "score_priorite": 20.35,
+   "intensite_moyenne": 1.86
+  },
+  {
+   "portee": "regionale",
+   "libelle": "Autonomie batterie insuffisante",
+   "sources": [
+    "amazon",
+    "reddit"
+   ],
+   "confiance": "moyenne",
+   "verbatims": [
+    {
+     "source": "reddit",
+     "extrait": "los tengo hace un mes y me encantan, lo único que me jode es que si los querés acomodar en la oreja muchas veces terminas tocando para pausar la música, un dolor de huevos y que la capacidad de la batería del estuche para mí debería ser un poco más, a veces los uso para jugar a la play y a ponerlos",
+     "id_unite": "rd-c-jicej3p"
+    },
+    {
+     "source": "reddit",
+     "extrait": "That’s because the $50 one is a cheap knockoff of the $150. One It’s literally the same design with less features, smaller range, and crappy battery life.",
+     "id_unite": "rd-c-p3ci3ng"
+    },
+    {
+     "source": "reddit",
+     "extrait": "I see, that's a dealbreaker for me, then. I figure I'm back to radio lavalier microphones, then, and I just need to find one with the lightest and least obtrusive transmitter pack.\n\nThanks very much for your help, I was ready to spring for the H4n before.",
+     "id_unite": "rd-c-c196rfl"
+    }
+   ],
+   "description": "Certains utilisateurs jugent l'autonomie de la batterie ou du boîtier de charge trop limitée pour leurs usages prolongés, un avis évoquant même une autonomie perçue comme inférieure à des alternatives plus chères.",
+   "frequence_nb": 4,
+   "frequence_pct": 6.25,
+   "score_priorite": 15.62,
+   "intensite_moyenne": 2.0
+  },
+  {
+   "portee": "mixte",
+   "libelle": "Encombrement et portabilité",
+   "sources": [
+    "amazon",
+    "reddit"
+   ],
+   "confiance": "moyenne",
+   "verbatims": [
+    {
+     "source": "reddit",
+     "extrait": "help explaining to my boss that a table microphone isnt good for interviews\n\nI am trying to get my boss to buy a wireless set lavalier transmitter and receiver so we can conduct inside/outside interviews with people on camera.\n\nHe wants me purchase table microphones where we can just have two people",
+     "id_unite": "rd-p-t3_15d2y4x"
+    },
+    {
+     "source": "reddit",
+     "extrait": "Second this, they have great range and sound quality downside is that they’re a bit bulky. But they are solid units I have 2 in my kit along side my Wisycom system.",
+     "id_unite": "rd-c-p4jpxka"
+    }
+   ],
+   "description": "À l'inverse des signaux positifs sur la portabilité, une partie du corpus évoque un encombrement jugé excessif pour certains usages professionnels, notamment par comparaison avec d'autres systèmes du marché.",
+   "frequence_nb": 6,
+   "frequence_pct": 9.38,
+   "score_priorite": 11.73,
+   "intensite_moyenne": 1.0
+  },
+  {
+   "portee": "mixte",
+   "libelle": "Incohérence et instabilité qualité",
+   "sources": [
+    "amazon",
+    "reddit"
+   ],
+   "confiance": "faible",
+   "verbatims": [
+    {
+     "source": "reddit",
+     "extrait": "It depends on how loud the city is, it depends on how loud the actors are, it depends on whether you're near an airport, or a firetruck, or ... etc.  At best a lav in this situation will be a gamble.  And remember the noise will be changing constantly, so every time you switch from one actor/mic to",
+     "id_unite": "rd-c-p21pe23"
+    },
+    {
+     "source": "amazon",
+     "extrait": "Don't waste your money\n\nUsed this for outside interviews. Background crackles everything you move awful product wasted my money. Gutted",
+     "id_unite": "amz-B09X629VRD-6"
+    }
+   ],
+   "description": "Des avis rapportent une qualité variable selon les conditions d'usage, avec des craquements ou artefacts sonores en extérieur, ce qui traduit une instabilité perçue plutôt qu'un défaut systématique.",
+   "frequence_nb": 3,
+   "frequence_pct": 4.69,
+   "score_priorite": 11.73,
+   "intensite_moyenne": 2.0
+  },
+  {
+   "portee": "mixte",
+   "libelle": "Attentes de qualité non rencontrées",
+   "sources": [
+    "reddit"
+   ],
+   "confiance": "faible",
+   "verbatims": [
+    {
+     "source": "reddit",
+     "extrait": "Sure, if you're auditioning for student films and whatever then go for a $12 mic. But this is advice for serious working actors, or people who are trying to be working actors.\n\nI bought a lavalier mic for ~$500. It has made twice that in rentals on Sharegrid over the course of 2 years, so it has pai",
+     "id_unite": "rd-c-g3rdmok"
+    },
+    {
+     "source": "reddit",
+     "extrait": "Cheap is cheap for a reason. Don’t expect anything stellar.",
+     "id_unite": "rd-c-p3a8dqg"
+    },
+    {
+     "source": "reddit",
+     "extrait": "That’s the truth and I 100% agree. Everyone who was using the rode or dji (the rode especially), was either using it with a dedicated camera, had tons of time to edit, was using a separate audio editing software (some you had to pay for), had someone else or a team editing for them, or was doing con",
+     "id_unite": "rd-c-ojyref8"
+    }
+   ],
+   "description": "Certains commentaires, de portée plus générale sur la catégorie des micros-cravates économiques que sur ce produit spécifique, expriment une déception liée à un écart entre le prix très bas et le niveau de qualité professionnelle espéré.",
+   "frequence_nb": 3,
+   "frequence_pct": 4.69,
+   "score_priorite": 9.38,
+   "intensite_moyenne": 2.0
+  },
+  {
+   "portee": "mixte",
+   "libelle": "Coût et investissement élevé",
+   "sources": [
+    "reddit"
+   ],
+   "confiance": "faible",
+   "verbatims": [
+    {
+     "source": "reddit",
+     "extrait": "Forgive me, but this is way too much advice on sound for newbies. If they're looking to film scenes with a shotgun mic or something, sure, $100-300 might be good to drop. But for beginner self tape setups, a $12-30 lav mic will totally work. People shouldn't be breaking the bank before even turning",
+     "id_unite": "rd-c-g3ras6y"
+    },
+    {
+     "source": "reddit",
+     "extrait": "That’s the truth and I 100% agree. Everyone who was using the rode or dji (the rode especially), was either using it with a dedicated camera, had tons of time to edit, was using a separate audio editing software (some you had to pay for), had someone else or a team editing for them, or was doing con",
+     "id_unite": "rd-c-ojyref8"
+    }
+   ],
+   "description": "Ce pain point, mineur dans le corpus, renvoie moins au produit étudié lui-même qu'à des comparaisons avec des micros plus chers jugés plus fiables pour un usage professionnel.",
+   "frequence_nb": 3,
+   "frequence_pct": 4.69,
+   "score_priorite": 9.38,
+   "intensite_moyenne": 2.0
+  },
+  {
+   "portee": "mixte",
+   "libelle": "Portée limitée",
+   "sources": [
+    "amazon",
+    "reddit"
+   ],
+   "confiance": "faible",
+   "verbatims": [
+    {
+     "source": "reddit",
+     "extrait": "That’s because the $50 one is a cheap knockoff of the $150. One It’s literally the same design with less features, smaller range, and crappy battery life.",
+     "id_unite": "rd-c-p3ci3ng"
+    }
+   ],
+   "description": "Un avis signale une portée radio jugée plus faible que sur des modèles concurrents plus onéreux, dans une comparaison indirecte plutôt qu'un test isolé du produit étudié.",
+   "frequence_nb": 2,
+   "frequence_pct": 3.12,
+   "score_priorite": 5.85,
+   "intensite_moyenne": 1.5
+  },
+  {
+   "portee": "globale",
+   "libelle": "Fiabilité et durabilité",
+   "sources": [
+    "reddit"
+   ],
+   "confiance": "faible",
+   "verbatims": [
+    {
+     "source": "reddit",
+     "extrait": "Agreed, I bought a Hollyland Lark M2 for a Japan trip and it packed up after 3 days,  as soon as I got back to return it I got a DJI Mic 2 kit",
+     "id_unite": "rd-c-p3dkjic"
+    }
+   ],
+   "description": "Un signal isolé évoque une panne rapide d'un micro-cravate concurrent, cité en creux dans une discussion Reddit; le corpus ne permet pas de l'attribuer directement au produit étudié.",
+   "frequence_nb": 1,
+   "frequence_pct": 1.56,
+   "score_priorite": 4.68,
+   "intensite_moyenne": 3.0
+  },
+  {
+   "portee": "regionale",
+   "libelle": "Captage indésirable de voix",
+   "sources": [
+    "reddit"
+   ],
+   "confiance": "faible",
+   "verbatims": [],
+   "description": "Ce pain point est identifié par le code mais ne dispose d'aucun verbatim candidat dans les données fournies, ce qui empêche d'en préciser la nature exacte au-delà de son existence du signal.",
+   "frequence_nb": 1,
+   "frequence_pct": 1.56,
+   "score_priorite": 3.12,
+   "intensite_moyenne": 2.0
+  },
+  {
+   "portee": "regionale",
+   "libelle": "Contrôles tactiles trop sensibles",
+   "sources": [
+    "reddit"
+   ],
+   "confiance": "faible",
+   "verbatims": [
+    {
+     "source": "reddit",
+     "extrait": "los tengo hace un mes y me encantan, lo único que me jode es que si los querés acomodar en la oreja muchas veces terminas tocando para pausar la música, un dolor de huevos y que la capacidad de la batería del estuche para mí debería ser un poco más, a veces los uso para jugar a la play y a ponerlos",
+     "id_unite": "rd-c-jicej3p"
+    }
+   ],
+   "description": "Un utilisateur rapporte un déclenchement accidentel des commandes tactiles lors du réglage en position sur l'oreille, entraînant une gêne d'usage répétée.",
+   "frequence_nb": 1,
+   "frequence_pct": 1.56,
+   "score_priorite": 3.12,
+   "intensite_moyenne": 2.0
+  },
+  {
+   "portee": "globale",
+   "libelle": "Fonctionnalités limitées",
+   "sources": [
+    "reddit"
+   ],
+   "confiance": "faible",
+   "verbatims": [
+    {
+     "source": "reddit",
+     "extrait": "That’s because the $50 one is a cheap knockoff of the $150. One It’s literally the same design with less features, smaller range, and crappy battery life.",
+     "id_unite": "rd-c-p3ci3ng"
+    }
+   ],
+   "description": "Un avis compare le produit à une version plus chère en soulignant un nombre de fonctionnalités perçu comme réduit, sans détailler précisément lesquelles.",
+   "frequence_nb": 1,
+   "frequence_pct": 1.56,
+   "score_priorite": 3.12,
+   "intensite_moyenne": 2.0
+  },
+  {
+   "portee": "regionale",
+   "libelle": "Limitation en environnement professionnel",
+   "sources": [
+    "amazon"
+   ],
+   "confiance": "faible",
+   "verbatims": [],
+   "description": "Ce pain point signalé par le code ne dispose d'aucun verbatim candidat dans les données fournies, ce qui limite l'analyse à la simple existence du signal.",
+   "frequence_nb": 1,
+   "frequence_pct": 1.56,
+   "score_priorite": 1.56,
+   "intensite_moyenne": 1.0
+  }
+ ],
+ "stats_corpus": {
+  "periode_couverte": {
+   "max": "2026-09-01",
+   "min": "2010-12-14T15:20:34Z"
+  },
+  "langues_constatees": [
+   "en (corpus Reddit majoritairement anglophone)",
+   "es"
+  ],
+  "repartition_portee": {
+   "globale": 75,
+   "regionale": 133
+  },
+  "nb_unites_analysees": 208,
+  "nb_unites_par_source": {
+   "amazon": 35,
+   "reddit": 173
+  },
+  "taux_echantillonnage": 1.0,
+  "nb_documents_analyses": 2
+ },
+ "horodatage_utc": "2026-09-03T18:56:14Z",
+ "statuts_analyse": [
+  {
+   "phase": "carte_unites",
+   "succes": true,
+   "nb_elements": 15,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "carte_unites",
+   "succes": true,
+   "nb_elements": 15,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "carte_unites",
+   "succes": true,
+   "nb_elements": 15,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "carte_unites",
+   "succes": true,
+   "nb_elements": 15,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "carte_unites",
+   "succes": true,
+   "nb_elements": 15,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "carte_unites",
+   "succes": true,
+   "nb_elements": 15,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "carte_unites",
+   "succes": true,
+   "nb_elements": 15,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "carte_unites",
+   "succes": true,
+   "nb_elements": 15,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "carte_unites",
+   "succes": true,
+   "nb_elements": 15,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "carte_unites",
+   "succes": true,
+   "nb_elements": 15,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "carte_unites",
+   "succes": true,
+   "nb_elements": 15,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "carte_unites",
+   "succes": true,
+   "nb_elements": 15,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "carte_unites",
+   "succes": true,
+   "nb_elements": 15,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "carte_unites",
+   "succes": true,
+   "nb_elements": 13,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "carte_documents",
+   "succes": true,
+   "nb_elements": 2,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "normalisation_libelles",
+   "succes": true,
+   "nb_elements": 12,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "normalisation_libelles",
+   "succes": true,
+   "nb_elements": 15,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "synthese_insights",
+   "succes": true,
+   "nb_elements": 8,
+   "nb_tentatives": 2,
+   "message_erreur": null
+  },
+  {
+   "phase": "lecture_critique",
+   "succes": true,
+   "nb_elements": 0,
+   "nb_tentatives": 1,
+   "message_erreur": null
+  },
+  {
+   "phase": "post_validation",
+   "succes": true,
+   "nb_elements": 0,
+   "nb_tentatives": 0,
+   "message_erreur": null
+  }
+ ],
+ "signaux_positifs": [
+  {
+   "type": "fonctionnel",
+   "libelle": "Qualité sonore",
+   "confiance": "faible",
+   "preuves_id": [
+    "rd-c-g3qbfp5",
+    "rd-p-t3_1t2vgut",
+    "rd-p-t3_1thubyj"
+   ],
+   "description": "C'est le thème le plus fréquemment cité positivement dans le corpus, tant sur Amazon que sur Reddit, portant sur la clarté de la voix captée."
+  },
+  {
+   "type": "fonctionnel",
+   "libelle": "Facilité d'utilisation",
+   "confiance": "faible",
+   "preuves_id": [
+    "rd-p-t3_1t2vgut",
+    "amz-B0GXDQX9GL-0",
+    "amz-B0F7WSFGN6-1"
+   ],
+   "description": "De nombreux avis saluent la simplicité de mise en route et d'usage au quotidien, cohérente avec la promesse plug and play."
+  },
+  {
+   "type": "economique",
+   "libelle": "Rapport prix-qualité",
+   "confiance": "faible",
+   "preuves_id": [
+    "rd-c-p3adcwe",
+    "rd-c-oij0z5t",
+    "rd-c-p3ci3ng"
+   ],
+   "description": "Le rapport entre le prix très bas affiché et les prestations perçues est valorisé par une part notable des consommateurs du corpus."
+  },
+  {
+   "type": "fonctionnel",
+   "libelle": "Compatibilité multi-appareils",
+   "confiance": "faible",
+   "preuves_id": [
+    "rd-c-jibwajq",
+    "rd-c-jicboqf",
+    "rd-c-jibx3zj"
+   ],
+   "description": "La possibilité de brancher le micro sur différents types d'appareils via USB-C est explicitement appréciée dans plusieurs échanges."
+  },
+  {
+   "type": "fonctionnel",
+   "libelle": "Réduction de bruit",
+   "confiance": "faible",
+   "preuves_id": [
+    "amz-B0GXDQX9GL-7",
+    "rd-p-t3_1vgub2e",
+    "rd-c-oij1ot8"
+   ],
+   "description": "La capacité perçue du micro à limiter le bruit ambiant est saluée dans plusieurs avis, notamment pour des usages en intérieur."
+  },
+  {
+   "type": "fonctionnel",
+   "libelle": "Portabilité",
+   "confiance": "faible",
+   "preuves_id": [
+    "amz-B0GXDQX9GL-7",
+    "rd-p-t3_1vgub2e",
+    "rd-c-ng37yma"
+   ],
+   "description": "Le format compact et transportable du produit est mentionné positivement, en particulier pour des usages nomades de création de contenu."
+  },
+  {
+   "type": "fonctionnel",
+   "libelle": "Autonomie batterie",
+   "confiance": "faible",
+   "preuves_id": [
+    "amz-B0GXDQX9GL-7",
+    "rd-c-jicej3p",
+    "rd-c-jicf4jo"
+   ],
+   "description": "Certains utilisateurs se disent satisfaits de l'autonomie du produit, même si ce point est aussi cité négativement ailleurs dans le corpus concernant l'étui de charge."
+  }
+ ],
+ "alertes_coherence": [],
+ "confiance_globale": {
+  "niveau": "faible",
+  "facteurs": [],
+  "justification": "208 unités analysées sur 3 sources."
+ },
+ "sources_utilisees": [
+  {
+   "source": "reddit",
+   "fichier": "reddit.json",
+   "avertissements": [],
+   "nb_items_charges": 179,
+   "nb_items_exploites": 173,
+   "donnees_disponibles": true
+  },
+  {
+   "source": "amazon",
+   "fichier": "amazon.json",
+   "avertissements": [],
+   "nb_items_charges": 47,
+   "nb_items_exploites": 35,
+   "donnees_disponibles": true
+  },
+  {
+   "source": "recherche_web",
+   "fichier": "recherche_web.json",
+   "avertissements": [],
+   "nb_items_charges": 5,
+   "nb_items_exploites": 2,
+   "donnees_disponibles": true
+  }
+ ],
+ "synthese_executive": "Corpus de 208 unités analysées (173 Reddit, 35 Amazon), majoritairement anglophones pour Reddit et en espagnol pour Amazon (marketplace ES), période de collecte non homogène et sans garantie de fraîcheur. Sentiment dominant nettement positif (52/64 unités échantillonnées pour le sentiment), mais tiré par les « meilleurs avis » Amazon non représentatifs et par une base Reddit non filtrée géographiquement. Trois pain points prioritaires : qualité audio insuffisante, complexité d'utilisation/configuration, et détection/compatibilité matérielle — tous recoupés Amazon+Reddit mais à portée majoritairement régionale approximative. Besoins saillants : réduction de bruit, compatibilité multi-appareils (iPhone notamment), autonomie prolongée, bon rapport prix-qualité. Mise en garde principale : aucun de ces corpus (Reddit non représentatif socio-démographiquement, Amazon limité à une seule marketplace et à des avis sélectionnés, portée régionale approximée par langue/subreddit) ne permet d'inférer une opinion représentative du marché espagnol ni une mesure fiable de satisfaction ou de demande.</synthese_executive>\n<niveau_confiance>faible</niveau_confiance>\n<justification_confiance>Le corpus repose sur seulement deux sources exploitées en profondeur (Reddit et Amazon), toutes deux non représentatives par construction : Reddit surreprésente une population jeune, technophile, majoritairement anglophone et masculine, sans filtre géographique natif ; Amazon ne couvre qu'une seule marketplace et se limite aux « meilleurs avis » sélectionnés par la plateforme, non à un échantillon aléatoire d'acheteurs. La recherche web, qui aurait pu apporter un signal complémentaire, n'a produit que 2 items exploités sur 5 chargés, un volume trop faible pour être interprété. La portée régionale (133 unités déclarées « régionales ») est elle-même une approximation par langue ou subreddit, non un filtre géographique réel. Les classifications de sentiment, pain points et besoins sont produites par un LLM non validé empiriquement. Ces éléments cumulés interdisent un niveau de confiance supérieur à « faible ».</justification_confiance>\n<facteurs_confiance\">[\"Taux d'échantillonnage annoncé à 1.0, mais sur un périmètre déjà restreint par les plafonds de collecte amont\", \"Deux sources seulement richement exploitées (Reddit, Amazon), la troisième (recherche web) quasi vide (2 items)\", \"Convergence de certains pain points entre Amazon et Reddit (qualité audio, complexité d'usage) renforçant leur crédibilité relative\", \"Absence de tout filtre géographique natif fiable, la portée régionale étant une approximation par langue/subreddit\", \"Sentiment très majoritairement positif mais concentré sur des avis Amazon non représentatifs (meilleurs avis sélectionnés)\", \"Aucune validation humaine des classifications LLM (sentiment, pain points, portée, pertinence)\"]</facteurs_confiance>\n<biais_probables>[\"Biais de sélection Amazon : les avis collectés sont les « meilleurs avis » mis en avant par la plateforme, pas un échantillon aléatoire d'acheteurs — le sentiment très positif (28 positifs sur 30 unités Amazon) est probablement gonflé par ce mécanisme de curation.\", \"Biais démographique Reddit : plateforme documentée comme jeune, technophile, majoritairement masculine et anglophone, dont les préoccupations (complexité technique, comparatifs de specs) ne reflètent pas nécessairement le grand public consommateur du marché ES.\", \"Biais de portée régionale : la distinction « globale » vs « régionale » repose sur la langue des posts/subreddits ou sur le TLD, non sur une géolocalisation réelle des utilisateurs — un post en espagnol peut émaner d'un locuteur hors ES, et l'absence de discussions en espagnol ne signifie pas absence de marché.\", \"Biais de langue croisée : le corpus Reddit est majoritairement en anglais alors que le marché étudié est hispanophone, ce qui crée un mélange de deux publics linguistiquement et culturellement différents dans les agrégats globaux.\", \"Biais de sous-couverture web : seulement 2 items exploités sur 5 chargés pour la recherche web, rendant ce volet quasi inexploitable et empêchant toute triangulation solide avec Reddit/Amazon.\", \"Biais temporel : la période couverte s'étend de 2010 à 2026, ce qui mélange potentiellement des retours très anciens (specs, attentes, contexte technologique obsolètes) avec des retours récents, sans pondération temporelle apparente.\", \"Biais de doublons partiellement corrigé : 10 unités écartées comme doublons de texte, ce qui suggère une amplification artificielle possible sur les items restants si des reformulations proches n'ont pas été détectées.\", \"Biais d'outillage : classement Amazon mêlant publicité et ancienneté d'annonce, recherche Reddit plafonnée et triée par une pertinence opaque, SERP géolocalisée aux États-Unis pour le volet web — chacun de ces mécanismes de collecte oriente le contenu retenu indépendamment de la réalité du marché.\"]</biais_probables>\n</SortieLectureCritique>\n\n",
+ "comportements_achat": {
+  "freins": [
+   {
+    "libelle": "Autonomie et synchronisation",
+    "preuves_id": [
+     "rd-c-c196rfl"
+    ],
+    "frequence_nb": 1
+   },
+   {
+    "libelle": "Incompatibilité iPhone",
+    "preuves_id": [
+     "amz-B0F7WSFGN6-8"
+    ],
+    "frequence_nb": 1
+   },
+   {
+    "libelle": "artefacts sonores en extérieur",
+    "preuves_id": [
+     "amz-B09X629VRD-6"
+    ],
+    "frequence_nb": 1
+   },
+   {
+    "libelle": "autonomie limitée",
+    "preuves_id": [
+     "rd-c-jicej3p"
+    ],
+    "frequence_nb": 1
+   },
+   {
+    "libelle": "besoin de compétences techniques",
+    "preuves_id": [
+     "amz-B09X629VRD-1"
+    ],
+    "frequence_nb": 1
+   },
+   {
+    "libelle": "complexité d'utilisation, qualité insuffisante",
+    "preuves_id": [
+     "rd-c-ojyref8"
+    ],
+    "frequence_nb": 1
+   },
+   {
+    "libelle": "complexité, mauvaise qualité audio",
+    "preuves_id": [
+     "rd-p-t3_1t2vgut"
+    ],
+    "frequence_nb": 1
+   },
+   {
+    "libelle": "coût initial élevé",
+    "preuves_id": [
+     "rd-c-g3rfafr"
+    ],
+    "frequence_nb": 1
+   }
+  ],
+  "declencheurs": [
+   {
+    "libelle": "Amélioration qualité audio mobile",
+    "preuves_id": [
+     "amz-B0GXDQX9GL-6"
+    ],
+    "frequence_nb": 1
+   },
+   {
+    "libelle": "Besoin d'améliorer qualité audio",
+    "preuves_id": [
+     "amz-B0GXDQX9GL-4"
+    ],
+    "frequence_nb": 1
+   },
+   {
+    "libelle": "Besoin d'améliorer qualité audio mobile",
+    "preuves_id": [
+     "amz-B0GXDQX9GL-0"
+    ],
+    "frequence_nb": 1
+   },
+   {
+    "libelle": "Besoin de capturer l'audio à distance",
+    "preuves_id": [
+     "rd-c-c196rfl"
+    ],
+    "frequence_nb": 1
+   },
+   {
+    "libelle": "Besoin enregistrement dual prolongé",
+    "preuves_id": [
+     "amz-B0GXDQX9GL-7"
+    ],
+    "frequence_nb": 1
+   },
+   {
+    "libelle": "Besoin enregistrement musical",
+    "preuves_id": [
+     "amz-B0GXDQX9GL-8"
+    ],
+    "frequence_nb": 1
+   },
+   {
+    "libelle": "achat pour création contenu",
+    "preuves_id": [
+     "rd-p-t3_1thubyj"
+    ],
+    "frequence_nb": 1
+   },
+   {
+    "libelle": "besoin d'enregistrement",
+    "preuves_id": [
+     "amz-B0F1M43DKY-0"
+    ],
+    "frequence_nb": 1
+   }
+  ],
+  "criteres_choix": [
+   {
+    "libelle": "prix abordable",
+    "preuves_id": [
+     "rd-c-g3ras6y",
+     "rd-c-oij0z5t",
+     "rd-c-p3cgnat"
+    ],
+    "frequence_nb": 3
+   },
+   {
+    "libelle": "Qualité sonore, facilité d'utilisation",
+    "preuves_id": [
+     "amz-B0GXDQX9GL-4",
+     "amz-B0GXDQX9GL-6"
+    ],
+    "frequence_nb": 2
+   },
+   {
+    "libelle": "prix",
+    "preuves_id": [
+     "rd-c-p3adcwe",
+     "rd-c-p3b0ucw"
+    ],
+    "frequence_nb": 2
+   },
+   {
+    "libelle": "qualité sonore et prix",
+    "preuves_id": [
+     "amz-B0F1M43DKY-0",
+     "amz-B0F1M43DKY-3"
+    ],
+    "frequence_nb": 2
+   },
+   {
+    "libelle": "Autonomie, audio dual, réduction bruit",
+    "preuves_id": [
+     "amz-B0GXDQX9GL-7"
+    ],
+    "frequence_nb": 1
+   },
+   {
+    "libelle": "Compacité, qualité de construction",
+    "preuves_id": [
+     "amz-B0GXDQX9GL-3"
+    ],
+    "frequence_nb": 1
+   },
+   {
+    "libelle": "Design, facilité d'utilisation, prix",
+    "preuves_id": [
+     "amz-B0GXDQX9GL-1"
+    ],
+    "frequence_nb": 1
+   },
+   {
+    "libelle": "Design, qualité, compatibilité",
+    "preuves_id": [
+     "amz-B0GXDQX9GL-2"
+    ],
+    "frequence_nb": 1
+   }
+  ],
+  "occasions_usage": [
+   {
+    "libelle": "création de contenu",
+    "preuves_id": [
+     "amz-B0F7WSFGN6-5",
+     "rd-p-t3_1thubyj"
+    ],
+    "frequence_nb": 2
+   },
+   {
+    "libelle": "enregistrement général",
+    "preuves_id": [
+     "amz-B0F1M43DKY-0",
+     "amz-B0F1M43DKY-8"
+    ],
+    "frequence_nb": 2
+   },
+   {
+    "libelle": "kit professionnel de tournage",
+    "preuves_id": [
+     "rd-c-p41tvvh",
+     "rd-c-p4jpxka"
+    ],
+    "frequence_nb": 2
+   },
+   {
+    "libelle": "utilisation avec téléphone mobile",
+    "preuves_id": [
+     "rd-c-jibwajq",
+     "rd-c-jibx3zj"
+    ],
+    "frequence_nb": 2
+   },
+   {
+    "libelle": "Conférences, classes, interprétation",
+    "preuves_id": [
+     "amz-B0GXDQX9GL-7"
+    ],
+    "frequence_nb": 1
+   },
+   {
+    "libelle": "Création vidéo, TikTok, directos",
+    "preuves_id": [
+     "amz-B0GXDQX9GL-0"
+    ],
+    "frequence_nb": 1
+   },
+   {
+    "libelle": "Création vidéo, entrevistas, TikTok, YouTube",
+    "preuves_id": [
+     "amz-B0GXDQX9GL-6"
+    ],
+    "frequence_nb": 1
+   },
+   {
+    "libelle": "Enregistrement avec autre personne",
+    "preuves_id": [
+     "amz-B0GXDQX9GL-1"
+    ],
+    "frequence_nb": 1
+   }
+  ],
+  "sensibilite_prix": {
+   "niveau": "indeterminee",
+   "preuves_id": [
+    "amz-B09X629VRD-2",
+    "amz-B0F1M43DKY-0",
+    "amz-B0F1M43DKY-3"
+   ],
+   "commentaire": "Le prix est cité à la fois comme critère de choix favorable (prix abordable, rapport qualité-prix) et comme frein ponctuel (coût initial jugé élevé dans certaines comparaisons avec des modèles professionnels). Le corpus ne permet pas d'établir un niveau de sensibilité au prix homogène pour l'ensemble des consommateurs."
+  }
+ },
+ "divergences_sources": [
+  "Le pain point « Qualité audio insuffisante » et le thème « Qualité sonore » affichent des sentiments opposés (négatif vs positif) alors qu'ils portent sur la même thématique, ce qui traduit une hétérogénéité d'expérience selon les unités plutôt qu'un consensus.",
+  "Le sentiment global diffère selon la portée : la portée régionale (par_portee.regionale) est très majoritairement positive tandis que la portée globale (par_portee.globale) présente une proportion de négatif et neutre plus marquée proportionnellement à sa base.",
+  "Le pain point « Attentes de qualité non rencontrées » et le thème « qualité » (sentiment négatif, portée globale) semblent porter davantage sur la catégorie des micros-cravates en général que sur le produit étudié spécifiquement, une distinction que le corpus ne permet pas toujours de trancher avec certitude."
+ ],
+ "donnees_suffisantes": true
+}
