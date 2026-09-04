@@ -95,9 +95,21 @@ class StudyTrigger(StrEnum):
 REGION_PATTERN = r"^[A-Z]{2}$"
 LANGUE_PATTERN = r"^[a-z]{2}$"
 
-# Aligned on the products domain (EXTRACTION_ALLOWED_REGIONS): the same countries are
-# extractable and studiable today. The two settings stay distinct so they may diverge.
-DEFAULT_ALLOWED_REGIONS = "MA,FR,ES,US,AE"
+# EMPTY MEANS NO RESTRICTION. The whitelist held five countries while the pipeline's own
+# tables map a currency and a language for 244 -- `devise_marche.py` and
+# `langues_marche.py`, which cover exactly the same set, with no gap between them. The
+# five were a launch precaution, not a limit of what the pipeline can do, and they turned
+# away 239 countries it handles.
+#
+# What still guards an unknown region is the pipeline itself, and it guards it for free:
+# `_resolve_market` runs BEFORE the first collector, and a country absent from those
+# tables stops the study on `CURRENCY_NOT_MAPPED` or `LANGUAGE_NOT_RESOLVED` without
+# having spent an actor run or a token. Restating the 244 codes here would only add a
+# second list to keep in sync with the first.
+#
+# Set STUDY_ALLOWED_REGIONS to a comma-separated list to restrict again -- per
+# deployment, per market opening, without touching this code.
+DEFAULT_ALLOWED_REGIONS = ""
 
 # Pagination of GET /studies. The upper bound is what keeps a sidebar query cheap.
 DEFAULT_LIST_LIMIT = 20

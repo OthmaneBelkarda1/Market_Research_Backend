@@ -51,7 +51,7 @@ def resolve_product_region(region: str | None) -> str | None:
     """
     candidate = (region or "").strip().upper()
     looks_like_a_code = len(candidate) == 2 and candidate.isalpha()
-    if looks_like_a_code and candidate in studies_settings.allowed_regions:
+    if looks_like_a_code and studies_settings.region_autorisee(candidate):
         return candidate
     return None
 

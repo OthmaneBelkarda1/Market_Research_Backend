@@ -84,11 +84,11 @@ Puis renseigner `.env` :
 | `OPENAI_API_KEY` | Secret. Requis uniquement si `use_agent: true` sur `/products/extract`. |
 | `APIFY_API_TOKEN` | Secret. Requis uniquement pour les places de marché (Amazon, Temu, AliExpress, Walmart, eBay). |
 | `PRODUCT_COUNTRY`, `PRODUCT_VARIANTS`, `OPENAI_MODEL` | Réglages de l'agent, lus **une seule fois** à son import. |
-| `EXTRACTION_ALLOWED_REGIONS` | Régions ISO acceptées. Défaut : `MA,FR,ES,US,AE`. |
+| `EXTRACTION_ALLOWED_REGIONS` | Régions ISO acceptées. **Vide par défaut = aucune restriction** ; renseignée, elle restreint. |
 | `EXTRACTION_MAX_CONCURRENCY` | Extractions simultanées. Défaut : `1`. |
 | `EXTRACTION_TIMEOUT_SECONDS` | Budget par extraction, attente incluse. Défaut : `300`. |
 | `STUDY_AUTO_START` | Une étude est créée automatiquement à l'enregistrement d'un produit. Défaut : `true`. |
-| `STUDY_ALLOWED_REGIONS` | Régions ISO pour lesquelles une étude peut être lancée. Défaut : `MA,FR,ES,US,AE`. |
+| `STUDY_ALLOWED_REGIONS` | Régions ISO pour lesquelles une étude peut être lancée. **Vide par défaut = aucune restriction.** |
 
 Les deux secrets passent **exclusivement** par variable d'environnement : jamais en dur
 dans le code, jamais dans les logs, jamais dans une réponse d'erreur.
@@ -330,8 +330,9 @@ la devise et la disponibilité dépendent du pays d'où l'on regarde : la régio
 la locale, le fuseau et l'`Accept-Language` du navigateur, et le pays de proxy du scraper
 hébergé. C'est aussi la valeur écrite dans `product.region`.
 
-Elle doit être un code ISO 3166-1 alpha-2 de la liste blanche `EXTRACTION_ALLOWED_REGIONS`
-(`MA,FR,ES,US,AE` par défaut) ; la casse est normalisée (`fr` → `FR`). Toute autre valeur
+Elle doit être un code ISO 3166-1 alpha-2 ; la casse est normalisée (`fr` → `FR`). La
+liste blanche `EXTRACTION_ALLOWED_REGIONS` est **vide par défaut, ce qui n'interdit
+rien** — la renseigner restreint aux seules régions citées. Une valeur mal formée
 est rejetée en `422` avec la liste des valeurs acceptées.
 
 > **Note d'implémentation.** L'agent fige `PRODUCT_COUNTRY` à son import : une région par
@@ -559,6 +560,39 @@ aux modules, jamais à l'orchestrateur.
 - `failed` : F7 en échec pour une autre raison, ou étude inexécutable (devise non mappée,
   produit disparu, tous les collecteurs en échec). **Un verdict négatif ou indéterminé est
   un résultat, jamais un échec.**
+
+### Quelles régions sont ouvertes
+
+**Toutes**, depuis que `STUDY_ALLOWED_REGIONS` est vide par défaut.
+
+La liste blanche a tenu cinq pays — `MA,FR,ES,US,AE` — alors que les tables du pipeline
+mappent une devise **et** une langue pour **244**. Les deux tables, `devise_marche.py` et
+`langues_marche.py`, couvrent exactement le même ensemble, sans écart : un test le
+vérifie. Les cinq étaient une précaution de lancement, pas une limite de ce que le
+pipeline sait faire, et elles refusaient 239 pays qu'il traite.
+
+Ce qui garde une région inconnue, maintenant, c'est le pipeline lui-même — et il le fait
+gratuitement. `_resolve_market` s'exécute **avant le premier collecteur** : un code absent
+des tables arrête l'étude sur `CURRENCY_NOT_MAPPED` sans avoir consommé un run d'actor ni
+un jeton. Recopier les 244 codes dans le backend n'ajouterait qu'une seconde liste à tenir
+en phase avec la première.
+
+Une région sans site Amazon reste un cas normal : le collecteur sort en code 3, la source
+est `skipped_region`, et l'étude continue.
+
+**Pour restreindre à nouveau** — ouverture de marché par étapes, contrainte
+contractuelle — il suffit de renseigner la variable, sans toucher au code :
+
+```
+STUDY_ALLOWED_REGIONS=FR,ES,MA
+```
+
+**La réserve porte sur l'extraction, pas sur les études.** `REGION_PROFILES` donne une
+langue, un fuseau et un `Accept-Language` à treize pays. Partout ailleurs, le navigateur
+se présente en `en-US`/`UTC`, et une boutique qui change de devise sur ces en-têtes
+affichera son prix américain. L'extraction réussit et le chiffre est réel — c'est
+simplement le prix que ce site montre à un visiteur américain. Ajouter le pays à
+`REGION_PROFILES` le corrige définitivement.
 
 ### Quand F7 refuse d'écrire le rapport
 

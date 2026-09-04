@@ -34,7 +34,7 @@ def normalize_region(value: object) -> object:
         return value
     region = value.strip().upper()
     looks_like_a_code = len(region) == 2 and region.isalpha()
-    if looks_like_a_code and region not in studies_settings.allowed_regions:
+    if looks_like_a_code and not studies_settings.region_autorisee(region):
         raise ValueError(
             f"Region {region!r} is not allowed. "
             f"Accepted values: {', '.join(studies_settings.sorted_allowed_regions)}."

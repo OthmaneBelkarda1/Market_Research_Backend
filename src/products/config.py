@@ -44,5 +44,20 @@ class ProductsConfig(BaseSettings):
         """Stable order, so error messages and OpenAPI examples stay reproducible."""
         return sorted(self.allowed_regions)
 
+    def region_autorisee(self, region: str) -> bool:
+        """Dit si une région passe la liste blanche.
+
+        Une liste VIDE n'autorise pas rien, elle n'interdit rien : c'est le réglage
+        par défaut, et il ouvre les régions que le pipeline sait traiter. Une liste
+        renseignée restreint à ses seuls membres.
+
+        Args:
+            region: Code ISO 3166-1 alpha-2, déjà en majuscules.
+
+        Returns:
+            `True` si la région est acceptée.
+        """
+        return not self.allowed_regions or region in self.allowed_regions
+
 
 products_settings = ProductsConfig()

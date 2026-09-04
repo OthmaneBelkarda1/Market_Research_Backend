@@ -28,7 +28,15 @@ IMAGE_READ_CHUNK_SIZE = 64 * 1024
 # ---------------------------------------------------------------------------
 # Shopper countries accepted by the extraction endpoint. Overridable with
 # EXTRACTION_ALLOWED_REGIONS.
-DEFAULT_ALLOWED_REGIONS = "MA,FR,ES,US,AE"
+# EMPTY MEANS NO RESTRICTION -- see the note in `src/studies/constants.py`.
+#
+# One caveat is proper to extraction, and it is not a failure: REGION_PROFILES below
+# carries a locale, a timezone and an Accept-Language for thirteen countries. Anywhere
+# else the browser presents itself as `en-US`/`UTC`, so a store that switches currency on
+# browser hints may quote a price in the wrong one. The extraction succeeds and the
+# figure is real -- it is simply the price that store shows to an American visitor. Add
+# the country to REGION_PROFILES to fix that for good.
+DEFAULT_ALLOWED_REGIONS = ""
 
 REGION_PATTERN = r"^[A-Z]{2}$"
 
