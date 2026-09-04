@@ -26,7 +26,7 @@ Modules (one responsibility each):
 """
 
 from .actors import ACTOR_ADAPTERS, ActorAdapter, register_adapter
-from .agent import extract_product, extract_product_data
+from .agent import _cause_de_compte, extract_product, extract_product_data
 from .config import (
     TARGET_COUNTRY,
     TARGET_LOCALE,
@@ -54,6 +54,7 @@ from .schema import (
 
 __all__ = [
     "extract_product",
+    "_cause_de_compte",
     "extract_product_data",
     "extract_deterministic",
     "ProductSummary",

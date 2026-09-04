@@ -58,6 +58,7 @@ from src.agents.product_extraction import (
     PlatformUnsupportedError,
     ProductSummary,
     UnsupportedUrlError,
+    _cause_de_compte,
     detect_route,
     extract_product_data,
     register_adapter,
@@ -334,9 +335,17 @@ async def extract_product(
         if kind == "usage":
             logger.info("Extraction usage url=%s region=%s %s", url, region, payload)
         elif kind == "agent_error":
-            logger.warning(
-                "Extraction agent degraded url=%s region=%s error=%s: %s",
-                url, region, type(payload).__name__, payload,
+            # ERROR et non WARNING quand la cause est le compte : ce n'est pas
+            # une extraction qui s'est mal passée, c'est le service entier qui
+            # produit des fiches dégradées jusqu'à ce qu'on recharge ou qu'on
+            # corrige une clé. Les deux ne demandent pas la même réaction, et un
+            # niveau de journal est ce qui les sépare pour qui filtre les logs.
+            cause = _cause_de_compte(payload)
+            journaliser = logger.error if cause else logger.warning
+            journaliser(
+                "Extraction agent degraded url=%s region=%s error=%s%s: %s",
+                url, region, type(payload).__name__,
+                f" [{cause}]" if cause else "", payload,
             )
 
     try:

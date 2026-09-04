@@ -326,6 +326,42 @@ async def extract_product(url: str, **options) -> ProductSummary:
     return summarize(product, source_url=url)
 
 
+_MOTIFS_COMPTE: tuple[tuple[str, str], ...] = (
+    (
+        "credit balance is too low",
+        "compte Anthropic sans crédit — rechargez-le dans Plans & Billing",
+    ),
+    ("authentication_error", "clé Anthropic refusée — vérifiez ANTHROPIC_API_KEY"),
+    ("api key is invalid", "clé Anthropic invalide — vérifiez ANTHROPIC_API_KEY"),
+    ("permission_error", "clé Anthropic sans accès à ce modèle"),
+)
+"""Pannes de COMPTE, reconnues dans le message de l'erreur.
+
+Elles se distinguent de tout le reste par ce qu'elles demandent : une action
+humaine, sur une facture ou une clé. Aucune reprise ne les répare, et elles
+frappent TOUTES les extractions jusqu'à ce que quelqu'un intervienne.
+
+Reconnues sur le texte plutôt que sur la classe : Anthropic répond au crédit
+épuisé par un `BadRequestError` 400, la même classe qu'une requête malformée, et
+seul le message les sépare."""
+
+
+def _cause_de_compte(erreur: BaseException) -> str | None:
+    """Dit si une erreur vient du compte, et en un mot ce qu'il faut faire.
+
+    Args:
+        erreur: Exception levée par la chaîne du modèle.
+
+    Returns:
+        Le libellé de la cause, ou `None` si l'erreur est d'une autre nature.
+    """
+    message = str(erreur).lower()
+    for motif, libelle in _MOTIFS_COMPTE:
+        if motif in message:
+            return libelle
+    return None
+
+
 async def extract_product_data(url: str, *, use_agent: bool = True,
                                model: str = ANTHROPIC_MODEL, force_actor: str | None = None,
                                on_event=None, **playwright_options) -> ProductData:
@@ -347,6 +383,7 @@ async def extract_product_data(url: str, *, use_agent: bool = True,
         return to_product(result, route.url)
 
     collected: list[SourceResult] = []
+    cause_compte: str | None = None
     agent = build_agent(
         build_tools(collected, force_actor=force_actor, **playwright_options),
         model=model,
@@ -363,6 +400,7 @@ async def extract_product_data(url: str, *, use_agent: bool = True,
             draft: ProductDraft | None = state.get("structured_response")
         except Exception as exc:                   # noqa: BLE001 - see fallback below
             notify("agent_error", exc)
+            cause_compte = _cause_de_compte(exc)
             draft = None
             if not collected:
                 # The model never got usable data: fall back to pure code so the
@@ -393,7 +431,16 @@ async def extract_product_data(url: str, *, use_agent: bool = True,
     warnings = [w for r in collected for w in r.warnings]
 
     if draft is None:
-        warnings.append("LLM normalization unavailable — deterministic fields only")
+        # Nommer la cause quand elle appelle une action. « LLM normalization
+        # unavailable » est exact et inexploitable : l'exploitant ne peut pas
+        # savoir, en le lisant, qu'il lui suffit de recharger un compte. Et
+        # comme cette panne-là frappe TOUTES les extractions jusqu'à ce que
+        # quelqu'un intervienne, chaque fiche produite entre-temps porte une
+        # description de gabarit sans que rien ne le dise.
+        detail = f" ({cause_compte})" if cause_compte else ""
+        warnings.append(
+            f"LLM normalization unavailable — deterministic fields only{detail}"
+        )
         fields = reliable
     else:
         fields = overlay_reliable(draft_to_fields(draft), reliable, soft)
