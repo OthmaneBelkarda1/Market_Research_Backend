@@ -238,3 +238,13 @@ class ActorRunError(ExtractionError):
 
 class UnsupportedUrlError(ExtractionError):
     """The input is not a usable product URL."""
+
+
+class PlatformUnsupportedError(UnsupportedUrlError):
+    """The URL is a real product page on a site nothing can currently scrape.
+
+    A subclass rather than a message, because the two cases call for different
+    answers. A malformed URL is the caller's mistake and they can fix it; a site
+    that blocks every scraper is ours to solve, and no amount of retrying by the
+    caller will help. Telling them apart is what lets the API say which it is.
+    """

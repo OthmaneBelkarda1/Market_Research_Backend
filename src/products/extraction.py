@@ -55,6 +55,7 @@ from src.agents.product_extraction import (
     ConfigError,
     ExtractionError,
     PageLoadError,
+    PlatformUnsupportedError,
     ProductSummary,
     UnsupportedUrlError,
     detect_route,
@@ -73,6 +74,7 @@ from src.products.exceptions import (
     ExtractionFailed,
     ExtractionNotConfigured,
     ExtractionTimedOut,
+    PlatformNotExtractable,
     ProductPageLoadFailed,
     ScraperRunFailed,
     UnsupportedProductUrl,
@@ -167,23 +169,54 @@ def _regional_build_input(base_build_input: Any, region: str) -> Any:
     return build_input
 
 
+def _cloner_adaptateur(actor: str, region: str) -> str | None:
+    """Create the ``actor@REGION`` clone of one adapter, if it does not exist yet.
+
+    Args:
+        actor: Key of the base adapter.
+        region: Shopper country, uppercase.
+
+    Returns:
+        The clone's key, or ``None`` when the base adapter is unknown.
+    """
+    cle = f"{actor}{REGION_ACTOR_SEPARATOR}{region}"
+    if cle in ACTOR_ADAPTERS:
+        return cle
+    base = ACTOR_ADAPTERS.get(actor)
+    if base is None:
+        return None
+    register_adapter(
+        replace_dataclass(
+            base,
+            key=cle,
+            label=f"{base.label} [{region}]",
+            build_input=_regional_build_input(base.build_input, region),
+        )
+    )
+    return cle
+
+
 def register_region_adapters() -> None:
-    """Register one adapter clone per (actor, allowed region), keyed ``actor@REGION``.
+    """Pre-register the adapter clones for the configured region whitelist.
+
+    A WARM-UP, NOT THE GUARANTEE. It was the guarantee, and that stopped being
+    true the day the whitelist was allowed to be empty — which means "no
+    restriction", so this loop had nothing to iterate and registered zero clones.
+    Every Apify extraction then fell back to the agent's default country, and
+    logged a "should not happen" while doing it.
+
+    `_apply_region` now creates the clone it needs on demand, so an open
+    whitelist is served just as well as a closed one. This function stays
+    because pre-registering keeps the first extraction of each configured region
+    off the critical path, and because it fails loudly at startup if an adapter
+    cannot be cloned at all.
 
     Idempotent: re-registering overwrites a clone with an equivalent one.
     """
     for region in products_settings.sorted_allowed_regions:
-        for key, adapter in list(ACTOR_ADAPTERS.items()):
-            if REGION_ACTOR_SEPARATOR in key:
-                continue  # already a regional clone
-            register_adapter(
-                replace_dataclass(
-                    adapter,
-                    key=f"{key}{REGION_ACTOR_SEPARATOR}{region}",
-                    label=f"{adapter.label} [{region}]",
-                    build_input=_regional_build_input(adapter.build_input, region),
-                )
-            )
+        for key in list(ACTOR_ADAPTERS):
+            if REGION_ACTOR_SEPARATOR not in key:  # skip clones already made
+                _cloner_adaptateur(key, region)
 
 
 def _apply_region(region: str, url: str) -> dict[str, Any]:
@@ -203,14 +236,16 @@ def _apply_region(region: str, url: str) -> dict[str, Any]:
     # detect_route is a pure function: no network, no side effect.
     route = detect_route(url)
     if route.strategy == "apify" and route.actor:
-        regional_key = f"{route.actor}{REGION_ACTOR_SEPARATOR}{region}"
-        if regional_key in ACTOR_ADAPTERS:
+        # Created on demand rather than looked up: the region whitelist may be
+        # open, in which case there is no finite list to pre-register from.
+        regional_key = _cloner_adaptateur(route.actor, region)
+        if regional_key:
             options["force_actor"] = regional_key
         else:
-            # Should not happen: register_region_adapters() covers the whole whitelist.
             logger.warning(
-                "No regional adapter %s; falling back to the agent's default country.",
-                regional_key,
+                "Unknown actor %s for this route; falling back to the agent's "
+                "default country.",
+                route.actor,
             )
     return options
 
@@ -231,6 +266,9 @@ def _http_error(exc: BaseException) -> Exception:
             type(asyncio.get_event_loop()).__name__,
         )
         return ProductPageLoadFailed()
+    # Avant `UnsupportedUrlError`, dont c'est une sous-classe : l'ordre décide.
+    if isinstance(exc, PlatformUnsupportedError):
+        return PlatformNotExtractable()
     if isinstance(exc, UnsupportedUrlError):
         return UnsupportedProductUrl()
     if isinstance(exc, PageLoadError):
@@ -262,7 +300,19 @@ async def extract_product(
     The timeout covers the wait for a semaphore slot as well as the extraction itself, so
     the endpoint's latency stays bounded even when every slot is busy.
     """
-    options = _apply_region(region, url)
+    # Dans le `try` : `_apply_region` route l'URL, et le routage refuse d'emblée
+    # une plateforme qu'aucun scrapeur ne sait lire. Appelée au-dessus, cette
+    # exception-là échappait au traducteur d'erreurs et remontait nue.
+    try:
+        options = _apply_region(region, url)
+    except Exception as exc:
+        error = _http_error(exc)
+        logger.info(
+            "Extraction refused url=%s region=%s -> %s: %s",
+            url, region, error.__class__.__name__, exc,
+        )
+        raise error from exc
+
     logger.info(
         "Extraction started url=%s region=%s use_agent=%s force_actor=%s",
         url,

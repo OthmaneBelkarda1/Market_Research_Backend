@@ -27,7 +27,7 @@ or at runtime, without touching this file:
 from dataclasses import dataclass
 from urllib.parse import urlparse
 
-from .config import UnsupportedUrlError
+from .config import PlatformUnsupportedError, UnsupportedUrlError
 
 # Strategy names are also what lands in ProductData.strategy.
 PLAYWRIGHT = "playwright"
@@ -47,6 +47,25 @@ class DomainRoute:
 # ---------------------------------------------------------------------------
 # 1. The routing table  (domain suffix -> Apify actor adapter key)
 # ---------------------------------------------------------------------------
+# Sites where every scraper we have access to currently comes back empty. The URL is
+# refused before any network call, which is the whole point: the route below would
+# otherwise spend one Apify run on the dedicated actor, a second on the generic
+# fallback, and the agent's LLM steps on top -- roughly forty seconds and real money
+# to reach a failure we already know is certain.
+#
+# Each entry carries the date it was verified. Delete it and try again when there is
+# reason to think the site changed; this table is meant to be re-checked, not trusted
+# forever.
+PLATEFORMES_SANS_SCRAPEUR: dict[str, str] = {
+    "temu.com": (
+        "Temu blocks automated product-page reads. Verified 2026-09-04 across three "
+        "Apify actors (apivault_labs/temu-product-scraper, pear_fight/temu-scraper, "
+        "apify/e-commerce-scraping-tool) and two storefronts: the dedicated actor "
+        "reports '0 OK / 1 FAIL' in under two seconds, and the others return a "
+        "blocked page with no price."
+    ),
+}
+
 # `actor` values are keys of actors.ACTOR_ADAPTERS.
 DOMAIN_ROUTES: tuple[DomainRoute, ...] = (
     DomainRoute(
@@ -164,6 +183,10 @@ def detect_route(url: str) -> Route:
     """URL -> extraction plan. Pure function, no network access."""
     url = normalize_url(url)
     host = _host(url)
+
+    for domaine, raison in PLATEFORMES_SANS_SCRAPEUR.items():
+        if _matches(host, domaine):
+            raise PlatformUnsupportedError(raison)
 
     for route in DOMAIN_ROUTES:
         if any(_matches(host, domain) for domain in route.domains):

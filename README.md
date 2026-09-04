@@ -338,10 +338,42 @@ est rejetée en `422` avec la liste des valeurs acceptées.
 > **Note d'implémentation.** L'agent fige `PRODUCT_COUNTRY` à son import : une région par
 > requête n'est pas supportée nativement. Le chemin navigateur l'est déjà (locale, fuseau
 > et `Accept-Language` sont des paramètres d'appel) ; pour le chemin Apify,
-> `src/products/extraction.py` enregistre au démarrage un clone d'adaptateur par
-> (acteur × région autorisée) — clé `amazon@MA` — via le point d'extension
-> `register_adapter()` de l'agent. Aucune ligne de l'agent n'est modifiée, aucun état
-> global n'est muté, et les extractions restent parallèles.
+> `src/products/extraction.py` enregistre un clone d'adaptateur par (acteur × région) —
+> clé `amazon@MA` — via le point d'extension `register_adapter()` de l'agent. Aucune ligne
+> de l'agent n'est modifiée, aucun état global n'est muté, et les extractions restent
+> parallèles.
+>
+> Ces clones sont créés **à la demande**, à la première extraction de chaque couple. Ils
+> étaient pré-enregistrés en parcourant la liste blanche, ce qui a cessé de fonctionner le
+> jour où celle-ci a pu être vide : « aucune restriction » ne donne rien à parcourir, donc
+> aucun clone, donc toutes les extractions repartaient sur le pays par défaut de l'agent.
+> Le pré-enregistrement au démarrage subsiste pour la liste blanche quand elle est
+> renseignée — c'est une mise en cache, plus une garantie.
+
+### Plateformes sans scrapeur
+
+Certains sites bloquent toute lecture automatique de leurs pages produit. Ils sont
+refusés **au routage**, avant le moindre appel réseau, et l'API répond `422` avec un
+message qui le dit.
+
+C'est une décision d'économie autant que de clarté. Sans ce refus, l'URL suivait tout le
+chemin : un run Apify sur l'acteur dédié, un second sur l'acteur de repli, et les étapes
+du modèle par-dessus — une quarantaine de secondes et de l'argent réel pour atteindre un
+échec dont l'issue était connue d'avance. Le `422` est aussi plus honnête qu'un `502` :
+rien n'a échoué, et rien ne réussira à la reprise.
+
+La table `PLATEFORMES_SANS_SCRAPEUR`, dans `src/agents/product_extraction/routing.py`,
+porte pour chaque site la raison et **la date de vérification**. Elle est faite pour être
+re-testée, pas pour être crue sur parole : retirer une entrée et réessayer est la
+procédure normale dès qu'il y a lieu de penser que le site a changé.
+
+| Site | Constaté |
+|---|---|
+| `temu.com` | 04/09/2026 — trois acteurs Apify testés (`apivault_labs/temu-product-scraper`, `pear_fight/temu-scraper`, `apify/e-commerce-scraping-tool`) sur deux boutiques. L'acteur dédié rend « 0 OK / 1 FAIL » en moins de deux secondes ; les autres renvoient une page de blocage sans prix |
+
+Attention au taux de réussite affiché par le store Apify : il compte le statut des runs,
+pas la qualité du résultat. L'acteur Temu affiche 2135 runs « réussis » sur 2164 tout en
+ne rendant aucune donnée.
 
 ### Durées et limites
 
@@ -379,6 +411,7 @@ une ligne, `image_url` à `null` et un avertissement dans `warnings`.
 | `422` | `url` invalide ; `region` absente, malformée ou hors liste blanche ; extraction trop incomplète |
 | `500` | Agent non configuré (secret manquant) ou erreur serveur inattendue |
 | `502` | Page non chargeable (réseau, timeout, blocage anti-bot) ou run du scraper hébergé en échec |
+| `422` | Site qu'aucun scrapeur disponible ne sait lire — voir « Plateformes sans scrapeur » ci-dessous. L'URL est bonne ; réessayer n'aidera pas, et rien n'a été facturé |
 | `504` | Extraction au-delà de `EXTRACTION_TIMEOUT_SECONDS` |
 
 ### L'agent

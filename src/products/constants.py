@@ -70,8 +70,10 @@ NEUTRAL_REGION_PROFILE = ("en-US", "UTC", "en-US,en;q=0.9")
 REGION_ACTOR_SEPARATOR = "@"
 
 # Keys through which Apify actors express the shopper country. Only keys an adapter
-# already sends are rewritten, so an actor with no country input stays untouched.
-ACTOR_COUNTRY_KEYS = ("proxyCountry", "countryCode")
+# already sends are rewritten, so an actor with no country input stays untouched --
+# which is also why adding a key here is not enough on its own: the adapter must send
+# it too, with the casing the actor expects.
+ACTOR_COUNTRY_KEYS = ("proxyCountry", "countryCode", "region")
 
 
 class ErrorCode(StrEnum):
@@ -82,6 +84,11 @@ class ErrorCode(StrEnum):
     IMAGE_TOO_LARGE = "The image exceeds the maximum allowed size."
     IMAGE_UPLOAD_FAILED = "The image could not be uploaded to storage; the product was not created."
     UNSUPPORTED_URL = "The URL is not a usable product page URL."
+    PLATFORM_NOT_EXTRACTABLE = (
+        "This site cannot be read automatically at the moment: it blocks every "
+        "scraper available to the service. The URL itself is fine — retrying will "
+        "not help, and no extraction was attempted or billed."
+    )
     PAGE_LOAD_FAILED = (
         "The product page could not be loaded or rendered (network, timeout, or anti-bot block)."
     )

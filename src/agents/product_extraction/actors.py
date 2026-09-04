@@ -612,12 +612,17 @@ ACTOR_ADAPTERS: dict[str, ActorAdapter] = {
             "maxProductsPerKeyword": 1,
             "maxConcurrency": 1,
             "writeSummary": False,
+            # Lowercase: the actor's own schema defaults to "us". Sent even at the
+            # default so `extraction._regional_build_input` has a key to rewrite —
+            # it only touches keys an adapter already provides.
+            "region": TARGET_COUNTRY.lower(),
         },
         map_record=map_temu,
         notes=("Temu redirects browsers to /login.html, so this is the only route. "
-               "The actor exposes no country input — it returns the local currency "
-               "of whatever storefront it reaches (MAD for temu.com/ma URLs), so "
-               "pass a localized product URL when the currency matters."),
+               "The actor DOES take a country, through `region` — the note here "
+               "said otherwise for months, and the parameter was never sent, so "
+               "every extraction got the actor's default of `us` whatever region "
+               "was asked for. Verified against the actor's published input schema."),
     ),
     "walmart": ActorAdapter(
         key="walmart",

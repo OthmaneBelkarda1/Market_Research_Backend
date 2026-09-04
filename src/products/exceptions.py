@@ -31,6 +31,17 @@ class UnsupportedProductUrl(UnprocessableContent):
     DETAIL = ErrorCode.UNSUPPORTED_URL
 
 
+class PlatformNotExtractable(UnprocessableContent):
+    """The URL is a genuine product page on a site no scraper can currently read.
+
+    422 rather than 502: nothing failed, and nothing will succeed on a retry. The
+    distinction matters to whoever reads the response — a 502 invites a retry that
+    would cost two actor runs to reach the same place.
+    """
+
+    DETAIL = ErrorCode.PLATFORM_NOT_EXTRACTABLE
+
+
 class ExtractionIncomplete(UnprocessableContent):
     DETAIL = ErrorCode.EXTRACTION_INCOMPLETE
 

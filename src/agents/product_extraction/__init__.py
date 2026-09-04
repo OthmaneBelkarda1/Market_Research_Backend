@@ -33,6 +33,7 @@ from .config import (
     ActorRunError,
     ConfigError,
     ExtractionError,
+    PlatformUnsupportedError,
     PageLoadError,
     UnsupportedUrlError,
 )
@@ -78,6 +79,7 @@ __all__ = [
     "TARGET_COUNTRY",
     "TARGET_LOCALE",
     "ExtractionError",
+    "PlatformUnsupportedError",
     "ConfigError",
     "PageLoadError",
     "ActorRunError",
