@@ -12,10 +12,9 @@ tous les trois pour qu'aucun ne dérive des autres.
 
 from __future__ import annotations
 
-import importlib
-import sys
+import importlib.util
 from pathlib import Path
-from typing import Any
+from types import ModuleType
 
 import pytest
 
@@ -23,21 +22,32 @@ RACINE = Path(__file__).resolve().parents[2] / "src" / "agents" / "market_study"
 AGENTS = ("agent_recherche_web", "agent_amazon", "agent_meta_ads")
 
 
-def _config(agent: str) -> Any:
-    """Charge le `config.py` d'un agent, qui s'importe par nom nu.
+def _config(agent: str) -> ModuleType:
+    """Charge le `config.py` d'un agent, par son CHEMIN et sous un nom unique.
+
+    Ni `sys.path`, ni `sys.modules["config"]` ne sont touchés, et c'est tout
+    l'intérêt : chacun des douze arbres du pipeline possède un module nommé
+    `config`, et ils s'importent tous par nom nu parce qu'ils sont exécutés en
+    sous-processus, jamais importés ensemble.
+
+    Dans un même processus pytest, ils entrent en collision. La première version
+    de ce fichier insérait les répertoires dans `sys.path` : le test de F7, qui
+    recharge `redaction_v2`, récupérait alors le `config` d'`agent_meta_ads` et
+    échouait sur un `CONTRAT_SOUS_BLOCS` introuvable. Charger par chemin, sous un
+    nom distinct, supprime le problème plutôt que d'en ranger les effets.
 
     Args:
         agent: Nom du répertoire de l'agent.
 
     Returns:
-        Le module de configuration.
+        Le module de configuration de cet agent.
     """
-    chemin = str(RACINE / agent)
-    if chemin not in sys.path:
-        sys.path.insert(0, chemin)
-    for reste in ("config",):
-        sys.modules.pop(reste, None)
-    return importlib.import_module("config")
+    chemin = RACINE / agent / "config.py"
+    specification = importlib.util.spec_from_file_location(f"{agent}_config", chemin)
+    assert specification and specification.loader
+    module = importlib.util.module_from_spec(specification)
+    specification.loader.exec_module(module)
+    return module
 
 
 class _SaturationError(Exception):
