@@ -703,28 +703,64 @@ def _ecrire_etat_sources(
     )
 
 
-# Ce que chaque collecteur rapporte vraiment : la liste de son payload qui porte la
-# récolte, par opposition à ses limites, ses hypothèses et ses statuts internes --
-# tous présents et non vides même quand la collecte n'a rien donné.
+# La liste de chaque payload qui porte la récolte, par opposition aux limites, aux
+# hypothèses et aux statuts internes -- tous présents et non vides même quand la
+# collecte n'a rien donné. Elle ne sert qu'au DÉCOMPTE, et seulement en secours du
+# drapeau ci-dessous : `google_trends` n'y figure pas, parce qu'il ne rapporte pas
+# une liste d'éléments mais un bloc d'indicateurs.
 CLE_RECOLTE: dict[str, str] = {
     "aliexpress": "produits",
     "amazon": "produits",
     "reddit": "commentaires",
     "recherche_web": "pages",
     "meta_ads": "annonces",
-    "google_trends": "sujets_associes",
 }
 
+DRAPEAU_RECOLTE = "donnees_disponibles"
+"""Le champ par lequel chaque collecteur dit lui-même s'il a rapporté quelque chose.
 
-def _nb_items(source: str, payload: dict[str, Any] | None) -> int:
-    """Compte ce qu'un collecteur a rapporté.
+Il fait foi. La première version de ce code déduisait la récolte de la longueur
+d'une liste choisie par source, ce qui était une devinette sur un contrat qui
+existait déjà : `google_trends` s'y trouvait classé vide sur toutes ses collectes,
+parce qu'il ne publie pas de liste d'éléments mais des indicateurs, et son
+`sujets_associes` est vide même sur un run parfaitement bon.
+
+Le décompte de listes reste, en secours, pour un module qui ne publierait pas le
+drapeau."""
+
+
+def _a_recolte(source: str, payload: dict[str, Any] | None) -> bool:
+    """Dit si un collecteur a rapporté quelque chose d'exploitable.
 
     Args:
         source: Identifiant du collecteur.
         payload: Sortie JSON du module, ou ``None``.
 
     Returns:
-        Le nombre d'éléments récoltés, zéro compris.
+        ``True`` si la collecte a produit des données.
+    """
+    if not payload:
+        return False
+    drapeau = payload.get(DRAPEAU_RECOLTE)
+    if isinstance(drapeau, bool):
+        return drapeau
+    return _nb_items(source, payload) > 0
+
+
+def _nb_items(source: str, payload: dict[str, Any] | None) -> int:
+    """Compte les éléments rapportés par un collecteur, quand il en liste.
+
+    Purement informatif : le volume voyage jusqu'à F7 par ``sources_etat.json``, où
+    il nourrit la ligne « Sources analysées ». C'est ``_a_recolte`` qui décide du
+    statut, jamais ce décompte.
+
+    Args:
+        source: Identifiant du collecteur.
+        payload: Sortie JSON du module, ou ``None``.
+
+    Returns:
+        Le nombre d'éléments récoltés, zéro compris — y compris pour un collecteur
+        qui a réussi sans rien lister, comme ``google_trends``.
     """
     if not payload:
         return 0
@@ -752,7 +788,7 @@ def _collector_status(spec: CollectorSpec, run: ModuleRun) -> str:
         return StudySourceStatus.SKIPPED_REGION
     if not run.succeeded:
         return StudySourceStatus.FAILED
-    if not _nb_items(spec.source, run.payload):
+    if not _a_recolte(spec.source, run.payload):
         return StudySourceStatus.EMPTY
     return StudySourceStatus.SUCCEEDED
 
